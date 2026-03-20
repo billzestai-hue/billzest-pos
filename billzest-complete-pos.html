@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>BillZest POS — Complete System</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+/* ══ PRINT STYLES ══ */
+@media print {
+  body * { visibility: hidden !important; }
+  .receipt-modal, .receipt-modal * { visibility: visible !important; }
+  .receipt-modal { 
+    position: fixed !important; 
+    inset: 0 !important; 
+    background: white !important;
+    display: flex !important;
+    align-items: flex-start !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    z-index: 9999 !important;
+  }
+  .receipt-box {
+    box-shadow: none !important;
+    width: 80mm !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+  }
+  .receipt-actions { display: none !important; }
+  .toast { display: none !important; }
+  .pay-modal { display: none !important; }
+  .hdr { display: none !important; }
+}
+/* OVERFLOW NUCLEAR FIX */
+*, *::before, *::after { box-sizing: border-box !important; }
+html { overflow-x: hidden !important; max-width: 100vw !important; }
+body { overflow-x: hidden !important; max-width: 100vw !important; width: 100% !important; }
+.pg { max-width: 100vw !important; overflow-x: hidden !important; }
+.pos-layout { max-width: 100% !important; }
+.menu-side { max-width: 100% !important; overflow: hidden !important; }
+.item-grid { max-width: 100% !important; }
+.hdr { max-width: 100vw !important; overflow: hidden !important; }
+
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --purple:#4f2d91;--pd:#3b1f6e;--pl:#f0ebff;
+  --teal:#00b5a3;--orange:#f5a623;--red:#ef4444;
+  --green:#10b981;--blue:#3b82f6;--yellow:#f59e0b;
+  --gray:#f4f4f8;--bdr:#e0e0e0;--dark:#1a1a1a;--muted:#888;
+  --card:#ffffff;
+}
+body{font-family:'Poppins',sans-serif;background:var(--gray);color:var(--dark);min-height:100vh;}
+
+/* ══ HEADER ══ */
+.hdr{background:#fff;border-bottom:2px solid var(--bdr);padding:0 14px;height:58px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:300;gap:8px;width:100%;box-sizing:border-box;overflow:hidden;}
+.hdr-logo{font-size:20px;font-weight:800;color:var(--dark);letter-spacing:-0.5px;white-space:nowrap;flex-shrink:0;}
+.hdr-logo span{color:var(--orange);}
+.hdr-logo small{font-size:13px;font-weight:500;color:var(--muted);margin-left:4px;letter-spacing:0;}
+.hdr-nav{display:flex;gap:4px;flex:1;justify-content:center;}
+.nav-btn{padding:8px 16px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;border:none;background:none;color:var(--muted);font-family:'Poppins',sans-serif;transition:all 0.2s;white-space:nowrap;display:flex;align-items:center;gap:6px;}
+.nav-btn.active{background:var(--purple);color:#fff;box-shadow:0 3px 10px rgba(79,45,145,0.3);}
+.nav-btn:hover:not(.active){background:var(--pl);color:var(--purple);}
+.nav-btn .badge{background:var(--red);color:#fff;font-size:9px;font-weight:700;width:17px;height:17px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-left:2px;}
+.hdr-time{font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;white-space:nowrap;flex-shrink:0;background:var(--gray);padding:6px 10px;border-radius:8px;}
+
+/* ══ PAGES ══ */
+html,body{overflow-x:hidden;width:100%;max-width:100vw;}
+.pg{display:none;padding:12px;overflow-x:hidden;box-sizing:border-box;width:100%;}
+.pg.active{display:block;}
+
+/* ══ POS / CART PAGE ══ */
+.pos-layout{display:grid;grid-template-columns:1fr 360px;gap:12px;max-width:100%;margin:0;width:100%;}
+
+/* Menu side */
+.menu-side{min-width:0;overflow:hidden;}
+.menu-search{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--bdr);border-radius:10px;padding:10px 16px;margin-bottom:14px;}
+.menu-search input{border:none;outline:none;font-family:'Poppins',sans-serif;font-size:13px;width:100%;background:none;color:var(--dark);}
+.cat-scroll{display:flex;gap:8px;overflow-x:auto;margin-bottom:14px;padding-bottom:6px;scrollbar-width:none;width:100%;max-width:100%;}
+.cat-scroll::-webkit-scrollbar{display:none;}
+.cat-pill{padding:10px 16px;border-radius:12px;border:2px solid var(--bdr);font-size:12px;font-weight:700;cursor:pointer;background:#fff;color:#555;white-space:nowrap;flex-shrink:0;transition:all 0.2s;font-family:'Poppins',sans-serif;}
+.cat-pill.active{background:var(--purple);color:#fff;border-color:var(--purple);box-shadow:0 3px 10px rgba(79,45,145,0.3);}
+.cat-pill:hover:not(.active){border-color:var(--purple);color:var(--purple);background:#f0ebff;}
+.item-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;width:100%;}
+.item-card{background:#fff;border:1.5px solid var(--bdr);border-radius:12px;padding:12px 10px;cursor:pointer;transition:all 0.2s;text-align:center;position:relative;min-width:0;overflow:hidden;}
+.item-card:hover{border-color:var(--purple);box-shadow:0 4px 16px rgba(79,45,145,0.12);transform:translateY(-2px);}
+.item-card.oos{opacity:0.5;cursor:not-allowed;}
+.item-emoji{font-size:42px;margin-bottom:8px;display:block;}
+.item-name{font-size:12px;font-weight:700;color:var(--dark);margin-bottom:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.item-price{font-size:13px;font-weight:800;color:var(--purple);}
+.item-offer{position:absolute;top:6px;right:6px;background:var(--orange);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:10px;}
+.item-oos-tag{position:absolute;top:6px;left:6px;background:var(--red);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:10px;}
+
+/* Cart side */
+.cart-side{background:#fff;border-radius:14px;border:1px solid var(--bdr);display:flex;flex-direction:column;height:calc(100vh - 100px);position:sticky;top:74px;min-width:0;overflow:hidden;}
+.cart-hdr{padding:16px 18px;border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between;}
+.cart-hdr h3{font-size:15px;font-weight:700;}
+.cart-order-num{font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;}
+.btn-clear-cart{background:none;border:1px solid var(--bdr);color:var(--red);font-size:11px;font-weight:600;padding:4px 10px;border-radius:6px;cursor:pointer;font-family:'Poppins',sans-serif;}
+.cart-items{flex:1;overflow-y:auto;padding:10px 14px;}
+.cart-empty{text-align:center;padding:40px 20px;color:var(--muted);}
+.cart-empty .ce-icon{font-size:48px;margin-bottom:10px;}
+.cart-empty p{font-size:13px;}
+.cart-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #f5f5f5;}
+.cart-row:last-child{border-bottom:none;}
+.cr-emoji{font-size:28px;flex-shrink:0;}
+.cr-info{flex:1;}
+.cr-name{font-size:13px;font-weight:600;color:var(--dark);}
+.cr-price{font-size:12px;color:var(--muted);}
+.cr-qty{display:flex;align-items:center;gap:6px;flex-shrink:0;}
+.qty-btn{width:26px;height:26px;border-radius:6px;border:1.5px solid var(--bdr);background:#fff;cursor:pointer;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;transition:all 0.2s;color:var(--dark);}
+.qty-btn:hover{background:var(--purple);color:#fff;border-color:var(--purple);}
+.qty-num{font-size:14px;font-weight:700;min-width:20px;text-align:center;}
+.cr-total{font-size:13px;font-weight:700;color:var(--purple);min-width:60px;text-align:right;}
+.cart-footer{padding:14px 16px;border-top:1px solid var(--bdr);}
+.cart-summary{margin-bottom:12px;}
+.cs-row{display:flex;justify-content:space-between;font-size:13px;color:#555;margin-bottom:6px;}
+.cs-row.total{font-size:16px;font-weight:800;color:var(--dark);border-top:1px solid var(--bdr);padding-top:8px;margin-top:4px;}
+.cs-row.vat{font-size:11px;color:var(--muted);}
+/* Table + Notes */
+.cart-extras{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
+.cart-extras input,.cart-extras select{width:100%;padding:8px 10px;border:1.5px solid var(--bdr);border-radius:7px;font-size:12px;font-family:'Poppins',sans-serif;outline:none;transition:border 0.2s;}
+.cart-extras input:focus,.cart-extras select:focus{border-color:var(--purple);}
+.pay-methods{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px;}
+.pm-btn{padding:8px 4px;border:2px solid var(--bdr);border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;background:#fff;color:#555;font-family:'Poppins',sans-serif;transition:all 0.2s;text-align:center;}
+.pm-btn.active{border-color:var(--purple);background:var(--pl);color:var(--purple);}
+.btn-checkout{width:100%;background:var(--purple);color:#fff;border:none;padding:13px;border-radius:10px;font-size:15px;font-weight:700;font-family:'Poppins',sans-serif;cursor:pointer;transition:all 0.2s;}
+.btn-checkout:hover{background:var(--pd);}
+.btn-checkout:disabled{background:#ccc;cursor:not-allowed;}
+
+/* ══ KDS PAGE ══ */
+.kds-wrap{max-width:1300px;margin:0 auto;}
+.kds-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+.kds-hdr h2{font-size:22px;font-weight:700;}
+.kds-live{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--green);font-weight:600;}
+.kds-live::before{content:'';width:8px;height:8px;background:var(--green);border-radius:50%;animation:pulse 1.5s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
+.kds-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.kds-col-hdr{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-radius:10px 10px 0 0;color:#fff;font-size:14px;font-weight:700;}
+.kds-col-hdr .count{background:rgba(255,255,255,0.2);padding:2px 10px;border-radius:20px;font-size:12px;}
+.kds-new .kds-col-hdr{background:var(--blue);}
+.kds-prep .kds-col-hdr{background:var(--orange);}
+.kds-done .kds-col-hdr{background:var(--green);}
+.kds-col-body{background:#fff;border:1px solid var(--bdr);border-top:none;border-radius:0 0 10px 10px;min-height:300px;padding:10px;}
+.kds-card{background:#f8f8fc;border:1.5px solid var(--bdr);border-radius:10px;padding:14px;margin-bottom:10px;transition:all 0.2s;}
+.kds-card:last-child{margin-bottom:0;}
+.kds-card-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.kds-order-id{font-size:13px;font-weight:800;color:var(--purple);font-family:'JetBrains Mono',monospace;}
+.kds-table{font-size:11px;color:var(--muted);background:var(--pl);padding:2px 8px;border-radius:10px;}
+.kds-time{font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;}
+.kds-items{list-style:none;margin-bottom:10px;}
+.kds-items li{font-size:13px;color:#333;padding:3px 0;display:flex;align-items:center;gap:6px;}
+.kds-items li::before{content:'▸';color:var(--purple);font-size:10px;}
+.kds-qty{font-weight:700;color:var(--purple);}
+.kds-note{font-size:11px;color:var(--orange);background:#fff8e1;padding:5px 9px;border-radius:6px;margin-bottom:8px;}
+.kds-btn{width:100%;padding:8px;border:none;border-radius:7px;font-size:12px;font-weight:700;font-family:'Poppins',sans-serif;cursor:pointer;transition:all 0.2s;}
+.kds-new .kds-btn{background:var(--blue);color:#fff;}
+.kds-prep .kds-btn{background:var(--orange);color:#fff;}
+.kds-done .kds-btn{background:var(--green);color:#fff;}
+.kds-empty{text-align:center;padding:32px;color:var(--muted);font-size:13px;}
+
+/* ══ ANALYTICS PAGE ══ */
+.analytics-wrap{max-width:1200px;margin:0 auto;}
+.an-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px;}
+.an-card{background:#fff;border:1px solid var(--bdr);border-radius:14px;padding:20px;position:relative;overflow:hidden;}
+.an-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;border-radius:14px 14px 0 0;}
+.an-p .an-card::before,.an-card.p::before{background:var(--purple);}
+.an-card.g::before{background:var(--green);}
+.an-card.o::before{background:var(--orange);}
+.an-card.b::before{background:var(--blue);}
+.an-icon{font-size:28px;margin-bottom:8px;}
+.an-val{font-size:28px;font-weight:800;color:var(--dark);font-family:'JetBrains Mono',monospace;}
+.an-lbl{font-size:12px;color:var(--muted);margin-top:2px;}
+.an-chg{font-size:11px;font-weight:600;margin-top:6px;}
+.an-chg.up{color:var(--green);}
+.an-chg.down{color:var(--red);}
+.an-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+.an-section{background:#fff;border:1px solid var(--bdr);border-radius:14px;padding:20px;}
+.an-section h3{font-size:15px;font-weight:700;margin-bottom:16px;color:var(--dark);}
+.bar-item{margin-bottom:12px;}
+.bar-label{display:flex;justify-content:space-between;font-size:12px;color:#555;margin-bottom:4px;}
+.bar-track{height:8px;background:#f0f0f0;border-radius:4px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:4px;transition:width 1s ease;}
+.sale-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f5f5f5;font-size:13px;}
+.sale-row:last-child{border-bottom:none;}
+.sale-id{font-family:'JetBrains Mono',monospace;color:var(--purple);font-weight:600;font-size:12px;}
+.sale-amt{font-weight:700;color:var(--green);}
+.sale-method{font-size:11px;color:var(--muted);background:#f5f5f5;padding:2px 8px;border-radius:10px;}
+.chart-wrap{height:160px;display:flex;align-items:flex-end;gap:8px;padding:10px 0;}
+.chart-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
+.chart-bar{width:100%;border-radius:6px 6px 0 0;transition:height 0.8s ease;cursor:pointer;position:relative;}
+.chart-bar:hover{opacity:0.85;}
+.chart-bar-lbl{font-size:10px;color:var(--muted);font-weight:600;}
+
+/* ══ INVENTORY PAGE ══ */
+.inv-wrap{max-width:1200px;margin:0 auto;}
+.inv-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px;}
+.inv-hdr h2{font-size:20px;font-weight:700;}
+.inv-search{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--bdr);border-radius:8px;padding:9px 14px;width:260px;}
+.inv-search input{border:none;outline:none;font-size:13px;font-family:'Poppins',sans-serif;width:100%;background:none;}
+.inv-table{background:#fff;border:1px solid var(--bdr);border-radius:14px;overflow:hidden;}
+.inv-table table{width:100%;border-collapse:collapse;font-size:13px;}
+.inv-table thead tr{background:#f8f8fc;border-bottom:2px solid var(--bdr);}
+.inv-table th{padding:12px 16px;text-align:left;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.6px;}
+.inv-table tbody tr{border-bottom:1px solid #f5f5f5;transition:background 0.15s;}
+.inv-table tbody tr:last-child{border-bottom:none;}
+.inv-table tbody tr:hover{background:#fafafa;}
+.inv-table td{padding:13px 16px;vertical-align:middle;}
+.inv-emoji{font-size:26px;margin-right:6px;}
+.inv-name{font-weight:600;color:var(--dark);}
+.inv-cat{font-size:11px;color:var(--muted);}
+.stock-bar-wrap{width:120px;}
+.stock-bar{height:6px;background:#f0f0f0;border-radius:3px;overflow:hidden;margin-top:4px;}
+.stock-fill{height:100%;border-radius:3px;}
+.stock-high{background:var(--green);}
+.stock-mid{background:var(--yellow);}
+.stock-low{background:var(--red);}
+.stock-num{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;}
+.inv-status{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;}
+.inv-ok{background:rgba(16,185,129,0.1);color:var(--green);}
+.inv-warn{background:rgba(245,158,11,0.1);color:var(--yellow);}
+.inv-low{background:rgba(239,68,68,0.1);color:var(--red);}
+.inv-edit-qty{width:70px;padding:5px 8px;border:1.5px solid var(--bdr);border-radius:6px;font-size:13px;font-family:'JetBrains Mono',monospace;outline:none;text-align:center;transition:border 0.2s;}
+.inv-edit-qty:focus{border-color:var(--purple);}
+.btn-upd{background:var(--purple);color:#fff;border:none;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:600;font-family:'Poppins',sans-serif;cursor:pointer;}
+
+/* ══ RECEIPT MODAL ══ */
+.receipt-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:600;align-items:center;justify-content:center;padding:20px;}
+.receipt-modal.open{display:flex;}
+.receipt-box{background:#fff;border-radius:4px;width:100%;max-width:360px;padding:0;box-shadow:0 20px 60px rgba(0,0,0,0.3);font-family:'JetBrains Mono',monospace;}
+.receipt-inner{padding:24px;}
+.r-logo{text-align:center;font-family:'Poppins',sans-serif;font-size:22px;font-weight:800;margin-bottom:4px;}
+.r-logo span{color:var(--orange);}
+.r-addr{text-align:center;font-size:10px;color:#666;line-height:1.6;margin-bottom:14px;}
+.r-divider{border:none;border-top:1px dashed #ccc;margin:10px 0;}
+.r-meta{font-size:11px;color:#555;margin-bottom:10px;}
+.r-meta-row{display:flex;justify-content:space-between;margin-bottom:3px;}
+.r-items{margin-bottom:10px;}
+.r-item{display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px;}
+.r-item-name{flex:1;color:#333;}
+.r-item-qty{color:var(--purple);margin:0 8px;}
+.r-item-price{font-weight:600;}
+.r-totals{font-size:12px;}
+.r-total-row{display:flex;justify-content:space-between;margin-bottom:4px;}
+.r-grand{font-size:15px;font-weight:800;border-top:2px solid #333;padding-top:8px;margin-top:4px;}
+.r-payment{text-align:center;margin-top:12px;font-size:11px;color:#555;}
+.r-payment .method{font-size:14px;font-weight:700;color:var(--purple);margin-top:2px;}
+.r-footer{text-align:center;font-size:10px;color:#888;margin-top:14px;line-height:1.7;}
+.receipt-actions{padding:12px 16px;border-top:1px solid var(--bdr);display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:7px;align-items:center;}
+.btn-print{background:#1a1a1a;color:#fff;border:none;padding:11px 8px;border-radius:8px;font-size:12px;font-weight:700;font-family:'Poppins',sans-serif;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:5px;}
+.btn-print:hover{background:#333;}
+.btn-pdf{background:#2563eb;color:#fff;border:none;padding:11px 8px;border-radius:8px;font-size:12px;font-weight:700;font-family:'Poppins',sans-serif;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:5px;}
+.btn-pdf:hover{background:#1d4ed8;}
+.btn-wa{background:#25d366;color:#fff;border:none;padding:11px 8px;border-radius:8px;font-size:12px;font-weight:700;font-family:'Poppins',sans-serif;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:5px;}
+.btn-wa:hover{background:#128c7e;}
+.btn-close-r{background:#f0f0f0;color:#555;border:none;padding:11px 14px;border-radius:8px;font-size:15px;font-weight:700;font-family:'Poppins',sans-serif;cursor:pointer;}
+
+/* ══ PAYMENT MODAL ══ */
+.pay-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:600;align-items:center;justify-content:center;padding:20px;}
+.pay-modal.open{display:flex;}
+.pay-box{background:#fff;border-radius:18px;width:100%;max-width:420px;padding:28px;box-shadow:0 20px 60px rgba(0,0,0,0.25);animation:pop .22s ease;}
+@keyframes pop{from{opacity:0;transform:scale(0.95);}to{opacity:1;transform:scale(1);}}
+.pay-title{font-size:20px;font-weight:700;text-align:center;color:var(--dark);margin-bottom:6px;}
+.pay-amount{font-size:36px;font-weight:800;text-align:center;color:var(--purple);font-family:'JetBrains Mono',monospace;margin-bottom:20px;}
+.pay-methods-big{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;}
+.pmb{padding:14px 8px;border:2px solid var(--bdr);border-radius:12px;text-align:center;cursor:pointer;transition:all 0.2s;font-family:'Poppins',sans-serif;}
+.pmb .pm-icon{font-size:28px;margin-bottom:6px;}
+.pmb .pm-lbl{font-size:12px;font-weight:600;color:#555;}
+.pmb.on{border-color:var(--purple);background:var(--pl);}
+.pmb.on .pm-lbl{color:var(--purple);}
+.cash-change{background:var(--pl);border-radius:10px;padding:14px;margin-bottom:16px;display:none;}
+.cash-change label{font-size:12px;color:var(--purple);font-weight:600;display:block;margin-bottom:6px;}
+.cash-change input{width:100%;padding:10px;border:1.5px solid var(--purple);border-radius:7px;font-size:16px;font-family:'JetBrains Mono',monospace;font-weight:700;outline:none;text-align:center;}
+.change-due{text-align:center;font-size:18px;font-weight:800;color:var(--green);margin-top:8px;font-family:'JetBrains Mono',monospace;}
+.card-fields{display:none;}
+.card-fields input{width:100%;padding:10px 12px;border:1.5px solid var(--bdr);border-radius:8px;font-size:14px;font-family:'JetBrains Mono',monospace;outline:none;margin-bottom:10px;transition:border 0.2s;}
+.card-fields input:focus{border-color:var(--purple);}
+.btn-confirm-pay{width:100%;background:var(--green);color:#fff;border:none;padding:14px;border-radius:10px;font-size:16px;font-weight:700;font-family:'Poppins',sans-serif;cursor:pointer;transition:all 0.2s;}
+.btn-confirm-pay:hover{background:#059669;}
+.btn-cancel-pay{width:100%;background:#f5f5f5;color:#555;border:none;padding:12px;border-radius:10px;font-size:14px;font-weight:600;font-family:'Poppins',sans-serif;cursor:pointer;margin-top:8px;}
+
+/* Success animation */
+.pay-success{display:none;text-align:center;padding:20px 0;}
+.pay-success .check{font-size:64px;animation:bounce 0.5s ease;}
+@keyframes bounce{0%{transform:scale(0);}70%{transform:scale(1.2);}100%{transform:scale(1);}}
+.pay-success h3{font-size:22px;font-weight:800;color:var(--green);margin:12px 0 6px;}
+.pay-success p{font-size:14px;color:var(--muted);}
+
+/* Toast */
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(60px);background:#1a1a1a;color:#fff;padding:12px 22px;border-radius:30px;font-size:13px;font-weight:600;z-index:999;transition:transform 0.3s;white-space:nowrap;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+
+/* ══ DESKTOP ══ */
+@media(min-width:1025px){
+  .pos-layout{grid-template-columns:1fr 360px;}
+  .cart-side{height:calc(100vh - 100px);position:sticky;top:74px;}
+  .item-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));}
+  .kds-cols{grid-template-columns:repeat(3,1fr);}
+  .an-grid{grid-template-columns:repeat(4,1fr);}
+  .an-row{grid-template-columns:1fr 1fr;}
+  .hdr-nav{gap:4px;}
+  .nav-btn{padding:7px 14px;font-size:12px;}
+}
+
+/* ══ TABLET ══ */
+@media(max-width:1024px){
+  .pos-layout{grid-template-columns:1fr;}
+  .cart-side{height:auto;position:static;max-height:none;}
+  .item-grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr));}
+  .kds-cols{grid-template-columns:1fr 1fr;}
+  .an-grid{grid-template-columns:1fr 1fr;}
+  .an-row{grid-template-columns:1fr;}
+  .hdr-time{display:none;}
+}
+
+/* ══ MOBILE ══ */
+@media(max-width:640px){
+  /* Header */
+  .hdr{height:auto;flex-wrap:wrap;padding:10px 14px 8px;gap:6px;}
+  .hdr-logo{font-size:17px;order:1;}
+  .hdr-time{order:2;margin-left:auto;font-size:10px;padding:4px 8px;display:block;}
+  .hdr-nav{order:3;width:100%;justify-content:flex-start;gap:4px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none;}
+  .hdr-nav::-webkit-scrollbar{display:none;}
+  .nav-btn{padding:6px 12px;font-size:11px;flex-shrink:0;border-radius:8px;}
+
+  /* POS */
+  .pg{padding:10px;max-width:100vw;overflow-x:hidden;}
+  .pos-layout{grid-template-columns:1fr;gap:10px;max-width:100%;}
+  .item-grid{grid-template-columns:repeat(3,1fr) !important;gap:6px;max-width:100%;}
+  .item-card{padding:10px 6px;}
+  .item-emoji{font-size:32px;margin-bottom:5px;}
+  .item-name{font-size:11px;}
+  .item-price{font-size:12px;}
+  .menu-search{padding:8px 12px;margin-bottom:10px;}
+  .cat-scroll{gap:5px;margin-bottom:10px;}
+  .cat-pill{padding:5px 11px;font-size:11px;}
+
+  /* Cart */
+  .cart-side{border-radius:12px;}
+  .cart-hdr{padding:11px 13px;}
+  .cart-hdr h3{font-size:14px;}
+  .cart-items{max-height:200px;overflow-y:auto;}
+  .cart-footer{padding:10px 12px;}
+  .cart-extras{grid-template-columns:1fr 1fr;gap:6px;}
+  .cart-extras input,.cart-extras select{padding:7px 9px;font-size:11px;}
+  .pay-methods{gap:5px;}
+  .pm-btn{padding:7px 4px;font-size:10px;}
+  .btn-checkout{padding:12px;font-size:14px;border-radius:9px;}
+  .cs-row{font-size:12px;}
+  .cs-row.total{font-size:14px;}
+
+  /* KDS */
+  .kds-cols{grid-template-columns:1fr;}
+  .kds-hdr h2{font-size:17px;}
+
+  /* Analytics */
+  .an-grid{grid-template-columns:1fr 1fr;gap:10px;}
+  .an-val{font-size:20px;}
+  .an-row{grid-template-columns:1fr;}
+  .chart-wrap{height:120px;}
+
+  /* Inventory */
+  .inv-hdr{flex-direction:column;align-items:flex-start;gap:8px;}
+  .inv-search{width:100%;}
+  .inv-table{overflow-x:auto;}
+  .inv-table table{min-width:480px;}
+
+  /* Payment modal */
+  .pay-box{padding:18px 14px;margin:8px;}
+  .pay-amount{font-size:26px;}
+  .pmb{padding:10px 5px;}
+  .pmb .pm-icon{font-size:22px;margin-bottom:3px;}
+  .pmb .pm-lbl{font-size:10px;}
+
+  /* Receipt */
+  .receipt-box{margin:8px;}
+  .receipt-inner{padding:16px;}
+}
+
+/* ══ SMALL MOBILE ══ */
+@media(max-width:380px){
+  .item-grid{grid-template-columns:repeat(2,1fr) !important;}
+  .item-emoji{font-size:28px;}
+  .nav-btn{padding:5px 10px;font-size:10px;}
+  .cart-items{max-height:160px;}
+  .hdr-time{display:none;}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="hdr">
+  <div class="hdr-logo">Bill<span>Zest</span><small>POS</small></div>
+  <div class="hdr-nav">
+    <button class="nav-btn active" onclick="goPage('pos',this)">
+      🛒 POS <span class="badge" id="cartBadge" style="display:none;">0</span>
+    </button>
+    <button class="nav-btn" onclick="goPage('kds',this)">👨‍🍳 Kitchen</button>
+    <button class="nav-btn" onclick="goPage('analytics',this)">📊 Reports</button>
+    <button class="nav-btn" onclick="goPage('inventory',this)">📦 Stock</button>
+  </div>
+  <div class="hdr-time" id="clock">⏰ --:--:--</div>
+</div>
+
+<!-- ══ POS PAGE ══ -->
+<div class="pg active" id="pg-pos">
+  <div class="pos-layout">
+    <!-- Menu -->
+    <div class="menu-side">
+      <div class="menu-search">🔍 <input type="text" id="posSearch" placeholder="Search menu items..." oninput="renderMenu()"></div>
+      <div class="cat-scroll" id="catScroll"></div>
+      <div class="item-grid" id="itemGrid"></div>
+    </div>
+    <!-- Cart -->
+    <div class="cart-side">
+      <div class="cart-hdr">
+        <div>
+          <h3>🛒 Current Order</h3>
+          <div class="cart-order-num" id="orderNum">#ORD-0001</div>
+        </div>
+        <button class="btn-clear-cart" onclick="clearCart()">Clear</button>
+      </div>
+      <div class="cart-items" id="cartItems">
+        <div class="cart-empty"><div class="ce-icon">🛒</div><p>Tap items to add</p></div>
+      </div>
+      <div class="cart-footer">
+        <div class="cart-summary" id="cartSummary"></div>
+        <div class="cart-extras">
+          <select id="tableNum">
+            <option value="">Table #</option>
+            <option>Table 1</option><option>Table 2</option><option>Table 3</option>
+            <option>Table 4</option><option>Table 5</option><option>Takeaway</option><option>Delivery</option>
+          </select>
+          <input type="text" id="orderNote" placeholder="Special note...">
+        </div>
+        <div class="pay-methods">
+          <button class="pm-btn active" onclick="setPayMethod('Cash',this)">💵 Cash</button>
+          <button class="pm-btn" onclick="setPayMethod('Card',this)">💳 Card</button>
+          <button class="pm-btn" onclick="setPayMethod('Online',this)">📱 Online</button>
+        </div>
+        <button class="btn-checkout" id="checkoutBtn" onclick="openPayModal()" disabled>Charge ﷼ 0.00</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ KDS PAGE ══ -->
+<div class="pg" id="pg-kds">
+  <div class="kds-wrap">
+    <div class="kds-hdr">
+      <h2>👨‍🍳 Kitchen Display</h2>
+      <div class="kds-live">Live Orders</div>
+    </div>
+    <div class="kds-cols">
+      <div class="kds-new">
+        <div class="kds-col-hdr">🆕 New Orders <span class="count" id="kds-count-new">0</span></div>
+        <div class="kds-col-body" id="kds-new"></div>
+      </div>
+      <div class="kds-prep">
+        <div class="kds-col-hdr">🔥 Preparing <span class="count" id="kds-count-prep">0</span></div>
+        <div class="kds-col-body" id="kds-prep"></div>
+      </div>
+      <div class="kds-done">
+        <div class="kds-col-hdr">✅ Ready <span class="count" id="kds-count-done">0</span></div>
+        <div class="kds-col-body" id="kds-done"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ ANALYTICS PAGE ══ -->
+<div class="pg" id="pg-analytics">
+  <div class="analytics-wrap">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+      <h2 style="font-size:20px;font-weight:700;">📊 Sales Reports</h2>
+      <select id="anPeriod" onchange="renderAnalytics()" style="padding:8px 14px;border:1px solid var(--bdr);border-radius:8px;font-family:'Poppins',sans-serif;font-size:13px;outline:none;">
+        <option value="today">Today</option>
+        <option value="week">This Week</option>
+        <option value="month">This Month</option>
+      </select>
+    </div>
+    <div class="an-grid" id="anCards"></div>
+    <div class="an-row">
+      <div class="an-section">
+        <h3>📈 Revenue Chart</h3>
+        <div class="chart-wrap" id="revenueChart"></div>
+      </div>
+      <div class="an-section">
+        <h3>🏆 Top Selling Items</h3>
+        <div id="topItems"></div>
+      </div>
+    </div>
+    <div class="an-row">
+      <div class="an-section">
+        <h3>💳 Payment Methods</h3>
+        <div id="payChart"></div>
+      </div>
+      <div class="an-section">
+        <h3>🧾 Recent Transactions</h3>
+        <div id="recentTx"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ INVENTORY PAGE ══ -->
+<div class="pg" id="pg-inventory">
+  <div class="inv-wrap">
+    <div class="inv-hdr">
+      <h2>📦 Inventory Management</h2>
+      <div style="display:flex;gap:10px;align-items:center;">
+        <div class="inv-search">🔍 <input type="text" id="invSearch" placeholder="Search..." oninput="renderInventory()"></div>
+        <button onclick="renderInventory()" style="background:var(--purple);color:#fff;border:none;padding:9px 16px;border-radius:8px;font-size:12px;font-weight:600;font-family:'Poppins',sans-serif;cursor:pointer;">Refresh</button>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;" id="invStats"></div>
+    <div class="inv-table"><table><thead><tr><th>Item</th><th>Category</th><th>Stock</th><th>Status</th><th>Update Stock</th></tr></thead><tbody id="invBody"></tbody></table></div>
+  </div>
+</div>
+
+<!-- RECEIPT MODAL -->
+<div class="receipt-modal" id="receiptModal">
+  <div class="receipt-box">
+    <div class="receipt-inner" id="receiptContent"></div>
+    <div class="receipt-actions">
+      <button class="btn-print" onclick="printReceipt()" title="Print Receipt">🖨️ Print</button>
+      <button class="btn-pdf" onclick="downloadPDF()" title="Save as PDF">📄 PDF</button>
+      <button class="btn-wa" onclick="shareWhatsApp()" title="Share on WhatsApp">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        WhatsApp
+      </button>
+      <button class="btn-close-r" onclick="closeReceipt()">✕</button>
+    </div>
+  </div>
+</div>
+
+<!-- PAYMENT MODAL -->
+<div class="pay-modal" id="payModal">
+  <div class="pay-box">
+    <div id="payContent">
+      <div class="pay-title">💳 Complete Payment</div>
+      <div class="pay-amount" id="payAmt">﷼ 0.00</div>
+      <div class="pay-methods-big">
+        <div class="pmb on" onclick="selectPayMethod('Cash',this)"><div class="pm-icon">💵</div><div class="pm-lbl">Cash</div></div>
+        <div class="pmb" onclick="selectPayMethod('Card',this)"><div class="pm-icon">💳</div><div class="pm-lbl">Card</div></div>
+        <div class="pmb" onclick="selectPayMethod('Online',this)"><div class="pm-icon">📱</div><div class="pm-lbl">Online</div></div>
+      </div>
+      <div class="cash-change" id="cashSection">
+        <label>Cash Received</label>
+        <input type="number" id="cashIn" placeholder="0.00" oninput="calcChange()" style="font-size:18px;font-weight:700;">
+        <div class="change-due" id="changeDue"></div>
+        <div id="quickAmounts" style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;"></div>
+      </div>
+      <div class="card-fields" id="cardSection">
+        <input type="text" id="cNum" maxlength="19" placeholder="Card Number" oninput="fmtC(this)">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <input type="text" id="cExp" maxlength="5" placeholder="MM/YY" oninput="fmtE(this)">
+          <input type="password" id="cCvv" maxlength="3" placeholder="CVV">
+        </div>
+      </div>
+      <button class="btn-confirm-pay" id="confirmPayBtn" onclick="confirmPayment()">✅ Confirm Payment</button>
+      <button class="btn-cancel-pay" onclick="closePayModal()">Cancel</button>
+    </div>
+    <div class="pay-success" id="paySuccess">
+      <div class="check">✅</div>
+      <h3>Payment Successful!</h3>
+      <p id="paySuccessMsg"></p>
+      <button onclick="showReceipt()" style="background:var(--purple);color:#fff;border:none;padding:12px 24px;border-radius:8px;font-size:14px;font-weight:600;font-family:'Poppins',sans-serif;cursor:pointer;margin-top:16px;margin-right:8px;">🖨️ Print Receipt</button>
+      <button onclick="newOrder()" style="background:#f5f5f5;color:#555;border:none;padding:12px 24px;border-radius:8px;font-size:14px;font-weight:600;font-family:'Poppins',sans-serif;cursor:pointer;margin-top:16px;">New Order</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ══ DATA ══
+var products = [
+  // 🍔 BURGERS
+  {id:1,  name:'Classic Burger',      cat:'🍔 Burgers',  price:32, emoji:'🍔', offer:'BEST',    stock:50},
+  {id:2,  name:'Cheese Burger',       cat:'🍔 Burgers',  price:38, emoji:'🍔', offer:'',        stock:42},
+  {id:3,  name:'Double Smash Burger', cat:'🍔 Burgers',  price:52, emoji:'🍔', offer:'NEW',     stock:30},
+  {id:4,  name:'BBQ Bacon Burger',    cat:'🍔 Burgers',  price:48, emoji:'🍔', offer:'',        stock:25},
+  {id:5,  name:'Crispy Chicken Burger',cat:'🍔 Burgers', price:42, emoji:'🍔', offer:'HOT 🌶️', stock:35},
+  {id:6,  name:'Mushroom Swiss Burger',cat:'🍔 Burgers', price:45, emoji:'🍔', offer:'',        stock:20},
+
+  // 🍕 PIZZA
+  {id:10, name:'Margherita Pizza',    cat:'🍕 Pizza',    price:45, emoji:'🍕', offer:'',        stock:30},
+  {id:11, name:'Pepperoni Pizza',     cat:'🍕 Pizza',    price:50, emoji:'🍕', offer:'10% OFF', stock:28},
+  {id:12, name:'BBQ Chicken Pizza',   cat:'🍕 Pizza',    price:55, emoji:'🍕', offer:'NEW',     stock:22},
+  {id:13, name:'Veggie Supreme Pizza',cat:'🍕 Pizza',    price:48, emoji:'🍕', offer:'',        stock:18},
+  {id:14, name:'Four Cheese Pizza',   cat:'🍕 Pizza',    price:58, emoji:'🍕', offer:'VIP',     stock:15},
+  {id:15, name:'Spicy Beef Pizza',    cat:'🍕 Pizza',    price:52, emoji:'🍕', offer:'HOT 🌶️', stock:20},
+
+  // 🍗 CHICKEN
+  {id:20, name:'Crispy Fried Chicken',cat:'🍗 Chicken',  price:28, emoji:'🍗', offer:'NEW',     stock:45},
+  {id:21, name:'Grilled Chicken',     cat:'🍗 Chicken',  price:35, emoji:'🍗', offer:'',        stock:40},
+  {id:22, name:'Chicken Shawarma',    cat:'🍗 Chicken',  price:30, emoji:'🍗', offer:'BEST',    stock:55},
+  {id:23, name:'Chicken Strips x5',  cat:'🍗 Chicken',  price:25, emoji:'🍗', offer:'',        stock:38},
+  {id:24, name:'Buffalo Wings x8',   cat:'🍗 Chicken',  price:38, emoji:'🍗', offer:'HOT 🌶️', stock:32},
+  {id:25, name:'Chicken Tikka',      cat:'🍗 Chicken',  price:42, emoji:'🍗', offer:'',        stock:25},
+
+  // 🥩 GRILLS
+  {id:30, name:'Grilled Steak',       cat:'🥩 Grills',   price:85, emoji:'🥩', offer:'VIP',     stock:15},
+  {id:31, name:'Lamb Chops',          cat:'🥩 Grills',   price:95, emoji:'🥩', offer:'',        stock:12},
+  {id:32, name:'Mixed Grill Platter', cat:'🥩 Grills',   price:120,emoji:'🥩', offer:'SPECIAL', stock:10},
+  {id:33, name:'Beef Kofta',          cat:'🥩 Grills',   price:55, emoji:'🥩', offer:'',        stock:20},
+  {id:34, name:'Shish Tawook',        cat:'🥩 Grills',   price:48, emoji:'🥩', offer:'NEW',     stock:18},
+  {id:35, name:'Grilled Hammour',     cat:'🥩 Grills',   price:110,emoji:'🥩', offer:'',        stock:8},
+
+  // 🌮 WRAPS & SANDWICHES
+  {id:40, name:'Chicken Wrap',        cat:'🌮 Wraps',    price:26, emoji:'🌮', offer:'',        stock:35},
+  {id:41, name:'Veggie Wrap',         cat:'🌮 Wraps',    price:22, emoji:'🌮', offer:'',        stock:18},
+  {id:42, name:'Beef Shawarma Wrap',  cat:'🌮 Wraps',    price:28, emoji:'🌮', offer:'BEST',    stock:40},
+  {id:43, name:'Falafel Wrap',        cat:'🌮 Wraps',    price:20, emoji:'🌮', offer:'',        stock:25},
+  {id:44, name:'Tuna Melt Sandwich',  cat:'🌮 Wraps',    price:24, emoji:'🌮', offer:'',        stock:20},
+  {id:45, name:'Club Sandwich',       cat:'🌮 Wraps',    price:32, emoji:'🌮', offer:'',        stock:22},
+
+  // 🥗 SALADS
+  {id:50, name:'Caesar Salad',        cat:'🥗 Salads',   price:22, emoji:'🥗', offer:'',        stock:25},
+  {id:51, name:'Greek Salad',         cat:'🥗 Salads',   price:20, emoji:'🥗', offer:'',        stock:22},
+  {id:52, name:'Fattoush Salad',      cat:'🥗 Salads',   price:18, emoji:'🥗', offer:'',        stock:28},
+  {id:53, name:'Rocca Salad',         cat:'🥗 Salads',   price:24, emoji:'🥗', offer:'NEW',     stock:20},
+  {id:54, name:'Grilled Halloumi Salad',cat:'🥗 Salads', price:28, emoji:'🥗', offer:'',        stock:15},
+
+  // 🍟 SIDES
+  {id:60, name:'Loaded Fries',        cat:'🍟 Sides',    price:18, emoji:'🍟', offer:'HOT',     stock:60},
+  {id:61, name:'Regular Fries',       cat:'🍟 Sides',    price:10, emoji:'🍟', offer:'',        stock:80},
+  {id:62, name:'Onion Rings',         cat:'🍟 Sides',    price:15, emoji:'🍟', offer:'',        stock:45},
+  {id:63, name:'Coleslaw',            cat:'🍟 Sides',    price:8,  emoji:'🍟', offer:'',        stock:50},
+  {id:64, name:'Mozzarella Sticks x6',cat:'🍟 Sides',   price:22, emoji:'🍟', offer:'',        stock:35},
+  {id:65, name:'Garlic Bread',        cat:'🍟 Sides',    price:12, emoji:'🍟', offer:'',        stock:40},
+
+  // 🥤 COLD DRINKS
+  {id:70, name:'Coca Cola',           cat:'🥤 Cold Drinks', price:8,  emoji:'🥤', offer:'',     stock:100},
+  {id:71, name:'Pepsi',               cat:'🥤 Cold Drinks', price:8,  emoji:'🥤', offer:'',     stock:100},
+  {id:72, name:'7UP Sprite',          cat:'🥤 Cold Drinks', price:8,  emoji:'🥤', offer:'',     stock:80},
+  {id:73, name:'Mango Juice',         cat:'🥤 Cold Drinks', price:12, emoji:'🥤', offer:'',     stock:60},
+  {id:74, name:'Orange Juice Fresh',  cat:'🥤 Cold Drinks', price:15, emoji:'🥤', offer:'FRESH',stock:40},
+  {id:75, name:'Mango Smoothie',      cat:'🥤 Cold Drinks', price:18, emoji:'🥤', offer:'',     stock:35},
+  {id:76, name:'Strawberry Milkshake',cat:'🥤 Cold Drinks', price:22, emoji:'🥤', offer:'NEW',  stock:30},
+  {id:77, name:'Chocolate Milkshake', cat:'🥤 Cold Drinks', price:22, emoji:'🥤', offer:'',     stock:30},
+  {id:78, name:'Lemon Mint',          cat:'🥤 Cold Drinks', price:14, emoji:'🥤', offer:'BEST', stock:50},
+  {id:79, name:'Water Bottle',        cat:'🥤 Cold Drinks', price:3,  emoji:'🥤', offer:'',     stock:200},
+
+  // ☕ HOT DRINKS
+  {id:80, name:'Espresso',            cat:'☕ Hot Drinks',  price:10, emoji:'☕', offer:'',     stock:80},
+  {id:81, name:'Americano',           cat:'☕ Hot Drinks',  price:12, emoji:'☕', offer:'',     stock:75},
+  {id:82, name:'Cappuccino',          cat:'☕ Hot Drinks',  price:16, emoji:'☕', offer:'BEST', stock:70},
+  {id:83, name:'Latte',               cat:'☕ Hot Drinks',  price:18, emoji:'☕', offer:'',     stock:65},
+  {id:84, name:'Arabic Coffee',       cat:'☕ Hot Drinks',  price:10, emoji:'☕', offer:'',     stock:60},
+  {id:85, name:'Karak Tea',           cat:'☕ Hot Drinks',  price:8,  emoji:'☕', offer:'HOT',  stock:80},
+  {id:86, name:'Green Tea',           cat:'☕ Hot Drinks',  price:10, emoji:'☕', offer:'',     stock:50},
+  {id:87, name:'Hot Chocolate',       cat:'☕ Hot Drinks',  price:16, emoji:'☕', offer:'',     stock:45},
+
+  // 🍰 DESSERTS
+  {id:90, name:'Chocolate Cake',      cat:'🍰 Desserts',  price:25, emoji:'🍰', offer:'',      stock:20},
+  {id:91, name:'Tiramisu',            cat:'🍰 Desserts',  price:30, emoji:'🍰', offer:'NEW',   stock:12},
+  {id:92, name:'Kunafa',              cat:'🍰 Desserts',  price:28, emoji:'🍰', offer:'BEST',  stock:18},
+  {id:93, name:'Umm Ali',             cat:'🍰 Desserts',  price:22, emoji:'🍰', offer:'',      stock:15},
+  {id:94, name:'Crème Brûlée',        cat:'🍰 Desserts',  price:32, emoji:'🍰', offer:'',      stock:10},
+  {id:95, name:'Ice Cream 2 Scoops',  cat:'🍰 Desserts',  price:18, emoji:'🍰', offer:'',      stock:40},
+  {id:96, name:'Waffle with Nutella', cat:'🍰 Desserts',  price:26, emoji:'🍰', offer:'HOT',   stock:22},
+];
+
+var cart = [];
+var orderCounter = 1;
+var activeCat = 'All';
+var payMethod = 'Cash';
+var kdsOrders = [];
+var completedOrders = [];
+var lastOrder = null;
+
+// ══ CLOCK ══
+function updateClock(){
+  var now = new Date();
+  var h = now.getHours().toString().padStart(2,"0");
+  var m = now.getMinutes().toString().padStart(2,"0");
+  var s = now.getSeconds().toString().padStart(2,"0");
+  var months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  var d = now.getDate().toString().padStart(2,"0")+" "+months[now.getMonth()]+" "+now.getFullYear();
+  document.getElementById("clock").textContent = d+" "+h+":"+m+":"+s;
+}
+setInterval(updateClock,1000); updateClock();
+
+// ══ PAGE NAV ══
+function goPage(p,btn){
+  document.querySelectorAll('.pg').forEach(function(x){x.classList.remove('active');});
+  document.querySelectorAll('.nav-btn').forEach(function(x){x.classList.remove('active');});
+  document.getElementById('pg-'+p).classList.add('active');
+  btn.classList.add('active');
+  if(p==='kds')renderKDS();
+  if(p==='analytics')renderAnalytics();
+  if(p==='inventory')renderInventory();
+}
+
+// ══ MENU ══
+function getCats(){
+  var c=['All'];
+  products.forEach(function(p){if(!c.includes(p.cat))c.push(p.cat);});
+  return c;
+}
+function renderMenu(){
+  var search = document.getElementById("posSearch").value.toLowerCase();
+  var cats = getCats();
+  var catColors = {
+    "🍔 Burgers":"#d97706","🍕 Pizza":"#dc2626","🍗 Chicken":"#b45309",
+    "🥩 Grills":"#991b1b","🌮 Wraps":"#15803d","🥗 Salads":"#16a34a",
+    "🍟 Sides":"#ca8a04","🥤 Cold Drinks":"#0284c7","☕ Hot Drinks":"#7c3aed","🍰 Desserts":"#db2777"
+  };
+  // Category pills with item counts
+  document.getElementById("catScroll").innerHTML = cats.map(function(c){
+    var inStock = c==="All" ? products.filter(function(p){return p.stock>0;}).length : products.filter(function(p){return p.cat===c&&p.stock>0;}).length;
+    var col = catColors[c]||"#4f2d91";
+    var isActive = activeCat===c;
+    var style = isActive ? "background:"+col+";color:#fff;border-color:"+col+";box-shadow:0 3px 10px rgba(0,0,0,0.2);" : "";
+    return "<button class=\"cat-pill"+(isActive?" active":"")+"\" style=\""+style+"\" onclick=\"setMenuCat('"+c+"')\" >"+c+" <span style=\"background:rgba(255,255,255,0.25);border-radius:10px;padding:1px 7px;font-size:10px;\">"+inStock+"</span></button>";
+  }).join("");
+  // Filter items
+  var filtered = products.filter(function(p){
+    var mc = activeCat==="All"||p.cat===activeCat;
+    var ms = !search||p.name.toLowerCase().includes(search);
+    return mc&&ms;
+  });
+  // Category board header
+  var header = "";
+  if(activeCat!=="All"){
+    var col = catColors[activeCat]||"#4f2d91";
+    header = "<div style=\"background:"+col+";color:#fff;padding:14px 18px;border-radius:12px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;grid-column:1/-1;\">"+
+      "<span style=\"font-size:18px;font-weight:800;\">"+activeCat+"</span>"+
+      "<span style=\"font-size:12px;background:rgba(255,255,255,0.25);padding:3px 12px;border-radius:20px;font-weight:600;\">"+filtered.length+" items</span>"+
+      "</div>";
+  }
+  document.getElementById("itemGrid").innerHTML = header + filtered.map(function(p){
+    var oos = p.stock===0;
+    return "<div class=\"item-card"+(oos?" oos":"")+"\" onclick=\""+(oos?"":"addToCart("+p.id+")")+"\" >"+
+      (p.offer?"<div class=\"item-offer\">"+p.offer+"</div>":"")+
+      (oos?"<div class=\"item-oos-tag\">Out of Stock</div>":"")+
+      "<span class=\"item-emoji\">"+p.emoji+"</span>"+
+      "<div class=\"item-name\">"+p.name+"</div>"+
+      "<div class=\"item-price\">&#xFDFC; "+p.price.toFixed(2)+"</div>"+
+    "</div>";
+  }).join("");
+}
+function setMenuCat(c){activeCat=c;renderMenu();}
+
+// ══ CART ══
+function addToCart(id){
+  var p = products.find(function(x){return x.id===id;});
+  if(!p||p.stock===0)return;
+  var existing = cart.find(function(x){return x.id===id;});
+  if(existing){existing.qty++;}
+  else{cart.push({id:p.id,name:p.name,price:p.price,emoji:p.emoji,qty:1});}
+  renderCart();
+  showToast('✅ '+p.name+' added!');
+}
+function changeQty(id,delta){
+  var i = cart.findIndex(function(x){return x.id===id;});
+  if(i===-1)return;
+  cart[i].qty+=delta;
+  if(cart[i].qty<=0)cart.splice(i,1);
+  renderCart();
+}
+function clearCart(){cart=[];renderCart();}
+function setPayMethod(m,btn){
+  payMethod=m;
+  document.querySelectorAll('.pay-methods .pm-btn').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+}
+function cartTotal(){return cart.reduce(function(s,i){return s+i.price*i.qty;},0);}
+function renderCart(){
+  var cb = document.getElementById('cartBadge');
+  var total = cart.reduce(function(s,i){return s+i.qty;},0);
+  cb.textContent=total; cb.style.display=total?'flex':'none';
+
+  var el = document.getElementById('cartItems');
+  if(!cart.length){
+    el.innerHTML='<div class="cart-empty"><div class="ce-icon">🛒</div><p>Tap items to add to order</p></div>';
+    document.getElementById('cartSummary').innerHTML='';
+    document.getElementById('checkoutBtn').disabled=true;
+    document.getElementById('checkoutBtn').textContent='Charge ﷼ 0.00';
+    return;
+  }
+  el.innerHTML = cart.map(function(i){
+    return '<div class="cart-row">'+
+      '<span class="cr-emoji">'+i.emoji+'</span>'+
+      '<div class="cr-info"><div class="cr-name">'+i.name+'</div><div class="cr-price">﷼ '+i.price.toFixed(2)+' each</div></div>'+
+      '<div class="cr-qty">'+
+        '<button class="qty-btn" onclick="changeQty('+i.id+',-1)">−</button>'+
+        '<span class="qty-num">'+i.qty+'</span>'+
+        '<button class="qty-btn" onclick="changeQty('+i.id+',1)">+</button>'+
+      '</div>'+
+      '<div class="cr-total">﷼ '+(i.price*i.qty).toFixed(2)+'</div>'+
+    '</div>';
+  }).join('');
+
+  var sub = cartTotal();
+  var vat = sub*0.15;
+  var grand = sub+vat;
+  document.getElementById('cartSummary').innerHTML=
+    '<div class="cs-row"><span>Subtotal</span><span>﷼ '+sub.toFixed(2)+'</span></div>'+
+    '<div class="cs-row vat"><span>VAT (15%)</span><span>﷼ '+vat.toFixed(2)+'</span></div>'+
+    '<div class="cs-row total"><span>Total</span><span>﷼ '+grand.toFixed(2)+'</span></div>';
+  document.getElementById('checkoutBtn').disabled=false;
+  document.getElementById('checkoutBtn').textContent='Charge ﷼ '+grand.toFixed(2);
+}
+
+// ══ PAYMENT MODAL ══
+function openPayModal(){
+  if(!cart.length)return;
+  var grand = (cartTotal()*1.15);
+  document.getElementById('payAmt').textContent='﷼ '+grand.toFixed(2);
+  document.getElementById('payContent').style.display='block';
+  document.getElementById('paySuccess').style.display='none';
+  // Auto fill cash received with exact amount
+  document.getElementById('cashIn').value=grand.toFixed(2);
+  document.getElementById('changeDue').textContent='Change: ﷼ 0.00';
+  document.getElementById('changeDue').style.color='var(--green)';
+  document.getElementById('cNum').value='';
+  document.getElementById('cExp').value='';
+  document.getElementById('cCvv').value='';
+  document.getElementById('payModal').classList.add('open');
+  selectPayMethod('Cash',document.querySelector('.pmb'));
+  generateQuickAmounts();
+}
+function closePayModal(){document.getElementById('payModal').classList.remove('open');}
+function selectPayMethod(m,el){
+  payMethod=m;
+  document.querySelectorAll('.pmb').forEach(function(b){b.classList.remove('on');});
+  el.classList.add('on');
+  document.getElementById('cashSection').style.display=m==='Cash'?'block':'none';
+  document.getElementById('cardSection').style.display=m==='Card'?'block':'none';
+  if(m==='Cash') generateQuickAmounts();
+}
+
+function generateQuickAmounts(){
+  var grand = cartTotal()*1.15;
+  // Round up to common amounts
+  var amounts = [];
+  var exact = Math.ceil(grand);
+  var r50 = Math.ceil(grand/50)*50;
+  var r100 = Math.ceil(grand/100)*100;
+  var r200 = Math.ceil(grand/200)*200;
+  // Always add exact, then rounded amounts
+  amounts.push(exact);
+  if(r50>exact) amounts.push(r50);
+  if(r100>r50) amounts.push(r100);
+  if(r200>r100) amounts.push(r200);
+  // Remove duplicates
+  amounts = amounts.filter(function(v,i,a){return a.indexOf(v)===i;}).slice(0,4);
+  
+  var el = document.getElementById('quickAmounts');
+  el.innerHTML = amounts.map(function(a){
+    return '<button onclick="setQuickAmt('+a+')" style="flex:1;min-width:60px;padding:8px 4px;border:1.5px solid var(--purple);border-radius:8px;background:var(--pl);color:var(--purple);font-family:Poppins,sans-serif;font-size:12px;font-weight:700;cursor:pointer;">﷼'+a+'</button>';
+  }).join('');
+}
+
+function setQuickAmt(amt){
+  document.getElementById('cashIn').value = amt;
+  calcChange();
+}
+function calcChange(){
+  var grand = cartTotal()*1.15;
+  var cash = parseFloat(document.getElementById('cashIn').value)||0;
+  var change = cash-grand;
+  document.getElementById('changeDue').textContent = change>=0 ? 'Change: ﷼ '+change.toFixed(2) : '⚠️ Not enough cash';
+  document.getElementById('changeDue').style.color = change>=0?'var(--green)':'var(--red)';
+}
+function fmtC(el){var v=el.value.replace(/\D/g,'').substring(0,16);el.value=v.replace(/(.{4})/g,'$1 ').trim();}
+function fmtE(el){var v=el.value.replace(/\D/g,'').substring(0,4);if(v.length>=2)v=v.substring(0,2)+'/'+v.substring(2);el.value=v;}
+
+function confirmPayment(){
+  var grand = cartTotal()*1.15;
+  if(payMethod==='Cash'){
+    var cash = parseFloat(document.getElementById('cashIn').value)||0;
+    if(cash<grand){showToast('⚠️ Not enough cash!');return;}
+  }
+  if(payMethod==='Card'){
+    var cn = document.getElementById('cNum').value.replace(/\s/g,'');
+    if(cn.length<16){showToast('⚠️ Invalid card number');return;}
+  }
+  // Process order
+  var ordId = '#ORD-'+String(orderCounter).padStart(4,'0');
+  var table = document.getElementById('tableNum').value||'Takeaway';
+  var note = document.getElementById('orderNote').value;
+  var orderData = {
+    id:ordId,
+    items:cart.map(function(x){return {id:x.id,name:x.name,price:x.price,emoji:x.emoji,qty:x.qty};}),
+    total:grand,
+    payMethod:payMethod,
+    table:table,
+    note:note,
+    time:new Date()
+  };
+  lastOrder = orderData;
+
+  // Add to KDS
+  kdsOrders.push({id:orderData.id,items:orderData.items.slice(),total:orderData.total,payMethod:orderData.payMethod,table:orderData.table,note:orderData.note,time:orderData.time,status:'new'});
+
+  // Deduct inventory
+  cart.forEach(function(ci){
+    var p = products.find(function(x){return x.id===ci.id;});
+    if(p)p.stock = Math.max(0,p.stock-ci.qty);
+  });
+
+  completedOrders.unshift(orderData);
+  orderCounter++;
+
+  // Show success
+  document.getElementById('payContent').style.display='none';
+  document.getElementById('paySuccess').style.display='block';
+  var msg = payMethod==='Cash'?'Cash payment received. Change: ﷼'+((parseFloat(document.getElementById('cashIn').value)||0)-grand).toFixed(2):payMethod+' payment processed successfully!';
+  document.getElementById('paySuccessMsg').textContent=msg;
+}
+
+function newOrder(){
+  cart=[];
+  renderCart();
+  renderMenu();
+  closePayModal();
+  document.getElementById('orderNum').textContent='#ORD-'+String(orderCounter).padStart(4,'0');
+}
+
+// ══ RECEIPT ══
+function showReceipt(){
+  if(!lastOrder)return;
+  closePayModal();
+  var o = lastOrder;
+  var sub = o.total/1.15;
+  var vat = o.total-sub;
+  var dateStr = o.time.toLocaleDateString("en-GB");
+  var timeStr = o.time.getHours().toString().padStart(2,"0")+":"+o.time.getMinutes().toString().padStart(2,"0");
+  var payIcon = o.payMethod==="Cash"?"💵":o.payMethod==="Card"?"💳":"📱";
+  var itemsHtml = o.items.map(function(i){
+    return "<div class='r-item'><span class='r-item-name'>"+i.emoji+" "+i.name+"</span><span class='r-item-qty'>x"+i.qty+"</span><span class='r-item-price'>&#xFDFC; "+(i.price*i.qty).toFixed(2)+"</span></div>";
+  }).join("");
+  var noteHtml = o.note?"<hr class='r-divider'><div style='font-size:11px;text-align:center;color:#666;'>Note: "+o.note+"</div>":"";
+  var html =
+    "<div class='r-logo'>Bill<span>Zest</span></div>"+
+    "<div class='r-addr'>BillZest POS Restaurant<br>Imam Saud Bin Faisal Rd, Riyadh<br>VAT: 300-123-456-700003<br>Tel: 800 1000 119</div>"+
+    "<hr class='r-divider'>"+
+    "<div class='r-meta'>"+
+      "<div class='r-meta-row'><span>Order:</span><span>"+o.id+"</span></div>"+
+      "<div class='r-meta-row'><span>Table:</span><span>"+o.table+"</span></div>"+
+      "<div class='r-meta-row'><span>Date:</span><span>"+dateStr+"</span></div>"+
+      "<div class='r-meta-row'><span>Time:</span><span>"+timeStr+"</span></div>"+
+    "</div>"+
+    "<hr class='r-divider'>"+
+    "<div class='r-items'>"+itemsHtml+"</div>"+
+    "<hr class='r-divider'>"+
+    "<div class='r-totals'>"+
+      "<div class='r-total-row'><span>Subtotal</span><span>&#xFDFC; "+sub.toFixed(2)+"</span></div>"+
+      "<div class='r-total-row'><span>VAT 15%</span><span>&#xFDFC; "+vat.toFixed(2)+"</span></div>"+
+      "<div class='r-total-row r-grand'><span>TOTAL</span><span>&#xFDFC; "+o.total.toFixed(2)+"</span></div>"+
+    "</div>"+
+    "<div class='r-payment'><div>Payment Method</div><div class='method'>"+payIcon+" "+o.payMethod+"</div></div>"+
+    noteHtml+
+    "<hr class='r-divider'>"+
+    "<div class='r-footer'>Thank you for dining with us!<br>Please visit again<br>Powered by BillZest POS</div>";
+  document.getElementById("receiptContent").innerHTML=html;
+  document.getElementById("receiptModal").classList.add("open");
+}
+function closeReceipt(){document.getElementById('receiptModal').classList.remove('open');}
+
+function printReceipt(){
+  var toast = document.getElementById('toast');
+  var payModal = document.getElementById('payModal');
+  toast.classList.remove('show');
+  toast.style.display = 'none';
+  payModal.style.display = 'none';
+  window.print();
+  setTimeout(function(){ toast.style.display = ''; }, 1000);
+}
+
+function downloadPDF(){
+  if(!lastOrder) return;
+  var o = lastOrder;
+  var sub = o.total/1.15;
+  var vat = o.total-sub;
+  var dateStr = o.time.getDate()+"/"+(o.time.getMonth()+1)+"/"+o.time.getFullYear();
+  var timeStr = o.time.getHours().toString().padStart(2,"0")+":"+o.time.getMinutes().toString().padStart(2,"0");
+  var payIcon = o.payMethod==="Cash"?"💵":o.payMethod==="Card"?"💳":"📱";
+
+  var itemsText = o.items.map(function(i){
+    return "  "+i.emoji+" "+i.name+" x"+i.qty+" ............. SAR "+(i.price*i.qty).toFixed(2);
+  }).join("\n");
+
+  var receiptText =
+    "================================\n"+
+    "         BillZest POS\n"+
+    " Imam Saud Bin Faisal Rd, Riyadh\n"+
+    " VAT: 300-123-456-700003\n"+
+    " Tel: 800 1000 119\n"+
+    "================================\n"+
+    "Order : "+o.id+"\n"+
+    "Table : "+o.table+"\n"+
+    "Date  : "+dateStr+"\n"+
+    "Time  : "+timeStr+"\n"+
+    "--------------------------------\n"+
+    itemsText+"\n"+
+    "--------------------------------\n"+
+    "Subtotal         SAR "+sub.toFixed(2)+"\n"+
+    "VAT 15%          SAR "+vat.toFixed(2)+"\n"+
+    "================================\n"+
+    "TOTAL            SAR "+o.total.toFixed(2)+"\n"+
+    "================================\n"+
+    "Payment: "+payIcon+" "+o.payMethod+"\n"+
+    (o.note?"Note: "+o.note+"\n":"")+
+    "--------------------------------\n"+
+    "  Thank you for dining with us!\n"+
+    "      Please visit again 😊\n"+
+    "   Powered by BillZest POS\n"+
+    "================================";
+
+  var blob = new Blob([receiptText], {type:"text/plain"});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement("a");
+  a.href = url;
+  a.download = "BillZest-Receipt-"+o.id+".txt";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast("📄 Receipt downloaded!");
+}
+
+function shareWhatsApp(){
+  if(!lastOrder) return;
+  var o = lastOrder;
+  var sub = o.total/1.15;
+  var vat = o.total-sub;
+  var dateStr = o.time.getDate()+"/"+(o.time.getMonth()+1)+"/"+o.time.getFullYear();
+  var timeStr = o.time.getHours().toString().padStart(2,"0")+":"+o.time.getMinutes().toString().padStart(2,"0");
+  var payIcon = o.payMethod==="Cash"?"💵":o.payMethod==="Card"?"💳":"📱";
+
+  var itemsText = o.items.map(function(i){
+    return i.emoji+" *"+i.name+"* x"+i.qty+" — SAR "+(i.price*i.qty).toFixed(2);
+  }).join("\n");
+
+  var msg =
+    "🧾 *BillZest POS — Receipt*\n"+
+    "━━━━━━━━━━━━━━━━━━\n"+
+    "📋 Order: *"+o.id+"*\n"+
+    "🪑 Table: "+o.table+"\n"+
+    "📅 Date: "+dateStr+" | "+timeStr+"\n"+
+    "━━━━━━━━━━━━━━━━━━\n"+
+    itemsText+"\n"+
+    "━━━━━━━━━━━━━━━━━━\n"+
+    "Subtotal: SAR "+sub.toFixed(2)+"\n"+
+    "VAT 15%:  SAR "+vat.toFixed(2)+"\n"+
+    "━━━━━━━━━━━━━━━━━━\n"+
+    "💰 *TOTAL: SAR "+o.total.toFixed(2)+"*\n"+
+    "━━━━━━━━━━━━━━━━━━\n"+
+    "Payment: "+payIcon+" "+o.payMethod+"\n"+
+    (o.note?"📝 Note: "+o.note+"\n":"")+
+    "\n_Thank you for dining with us! 😊_\n"+
+    "_Powered by BillZest POS_";
+
+  var encoded = encodeURIComponent(msg);
+  window.open("https://wa.me/?text="+encoded, "_blank");
+  showToast("💬 Opening WhatsApp...");
+}
+
+// ══ KDS ══
+function renderKDS(){
+  var newO = kdsOrders.filter(function(o){return o.status==='new';});
+  var prepO = kdsOrders.filter(function(o){return o.status==='prep';});
+  var doneO = kdsOrders.filter(function(o){return o.status==='done';});
+  document.getElementById('kds-count-new').textContent=newO.length;
+  document.getElementById('kds-count-prep').textContent=prepO.length;
+  document.getElementById('kds-count-done').textContent=doneO.length;
+  function kdsCard(o,nextStatus,btnText){
+    var elapsed = Math.round((new Date()-o.time)/60000);
+    return '<div class="kds-card">'+
+      '<div class="kds-card-hdr">'+
+        '<span class="kds-order-id">'+o.id+'</span>'+
+        '<span class="kds-table">'+o.table+'</span>'+
+        '<span class="kds-time">'+elapsed+'m ago</span>'+
+      '</div>'+
+      '<ul class="kds-items">'+
+        o.items.map(function(i){return '<li><span class="kds-qty">'+i.qty+'x</span> '+i.emoji+' '+i.name+'</li>';}).join('')+
+      '</ul>'+
+      (o.note?'<div class="kds-note">📝 '+o.note+'</div>':'')+
+      (nextStatus?'<button class="kds-btn" data-id="'+o.id+'" data-status="'+nextStatus+'" onclick="advKDS(this)">'+btnText+'</button>':'')+
+    '</div>';
+  }
+  document.getElementById('kds-new').innerHTML = newO.length ? newO.map(function(o){return kdsCard(o,'prep','🔥 Start Preparing');}).join('') : '<div class="kds-empty">No new orders</div>';
+  document.getElementById('kds-prep').innerHTML = prepO.length ? prepO.map(function(o){return kdsCard(o,'done','✅ Mark Ready');}).join('') : '<div class="kds-empty">Nothing preparing</div>';
+  document.getElementById('kds-done').innerHTML = doneO.length ? doneO.map(function(o){return kdsCard(o,null,'');}).join('') : '<div class="kds-empty">No ready orders</div>';
+}
+function advKDS(btn){
+  var id=btn.getAttribute('data-id');
+  var status=btn.getAttribute('data-status');
+  var o = kdsOrders.find(function(x){return x.id===id;});
+  if(o){o.status=status;renderKDS();}
+}
+function advanceKDS(id,status){
+  var o = kdsOrders.find(function(x){return x.id===id;});
+  if(o){o.status=status;renderKDS();}
+}
+
+// ══ ANALYTICS ══
+function renderAnalytics(){
+  var period = document.getElementById('anPeriod').value;
+  // Mock data per period
+  var data = {
+    today:{rev:4280,orders:38,items:127,avg:112.6,chartVals:[320,480,290,620,540,780,850,920,670,530,490,600],chartLbls:['8am','9','10','11','12','1pm','2','3','4','5','6','7']},
+    week:{rev:28900,orders:247,items:831,avg:117.0,chartVals:[3200,4100,3800,5200,4600,6800,5800],chartLbls:['Mon','Tue','Wed','Thu','Fri','Sat','Sun']},
+    month:{rev:115600,orders:1024,items:3421,avg:112.9,chartVals:[28000,32000,38000,17600],chartLbls:['Week 1','Week 2','Week 3','Week 4']}
+  };
+  var d = data[period];
+  var maxBar = Math.max.apply(null,d.chartVals);
+  var colors = ['#4f2d91','#7c3aed','#a78bfa','#f5a623','#00b5a3','#3b82f6','#10b981'];
+
+  // KPI cards
+  document.getElementById('anCards').innerHTML =
+    '<div class="an-card p"><div class="an-icon">💰</div><div class="an-val">﷼ '+d.rev.toLocaleString()+'</div><div class="an-lbl">Total Revenue</div><div class="an-chg up">↑ 12.4% vs last period</div></div>'+
+    '<div class="an-card g"><div class="an-icon">🧾</div><div class="an-val">'+d.orders+'</div><div class="an-lbl">Total Orders</div><div class="an-chg up">↑ 8.1%</div></div>'+
+    '<div class="an-card o"><div class="an-icon">🍽️</div><div class="an-val">'+d.items+'</div><div class="an-lbl">Items Sold</div><div class="an-chg up">↑ 15.3%</div></div>'+
+    '<div class="an-card b"><div class="an-icon">📊</div><div class="an-val">﷼ '+d.avg.toFixed(1)+'</div><div class="an-lbl">Avg Order Value</div><div class="an-chg down">↓ 1.2%</div></div>';
+
+  // Revenue chart
+  document.getElementById('revenueChart').innerHTML = d.chartVals.map(function(v,i){
+    var h = Math.round(v/maxBar*130);
+    return '<div class="chart-bar-wrap">'+
+      '<div class="chart-bar" style="height:'+h+'px;background:'+colors[i%colors.length]+'" title="﷼ '+v.toLocaleString()+'"></div>'+
+      '<div class="chart-bar-lbl">'+d.chartLbls[i]+'</div>'+
+    '</div>';
+  }).join('');
+
+  // Top items
+  var topData=[{name:'Classic Burger',emoji:'🍔',sold:48,pct:78},{name:'Crispy Chicken',emoji:'🍗',sold:41,pct:66},{name:'Pepperoni Pizza',emoji:'🍕',sold:35,pct:57},{name:'Loaded Fries',emoji:'🍟',sold:62,pct:100},{name:'Grilled Steak',emoji:'🥩',sold:22,pct:36}];
+  document.getElementById('topItems').innerHTML = topData.map(function(t){
+    return '<div class="bar-item">'+
+      '<div class="bar-label"><span>'+t.emoji+' '+t.name+'</span><span style="font-weight:700;color:var(--purple);">'+t.sold+' sold</span></div>'+
+      '<div class="bar-track"><div class="bar-fill" style="width:'+t.pct+'%;background:var(--purple);"></div></div>'+
+    '</div>';
+  }).join('');
+
+  // Payment methods
+  var pmData=[{m:'💵 Cash',pct:52,color:'var(--green)'},{m:'💳 Card',pct:34,color:'var(--blue)'},{m:'📱 Online',pct:14,color:'var(--orange)'}];
+  document.getElementById('payChart').innerHTML = pmData.map(function(p){
+    return '<div class="bar-item">'+
+      '<div class="bar-label"><span>'+p.m+'</span><span style="font-weight:700;color:'+p.color+';">'+p.pct+'%</span></div>'+
+      '<div class="bar-track"><div class="bar-fill" style="width:'+p.pct+'%;background:'+p.color+';"></div></div>'+
+    '</div>';
+  }).join('');
+
+  // Recent transactions
+  var txData = completedOrders.slice(0,6);
+  if(!txData.length){
+    var mockTx=[
+      {id:'#ORD-0021',items:[{name:'Classic Burger',qty:2}],total:73.6,payMethod:'Card',time:new Date(Date.now()-900000)},
+      {id:'#ORD-0020',items:[{name:'Grilled Steak',qty:1}],total:97.75,payMethod:'Cash',time:new Date(Date.now()-2400000)},
+      {id:'#ORD-0019',items:[{name:'Pepperoni Pizza',qty:1}],total:57.5,payMethod:'Online',time:new Date(Date.now()-3600000)},
+    ];
+    txData=mockTx;
+  }
+  document.getElementById('recentTx').innerHTML = txData.map(function(t){
+    var elapsed = Math.round((new Date()-t.time)/60000);
+    var timeStr = elapsed<60?elapsed+'m ago':Math.round(elapsed/60)+'h ago';
+    return '<div class="sale-row">'+
+      '<span class="sale-id">'+t.id+'</span>'+
+      '<span style="font-size:12px;color:var(--muted);">'+timeStr+'</span>'+
+      '<span class="sale-method">'+t.payMethod+'</span>'+
+      '<span class="sale-amt">﷼ '+t.total.toFixed(2)+'</span>'+
+    '</div>';
+  }).join('');
+}
+
+// ══ INVENTORY ══
+function renderInventory(){
+  var search = document.getElementById('invSearch').value.toLowerCase();
+  var filtered = products.filter(function(p){return !search||p.name.toLowerCase().includes(search)||p.cat.toLowerCase().includes(search);});
+  var totalItems = products.length;
+  var lowStock = products.filter(function(p){return p.stock>0&&p.stock<=15;}).length;
+  var outStock = products.filter(function(p){return p.stock===0;}).length;
+
+  document.getElementById('invStats').innerHTML =
+    '<div style="background:#fff;border:1px solid var(--bdr);border-radius:12px;padding:16px;display:flex;align-items:center;gap:12px;"><div style="font-size:28px;">📦</div><div><div style="font-size:22px;font-weight:800;">'+totalItems+'</div><div style="font-size:12px;color:var(--muted);">Total Products</div></div></div>'+
+    '<div style="background:#fff;border:1px solid rgba(245,158,11,0.3);border-radius:12px;padding:16px;display:flex;align-items:center;gap:12px;"><div style="font-size:28px;">⚠️</div><div><div style="font-size:22px;font-weight:800;color:var(--yellow);">'+lowStock+'</div><div style="font-size:12px;color:var(--muted);">Low Stock</div></div></div>'+
+    '<div style="background:#fff;border:1px solid rgba(239,68,68,0.3);border-radius:12px;padding:16px;display:flex;align-items:center;gap:12px;"><div style="font-size:28px;">❌</div><div><div style="font-size:22px;font-weight:800;color:var(--red);">'+outStock+'</div><div style="font-size:12px;color:var(--muted);">Out of Stock</div></div></div>';
+
+  document.getElementById('invBody').innerHTML = filtered.map(function(p){
+    var pct = Math.min(100,Math.round(p.stock/80*100));
+    var statusClass = p.stock===0?'inv-low':p.stock<=15?'inv-warn':'inv-ok';
+    var statusText = p.stock===0?'❌ Out of Stock':p.stock<=15?'⚠️ Low Stock':'✅ In Stock';
+    var fillClass = p.stock===0?'stock-low':p.stock<=15?'stock-mid':'stock-high';
+    return '<tr>'+
+      '<td><span class="inv-emoji">'+p.emoji+'</span><span class="inv-name">'+p.name+'</span></td>'+
+      '<td><span class="inv-cat">'+p.cat+'</span></td>'+
+      '<td>'+
+        '<div class="stock-bar-wrap">'+
+          '<span class="stock-num">'+p.stock+' units</span>'+
+          '<div class="stock-bar"><div class="stock-fill '+fillClass+'" style="width:'+pct+'%"></div></div>'+
+        '</div>'+
+      '</td>'+
+      '<td><span class="inv-status '+statusClass+'">'+statusText+'</span></td>'+
+      '<td style="display:flex;align-items:center;gap:6px;">'+
+        '<input class="inv-edit-qty" type="number" value="'+p.stock+'" min="0" id="invq-'+p.id+'">'+
+        '<button class="btn-upd" onclick="updateStock('+p.id+')">Update</button>'+
+      '</td>'+
+    '</tr>';
+  }).join('');
+}
+
+function updateStock(id){
+  var p = products.find(function(x){return x.id===id;});
+  var newVal = parseInt(document.getElementById('invq-'+id).value)||0;
+  if(p){p.stock=Math.max(0,newVal);renderInventory();renderMenu();showToast('✅ Stock updated for '+p.name);}
+}
+
+// ══ TOAST ══
+function showToast(msg){
+  var t = document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show');},2500);
+}
+
+// Init
+renderMenu();
+renderCart();
+
+// Add some demo KDS orders
+kdsOrders.push({id:'#ORD-DEMO1',items:[{qty:2,emoji:'🍔',name:'Classic Burger'},{qty:1,emoji:'🍟',name:'Loaded Fries'}],total:89.7,table:'Table 3',note:'No onions please',time:new Date(Date.now()-300000),status:'new'});
+kdsOrders.push({id:'#ORD-DEMO2',items:[{qty:1,emoji:'🍕',name:'Pepperoni Pizza'},{qty:2,emoji:'🥤',name:'Cola'}],total:75.9,table:'Table 7',note:'',time:new Date(Date.now()-600000),status:'prep'});
+kdsOrders.push({id:'#ORD-DEMO3',items:[{qty:1,emoji:'🥩',name:'Grilled Steak'}],total:97.75,table:'Table 1',note:'Well done',time:new Date(Date.now()-900000),status:'done'});
+</script>
+</body>
+</html>
