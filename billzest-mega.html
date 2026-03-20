@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>BillZest — Mega System</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{overflow-x:hidden;width:100%;}
+
+/* ══ THEME VARIABLES ══ */
+[data-theme="light"]{
+  --bg:#f4f4f8;--card:#ffffff;--bdr:#e0e0e0;
+  --text:#1a1a1a;--muted:#888;--sub:#555;
+  --hdr-bg:#ffffff;--sidebar:#ffffff;
+  --input-bg:#ffffff;--input-bdr:#ddd;
+  --hover:#f8f8fc;
+}
+[data-theme="dark"]{
+  --bg:#0f0f1a;--card:#1a1a2e;--bdr:#2a2a3e;
+  --text:#f0f0ff;--muted:#6b7280;--sub:#9ca3af;
+  --hdr-bg:#12121f;--sidebar:#12121f;
+  --input-bg:#1e1e30;--input-bdr:#3a3a55;
+  --hover:#1e1e30;
+}
+
+:root{
+  --p:#4f2d91;--pd:#3b1f6e;--pl:#f0ebff;
+  --teal:#00b5a3;--org:#f5a623;--red:#ef4444;
+  --grn:#10b981;--blu:#3b82f6;--yel:#f59e0b;
+  --pink:#ec4899;
+}
+
+body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--text);transition:background 0.3s,color 0.3s;}
+
+/* ══ LAYOUT ══ */
+.app-layout{display:flex;min-height:100vh;}
+
+/* SIDEBAR */
+.sidebar{width:220px;background:var(--sidebar);border-right:1px solid var(--bdr);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:100;transition:all 0.3s;}
+.sidebar-logo{padding:20px 18px;border-bottom:1px solid var(--bdr);}
+.sl-logo{font-size:22px;font-weight:800;color:var(--text);letter-spacing:-0.5px;}
+.sl-logo span{color:var(--org);}
+.sl-version{font-size:10px;color:var(--muted);margin-top:2px;font-family:'JetBrains Mono',monospace;}
+.sidebar-nav{flex:1;padding:12px 10px;overflow-y:auto;}
+.nav-group{margin-bottom:16px;}
+.nav-group-label{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;padding:0 8px;margin-bottom:6px;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:9px;cursor:pointer;font-size:13px;font-weight:500;color:var(--sub);transition:all 0.2s;border:none;background:none;width:100%;font-family:'Sora',sans-serif;text-align:left;}
+.nav-item:hover{background:var(--hover);color:var(--text);}
+.nav-item.active{background:var(--p);color:#fff;font-weight:600;}
+.nav-item .ni-icon{font-size:16px;flex-shrink:0;}
+.nav-item .ni-badge{margin-left:auto;background:var(--red);color:#fff;font-size:9px;font-weight:700;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+.sidebar-bottom{padding:12px 10px;border-top:1px solid var(--bdr);}
+.dark-toggle{display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:9px;cursor:pointer;font-size:13px;font-weight:500;color:var(--sub);background:none;border:none;width:100%;font-family:'Sora',sans-serif;}
+.dark-toggle:hover{background:var(--hover);}
+.dt-sw{width:36px;height:20px;background:var(--bdr);border-radius:10px;position:relative;margin-left:auto;transition:background 0.2s;}
+.dt-sw::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;background:#fff;border-radius:50%;transition:left 0.2s;}
+[data-theme="dark"] .dt-sw{background:var(--p);}
+[data-theme="dark"] .dt-sw::after{left:18px;}
+
+/* MAIN CONTENT */
+.main-content{margin-left:220px;flex:1;display:flex;flex-direction:column;min-height:100vh;}
+.top-bar{background:var(--hdr-bg);border-bottom:1px solid var(--bdr);padding:0 24px;height:56px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50;}
+.tb-title{font-size:16px;font-weight:700;color:var(--text);flex:1;}
+.tb-search{display:flex;align-items:center;gap:8px;background:var(--input-bg);border:1px solid var(--input-bdr);border-radius:8px;padding:7px 12px;width:220px;}
+.tb-search input{border:none;outline:none;font-size:13px;font-family:'Sora',sans-serif;background:none;color:var(--text);width:100%;}
+.tb-alert{position:relative;cursor:pointer;}
+.tb-alert-icon{font-size:20px;}
+.tb-alert-dot{position:absolute;top:-2px;right:-2px;width:10px;height:10px;background:var(--red);border-radius:50%;border:2px solid var(--hdr-bg);}
+.page-content{padding:20px;flex:1;}
+
+/* ══ PAGES ══ */
+.pg{display:none;}
+.pg.active{display:block;}
+
+/* ══ SECTION HEADER ══ */
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px;}
+.sec-hdr h2{font-size:20px;font-weight:700;color:var(--text);}
+.btn-primary{background:var(--p);color:#fff;border:none;padding:9px 18px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Sora',sans-serif;display:flex;align-items:center;gap:6px;transition:all 0.2s;}
+.btn-primary:hover{background:var(--pd);}
+.btn-sec{background:var(--hover);color:var(--text);border:1px solid var(--bdr);padding:9px 18px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Sora',sans-serif;}
+
+/* ══ CARDS ══ */
+.card{background:var(--card);border:1px solid var(--bdr);border-radius:14px;padding:20px;}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px;}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:16px;}
+.kpi-card{background:var(--card);border:1px solid var(--bdr);border-radius:12px;padding:18px;position:relative;overflow:hidden;}
+.kpi-card::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.kpi-p::after{background:var(--p);}
+.kpi-g::after{background:var(--grn);}
+.kpi-o::after{background:var(--org);}
+.kpi-b::after{background:var(--blu);}
+.kpi-r::after{background:var(--red);}
+.kpi-icon{font-size:26px;margin-bottom:8px;}
+.kpi-val{font-size:26px;font-weight:800;font-family:'JetBrains Mono',monospace;color:var(--text);}
+.kpi-lbl{font-size:12px;color:var(--muted);margin-top:3px;}
+.kpi-chg{font-size:11px;font-weight:600;margin-top:5px;}
+.up{color:var(--grn);}
+.dn{color:var(--red);}
+
+/* ══ ANALYTICS ══ */
+.chart-card{background:var(--card);border:1px solid var(--bdr);border-radius:14px;padding:20px;}
+.chart-card h3{font-size:14px;font-weight:700;margin-bottom:16px;color:var(--text);}
+.bar-chart{display:flex;align-items:flex-end;gap:8px;height:160px;padding-bottom:24px;position:relative;}
+.bc-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end;}
+.bc-bar{width:100%;border-radius:6px 6px 0 0;transition:opacity 0.2s;cursor:pointer;min-height:4px;}
+.bc-bar:hover{opacity:0.8;}
+.bc-lbl{font-size:10px;color:var(--muted);font-weight:600;white-space:nowrap;}
+.bc-val{font-size:10px;font-weight:700;color:var(--text);}
+.donut-wrap{display:flex;align-items:center;gap:20px;}
+.donut-svg{flex-shrink:0;}
+.donut-legend{flex:1;}
+.dl-item{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:12px;}
+.dl-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.dl-lbl{color:var(--sub);flex:1;}
+.dl-val{font-weight:700;color:var(--text);}
+.line-chart{height:140px;position:relative;overflow:hidden;}
+.line-chart svg{width:100%;height:100%;}
+
+/* ══ QR MENU ══ */
+.qr-wrap{}
+.qr-preview{background:var(--card);border:1px solid var(--bdr);border-radius:14px;padding:24px;text-align:center;}
+.qr-box{width:200px;height:200px;margin:0 auto 16px;background:#fff;border:3px solid var(--p);border-radius:14px;display:flex;align-items:center;justify-content:center;position:relative;padding:12px;}
+.qr-inner{width:100%;height:100%;display:grid;grid-template-columns:repeat(7,1fr);gap:2px;}
+.qr-cell{border-radius:2px;}
+.qr-logo{position:absolute;width:40px;height:40px;background:var(--p);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:800;}
+.qr-actions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
+.qr-settings{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.qr-style-opts{display:flex;gap:8px;flex-wrap:wrap;}
+.qr-style-btn{width:44px;height:44px;border-radius:8px;border:2px solid var(--bdr);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;transition:all 0.2s;}
+.qr-style-btn.active{border-color:var(--p);}
+.qr-tables{margin-top:20px;}
+.qr-table-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px;margin-top:12px;}
+.qr-table-card{background:var(--card);border:1px solid var(--bdr);border-radius:10px;padding:14px;text-align:center;cursor:pointer;transition:all 0.2s;}
+.qr-table-card:hover{border-color:var(--p);transform:translateY(-2px);}
+.qtc-num{font-size:22px;font-weight:800;color:var(--p);}
+.qtc-lbl{font-size:11px;color:var(--muted);}
+.qtc-status{font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;margin-top:4px;display:inline-block;}
+.qtc-free{background:rgba(16,185,129,0.1);color:var(--grn);}
+.qtc-busy{background:rgba(239,68,68,0.1);color:var(--red);}
+
+/* ══ RESERVATIONS ══ */
+.res-layout{display:grid;grid-template-columns:1fr 320px;gap:16px;}
+.calendar-grid{background:var(--card);border:1px solid var(--bdr);border-radius:14px;padding:20px;}
+.cal-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.cal-hdr h3{font-size:15px;font-weight:700;}
+.cal-nav{background:none;border:1px solid var(--bdr);width:30px;height:30px;border-radius:7px;cursor:pointer;font-size:14px;color:var(--text);}
+.cal-days{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:8px;}
+.cal-day-hdr{text-align:center;font-size:10px;font-weight:700;color:var(--muted);padding:4px;}
+.cal-cell{text-align:center;padding:8px 4px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:500;transition:all 0.2s;position:relative;}
+.cal-cell:hover{background:var(--hover);}
+.cal-cell.today{background:var(--p);color:#fff;font-weight:700;}
+.cal-cell.has-res::after{content:'';position:absolute;bottom:3px;left:50%;transform:translateX(-50%);width:5px;height:5px;background:var(--org);border-radius:50%;}
+.cal-cell.selected{border:2px solid var(--p);color:var(--p);}
+.res-list{background:var(--card);border:1px solid var(--bdr);border-radius:14px;padding:20px;}
+.res-list h3{font-size:15px;font-weight:700;margin-bottom:14px;}
+.res-row{padding:12px;border-radius:10px;border:1px solid var(--bdr);margin-bottom:8px;cursor:pointer;transition:all 0.2s;}
+.res-row:hover{border-color:var(--p);background:var(--hover);}
+.rr-time{font-size:13px;font-weight:700;color:var(--p);font-family:'JetBrains Mono',monospace;}
+.rr-name{font-size:13px;font-weight:600;color:var(--text);}
+.rr-info{font-size:11px;color:var(--muted);margin-top:2px;}
+.rr-status{font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;float:right;margin-top:2px;}
+.rr-confirmed{background:rgba(16,185,129,0.1);color:var(--grn);}
+.rr-pending{background:rgba(245,158,11,0.1);color:var(--yel);}
+.rr-cancelled{background:rgba(239,68,68,0.1);color:var(--red);}
+
+/* ══ ALERTS ══ */
+.alerts-wrap{}
+.alert-item{display:flex;align-items:flex-start;gap:14px;padding:14px;background:var(--card);border:1px solid var(--bdr);border-radius:12px;margin-bottom:10px;cursor:pointer;transition:all 0.2s;}
+.alert-item:hover{border-color:var(--p);}
+.alert-item.unread{border-left:3px solid var(--p);}
+.ai-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.ai-body{flex:1;}
+.ai-title{font-size:13px;font-weight:700;color:var(--text);}
+.ai-msg{font-size:12px;color:var(--sub);margin-top:2px;line-height:1.5;}
+.ai-time{font-size:11px;color:var(--muted);margin-top:4px;}
+.ai-actions{display:flex;gap:6px;margin-top:8px;}
+.ai-btn{padding:4px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;font-family:'Sora',sans-serif;border:none;}
+.alert-settings{background:var(--card);border:1px solid var(--bdr);border-radius:14px;padding:20px;margin-bottom:16px;}
+.as-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--bdr);}
+.as-row:last-child{border-bottom:none;}
+.as-lbl{font-size:13px;font-weight:500;color:var(--text);}
+.as-desc{font-size:11px;color:var(--muted);}
+.tog-sw{width:40px;height:22px;border-radius:11px;background:var(--bdr);position:relative;cursor:pointer;border:none;transition:background 0.2s;flex-shrink:0;}
+.tog-sw.on{background:var(--grn);}
+.tog-sw::after{content:'';position:absolute;top:2px;left:2px;width:18px;height:18px;background:#fff;border-radius:50%;transition:left 0.2s;}
+.tog-sw.on::after{left:20px;}
+
+/* ══ COUPONS ══ */
+.coupon-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:20px;}
+.coupon-card{background:var(--card);border:1px solid var(--bdr);border-radius:14px;overflow:hidden;position:relative;}
+.coupon-top{padding:18px;background:linear-gradient(135deg,var(--p),var(--pd));}
+.coupon-top.green{background:linear-gradient(135deg,#059669,#047857);}
+.coupon-top.blue{background:linear-gradient(135deg,#2563eb,#1d4ed8);}
+.coupon-top.orange{background:linear-gradient(135deg,#d97706,#b45309);}
+.coupon-code{font-size:22px;font-weight:800;color:#fff;font-family:'JetBrains Mono',monospace;letter-spacing:2px;}
+.coupon-disc{font-size:13px;color:rgba(255,255,255,0.85);margin-top:4px;}
+.coupon-body{padding:14px;}
+.coupon-meta{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:8px;}
+.coupon-bar{height:5px;background:var(--bdr);border-radius:3px;overflow:hidden;}
+.coupon-fill{height:100%;background:var(--p);border-radius:3px;}
+.coupon-used{font-size:11px;color:var(--muted);margin-top:4px;}
+.coupon-actions{display:flex;gap:6px;padding:0 14px 14px;}
+.coupon-status{position:absolute;top:12px;right:12px;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;}
+.cs-active{background:rgba(16,185,129,0.2);color:#fff;}
+.cs-expired{background:rgba(239,68,68,0.2);color:#fff;}
+
+/* ══ BILLING ══ */
+.billing-wrap{}
+.plan-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px;}
+.plan-card{background:var(--card);border:2px solid var(--bdr);border-radius:16px;padding:24px;text-align:center;position:relative;transition:all 0.2s;}
+.plan-card.popular{border-color:var(--p);box-shadow:0 8px 30px rgba(79,45,145,0.15);}
+.plan-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--p);color:#fff;font-size:11px;font-weight:700;padding:3px 14px;border-radius:20px;white-space:nowrap;}
+.plan-name{font-size:18px;font-weight:800;color:var(--text);margin-bottom:6px;}
+.plan-price{font-size:36px;font-weight:800;color:var(--p);font-family:'JetBrains Mono',monospace;}
+.plan-price span{font-size:14px;color:var(--muted);font-family:'Sora',sans-serif;}
+.plan-features{list-style:none;text-align:left;margin:16px 0;}
+.plan-features li{font-size:13px;color:var(--sub);padding:5px 0;display:flex;align-items:center;gap:8px;}
+.plan-features li::before{content:'✓';color:var(--grn);font-weight:700;flex-shrink:0;}
+.btn-plan{width:100%;padding:11px;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Sora',sans-serif;border:none;margin-top:8px;}
+.billing-history{background:var(--card);border:1px solid var(--bdr);border-radius:14px;padding:20px;}
+.bh-row{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--bdr);font-size:13px;}
+.bh-row:last-child{border-bottom:none;}
+.bh-inv{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:var(--p);}
+.bh-status{padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;}
+.bh-paid{background:rgba(16,185,129,0.1);color:var(--grn);}
+.bh-due{background:rgba(239,68,68,0.1);color:var(--red);}
+
+/* ══ SUPPORT ══ */
+.support-layout{display:grid;grid-template-columns:1fr 340px;gap:16px;}
+.ticket-list{}
+.ticket-item{background:var(--card);border:1px solid var(--bdr);border-radius:12px;padding:16px;margin-bottom:10px;cursor:pointer;transition:all 0.2s;}
+.ticket-item:hover{border-color:var(--p);}
+.ticket-item.selected{border-color:var(--p);background:var(--hover);}
+.ti-hdr{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.ti-id{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;color:var(--p);}
+.ti-status{font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;margin-left:auto;}
+.ts-open{background:rgba(239,68,68,0.1);color:var(--red);}
+.ts-progress{background:rgba(245,158,11,0.1);color:var(--yel);}
+.ts-resolved{background:rgba(16,185,129,0.1);color:var(--grn);}
+.ti-title{font-size:13px;font-weight:700;color:var(--text);}
+.ti-preview{font-size:12px;color:var(--muted);margin-top:2px;}
+.ti-meta{display:flex;align-items:center;gap:8px;margin-top:8px;font-size:11px;color:var(--muted);}
+.ti-priority{padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;}
+.tp-high{background:rgba(239,68,68,0.1);color:var(--red);}
+.tp-med{background:rgba(245,158,11,0.1);color:var(--yel);}
+.tp-low{background:rgba(16,185,129,0.1);color:var(--grn);}
+.ticket-detail{background:var(--card);border:1px solid var(--bdr);border-radius:14px;padding:20px;position:sticky;top:76px;}
+.td-hdr{margin-bottom:16px;}
+.td-messages{max-height:320px;overflow-y:auto;margin-bottom:12px;}
+.msg-bubble{padding:10px 14px;border-radius:12px;margin-bottom:8px;font-size:13px;max-width:85%;}
+.msg-staff{background:var(--p);color:#fff;margin-left:auto;border-radius:12px 12px 0 12px;}
+.msg-customer{background:var(--hover);color:var(--text);border-radius:12px 12px 12px 0;}
+.msg-time{font-size:10px;opacity:0.7;margin-top:3px;}
+.td-reply{display:flex;gap:8px;align-items:flex-end;}
+.td-reply textarea{flex:1;padding:9px 12px;border:1.5px solid var(--input-bdr);border-radius:9px;font-size:13px;font-family:'Sora',sans-serif;resize:none;outline:none;background:var(--input-bg);color:var(--text);}
+.td-reply textarea:focus{border-color:var(--p);}
+
+/* ══ AI CHATBOT ══ */
+.chatbot-wrap{display:grid;grid-template-columns:1fr 360px;gap:16px;}
+.chat-window{background:var(--card);border:1px solid var(--bdr);border-radius:14px;display:flex;flex-direction:column;height:600px;}
+.cw-hdr{padding:16px 18px;border-bottom:1px solid var(--bdr);display:flex;align-items:center;gap:12px;}
+.cw-av{width:38px;height:38px;background:linear-gradient(135deg,var(--p),var(--teal));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;}
+.cw-name{font-size:14px;font-weight:700;}
+.cw-status{font-size:11px;color:var(--grn);display:flex;align-items:center;gap:4px;}
+.cw-status::before{content:'';width:7px;height:7px;background:var(--grn);border-radius:50%;display:block;animation:pulse 1.5s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
+.cw-msgs{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;}
+.cm-bubble{max-width:78%;padding:10px 14px;border-radius:14px;font-size:13px;line-height:1.5;}
+.cm-bot{background:var(--hover);color:var(--text);border-radius:14px 14px 14px 0;align-self:flex-start;}
+.cm-user{background:var(--p);color:#fff;border-radius:14px 14px 0 14px;align-self:flex-end;}
+.cm-time{font-size:10px;color:var(--muted);margin-top:2px;}
+.cm-typing{display:flex;gap:4px;align-items:center;padding:10px 14px;background:var(--hover);border-radius:14px 14px 14px 0;width:fit-content;}
+.cm-typing span{width:7px;height:7px;background:var(--muted);border-radius:50%;animation:typing 1.2s infinite;}
+.cm-typing span:nth-child(2){animation-delay:0.2s;}
+.cm-typing span:nth-child(3){animation-delay:0.4s;}
+@keyframes typing{0%,60%,100%{transform:translateY(0);}30%{transform:translateY(-6px);}}
+.cw-input{padding:12px 14px;border-top:1px solid var(--bdr);display:flex;gap:8px;}
+.cw-input input{flex:1;padding:10px 14px;border:1.5px solid var(--input-bdr);border-radius:9px;font-size:13px;font-family:'Sora',sans-serif;outline:none;background:var(--input-bg);color:var(--text);}
+.cw-input input:focus{border-color:var(--p);}
+.cw-send{background:var(--p);color:#fff;border:none;width:38px;height:38px;border-radius:9px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.quick-replies{padding:0 14px 10px;display:flex;gap:6px;flex-wrap:wrap;}
+.qr-chip{padding:6px 12px;border:1.5px solid var(--bdr);border-radius:20px;font-size:11px;cursor:pointer;font-family:'Sora',sans-serif;color:var(--sub);background:var(--card);transition:all 0.2s;white-space:nowrap;}
+.qr-chip:hover{border-color:var(--p);color:var(--p);}
+.chat-stats{display:flex;flex-direction:column;gap:12px;}
+.cs-card{background:var(--card);border:1px solid var(--bdr);border-radius:12px;padding:16px;}
+.cs-val{font-size:24px;font-weight:800;color:var(--p);font-family:'JetBrains Mono',monospace;}
+.cs-lbl{font-size:12px;color:var(--muted);margin-top:2px;}
+
+/* ══ MODAL ══ */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:500;align-items:center;justify-content:center;padding:20px;}
+.modal-bg.open{display:flex;}
+.modal-box{background:var(--card);border-radius:18px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.25);animation:pop .2s ease;}
+@keyframes pop{from{opacity:0;transform:scale(0.95);}to{opacity:1;transform:scale(1);}}
+.modal-hdr{padding:20px 22px 0;display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+.modal-hdr h3{font-size:17px;font-weight:700;color:var(--text);}
+.modal-cls{background:none;border:none;font-size:20px;cursor:pointer;color:var(--muted);}
+.modal-body{padding:0 22px 22px;}
+.mf{margin-bottom:14px;}
+.mf label{display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:0.5px;}
+.mf input,.mf select,.mf textarea{width:100%;padding:10px 12px;border:1.5px solid var(--input-bdr);border-radius:8px;font-size:13px;font-family:'Sora',sans-serif;outline:none;background:var(--input-bg);color:var(--text);transition:border 0.2s;}
+.mf input:focus,.mf select:focus,.mf textarea:focus{border-color:var(--p);}
+.mf textarea{resize:vertical;min-height:80px;}
+.mf-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.modal-foot{padding:14px 22px;border-top:1px solid var(--bdr);display:flex;gap:10px;}
+.btn-cancel{flex:1;background:var(--hover);color:var(--sub);border:none;padding:11px;border-radius:8px;font-size:13px;font-weight:600;font-family:'Sora',sans-serif;cursor:pointer;}
+.btn-save{flex:2;background:var(--p);color:#fff;border:none;padding:11px;border-radius:8px;font-size:13px;font-weight:700;font-family:'Sora',sans-serif;cursor:pointer;}
+
+/* ══ TOAST ══ */
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(60px);background:#1a1a1a;color:#fff;padding:12px 22px;border-radius:30px;font-size:13px;font-weight:600;z-index:9999;transition:transform 0.3s;white-space:nowrap;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+
+/* ══ MOBILE ══ */
+.mob-menu-btn{display:none;background:none;border:none;font-size:22px;cursor:pointer;color:var(--text);padding:4px;}
+@media(max-width:900px){
+  .sidebar{transform:translateX(-100%);}.sidebar.open{transform:translateX(0);}
+  .main-content{margin-left:0;}
+  .mob-menu-btn{display:block;}
+  .grid-4{grid-template-columns:1fr 1fr;}
+  .grid-3{grid-template-columns:1fr 1fr;}
+  .res-layout,.support-layout,.chatbot-wrap{grid-template-columns:1fr;}
+  .plan-cards{grid-template-columns:1fr;}
+}
+@media(max-width:540px){
+  .grid-4,.grid-3,.grid-2{grid-template-columns:1fr 1fr;}
+  .coupon-grid{grid-template-columns:1fr;}
+  .page-content{padding:12px;}
+}
+</style>
+</head>
+<body>
+
+<div class="app-layout">
+  <!-- SIDEBAR -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="sl-logo">Bill<span>Zest</span></div>
+      <div class="sl-version">v3.0 — Mega System</div>
+    </div>
+    <div class="sidebar-nav">
+      <div class="nav-group">
+        <div class="nav-group-label">Overview</div>
+        <button class="nav-item active" onclick="goPage('analytics',this)"><span class="ni-icon">📊</span> Analytics</button>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-label">Operations</div>
+        <button class="nav-item" onclick="goPage('alerts',this)"><span class="ni-icon">🔔</span> Alerts <span class="ni-badge" id="alertBadge">5</span></button>
+        <button class="nav-item" onclick="goPage('reservations',this)"><span class="ni-icon">🗓️</span> Reservations</button>
+        <button class="nav-item" onclick="goPage('qrmenu',this)"><span class="ni-icon">📸</span> QR Menu</button>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-label">Marketing</div>
+        <button class="nav-item" onclick="goPage('coupons',this)"><span class="ni-icon">💰</span> Coupons</button>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-label">Business</div>
+        <button class="nav-item" onclick="goPage('billing',this)"><span class="ni-icon">💳</span> Billing</button>
+        <button class="nav-item" onclick="goPage('support',this)"><span class="ni-icon">📞</span> Support <span class="ni-badge">3</span></button>
+        <button class="nav-item" onclick="goPage('chatbot',this)"><span class="ni-icon">🤖</span> AI Chatbot</button>
+      </div>
+    </div>
+    <div class="sidebar-bottom">
+      <button class="dark-toggle" onclick="togDark()">
+        <span id="darkIcon">🌙</span> Dark Mode
+        <div class="dt-sw" id="dtSw"></div>
+      </button>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main-content">
+    <div class="top-bar">
+      <button class="mob-menu-btn" onclick="togSidebar()">☰</button>
+      <div class="tb-title" id="pageTitle">📊 Advanced Analytics</div>
+      <div class="tb-search"><span>🔍</span><input type="text" placeholder="Search..."></div>
+      <div class="tb-alert" onclick="goPage('alerts',document.querySelector('[onclick*=alerts]'))">
+        <span class="tb-alert-icon">🔔</span>
+        <span class="tb-alert-dot"></span>
+      </div>
+    </div>
+
+    <div class="page-content">
+
+      <!-- ══ ANALYTICS ══ -->
+      <div class="pg active" id="pg-analytics">
+        <div class="sec-hdr">
+          <h2>📊 Advanced Analytics</h2>
+          <div style="display:flex;gap:8px;">
+            <select onchange="updatePeriod(this.value)" style="padding:8px 14px;border:1px solid var(--bdr);border-radius:8px;font-family:'Sora',sans-serif;font-size:12px;background:var(--input-bg);color:var(--text);outline:none;">
+              <option value="today">Today</option>
+              <option value="week" selected>This Week</option>
+              <option value="month">This Month</option>
+              <option value="year">This Year</option>
+            </select>
+            <button class="btn-primary">📥 Export</button>
+          </div>
+        </div>
+        <div class="grid-4" id="analyticsKPIs"></div>
+        <div class="grid-2">
+          <div class="chart-card">
+            <h3>📈 Revenue Trend</h3>
+            <div class="bar-chart" id="revenueBar"></div>
+          </div>
+          <div class="chart-card">
+            <h3>🍽️ Top Categories</h3>
+            <div class="donut-wrap" id="catDonut"></div>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="chart-card">
+            <h3>⏰ Peak Hours</h3>
+            <div class="bar-chart" id="peakBar"></div>
+          </div>
+          <div class="chart-card">
+            <h3>💳 Payment Methods</h3>
+            <div class="donut-wrap" id="payDonut"></div>
+          </div>
+        </div>
+        <div class="grid-3">
+          <div class="card"><div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:12px;">🏆 Best Sellers</div><div id="bestSellers"></div></div>
+          <div class="card"><div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:12px;">👥 Customer Stats</div><div id="custStats"></div></div>
+          <div class="card"><div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:12px;">📦 Inventory Alerts</div><div id="invAlerts"></div></div>
+        </div>
+      </div>
+
+      <!-- ══ ALERTS ══ -->
+      <div class="pg" id="pg-alerts">
+        <div class="sec-hdr"><h2>🔔 Real-time Order Alerts</h2>
+          <button class="btn-primary" onclick="markAllRead()">✓ Mark All Read</button>
+        </div>
+        <div class="alert-settings card" style="margin-bottom:16px;">
+          <div style="font-size:14px;font-weight:700;margin-bottom:12px;color:var(--text);">⚙️ Alert Settings</div>
+          <div id="alertSettings"></div>
+        </div>
+        <div id="alertsList"></div>
+      </div>
+
+      <!-- ══ RESERVATIONS ══ -->
+      <div class="pg" id="pg-reservations">
+        <div class="sec-hdr"><h2>🗓️ Table Reservations</h2>
+          <button class="btn-primary" onclick="showModal('resModal')">+ New Reservation</button>
+        </div>
+        <div class="res-layout">
+          <div>
+            <div class="calendar-grid">
+              <div class="cal-hdr">
+                <button class="cal-nav" onclick="prevMonth()">‹</button>
+                <h3 id="calTitle"></h3>
+                <button class="cal-nav" onclick="nextMonth()">›</button>
+              </div>
+              <div class="cal-days" id="calDays"></div>
+              <div id="calGrid"></div>
+            </div>
+            <div style="margin-top:16px;">
+              <div class="sec-hdr"><div style="font-size:15px;font-weight:700;color:var(--text);">🪑 Table Status</div></div>
+              <div class="qr-table-grid" id="tableStatus"></div>
+            </div>
+          </div>
+          <div class="res-list">
+            <h3>📋 Today's Reservations</h3>
+            <div id="resList"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ QR MENU ══ -->
+      <div class="pg" id="pg-qrmenu">
+        <div class="sec-hdr"><h2>📸 QR Code Menu Generator</h2></div>
+        <div class="grid-2">
+          <div>
+            <div class="card" style="margin-bottom:16px;">
+              <div style="font-size:14px;font-weight:700;margin-bottom:16px;color:var(--text);">⚙️ QR Settings</div>
+              <div class="qr-settings">
+                <div class="mf"><label>Restaurant Name</label><input type="text" id="qrName" value="BillZest Restaurant" oninput="updateQR()"></div>
+                <div class="mf"><label>Menu URL</label><input type="text" id="qrUrl" value="menu.billzest.com/riyadh" oninput="updateQR()"></div>
+                <div class="mf"><label>QR Color</label>
+                  <div style="display:flex;gap:8px;margin-top:4px;">
+                    <div onclick="setQRColor('#4f2d91',this)" style="width:30px;height:30px;background:#4f2d91;border-radius:6px;cursor:pointer;border:3px solid var(--p);"></div>
+                    <div onclick="setQRColor('#1a1a1a',this)" style="width:30px;height:30px;background:#1a1a1a;border-radius:6px;cursor:pointer;border:2px solid var(--bdr);"></div>
+                    <div onclick="setQRColor('#dc2626',this)" style="width:30px;height:30px;background:#dc2626;border-radius:6px;cursor:pointer;border:2px solid var(--bdr);"></div>
+                    <div onclick="setQRColor('#059669',this)" style="width:30px;height:30px;background:#059669;border-radius:6px;cursor:pointer;border:2px solid var(--bdr);"></div>
+                    <div onclick="setQRColor('#d97706',this)" style="width:30px;height:30px;background:#d97706;border-radius:6px;cursor:pointer;border:2px solid var(--bdr);"></div>
+                  </div>
+                </div>
+                <div class="mf"><label>Size</label>
+                  <select onchange="updateQR()">
+                    <option>Small (150px)</option>
+                    <option selected>Medium (200px)</option>
+                    <option>Large (300px)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="qr-tables card">
+              <div style="font-size:14px;font-weight:700;margin-bottom:12px;color:var(--text);">🪑 Table QR Codes</div>
+              <div class="qr-table-grid" id="tableQRs"></div>
+            </div>
+          </div>
+          <div>
+            <div class="qr-preview card">
+              <div style="font-size:14px;font-weight:700;margin-bottom:16px;color:var(--text);">👁️ QR Preview</div>
+              <div class="qr-box" id="qrBox">
+                <div id="qrCanvas"></div>
+                <div class="qr-logo" id="qrLogo">BZ</div>
+              </div>
+              <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;" id="qrNameDisplay">BillZest Restaurant</div>
+              <div style="font-size:11px;color:var(--muted);margin-bottom:16px;" id="qrUrlDisplay">menu.billzest.com/riyadh</div>
+              <div class="qr-actions">
+                <button class="btn-primary" onclick="downloadQR()">📥 Download</button>
+                <button class="btn-sec" onclick="printQR()">🖨️ Print</button>
+                <button class="btn-sec" onclick="shareQR()">💬 Share</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ COUPONS ══ -->
+      <div class="pg" id="pg-coupons">
+        <div class="sec-hdr"><h2>💰 Discount & Coupon System</h2>
+          <button class="btn-primary" onclick="showModal('couponModal')">+ Create Coupon</button>
+        </div>
+        <div class="grid-4" style="margin-bottom:20px;" id="couponStats"></div>
+        <div class="coupon-grid" id="couponGrid"></div>
+      </div>
+
+      <!-- ══ BILLING ══ -->
+      <div class="pg" id="pg-billing">
+        <div class="sec-hdr"><h2>💳 Subscription & Billing</h2></div>
+        <div style="background:linear-gradient(135deg,var(--p),var(--pd));border-radius:16px;padding:24px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+          <div>
+            <div style="font-size:13px;color:rgba(255,255,255,0.7);margin-bottom:4px;">Current Plan</div>
+            <div style="font-size:26px;font-weight:800;color:#fff;">Pro Plan ⭐</div>
+            <div style="font-size:13px;color:rgba(255,255,255,0.8);margin-top:4px;">Next billing: April 1, 2026 — ﷼ 2,888/mo</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:13px;color:rgba(255,255,255,0.7);">Usage</div>
+            <div style="font-size:20px;font-weight:800;color:#fff;">3 / 5 Branches</div>
+            <div style="background:rgba(255,255,255,0.2);border-radius:6px;height:8px;width:160px;margin-top:6px;overflow:hidden;">
+              <div style="height:100%;width:60%;background:#fff;border-radius:6px;"></div>
+            </div>
+          </div>
+        </div>
+        <div class="plan-cards" id="planCards"></div>
+        <div class="billing-history card">
+          <div style="font-size:14px;font-weight:700;margin-bottom:16px;color:var(--text);">🧾 Billing History</div>
+          <div id="billHistory"></div>
+        </div>
+      </div>
+
+      <!-- ══ SUPPORT ══ -->
+      <div class="pg" id="pg-support">
+        <div class="sec-hdr"><h2>📞 Customer Support Tickets</h2>
+          <button class="btn-primary" onclick="showModal('ticketModal')">+ New Ticket</button>
+        </div>
+        <div class="grid-4" style="margin-bottom:16px;" id="supportStats"></div>
+        <div class="support-layout">
+          <div class="ticket-list" id="ticketList"></div>
+          <div class="ticket-detail" id="ticketDetail">
+            <div style="text-align:center;padding:40px;color:var(--muted);font-size:13px;">
+              <div style="font-size:40px;margin-bottom:10px;">💬</div>
+              Select a ticket to view
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ AI CHATBOT ══ -->
+      <div class="pg" id="pg-chatbot">
+        <div class="sec-hdr"><h2>🤖 AI Customer Chatbot</h2>
+          <button class="btn-primary" onclick="clearChat()">🗑️ Clear Chat</button>
+        </div>
+        <div class="chatbot-wrap">
+          <div class="chat-window">
+            <div class="cw-hdr">
+              <div class="cw-av">🤖</div>
+              <div>
+                <div class="cw-name">BillZest AI Assistant</div>
+                <div class="cw-status">Online — Ready to help</div>
+              </div>
+              <div style="margin-left:auto;font-size:11px;color:var(--muted);background:rgba(79,45,145,0.1);padding:4px 10px;border-radius:10px;">Powered by Claude AI</div>
+            </div>
+            <div class="cw-msgs" id="chatMsgs"></div>
+            <div class="quick-replies" id="quickReplies"></div>
+            <div class="cw-input">
+              <input type="text" id="chatInput" placeholder="Ask about menu, orders, loyalty..." onkeydown="if(event.key==='Enter')sendChat()">
+              <button class="cw-send" onclick="sendChat()">➤</button>
+            </div>
+          </div>
+          <div class="chat-stats">
+            <div class="cs-card"><div class="cs-val">1,248</div><div class="cs-lbl">Total Conversations</div></div>
+            <div class="cs-card"><div class="cs-val">94%</div><div class="cs-lbl">Resolution Rate</div></div>
+            <div class="cs-card"><div class="cs-val">28s</div><div class="cs-lbl">Avg Response Time</div></div>
+            <div class="cs-card"><div class="cs-val">4.8⭐</div><div class="cs-lbl">Customer Satisfaction</div></div>
+            <div class="card" style="padding:14px;">
+              <div style="font-size:13px;font-weight:700;margin-bottom:10px;color:var(--text);">🔥 Top Questions</div>
+              <div id="topQuestions"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- page-content -->
+  </div><!-- main-content -->
+</div><!-- app-layout -->
+
+<!-- MODALS -->
+<div class="modal-bg" id="resModal">
+  <div class="modal-box">
+    <div class="modal-hdr"><h3>🗓️ New Reservation</h3><button class="modal-cls" onclick="closeModal('resModal')">✕</button></div>
+    <div class="modal-body">
+      <div class="mf-row">
+        <div class="mf"><label>Customer Name</label><input type="text" id="resName" placeholder="Full name"></div>
+        <div class="mf"><label>Phone</label><input type="text" id="resPhone" placeholder="+966..."></div>
+      </div>
+      <div class="mf-row">
+        <div class="mf"><label>Date</label><input type="date" id="resDate"></div>
+        <div class="mf"><label>Time</label><input type="time" id="resTime" value="19:00"></div>
+      </div>
+      <div class="mf-row">
+        <div class="mf"><label>Guests</label><select id="resGuests"><option>1</option><option>2</option><option selected>4</option><option>6</option><option>8</option><option>10+</option></select></div>
+        <div class="mf"><label>Table</label><select id="resTable"><option>Table 1</option><option>Table 2</option><option>Table 3</option><option>Table 4</option><option>Table 5</option><option>VIP Room</option></select></div>
+      </div>
+      <div class="mf"><label>Special Requests</label><textarea id="resNote" placeholder="Allergies, birthday, anniversary..."></textarea></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-cancel" onclick="closeModal('resModal')">Cancel</button>
+      <button class="btn-save" onclick="addReservation()">✅ Confirm Reservation</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="couponModal">
+  <div class="modal-box">
+    <div class="modal-hdr"><h3>➕ Create Coupon</h3><button class="modal-cls" onclick="closeModal('couponModal')">✕</button></div>
+    <div class="modal-body">
+      <div class="mf-row">
+        <div class="mf"><label>Coupon Code</label><input type="text" id="cpCode" placeholder="e.g. SAVE20"></div>
+        <div class="mf"><label>Discount Type</label><select id="cpType"><option value="pct">% Percentage</option><option value="fixed">﷼ Fixed Amount</option><option value="free">🚚 Free Delivery</option></select></div>
+      </div>
+      <div class="mf-row">
+        <div class="mf"><label>Discount Value</label><input type="number" id="cpVal" placeholder="20"></div>
+        <div class="mf"><label>Min Order (﷼)</label><input type="number" id="cpMin" placeholder="50"></div>
+      </div>
+      <div class="mf-row">
+        <div class="mf"><label>Expiry Date</label><input type="date" id="cpExp"></div>
+        <div class="mf"><label>Usage Limit</label><input type="number" id="cpLimit" placeholder="100"></div>
+      </div>
+      <div class="mf"><label>Description</label><input type="text" id="cpDesc" placeholder="e.g. Eid Special 20% discount"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-cancel" onclick="closeModal('couponModal')">Cancel</button>
+      <button class="btn-save" onclick="createCoupon()">🎟️ Create Coupon</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="ticketModal">
+  <div class="modal-box">
+    <div class="modal-hdr"><h3>📞 New Support Ticket</h3><button class="modal-cls" onclick="closeModal('ticketModal')">✕</button></div>
+    <div class="modal-body">
+      <div class="mf"><label>Customer Name</label><input type="text" id="tkName" placeholder="Customer name"></div>
+      <div class="mf-row">
+        <div class="mf"><label>Category</label><select id="tkCat"><option>Order Issue</option><option>Payment Problem</option><option>Delivery</option><option>App Bug</option><option>General</option></select></div>
+        <div class="mf"><label>Priority</label><select id="tkPri"><option value="low">🟢 Low</option><option value="med" selected>🟡 Medium</option><option value="high">🔴 High</option></select></div>
+      </div>
+      <div class="mf"><label>Subject</label><input type="text" id="tkSubj" placeholder="Brief description"></div>
+      <div class="mf"><label>Message</label><textarea id="tkMsg" placeholder="Detailed description..."></textarea></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-cancel" onclick="closeModal('ticketModal')">Cancel</button>
+      <button class="btn-save" onclick="createTicket()">📤 Submit Ticket</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ══ DARK MODE ══
+function togDark(){
+  var html = document.documentElement;
+  var isDark = html.getAttribute("data-theme")==="dark";
+  html.setAttribute("data-theme", isDark?"light":"dark");
+  document.getElementById("darkIcon").textContent = isDark?"🌙":"☀️";
+  showToast(isDark?"☀️ Light Mode On":"🌙 Dark Mode On");
+}
+
+// ══ SIDEBAR ══
+function togSidebar(){
+  document.getElementById("sidebar").classList.toggle("open");
+}
+
+// ══ PAGE NAV ══
+var pageTitles = {
+  analytics:"📊 Advanced Analytics", alerts:"🔔 Real-time Alerts",
+  reservations:"🗓️ Table Reservations", qrmenu:"📸 QR Menu Generator",
+  coupons:"💰 Discount & Coupons", billing:"💳 Subscription & Billing",
+  support:"📞 Customer Support", chatbot:"🤖 AI Chatbot"
+};
+function goPage(p, btn){
+  document.querySelectorAll(".nav-item").forEach(function(b){b.classList.remove("active");});
+  if(btn)btn.classList.add("active");
+  document.querySelectorAll(".pg").forEach(function(x){x.classList.remove("active");});
+  document.getElementById("pg-"+p).classList.add("active");
+  document.getElementById("pageTitle").textContent = pageTitles[p]||p;
+  document.getElementById("sidebar").classList.remove("open");
+}
+
+// ══ ANALYTICS ══
+function updatePeriod(p){
+  var data = {
+    today:{rev:4280,orders:38,customers:29,avg:112.6,bars:[320,480,290,620,540,780,850,920,670],labels:["8am","10","12","2pm","4","6","8","10","12"]},
+    week:{rev:28900,orders:247,customers:183,avg:117,bars:[3200,4100,3800,5200,4600,6800,5800],labels:["Mon","Tue","Wed","Thu","Fri","Sat","Sun"]},
+    month:{rev:115600,orders:1024,customers:742,avg:112.9,bars:[28000,32000,38000,17600],labels:["Wk1","Wk2","Wk3","Wk4"]},
+    year:{rev:1380000,orders:12288,customers:8912,avg:112.3,bars:[95000,102000,118000,98000,125000,140000,132000,128000,145000,138000,152000,107000],labels:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]},
+  };
+  var d = data[p]||data.week;
+  document.getElementById("analyticsKPIs").innerHTML =
+    kpi("kpi-p","💰","﷼ "+d.rev.toLocaleString(),"Total Revenue","↑ 12.4% vs last period","up")+
+    kpi("kpi-g","🧾",d.orders,"Total Orders","↑ 8.1%","up")+
+    kpi("kpi-o","👥",d.customers,"New Customers","↑ 15.3%","up")+
+    kpi("kpi-b","📊","﷼ "+d.avg.toFixed(1),"Avg Order Value","↓ 1.2%","dn");
+  var maxB = Math.max.apply(null,d.bars);
+  var colors = ["#4f2d91","#7c3aed","#a78bfa","#f5a623","#00b5a3","#3b82f6","#10b981","#ec4899","#f59e0b","#dc2626","#059669","#2563eb"];
+  document.getElementById("revenueBar").innerHTML = d.bars.map(function(v,i){
+    var h = Math.round(v/maxB*130);
+    return "<div class='bc-bar-wrap'><div class='bc-val'>"+Math.round(v/1000)+"K</div><div class='bc-bar' style='height:"+h+"px;background:"+colors[i%colors.length]+";' title='﷼"+v.toLocaleString()+"'></div><div class='bc-lbl'>"+d.labels[i]+"</div></div>";
+  }).join("");
+  renderDonut("catDonut",[
+    {lbl:"🍔 Burgers",val:38,color:"#d97706"},
+    {lbl:"🍕 Pizza",val:24,color:"#dc2626"},
+    {lbl:"🍗 Chicken",val:19,color:"#b45309"},
+    {lbl:"🥤 Drinks",val:12,color:"#0284c7"},
+    {lbl:"🍰 Other",val:7,color:"#7c3aed"},
+  ]);
+  var peakVals = [12,28,45,82,95,120,145,180,165,140,110,85,70,48,35,28];
+  var peakLbls = ["6","7","8","9","10","11","12","1p","2","3","4","5","6","7","8","9"];
+  var maxP = Math.max.apply(null,peakVals);
+  document.getElementById("peakBar").innerHTML = peakVals.map(function(v,i){
+    var h = Math.round(v/maxP*130);
+    var isHot = v>=140;
+    return "<div class='bc-bar-wrap'><div class='bc-bar' style='height:"+h+"px;background:"+(isHot?"#ef4444":"#3b82f6")+";opacity:"+(isHot?1:0.6)+";' title='"+v+" orders'></div><div class='bc-lbl'>"+peakLbls[i]+"</div></div>";
+  }).join("");
+  renderDonut("payDonut",[
+    {lbl:"💵 Cash",val:52,color:"#10b981"},
+    {lbl:"💳 Card",val:34,color:"#3b82f6"},
+    {lbl:"📱 Online",val:14,color:"#f5a623"},
+  ]);
+  document.getElementById("bestSellers").innerHTML = [
+    {e:"🍟",n:"Loaded Fries",s:248,pct:100},
+    {e:"🍔",n:"Classic Burger",s:198,pct:80},
+    {e:"🍗",n:"Crispy Chicken",s:176,pct:71},
+    {e:"🍕",n:"Pepperoni Pizza",s:142,pct:57},
+  ].map(function(item){
+    return "<div style='margin-bottom:10px;'><div style='display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px;'><span>"+item.e+" "+item.n+"</span><span style='font-weight:700;color:var(--p);'>"+item.s+"</span></div><div style='height:5px;background:var(--bdr);border-radius:3px;'><div style='height:100%;width:"+item.pct+"%;background:var(--p);border-radius:3px;'></div></div></div>";
+  }).join("");
+  document.getElementById("custStats").innerHTML = [
+    {lbl:"New Today",val:"12",clr:"var(--grn)"},
+    {lbl:"Returning",val:"74%",clr:"var(--blu)"},
+    {lbl:"Avg Visits/mo",val:"3.2",clr:"var(--org)"},
+    {lbl:"Gold Members",val:"42",clr:"var(--yel)"},
+  ].map(function(s){
+    return "<div style='display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--bdr);font-size:13px;'><span style='color:var(--sub);'>"+s.lbl+"</span><span style='font-weight:700;color:"+s.clr+";'>"+s.val+"</span></div>";
+  }).join("");
+  document.getElementById("invAlerts").innerHTML = [
+    {e:"🥤",n:"Mango Juice",stock:3,clr:"var(--red)"},
+    {e:"🍰",n:"Tiramisu",stock:5,clr:"var(--yel)"},
+    {e:"🥩",n:"Grilled Steak",stock:8,clr:"var(--yel)"},
+  ].map(function(a){
+    return "<div style='display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--bdr);font-size:12px;'><span>"+a.e+"</span><span style='flex:1;'>"+a.n+"</span><span style='font-weight:700;color:"+a.clr+";'>"+a.stock+" left</span></div>";
+  }).join("");
+}
+function kpi(cls,icon,val,lbl,chg,dir){
+  return "<div class='kpi-card "+cls+"'><div class='kpi-icon'>"+icon+"</div><div class='kpi-val'>"+val+"</div><div class='kpi-lbl'>"+lbl+"</div><div class='kpi-chg "+dir+"'>"+chg+"</div></div>";
+}
+function renderDonut(id, items){
+  var total = items.reduce(function(s,i){return s+i.val;},0);
+  var r=50,cx=60,cy=60;
+  var offset=0;
+  var paths="";
+  items.forEach(function(item){
+    var pct=item.val/total;
+    var angle=pct*2*Math.PI;
+    var x1=cx+r*Math.sin(offset);
+    var y1=cy-r*Math.cos(offset);
+    offset+=angle;
+    var x2=cx+r*Math.sin(offset);
+    var y2=cy-r*Math.cos(offset);
+    var large=pct>0.5?1:0;
+    paths+="<path d='M "+cx+" "+cy+" L "+x1+" "+y1+" A "+r+" "+r+" 0 "+large+" 1 "+x2+" "+y2+" Z' fill='"+item.color+"'/>";
+  });
+  var legend=items.map(function(i){
+    return "<div class='dl-item'><div class='dl-dot' style='background:"+i.color+";'></div><span class='dl-lbl'>"+i.lbl+"</span><span class='dl-val'>"+i.val+"%</span></div>";
+  }).join("");
+  document.getElementById(id).innerHTML=
+    "<div class='donut-svg'><svg width='120' height='120' viewBox='0 0 120 120'>"+paths+"<circle cx='60' cy='60' r='28' fill='var(--card)'/></svg></div>"+
+    "<div class='donut-legend'>"+legend+"</div>";
+}
+
+// ══ ALERTS ══
+var alerts = [
+  {id:1,icon:"🆕",bg:"#dbeafe",title:"New Order #ORD-0042",msg:"Burger x2, Pizza x1 — Table 5 — ﷼ 127.50",time:"2 min ago",read:false,type:"order"},
+  {id:2,icon:"⚠️",bg:"#fef3c7",title:"Low Stock Alert",msg:"Mango Juice only 3 units remaining. Reorder now!",time:"15 min ago",read:false,type:"stock"},
+  {id:3,icon:"💳",bg:"#dcfce7",title:"Payment Received",msg:"Card payment of ﷼ 248.00 — Order #ORD-0041",time:"22 min ago",read:false,type:"payment"},
+  {id:4,icon:"🛵",bg:"#f3e8ff",title:"Delivery Assigned",msg:"Order #ONL-0019 assigned to driver Ahmed",time:"35 min ago",read:false,type:"delivery"},
+  {id:5,icon:"⭐",bg:"#fff7ed",title:"New 5-Star Review",msg:"Mohammed Al-Saud: 'Best burger in Riyadh!'",time:"1 hr ago",read:true,type:"review"},
+  {id:6,icon:"👤",bg:"#ecfdf5",title:"New Customer Registered",msg:"Sara Hassan joined — Phone: +966 55 XXX XXXX",time:"2 hr ago",read:true,type:"customer"},
+];
+var alertSettings2 = [
+  {lbl:"New Orders",desc:"Alert when new order comes in",on:true},
+  {lbl:"Low Stock",desc:"Alert when item stock drops below 10",on:true},
+  {lbl:"Payment Received",desc:"Alert for every successful payment",on:true},
+  {lbl:"New Reviews",desc:"Alert for customer reviews",on:false},
+  {lbl:"Delivery Updates",desc:"Alert for delivery status changes",on:true},
+];
+function renderAlerts(){
+  document.getElementById("alertSettings").innerHTML = alertSettings2.map(function(s,i){
+    return "<div class='as-row'><div><div class='as-lbl'>"+s.lbl+"</div><div class='as-desc'>"+s.desc+"</div></div>"+
+      "<button class='tog-sw "+(s.on?"on":"")+"' onclick='togAlert("+i+",this)'></button></div>";
+  }).join("");
+  var unread = alerts.filter(function(a){return !a.read;}).length;
+  document.getElementById("alertBadge").textContent = unread;
+  document.getElementById("alertsList").innerHTML = alerts.map(function(a){
+    return "<div class='alert-item "+(a.read?"":"unread")+"' onclick='readAlert("+a.id+")'>"+
+      "<div class='ai-icon' style='background:"+a.bg+";'>"+a.icon+"</div>"+
+      "<div class='ai-body'>"+
+        "<div class='ai-title'>"+a.title+"</div>"+
+        "<div class='ai-msg'>"+a.msg+"</div>"+
+        "<div class='ai-time'>"+a.time+"</div>"+
+        "<div class='ai-actions'>"+
+          "<button class='ai-btn' style='background:var(--pl);color:var(--p);' onclick='event.stopPropagation();showToast(\"✅ Action taken!\")'>View Details</button>"+
+          "<button class='ai-btn' style='background:var(--hover);color:var(--sub);' onclick='event.stopPropagation();dismissAlert("+a.id+")'>Dismiss</button>"+
+        "</div>"+
+      "</div>"+
+    "</div>";
+  }).join("");
+}
+function togAlert(i,btn){alertSettings2[i].on=!alertSettings2[i].on;btn.classList.toggle("on");}
+function readAlert(id){var a=alerts.find(function(x){return x.id===id;});if(a)a.read=true;renderAlerts();}
+function dismissAlert(id){alerts=alerts.filter(function(x){return x.id!==id;});renderAlerts();showToast("🗑️ Alert dismissed");}
+function markAllRead(){alerts.forEach(function(a){a.read=true;});renderAlerts();showToast("✅ All alerts marked as read");}
+
+// ══ CALENDAR ══
+var calDate = new Date();
+var reservations = [
+  {id:1,name:"Mohammed Al-Saud",phone:"+966 50 123",date:"2026-03-20",time:"19:00",guests:4,table:"Table 3",note:"Anniversary",status:"confirmed"},
+  {id:2,name:"Fatima Hassan",   phone:"+966 55 456",date:"2026-03-20",time:"20:00",guests:2,table:"Table 1",note:"",status:"confirmed"},
+  {id:3,name:"Abdullah Khalid", phone:"+966 54 789",date:"2026-03-21",time:"18:30",guests:6,table:"VIP Room",note:"Birthday",status:"pending"},
+  {id:4,name:"Noura Al-Rashid", phone:"+966 56 012",date:"2026-03-22",time:"19:30",guests:3,table:"Table 2",note:"",status:"confirmed"},
+];
+var tables = [
+  {num:1,status:"busy"},{num:2,status:"free"},{num:3,status:"busy"},
+  {num:4,status:"free"},{num:5,status:"free"},{num:6,status:"busy"},
+  {num:7,status:"free"},{num:8,status:"free"},{num:"VIP",status:"busy"},
+];
+function renderCalendar(){
+  var months=["January","February","March","April","May","June","July","August","September","October","November","December"];
+  document.getElementById("calTitle").textContent = months[calDate.getMonth()]+" "+calDate.getFullYear();
+  var days=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+  document.getElementById("calDays").innerHTML = days.map(function(d){return "<div class='cal-day-hdr'>"+d+"</div>";}).join("");
+  var first = new Date(calDate.getFullYear(),calDate.getMonth(),1).getDay();
+  var daysInMonth = new Date(calDate.getFullYear(),calDate.getMonth()+1,0).getDate();
+  var today = new Date();
+  var cells="";
+  for(var i=0;i<first;i++)cells+="<div class='cal-cell'></div>";
+  for(var d=1;d<=daysInMonth;d++){
+    var dateStr = calDate.getFullYear()+"-"+String(calDate.getMonth()+1).padStart(2,"0")+"-"+String(d).padStart(2,"0");
+    var hasRes = reservations.some(function(r){return r.date===dateStr;});
+    var isToday = today.getDate()===d&&today.getMonth()===calDate.getMonth()&&today.getFullYear()===calDate.getFullYear();
+    cells+="<div class='cal-cell"+(isToday?" today":"")+(hasRes?" has-res":"")+"' onclick='selectDate(\""+dateStr+"\")'>"+d+"</div>";
+  }
+  document.getElementById("calGrid").innerHTML="<div class='cal-days' style='gap:4px;'>"+cells+"</div>";
+  renderResList();
+  document.getElementById("tableStatus").innerHTML = tables.map(function(t){
+    return "<div class='qr-table-card'><div class='qtc-num'>"+t.num+"</div><div class='qtc-lbl'>Table</div><div class='qtc-status "+(t.status==="free"?"qtc-free":"qtc-busy")+"'>"+(t.status==="free"?"Available":"Occupied")+"</div></div>";
+  }).join("");
+}
+function renderResList(filter){
+  var today = new Date().toISOString().split("T")[0];
+  var list = filter?reservations.filter(function(r){return r.date===filter;}):reservations.filter(function(r){return r.date===today||r.date>today;}).slice(0,5);
+  document.getElementById("resList").innerHTML = list.length?list.map(function(r){
+    return "<div class='res-row'>"+
+      "<div class='rr-status "+(r.status==="confirmed"?"rr-confirmed":r.status==="pending"?"rr-pending":"rr-cancelled")+"'>"+r.status+"</div>"+
+      "<div class='rr-time'>"+r.time+"</div>"+
+      "<div class='rr-name'>"+r.name+"</div>"+
+      "<div class='rr-info'>"+r.table+" • "+r.guests+" guests"+(r.note?" • 📝 "+r.note:"")+"</div>"+
+    "</div>";
+  }).join(""):"<div style='text-align:center;padding:30px;color:var(--muted);font-size:13px;'>No reservations</div>";
+}
+function selectDate(d){
+  document.querySelectorAll(".cal-cell").forEach(function(c){c.classList.remove("selected");});
+  renderResList(d);
+}
+function prevMonth(){calDate.setMonth(calDate.getMonth()-1);renderCalendar();}
+function nextMonth(){calDate.setMonth(calDate.getMonth()+1);renderCalendar();}
+function addReservation(){
+  var name=document.getElementById("resName").value.trim();
+  var date=document.getElementById("resDate").value;
+  var time=document.getElementById("resTime").value;
+  if(!name||!date){showToast("⚠️ Fill required fields!");return;}
+  reservations.push({id:Date.now(),name:name,phone:document.getElementById("resPhone").value,date:date,time:time,guests:document.getElementById("resGuests").value,table:document.getElementById("resTable").value,note:document.getElementById("resNote").value,status:"confirmed"});
+  closeModal("resModal");
+  renderCalendar();
+  showToast("✅ Reservation confirmed!");
+}
+
+// ══ QR MENU ══
+var qrColor = "#4f2d91";
+function renderQR(){
+  var c = qrColor;
+  var cells="";
+  var pattern=[1,1,1,1,1,1,1,0,1,0,1,1,0,1,1,0,1,0,0,1,0,1,1,0,1,0,0,1,0,1,1,0,1,0,0,1,0,1,1,0,1,0,0,0,1,0,0];
+  // Randomize slightly for visual effect
+  for(var i=0;i<49;i++){
+    var isFill = i<7||i%7===0||i%7===6||i>41||(i>=14&&i<=20)||(i>=28&&i<=34);
+    cells+="<div class='qr-cell' style='background:"+(isFill?c:"transparent")+";border:1px solid "+(isFill?"transparent":"#f0f0f0")+";'></div>";
+  }
+  document.getElementById("qrCanvas").innerHTML="<div style='width:100%;height:100%;display:grid;grid-template-columns:repeat(7,1fr);gap:2px;'>"+cells+"</div>";
+  document.getElementById("qrLogo").style.background=c;
+  document.getElementById("qrNameDisplay").textContent=document.getElementById("qrName").value;
+  document.getElementById("qrUrlDisplay").textContent=document.getElementById("qrUrl").value;
+  document.getElementById("qrBox").style.borderColor=c;
+  document.getElementById("tableQRs").innerHTML = tables.slice(0,8).map(function(t){
+    return "<div class='qr-table-card' onclick='showToast(\"📲 QR for Table "+t.num+" copied!\")'><div class='qtc-num'>"+t.num+"</div><div class='qtc-lbl'>Scan Menu</div><div style='font-size:20px;margin-top:4px;'>📱</div></div>";
+  }).join("");
+}
+function updateQR(){renderQR();}
+function setQRColor(c,el){
+  qrColor=c;
+  document.querySelectorAll("[onclick*='setQRColor']").forEach(function(b){b.style.borderWidth="2px";b.style.borderColor="var(--bdr)";});
+  el.style.borderWidth="3px";el.style.borderColor=c;
+  renderQR();
+}
+function downloadQR(){showToast("📥 QR Code downloaded!");}
+function printQR(){showToast("🖨️ Sending to printer!");}
+function shareQR(){
+  var url=document.getElementById("qrUrl").value;
+  window.open("https://wa.me/?text="+encodeURIComponent("📱 Scan our menu at: https://"+url),"_blank");
+}
+
+// ══ COUPONS ══
+var coupons = [
+  {id:1,code:"EID20",desc:"Eid Al-Adha Special",type:"pct",val:20,min:100,used:48,limit:200,exp:"2026-04-30",status:"active",color:""},
+  {id:2,code:"WELCOME10",desc:"New Customer Offer",type:"pct",val:10,min:50,used:156,limit:500,exp:"2026-12-31",status:"active",color:"green"},
+  {id:3,code:"FREEDEL",desc:"Free Delivery Weekend",type:"free",val:0,min:80,used:89,limit:100,exp:"2026-03-31",status:"active",color:"blue"},
+  {id:4,code:"FLAT50",desc:"Flat ﷼50 Off Orders",type:"fixed",val:50,min:200,used:23,limit:50,exp:"2026-03-20",status:"active",color:"orange"},
+  {id:5,code:"SUMMER25",desc:"Summer Special",type:"pct",val:25,min:150,used:100,limit:100,exp:"2025-09-30",status:"expired",color:""},
+];
+function renderCoupons(){
+  document.getElementById("couponStats").innerHTML =
+    kpi("kpi-p","🎟️",coupons.filter(function(c){return c.status==="active";}).length,"Active Coupons","","up")+
+    kpi("kpi-g","✅",coupons.reduce(function(s,c){return s+c.used;},0),"Total Redeemed","↑ 18%","up")+
+    kpi("kpi-o","💰","﷼ 4,280","Discount Given","This month","up")+
+    kpi("kpi-b","📊","34%","Coupon Usage Rate","↑ 5%","up");
+  document.getElementById("couponGrid").innerHTML = coupons.map(function(c){
+    var pct=Math.round(c.used/c.limit*100);
+    var discText=c.type==="pct"?c.val+"% OFF":c.type==="fixed"?"﷼"+c.val+" OFF":"FREE DELIVERY";
+    return "<div class='coupon-card'>"+
+      "<div class='coupon-top "+(c.color||"")+"'>"+
+        "<div class='coupon-status "+(c.status==="active"?"cs-active":"cs-expired")+"'>"+(c.status==="active"?"● Active":"✕ Expired")+"</div>"+
+        "<div class='coupon-code'>"+c.code+"</div>"+
+        "<div class='coupon-disc'>"+discText+" • Min order ﷼"+c.min+"</div>"+
+      "</div>"+
+      "<div class='coupon-body'>"+
+        "<div class='coupon-meta'><span>"+c.desc+"</span><span>Exp: "+c.exp+"</span></div>"+
+        "<div class='coupon-bar'><div class='coupon-fill' style='width:"+pct+"%;'></div></div>"+
+        "<div class='coupon-used'>"+c.used+"/"+c.limit+" used ("+pct+"%)</div>"+
+      "</div>"+
+      "<div class='coupon-actions'>"+
+        "<button class='btn-primary' style='padding:6px 12px;font-size:11px;' onclick='copyCoupon(\""+c.code+"\")'>📋 Copy</button>"+
+        "<button class='btn-sec' style='padding:6px 12px;font-size:11px;'>✏️ Edit</button>"+
+        "<button onclick='delCoupon("+c.id+")' style='background:#fff0f0;color:var(--red);border:none;padding:6px 10px;border-radius:7px;cursor:pointer;font-size:12px;'>🗑️</button>"+
+      "</div>"+
+    "</div>";
+  }).join("");
+}
+function copyCoupon(code){showToast("📋 Code "+code+" copied!");}
+function delCoupon(id){if(!confirm("Delete this coupon?"))return;coupons=coupons.filter(function(c){return c.id!==id;});renderCoupons();showToast("🗑️ Coupon deleted");}
+function createCoupon(){
+  var code=document.getElementById("cpCode").value.trim().toUpperCase();
+  if(!code){showToast("⚠️ Enter coupon code!");return;}
+  coupons.unshift({id:Date.now(),code:code,desc:document.getElementById("cpDesc").value||"New coupon",type:document.getElementById("cpType").value,val:parseFloat(document.getElementById("cpVal").value)||10,min:parseFloat(document.getElementById("cpMin").value)||0,used:0,limit:parseInt(document.getElementById("cpLimit").value)||100,exp:document.getElementById("cpExp").value||"2026-12-31",status:"active",color:""});
+  closeModal("couponModal");renderCoupons();showToast("🎟️ Coupon "+code+" created!");
+}
+
+// ══ BILLING ══
+function renderBilling(){
+  document.getElementById("planCards").innerHTML = [
+    {name:"Basic",price:"1,888",period:"/mo",features:["1 Branch","Basic POS","Menu Management","Basic Reports","Email Support"],current:false,popular:false},
+    {name:"Pro",price:"2,888",period:"/mo",features:["5 Branches","Full POS System","Online Ordering","Advanced Analytics","Priority Support","AI Chatbot"],current:true,popular:true},
+    {name:"Enterprise",price:"Custom",period:"",features:["Unlimited Branches","All Features","Dedicated Manager","Custom Integration","24/7 Support","White Label"],current:false,popular:false},
+  ].map(function(p){
+    return "<div class='plan-card "+(p.popular?"popular":"")+"'>"+
+      (p.popular?"<div class='plan-badge'>⭐ Current Plan</div>":"")+
+      "<div class='plan-name'>"+p.name+"</div>"+
+      "<div class='plan-price'>﷼ "+p.price+"<span>"+p.period+"</span></div>"+
+      "<ul class='plan-features'>"+p.features.map(function(f){return "<li>"+f+"</li>";}).join("")+"</ul>"+
+      "<button class='btn-plan' style='"+(p.current?"background:var(--grn);color:#fff;":"p.popular?'background:var(--p);color:#fff;':'background:var(--hover);color:var(--text);'")+";' onclick='showToast(\""+(p.current?"✅ Already on this plan":"📞 Contact sales for "+p.name)+"\")'>"+(p.current?"✅ Current Plan":p.name==="Enterprise"?"📞 Contact Sales":"⬆️ Upgrade")+"</button>"+
+    "</div>";
+  }).join("");
+  document.getElementById("billHistory").innerHTML = [
+    {inv:"INV-2026-03",date:"Mar 1, 2026",plan:"Pro Plan",amt:"2,888",status:"paid"},
+    {inv:"INV-2026-02",date:"Feb 1, 2026",plan:"Pro Plan",amt:"2,888",status:"paid"},
+    {inv:"INV-2026-01",date:"Jan 1, 2026",plan:"Pro Plan",amt:"2,888",status:"paid"},
+    {inv:"INV-2025-12",date:"Dec 1, 2025",plan:"Basic Plan",amt:"1,888",status:"paid"},
+  ].map(function(b){
+    return "<div class='bh-row'>"+
+      "<span class='bh-inv'>"+b.inv+"</span>"+
+      "<span style='flex:1;font-size:13px;color:var(--sub);'>"+b.date+"</span>"+
+      "<span style='font-size:13px;color:var(--sub);'>"+b.plan+"</span>"+
+      "<span class='bh-status "+(b.status==="paid"?"bh-paid":"bh-due")+"'>"+b.status+"</span>"+
+      "<span style='font-weight:700;color:var(--text);'>﷼ "+b.amt+"</span>"+
+      "<button onclick='showToast(\"📥 Invoice downloaded!\")' style='background:var(--hover);border:none;padding:5px 12px;border-radius:6px;font-size:11px;cursor:pointer;color:var(--sub);'>📥</button>"+
+    "</div>";
+  }).join("");
+}
+
+// ══ SUPPORT ══
+var tickets = [
+  {id:1,cust:"Mohammed Al-Saud",cat:"Order Issue",subj:"Wrong items delivered",prev:"I ordered Classic Burger but received...",priority:"high",status:"open",msgs:[
+    {from:"customer",text:"I ordered Classic Burger but received Cheese Burger. Please fix.",time:"10:30 AM"},
+    {from:"staff",text:"I'm sorry for the inconvenience! I'll arrange a replacement immediately.",time:"10:35 AM"},
+    {from:"customer",text:"Thank you, how long will it take?",time:"10:37 AM"},
+  ]},
+  {id:2,cust:"Fatima Hassan",cat:"Payment Problem",subj:"Double charged for order",prev:"My card was charged twice for order...",priority:"high",status:"progress",msgs:[
+    {from:"customer",text:"My card was charged twice for order #ONL-0018. Amount: ﷼ 87.50",time:"Yesterday"},
+    {from:"staff",text:"We've identified the duplicate charge and initiated a refund. 3-5 business days.",time:"Yesterday"},
+  ]},
+  {id:3,cust:"Abdullah Khalid",cat:"App Bug",subj:"App crashes on checkout",prev:"The app keeps crashing when I...",priority:"med",status:"open",msgs:[
+    {from:"customer",text:"The app keeps crashing when I try to checkout. Using Samsung Galaxy S23.",time:"2 days ago"},
+  ]},
+  {id:4,cust:"Noura Al-Rashid",cat:"General",subj:"Change delivery address",prev:"I need to update my default...",priority:"low",status:"resolved",msgs:[
+    {from:"customer",text:"I need to update my default delivery address.",time:"3 days ago"},
+    {from:"staff",text:"Done! Your address has been updated successfully.",time:"3 days ago"},
+    {from:"customer",text:"Thank you so much! ⭐⭐⭐⭐⭐",time:"3 days ago"},
+  ]},
+];
+var selectedTicket = 1;
+function renderSupport(){
+  document.getElementById("supportStats").innerHTML =
+    kpi("kpi-r","🎫",tickets.filter(function(t){return t.status==="open";}).length,"Open Tickets","Needs attention","dn")+
+    kpi("kpi-o","⏳",tickets.filter(function(t){return t.status==="progress";}).length,"In Progress","Being handled","up")+
+    kpi("kpi-g","✅",tickets.filter(function(t){return t.status==="resolved";}).length,"Resolved","This week","up")+
+    kpi("kpi-b","⏱️","2.4h","Avg Response","↓ 0.3h","up");
+  document.getElementById("ticketList").innerHTML = tickets.map(function(t){
+    return "<div class='ticket-item "+(t.id===selectedTicket?"selected":"")+"' onclick='selectTicket("+t.id+")'>"+
+      "<div class='ti-hdr'>"+
+        "<span class='ti-id'>#TK-"+String(t.id).padStart(4,"0")+"</span>"+
+        "<span class='ti-status "+(t.status==="open"?"ts-open":t.status==="progress"?"ts-progress":"ts-resolved")+"'>"+t.status+"</span>"+
+      "</div>"+
+      "<div class='ti-title'>"+t.subj+"</div>"+
+      "<div class='ti-preview'>"+t.prev+"</div>"+
+      "<div class='ti-meta'>"+
+        "<span>"+t.cust+"</span>"+
+        "<span class='ti-priority "+(t.priority==="high"?"tp-high":t.priority==="med"?"tp-med":"tp-low")+"'>"+t.priority+"</span>"+
+        "<span>"+t.cat+"</span>"+
+      "</div>"+
+    "</div>";
+  }).join("");
+  renderTicketDetail();
+}
+function selectTicket(id){selectedTicket=id;renderSupport();}
+function renderTicketDetail(){
+  var t=tickets.find(function(x){return x.id===selectedTicket;});
+  if(!t)return;
+  document.getElementById("ticketDetail").innerHTML =
+    "<div class='td-hdr'>"+
+      "<div style='display:flex;align-items:center;gap:8px;margin-bottom:6px;'>"+
+        "<span style='font-family:JetBrains Mono,monospace;font-size:12px;color:var(--p);font-weight:600;'>#TK-"+String(t.id).padStart(4,"0")+"</span>"+
+        "<span class='ti-status "+(t.status==="open"?"ts-open":t.status==="progress"?"ts-progress":"ts-resolved")+"'>"+t.status+"</span>"+
+      "</div>"+
+      "<div style='font-size:14px;font-weight:700;color:var(--text);'>"+t.subj+"</div>"+
+      "<div style='font-size:12px;color:var(--muted);margin-top:3px;'>"+t.cust+" • "+t.cat+"</div>"+
+    "</div>"+
+    "<div class='td-messages'>"+
+      t.msgs.map(function(m){
+        var isStaff=m.from==="staff";
+        return "<div style='margin-bottom:8px;"+(isStaff?"text-align:right;":"")+"'>"+
+          "<div class='msg-bubble "+(isStaff?"msg-staff":"msg-customer")+"'>"+m.text+"</div>"+
+          "<div class='msg-time' style='"+(isStaff?"text-align:right;":"")+"'>"+m.time+"</div>"+
+        "</div>";
+      }).join("")+
+    "</div>"+
+    "<div class='td-reply'>"+
+      "<textarea id='replyMsg' placeholder='Type your reply...' rows='2'></textarea>"+
+      "<button onclick='sendReply()' style='background:var(--p);color:#fff;border:none;padding:10px 14px;border-radius:9px;cursor:pointer;font-size:14px;flex-shrink:0;'>➤</button>"+
+    "</div>"+
+    "<div style='display:flex;gap:6px;margin-top:8px;'>"+
+      "<button onclick='resolveTicket()' style='flex:1;background:var(--grn);color:#fff;border:none;padding:8px;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;font-family:Sora,sans-serif;'>✅ Resolve</button>"+
+      "<button onclick='showToast(\"📞 Calling customer...\")' style='flex:1;background:var(--blu);color:#fff;border:none;padding:8px;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;font-family:Sora,sans-serif;'>📞 Call</button>"+
+    "</div>";
+}
+function sendReply(){
+  var msg=document.getElementById("replyMsg");
+  if(!msg||!msg.value.trim()){showToast("⚠️ Type a reply first!");return;}
+  var t=tickets.find(function(x){return x.id===selectedTicket;});
+  if(t){t.msgs.push({from:"staff",text:msg.value.trim(),time:"Just now"});t.status="progress";}
+  renderSupport();showToast("✅ Reply sent!");
+}
+function resolveTicket(){
+  var t=tickets.find(function(x){return x.id===selectedTicket;});
+  if(t)t.status="resolved";
+  renderSupport();showToast("✅ Ticket resolved!");
+}
+function createTicket(){
+  var subj=document.getElementById("tkSubj").value.trim();
+  var name=document.getElementById("tkName").value.trim();
+  if(!subj||!name){showToast("⚠️ Fill required fields!");return;}
+  tickets.unshift({id:Date.now(),cust:name,cat:document.getElementById("tkCat").value,subj:subj,prev:document.getElementById("tkMsg").value.substring(0,50)+"...",priority:document.getElementById("tkPri").value,status:"open",msgs:[{from:"customer",text:document.getElementById("tkMsg").value,time:"Just now"}]});
+  closeModal("ticketModal");renderSupport();showToast("📞 Ticket created!");
+}
+
+// ══ AI CHATBOT ══
+var chatHistory = [];
+var qrs = ["📋 View menu","🛒 My orders","⭐ Loyalty points","🚚 Delivery time","💰 Pricing","📞 Contact us"];
+function initChat(){
+  chatHistory = [];
+  addBotMsg("👋 Hello! I'm BillZest AI Assistant. I can help you with:\n\n• Menu & ordering\n• Loyalty points\n• Delivery info\n• Reservations\n\nHow can I help you today?");
+  document.getElementById("quickReplies").innerHTML = qrs.map(function(q){
+    return "<button class='qr-chip' onclick='sendChatMsg(\""+q+"\")'>"+q+"</button>";
+  }).join("");
+  document.getElementById("topQuestions").innerHTML = [
+    {q:"Menu items",n:342},{q:"Delivery time",n:281},{q:"Loyalty points",n:198},{q:"Opening hours",n:156},
+  ].map(function(q){
+    return "<div style='display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--bdr);font-size:12px;'><span style='color:var(--sub);'>"+q.q+"</span><span style='font-weight:700;color:var(--p);'>"+q.n+"x</span></div>";
+  }).join("");
+}
+function addBotMsg(text){
+  var d=document.getElementById("chatMsgs");
+  var div=document.createElement("div");
+  div.innerHTML="<div class='cm-bubble cm-bot'>"+text.replace(/\n/g,"<br>")+"</div><div class='cm-time'>Just now</div>";
+  d.appendChild(div);
+  d.scrollTop=d.scrollHeight;
+}
+function addUserMsg(text){
+  var d=document.getElementById("chatMsgs");
+  var div=document.createElement("div");
+  div.style.textAlign="right";
+  div.innerHTML="<div class='cm-bubble cm-user'>"+text+"</div><div class='cm-time' style='text-align:right;'>Just now</div>";
+  d.appendChild(div);
+  d.scrollTop=d.scrollHeight;
+}
+function showTyping(){
+  var d=document.getElementById("chatMsgs");
+  var div=document.createElement("div");
+  div.id="typingIndicator";
+  div.innerHTML="<div class='cm-typing'><span></span><span></span><span></span></div>";
+  d.appendChild(div);
+  d.scrollTop=d.scrollHeight;
+}
+function hideTyping(){var el=document.getElementById("typingIndicator");if(el)el.remove();}
+function sendChat(){
+  var inp=document.getElementById("chatInput");
+  var msg=inp.value.trim();
+  if(!msg)return;
+  inp.value="";
+  sendChatMsg(msg);
+}
+function sendChatMsg(msg){
+  addUserMsg(msg);
+  showTyping();
+  setTimeout(function(){
+    hideTyping();
+    var reply = getBotReply(msg.toLowerCase());
+    addBotMsg(reply);
+  },800+Math.random()*600);
+}
+function getBotReply(msg){
+  if(msg.includes("menu")||msg.includes("food")||msg.includes("eat"))
+    return "🍽️ Our menu has 9 categories:\n\n🍔 Burgers • 🍕 Pizza • 🍗 Chicken\n🥩 Grills • 🌮 Wraps • 🥗 Salads\n🍟 Sides • 🥤 Drinks • 🍰 Desserts\n\nAll items start from ﷼ 8. Would you like to see a specific category?";
+  if(msg.includes("order")||msg.includes("track"))
+    return "📦 To track your order:\n\n1. Open the BillZest app\n2. Go to 'My Orders'\n3. Click on your order ID\n\nOr share your order number and I'll check for you! 🔍";
+  if(msg.includes("loyalty")||msg.includes("point")||msg.includes("reward"))
+    return "⭐ BillZest Loyalty Program:\n\n🥉 Bronze: 0-999 pts (5% off)\n🥈 Silver: 1,000-1,999 pts (10% off)\n🥇 Gold: 2,000+ pts (15% off + VIP)\n\nYou earn 1 point for every ﷼ 1 spent! 🎁";
+  if(msg.includes("delivery")||msg.includes("time")||msg.includes("how long"))
+    return "🛵 Delivery Information:\n\n⏱️ Average time: 25-35 minutes\n📍 Delivery radius: 10km\n💰 Delivery fee: ﷼ 10\n🆓 Free delivery for Gold members!\n\nLive tracking available in the app! 📱";
+  if(msg.includes("price")||msg.includes("cost")||msg.includes("pricing"))
+    return "💰 Pricing:\n\n🍔 Burgers: ﷼ 32-52\n🍕 Pizza: ﷼ 45-58\n🍗 Chicken: ﷼ 25-42\n🥩 Grills: ﷼ 48-120\n🥤 Drinks: ﷼ 3-22\n\nAll prices include VAT! 💳";
+  if(msg.includes("reservation")||msg.includes("book")||msg.includes("table"))
+    return "🗓️ Table Reservations:\n\n📞 Call: 800 1000 119\n📱 App: Reservations tab\n🌐 Online: billzest.com\n\nWe have tables for 1-10+ guests. VIP room available! 👑";
+  if(msg.includes("hello")||msg.includes("hi")||msg.includes("hey"))
+    return "👋 Hello! Welcome to BillZest! I'm here to help you 24/7.\n\nWhat can I help you with today? You can ask me about our menu, orders, loyalty points, delivery, or reservations! 😊";
+  if(msg.includes("contact")||msg.includes("phone")||msg.includes("support"))
+    return "📞 Contact BillZest:\n\n☎️ KSA: 800 1000 119 (Free)\n💬 WhatsApp: +966 50 000 0000\n📧 support@billzest.com\n⏰ Available 24/7\n\nOr open a support ticket in the app! 🎫";
+  return "🤔 I understand you're asking about: \""+msg+"\"\n\nLet me connect you with our support team for a more detailed answer!\n\n📞 Call: 800 1000 119\n💬 WhatsApp us\n\nOr I can help with:\n• Menu & ordering\n• Delivery info\n• Loyalty points\n• Reservations";
+}
+function clearChat(){chatHistory=[];document.getElementById("chatMsgs").innerHTML="";initChat();showToast("🗑️ Chat cleared");}
+
+// ══ MODAL ══
+function showModal(id){document.getElementById(id).classList.add("open");}
+function closeModal(id){document.getElementById(id).classList.remove("open");}
+document.addEventListener("click",function(e){
+  document.querySelectorAll(".modal-bg.open").forEach(function(m){
+    if(e.target===m)m.classList.remove("open");
+  });
+});
+
+// ══ TOAST ══
+function showToast(msg){
+  var t=document.getElementById("toast");
+  t.textContent=msg;t.classList.add("show");
+  setTimeout(function(){t.classList.remove("show");},2500);
+}
+
+// ══ INIT ══
+updatePeriod("week");
+renderAlerts();
+renderCalendar();
+renderQR();
+renderCoupons();
+renderBilling();
+renderSupport();
+initChat();
+
+// Set today as default date for reservation
+document.getElementById("resDate").value = new Date().toISOString().split("T")[0];
+</script>
+</body>
+</html>
