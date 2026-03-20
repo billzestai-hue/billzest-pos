@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>BillZest — Ultimate System</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{overflow-x:hidden;width:100%;}
+[data-theme="light"]{--bg:#f4f4f8;--card:#fff;--bdr:#e0e0e0;--text:#1a1a1a;--muted:#888;--sub:#555;--hdr:#fff;--inp:#fff;--inpb:#ddd;--hover:#f8f8fc;}
+[data-theme="dark"]{--bg:#0f0f1a;--card:#1a1a2e;--bdr:#2a2a3e;--text:#f0f0ff;--muted:#6b7280;--sub:#9ca3af;--hdr:#12121f;--inp:#1e1e30;--inpb:#3a3a55;--hover:#1e1e30;}
+:root{--p:#4f2d91;--pd:#3b1f6e;--pl:#f0ebff;--teal:#00b5a3;--org:#f5a623;--red:#ef4444;--grn:#10b981;--blu:#3b82f6;--yel:#f59e0b;--pink:#ec4899;}
+body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--text);transition:background .3s,color .3s;}
+[dir="rtl"] body{font-family:'Tajawal',sans-serif;}
+
+/* LAYOUT */
+.app{display:flex;min-height:100vh;}
+.sidebar{width:220px;background:var(--hdr);border-right:1px solid var(--bdr);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:100;transition:transform .3s;}
+[dir="rtl"] .sidebar{left:auto;right:0;border-right:none;border-left:1px solid var(--bdr);}
+.sidebar.hidden{transform:translateX(-100%);}
+[dir="rtl"] .sidebar.hidden{transform:translateX(100%);}
+.sb-logo{padding:18px 16px;border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between;}
+.sb-logo-txt{font-size:20px;font-weight:800;color:var(--text);}
+.sb-logo-txt span{color:var(--org);}
+.sb-nav{flex:1;padding:10px 8px;overflow-y:auto;scrollbar-width:none;}
+.sb-nav::-webkit-scrollbar{display:none;}
+.sg{margin-bottom:14px;}
+.sg-lbl{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;padding:0 8px;margin-bottom:5px;}
+.ni{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:9px;cursor:pointer;font-size:12px;font-weight:500;color:var(--sub);border:none;background:none;width:100%;font-family:inherit;text-align:left;transition:all .2s;}
+[dir="rtl"] .ni{text-align:right;}
+.ni:hover{background:var(--hover);color:var(--text);}
+.ni.on{background:var(--p);color:#fff;font-weight:600;}
+.ni-ic{font-size:15px;flex-shrink:0;}
+.ni-bd{margin-left:auto;background:var(--red);color:#fff;font-size:9px;font-weight:700;width:17px;height:17px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+[dir="rtl"] .ni-bd{margin-left:0;margin-right:auto;}
+.sb-bot{padding:10px 8px;border-top:1px solid var(--bdr);}
+
+/* MAIN */
+.main{margin-left:220px;flex:1;display:flex;flex-direction:column;}
+[dir="rtl"] .main{margin-left:0;margin-right:220px;}
+.topbar{background:var(--hdr);border-bottom:1px solid var(--bdr);padding:0 20px;height:54px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:50;}
+.tb-menu{background:none;border:none;font-size:20px;cursor:pointer;color:var(--text);display:none;}
+.tb-title{font-size:15px;font-weight:700;color:var(--text);flex:1;}
+.tb-lang{background:var(--hover);border:1px solid var(--bdr);padding:5px 12px;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;color:var(--text);font-family:inherit;}
+.tb-dark{background:none;border:none;font-size:18px;cursor:pointer;}
+.pc{padding:18px;}
+
+/* PAGES */
+.pg{display:none;}
+.pg.on{display:block;}
+
+/* COMMON */
+.sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px;}
+.sh h2{font-size:19px;font-weight:700;color:var(--text);}
+.card{background:var(--card);border:1px solid var(--bdr);border-radius:13px;padding:18px;}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px;}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:14px;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+.kpi{background:var(--card);border:1px solid var(--bdr);border-radius:12px;padding:16px;position:relative;overflow:hidden;}
+.kpi::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.kp::after{background:var(--p)}.kg::after{background:var(--grn)}.ko::after{background:var(--org)}.kb::after{background:var(--blu)}.kr::after{background:var(--red)}
+.kpi-ic{font-size:24px;margin-bottom:7px;}
+.kpi-v{font-size:24px;font-weight:800;font-family:'JetBrains Mono',monospace;color:var(--text);}
+.kpi-l{font-size:11px;color:var(--muted);margin-top:2px;}
+.btn{background:var(--p);color:#fff;border:none;padding:8px 16px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:5px;transition:all .2s;}
+.btn:hover{background:var(--pd);}
+.btn-g{background:var(--grn);}
+.btn-r{background:var(--red);}
+.btn-o{background:var(--org);}
+.btn-s{background:var(--hover);color:var(--text);border:1px solid var(--bdr);}
+.mf{margin-bottom:13px;}
+.mf label{display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px;}
+.mf input,.mf select,.mf textarea{width:100%;padding:9px 11px;border:1.5px solid var(--inpb);border-radius:8px;font-size:13px;font-family:inherit;outline:none;background:var(--inp);color:var(--text);transition:border .2s;}
+.mf input:focus,.mf select:focus,.mf textarea:focus{border-color:var(--p);}
+.mf textarea{resize:vertical;min-height:70px;}
+.mfr{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.tag{display:inline-flex;align-items:center;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;}
+.tag-g{background:rgba(16,185,129,.1);color:var(--grn);}
+.tag-r{background:rgba(239,68,68,.1);color:var(--red);}
+.tag-o{background:rgba(245,158,11,.1);color:var(--yel);}
+.tag-b{background:rgba(59,130,246,.1);color:var(--blu);}
+.tag-p{background:rgba(79,45,145,.1);color:var(--p);}
+
+/* MODAL */
+.mbg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;align-items:center;justify-content:center;padding:16px;}
+.mbg.on{display:flex;}
+.mbox{background:var(--card);border-radius:16px;width:100%;max-width:460px;max-height:88vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.25);animation:pop .2s ease;}
+@keyframes pop{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+.mhd{padding:18px 20px 0;display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.mhd h3{font-size:16px;font-weight:700;color:var(--text);}
+.mcl{background:none;border:none;font-size:19px;cursor:pointer;color:var(--muted);}
+.mbd{padding:0 20px 20px;}
+.mft{padding:12px 20px;border-top:1px solid var(--bdr);display:flex;gap:8px;}
+.btn-c{flex:1;background:var(--hover);color:var(--sub);border:none;padding:10px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;}
+.btn-sv{flex:2;background:var(--p);color:#fff;border:none;padding:10px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;}
+
+/* TOAST */
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%) translateY(60px);background:#1a1a1a;color:#fff;padding:11px 20px;border-radius:28px;font-size:12px;font-weight:600;z-index:9999;transition:transform .3s;white-space:nowrap;}
+.toast.on{transform:translateX(-50%) translateY(0);}
+
+/* ══ MAP PAGE ══ */
+.map-container{background:var(--card);border:1px solid var(--bdr);border-radius:13px;overflow:hidden;margin-bottom:14px;}
+.map-visual{height:380px;position:relative;background:linear-gradient(135deg,#1a3a5c 0%,#1e4976 50%,#1a3a5c 100%);overflow:hidden;}
+.map-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);background-size:40px 40px;}
+.map-road-h{position:absolute;height:3px;background:rgba(255,255,255,.2);left:0;right:0;}
+.map-road-v{position:absolute;width:3px;background:rgba(255,255,255,.2);top:0;bottom:0;}
+.map-marker{position:absolute;transform:translate(-50%,-50%);cursor:pointer;transition:transform .2s;}
+.map-marker:hover{transform:translate(-50%,-50%) scale(1.2);}
+.mm-pin{width:36px;height:36px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,.3);}
+.mm-pin .mm-ic{transform:rotate(45deg);font-size:16px;}
+.mm-label{position:absolute;top:-32px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.8);color:#fff;padding:3px 8px;border-radius:6px;font-size:10px;white-space:nowrap;font-weight:600;}
+.driver-path{position:absolute;border-top:2px dashed rgba(245,166,35,.7);transform-origin:left center;}
+.map-legend{padding:14px 16px;display:flex;gap:16px;flex-wrap:wrap;}
+.ml-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--sub);}
+.ml-dot{width:10px;height:10px;border-radius:50%;}
+.delivery-list{background:var(--card);border:1px solid var(--bdr);border-radius:13px;padding:16px;}
+.dl-row{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--bdr);font-size:13px;}
+.dl-row:last-child{border-bottom:none;}
+.dl-id{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;color:var(--p);}
+.dl-driver{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0;}
+.progress-bar{height:4px;background:var(--bdr);border-radius:2px;overflow:hidden;flex:1;}
+.pb-fill{height:100%;border-radius:2px;transition:width .5s;}
+
+/* ══ MOBILE APP UI ══ */
+.phone-frame{width:320px;min-height:600px;background:#000;border-radius:40px;padding:10px;box-shadow:0 20px 60px rgba(0,0,0,.4);margin:0 auto;position:relative;}
+.phone-screen{background:var(--card);border-radius:32px;overflow:hidden;min-height:580px;}
+.phone-status{background:#000;padding:12px 20px 6px;display:flex;justify-content:space-between;font-size:11px;color:#fff;}
+.app-screens{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+.app-screen-btn{padding:10px;border:2px solid var(--bdr);border-radius:10px;cursor:pointer;text-align:center;font-size:11px;font-weight:600;background:var(--card);color:var(--sub);transition:all .2s;}
+.app-screen-btn.on{border-color:var(--p);color:var(--p);}
+.phone-content{padding:16px;}
+.ph-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.ph-hdr h3{font-size:15px;font-weight:700;}
+.ph-search{background:var(--hover);border:none;border-radius:10px;padding:9px 13px;width:100%;font-size:12px;font-family:inherit;color:var(--text);outline:none;margin-bottom:12px;}
+.ph-cats{display:flex;gap:7px;overflow-x:auto;margin-bottom:12px;padding-bottom:2px;scrollbar-width:none;}
+.ph-cats::-webkit-scrollbar{display:none;}
+.ph-cat{padding:6px 13px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap;cursor:pointer;border:none;font-family:inherit;}
+.ph-cat.on{background:var(--p);color:#fff;}
+.ph-cat:not(.on){background:var(--hover);color:var(--sub);}
+.ph-items{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.ph-item{background:var(--hover);border-radius:12px;padding:12px;text-align:center;}
+.ph-item-e{font-size:32px;margin-bottom:6px;}
+.ph-item-n{font-size:11px;font-weight:700;margin-bottom:3px;}
+.ph-item-p{font-size:12px;font-weight:800;color:var(--p);}
+.ph-item-add{width:24px;height:24px;background:var(--p);color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:14px;margin-top:5px;}
+.ph-bottom-nav{display:flex;background:var(--card);border-top:1px solid var(--bdr);padding:8px 0;}
+.ph-nav-item{flex:1;text-align:center;cursor:pointer;font-size:10px;color:var(--muted);padding:4px;}
+.ph-nav-item.on{color:var(--p);}
+.ph-nav-item .ph-nav-ic{font-size:20px;display:block;}
+
+/* ══ AI RECOMMENDATIONS ══ */
+.ai-rec-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin-bottom:16px;}
+.ai-rec-card{background:var(--card);border:1px solid var(--bdr);border-radius:13px;overflow:hidden;transition:all .2s;}
+.ai-rec-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.1);}
+.arc-img{height:120px;display:flex;align-items:center;justify-content:center;font-size:56px;position:relative;}
+.arc-ai-badge{position:absolute;top:8px;right:8px;background:var(--p);color:#fff;font-size:9px;font-weight:700;padding:2px 8px;border-radius:10px;}
+.arc-body{padding:12px;}
+.arc-name{font-size:13px;font-weight:700;margin-bottom:3px;}
+.arc-reason{font-size:11px;color:var(--muted);margin-bottom:8px;line-height:1.4;}
+.arc-footer{display:flex;align-items:center;justify-content:space-between;}
+.arc-price{font-size:14px;font-weight:800;color:var(--p);}
+.arc-score{font-size:11px;color:var(--yel);}
+
+/* ══ FOOD PHOTOS ══ */
+.photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:16px;}
+.photo-card{background:var(--card);border:1px solid var(--bdr);border-radius:12px;overflow:hidden;cursor:pointer;transition:all .2s;}
+.photo-card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.1);}
+.pc-img{height:130px;display:flex;align-items:center;justify-content:center;font-size:56px;position:relative;}
+.pc-overlay{position:absolute;inset:0;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;}
+.photo-card:hover .pc-overlay{opacity:1;}
+.pc-body{padding:10px;}
+.pc-name{font-size:12px;font-weight:700;}
+.pc-cat{font-size:10px;color:var(--muted);}
+.upload-zone{border:2px dashed var(--bdr);border-radius:13px;padding:40px;text-align:center;cursor:pointer;transition:all .2s;background:var(--hover);}
+.upload-zone:hover{border-color:var(--p);background:var(--pl);}
+.uz-icon{font-size:48px;margin-bottom:12px;}
+.uz-text{font-size:14px;font-weight:600;color:var(--sub);}
+.uz-sub{font-size:12px;color:var(--muted);margin-top:4px;}
+
+/* ══ FINANCIAL ══ */
+.fin-period{display:flex;gap:8px;margin-bottom:16px;}
+.fp-btn{padding:7px 16px;border-radius:8px;border:1.5px solid var(--bdr);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;background:var(--card);color:var(--sub);transition:all .2s;}
+.fp-btn.on{background:var(--p);color:#fff;border-color:var(--p);}
+.pl-table{width:100%;border-collapse:collapse;font-size:13px;}
+.pl-table th{text-align:left;padding:10px 12px;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;border-bottom:2px solid var(--bdr);}
+.pl-table td{padding:10px 12px;border-bottom:1px solid var(--bdr);color:var(--text);}
+.pl-table tr:last-child td{border-bottom:none;}
+.pl-table .section-row td{font-weight:700;background:var(--hover);color:var(--p);}
+.pl-table .total-row td{font-weight:800;font-size:14px;border-top:2px solid var(--bdr);}
+.vat-card{background:linear-gradient(135deg,var(--p),var(--pd));border-radius:13px;padding:20px;color:#fff;margin-bottom:14px;}
+.vat-amt{font-size:32px;font-weight:800;font-family:'JetBrains Mono',monospace;}
+
+/* ══ HR / PAYROLL ══ */
+.emp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin-bottom:16px;}
+.emp-card{background:var(--card);border:1px solid var(--bdr);border-radius:13px;padding:18px;text-align:center;}
+.ec-av{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:#fff;margin:0 auto 10px;}
+.ec-name{font-size:14px;font-weight:700;margin-bottom:3px;}
+.ec-role{font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;display:inline-block;margin-bottom:10px;}
+.ec-stats{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px;}
+.ec-stat{background:var(--hover);border-radius:7px;padding:7px;}
+.ec-sv{font-size:13px;font-weight:800;color:var(--p);}
+.ec-sl{font-size:10px;color:var(--muted);}
+.payroll-table{width:100%;border-collapse:collapse;font-size:13px;}
+.payroll-table th{text-align:left;padding:10px 12px;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;border-bottom:2px solid var(--bdr);}
+.payroll-table td{padding:10px 12px;border-bottom:1px solid var(--bdr);vertical-align:middle;}
+.payroll-table tr:last-child td{border-bottom:none;}
+
+/* ══ CUSTOMER PROFILE ══ */
+.cust-profile{display:grid;grid-template-columns:300px 1fr;gap:16px;}
+.cp-sidebar{display:flex;flex-direction:column;gap:12px;}
+.cp-info{background:var(--card);border:1px solid var(--bdr);border-radius:13px;padding:20px;text-align:center;}
+.cp-av{width:72px;height:72px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;color:#fff;margin:0 auto 12px;}
+.cp-name{font-size:16px;font-weight:700;}
+.cp-phone{font-size:13px;color:var(--muted);margin-top:4px;}
+.cp-pts{background:linear-gradient(135deg,var(--p),var(--pd));color:#fff;border-radius:10px;padding:14px;margin-top:12px;text-align:center;}
+.cp-pts-val{font-size:28px;font-weight:800;font-family:'JetBrains Mono',monospace;}
+.cp-pts-lbl{font-size:12px;opacity:.8;}
+.cp-orders{background:var(--card);border:1px solid var(--bdr);border-radius:13px;padding:16px;}
+.co-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--bdr);font-size:12px;}
+.co-row:last-child{border-bottom:none;}
+.co-id{font-family:'JetBrains Mono',monospace;color:var(--p);font-weight:600;}
+
+/* ══ SUPPLIER ══ */
+.sup-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;margin-bottom:16px;}
+.sup-card{background:var(--card);border:1px solid var(--bdr);border-radius:13px;padding:18px;}
+.sc-hdr{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.sc-av2{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.sc-name{font-size:14px;font-weight:700;}
+.sc-cat{font-size:11px;color:var(--muted);}
+.sc-stats2{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:10px;}
+.sc-st{background:var(--hover);border-radius:7px;padding:7px;text-align:center;}
+.sc-stv{font-size:13px;font-weight:800;color:var(--p);}
+.sc-stl{font-size:10px;color:var(--muted);}
+.po-table{width:100%;border-collapse:collapse;font-size:13px;}
+.po-table th{text-align:left;padding:10px 12px;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;border-bottom:2px solid var(--bdr);}
+.po-table td{padding:10px 12px;border-bottom:1px solid var(--bdr);}
+.po-table tr:last-child td{border-bottom:none;}
+
+/* ══ MARKETING ══ */
+.camp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-bottom:16px;}
+.camp-card{background:var(--card);border:1px solid var(--bdr);border-radius:13px;overflow:hidden;}
+.camp-top{padding:18px;position:relative;}
+.camp-name{font-size:15px;font-weight:800;color:#fff;margin-bottom:4px;}
+.camp-type{font-size:11px;color:rgba(255,255,255,.8);}
+.camp-status{position:absolute;top:12px;right:12px;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;background:rgba(255,255,255,.2);color:#fff;}
+.camp-body{padding:14px;}
+.camp-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px;}
+.cs2{background:var(--hover);border-radius:7px;padding:8px;text-align:center;}
+.cs2v{font-size:14px;font-weight:800;color:var(--p);}
+.cs2l{font-size:10px;color:var(--muted);}
+.prog-bar{height:5px;background:var(--bdr);border-radius:3px;overflow:hidden;margin-bottom:5px;}
+.prog-fill{height:100%;border-radius:3px;}
+.audience-builder{background:var(--card);border:1px solid var(--bdr);border-radius:13px;padding:18px;margin-bottom:14px;}
+.ab-filters{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
+.ab-filter{padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bdr);background:var(--card);color:var(--sub);font-family:inherit;transition:all .2s;}
+.ab-filter.on{background:var(--p);color:#fff;border-color:var(--p);}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .sidebar{transform:translateX(-100%);}
+  [dir="rtl"] .sidebar{transform:translateX(100%);}
+  .sidebar.open{transform:translateX(0);}
+  .main{margin-left:0;}
+  [dir="rtl"] .main{margin-right:0;}
+  .tb-menu{display:block;}
+  .g4{grid-template-columns:1fr 1fr;}
+  .g3{grid-template-columns:1fr 1fr;}
+  .cust-profile{grid-template-columns:1fr;}
+}
+@media(max-width:540px){
+  .g4,.g3,.g2{grid-template-columns:1fr 1fr;}
+  .pc{padding:10px;}
+  .mfr{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- SIDEBAR -->
+<div class="sidebar" id="sb">
+  <div class="sb-logo">
+    <div class="sb-logo-txt">Bill<span>Zest</span></div>
+    <span style="font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace;">Ultimate</span>
+  </div>
+  <div class="sb-nav">
+    <div class="sg">
+      <div class="sg-lbl" id="lbl-ops">Operations</div>
+      <button class="ni on" onclick="gp('map',this)"><span class="ni-ic">🗺️</span><span id="t-map">Delivery Map</span><span class="ni-bd">3</span></button>
+      <button class="ni" onclick="gp('mobile',this)"><span class="ni-ic">📱</span><span id="t-mobile">Mobile App</span></button>
+      <button class="ni" onclick="gp('supplier',this)"><span class="ni-ic">📦</span><span id="t-supplier">Suppliers</span></button>
+    </div>
+    <div class="sg">
+      <div class="sg-lbl" id="lbl-menu">Menu & AI</div>
+      <button class="ni" onclick="gp('ai',this)"><span class="ni-ic">🤖</span><span id="t-ai">AI Recommendations</span></button>
+      <button class="ni" onclick="gp('photos',this)"><span class="ni-ic">📸</span><span id="t-photos">Food Photos</span></button>
+    </div>
+    <div class="sg">
+      <div class="sg-lbl" id="lbl-biz">Business</div>
+      <button class="ni" onclick="gp('finance',this)"><span class="ni-ic">💹</span><span id="t-finance">Financial Reports</span></button>
+      <button class="ni" onclick="gp('hr',this)"><span class="ni-ic">👨‍💼</span><span id="t-hr">HR & Payroll</span></button>
+      <button class="ni" onclick="gp('customer',this)"><span class="ni-ic">🔓</span><span id="t-customer">Customer Login</span></button>
+      <button class="ni" onclick="gp('marketing',this)"><span class="ni-ic">🎯</span><span id="t-marketing">Marketing</span></button>
+    </div>
+  </div>
+  <div class="sb-bot">
+    <button class="ni" onclick="togDark()"><span class="ni-ic" id="dkIc">🌙</span><span id="t-dark">Dark Mode</span></button>
+    <button class="ni" onclick="togLang()"><span class="ni-ic">🌍</span><span id="t-lang">العربية</span></button>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <button class="tb-menu" onclick="togSb()">☰</button>
+    <div class="tb-title" id="pgTitle">🗺️ Delivery Tracking Map</div>
+    <button class="tb-lang btn-s" style="padding:5px 12px;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;border:1px solid var(--bdr);background:var(--hover);color:var(--text);font-family:inherit;" onclick="togLang()" id="langBtn">🌍 عربي</button>
+    <button class="tb-dark" onclick="togDark()" id="dkBtn">🌙</button>
+  </div>
+
+  <div class="pc">
+
+    <!-- ══ MAP ══ -->
+    <div class="pg on" id="pg-map">
+      <div class="sh"><h2 id="h-map">🗺️ Live Delivery Tracking</h2>
+        <button class="btn" onclick="refreshMap()">🔄 <span id="t-refresh">Refresh</span></button>
+      </div>
+      <div class="g4" id="mapKPIs"></div>
+      <div class="map-container">
+        <div class="map-visual" id="mapVisual">
+          <div class="map-grid"></div>
+          <!-- Roads -->
+          <div class="map-road-h" style="top:30%;"></div>
+          <div class="map-road-h" style="top:60%;"></div>
+          <div class="map-road-v" style="left:25%;"></div>
+          <div class="map-road-v" style="left:65%;"></div>
+          <!-- Restaurant -->
+          <div class="map-marker" style="left:45%;top:48%;">
+            <div class="mm-label">BillZest HQ</div>
+            <div class="mm-pin" style="background:var(--p);"><span class="mm-ic">🏪</span></div>
+          </div>
+          <!-- Drivers -->
+          <div class="map-marker" id="d1" style="left:62%;top:35%;">
+            <div class="mm-label">Ahmed #D01</div>
+            <div class="mm-pin" style="background:var(--grn);"><span class="mm-ic">🛵</span></div>
+          </div>
+          <div class="map-marker" id="d2" style="left:28%;top:55%;">
+            <div class="mm-label">Omar #D02</div>
+            <div class="mm-pin" style="background:var(--blu);"><span class="mm-ic">🛵</span></div>
+          </div>
+          <div class="map-marker" id="d3" style="left:70%;top:65%;">
+            <div class="mm-label">Khalid #D03</div>
+            <div class="mm-pin" style="background:var(--org);"><span class="mm-ic">🛵</span></div>
+          </div>
+          <!-- Customers -->
+          <div class="map-marker" style="left:75%;top:28%;">
+            <div class="mm-label">#ONL-041</div>
+            <div class="mm-pin" style="background:var(--red);"><span class="mm-ic">📍</span></div>
+          </div>
+          <div class="map-marker" style="left:18%;top:42%;">
+            <div class="mm-label">#ONL-042</div>
+            <div class="mm-pin" style="background:var(--red);"><span class="mm-ic">📍</span></div>
+          </div>
+          <div class="map-marker" style="left:80%;top:72%;">
+            <div class="mm-label">#ONL-043</div>
+            <div class="mm-pin" style="background:var(--red);"><span class="mm-ic">📍</span></div>
+          </div>
+        </div>
+        <div class="map-legend">
+          <div class="ml-item"><div class="ml-dot" style="background:var(--p);"></div>Restaurant</div>
+          <div class="ml-item"><div class="ml-dot" style="background:var(--grn);"></div>Driver (Active)</div>
+          <div class="ml-item"><div class="ml-dot" style="background:var(--red);"></div>Customer Location</div>
+          <div class="ml-item"><span style="font-size:12px;color:var(--muted);">🔴 Live tracking updates every 30s</span></div>
+        </div>
+      </div>
+      <div class="delivery-list">
+        <div style="font-size:14px;font-weight:700;margin-bottom:12px;color:var(--text);" id="t-active-del">Active Deliveries</div>
+        <div id="deliveryRows"></div>
+      </div>
+    </div>
+
+    <!-- ══ MOBILE APP ══ -->
+    <div class="pg" id="pg-mobile">
+      <div class="sh"><h2>📱 Mobile App UI Preview</h2></div>
+      <div class="g2">
+        <div>
+          <div class="card" style="margin-bottom:14px;">
+            <div style="font-size:14px;font-weight:700;margin-bottom:12px;color:var(--text);">📲 Screen Preview</div>
+            <div class="app-screens">
+              <div class="app-screen-btn on" onclick="setScreen('home',this)">🏠<br>Home</div>
+              <div class="app-screen-btn" onclick="setScreen('menu',this)">🍽️<br>Menu</div>
+              <div class="app-screen-btn" onclick="setScreen('cart',this)">🛒<br>Cart</div>
+              <div class="app-screen-btn" onclick="setScreen('profile',this)">👤<br>Profile</div>
+              <div class="app-screen-btn" onclick="setScreen('orders',this)">📋<br>Orders</div>
+              <div class="app-screen-btn" onclick="setScreen('loyalty',this)">⭐<br>Loyalty</div>
+              <div class="app-screen-btn" onclick="setScreen('track',this)">🛵<br>Track</div>
+              <div class="app-screen-btn" onclick="setScreen('support',this)">💬<br>Support</div>
+            </div>
+          </div>
+          <div class="card">
+            <div style="font-size:14px;font-weight:700;margin-bottom:12px;color:var(--text);">📊 App Stats</div>
+            <div id="appStats"></div>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:center;">
+          <div class="phone-frame">
+            <div class="phone-screen" id="phoneScreen">
+              <div class="phone-status"><span>9:41</span><span>📶 🔋</span></div>
+              <div class="phone-content" id="phoneContent"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ AI RECOMMENDATIONS ══ -->
+    <div class="pg" id="pg-ai">
+      <div class="sh"><h2>🤖 AI Menu Recommendations</h2>
+        <button class="btn" onclick="refreshAI()">✨ Refresh AI</button>
+      </div>
+      <div class="card" style="margin-bottom:16px;background:linear-gradient(135deg,var(--p),var(--pd));">
+        <div style="color:#fff;">
+          <div style="font-size:18px;font-weight:800;margin-bottom:6px;">🧠 AI Analysis Active</div>
+          <div style="font-size:13px;opacity:.85;">Based on 1,248 orders, weather (☀️ Hot), time (Dinner), and customer preferences</div>
+          <div style="display:flex;gap:12px;margin-top:12px;flex-wrap:wrap;">
+            <span style="background:rgba(255,255,255,.15);padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;">📈 Order Patterns</span>
+            <span style="background:rgba(255,255,255,.15);padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;">🌡️ Weather Based</span>
+            <span style="background:rgba(255,255,255,.15);padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;">⏰ Time Based</span>
+          </div>
+        </div>
+      </div>
+      <div style="font-size:14px;font-weight:700;margin-bottom:12px;color:var(--text);">🔥 Top Recommended Right Now</div>
+      <div class="ai-rec-grid" id="aiRecGrid"></div>
+      <div class="g2">
+        <div class="card">
+          <div style="font-size:14px;font-weight:700;margin-bottom:12px;color:var(--text);">📊 AI Insights</div>
+          <div id="aiInsights"></div>
+        </div>
+        <div class="card">
+          <div style="font-size:14px;font-weight:700;margin-bottom:12px;color:var(--text);">⚙️ AI Settings</div>
+          <div id="aiSettings"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ FOOD PHOTOS ══ -->
+    <div class="pg" id="pg-photos">
+      <div class="sh"><h2>📸 Food Photography Manager</h2>
+        <button class="btn" onclick="showModal('photoModal')">📤 Upload Photo</button>
+      </div>
+      <div class="upload-zone" onclick="showToast('📷 Camera/Gallery would open here!')">
+        <div class="uz-icon">📸</div>
+        <div class="uz-text">Drop food photos here or click to upload</div>
+        <div class="uz-sub">Supports JPG, PNG, WEBP • Max 10MB per photo</div>
+      </div>
+      <div style="margin-top:16px;font-size:14px;font-weight:700;margin-bottom:12px;color:var(--text);">📁 Menu Photos Library</div>
+      <div class="photo-grid" id="photoGrid"></div>
+    </div>
+
+    <!-- ══ FINANCIAL ══ -->
+    <div class="pg" id="pg-finance">
+      <div class="sh"><h2>💹 Financial Reports</h2>
+        <button class="btn" onclick="showToast('📥 Exporting to Excel...')">📥 Export</button>
+      </div>
+      <div class="fin-period" id="finPeriod"></div>
+      <div class="vat-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+          <div>
+            <div style="font-size:13px;opacity:.8;margin-bottom:4px;">VAT Due (Q1 2026)</div>
+            <div class="vat-amt">﷼ 17,340</div>
+            <div style="font-size:12px;opacity:.8;margin-top:4px;">Due: March 31, 2026</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:13px;opacity:.8;">Tax Registration</div>
+            <div style="font-size:16px;font-weight:700;margin-top:2px;">300-123-456-700003</div>
+            <button onclick="showToast('📄 VAT Report downloaded!')" style="background:rgba(255,255,255,.2);border:none;padding:7px 14px;border-radius:7px;color:#fff;font-size:12px;font-weight:600;cursor:pointer;margin-top:8px;font-family:inherit;">📄 Download VAT Report</button>
+          </div>
+        </div>
+      </div>
+      <div class="g4" id="finKPIs"></div>
+      <div class="g2">
+        <div class="card">
+          <div style="font-size:14px;font-weight:700;margin-bottom:14px;color:var(--text);">📊 P&L Statement</div>
+          <table class="pl-table" id="plTable"></table>
+        </div>
+        <div class="card">
+          <div style="font-size:14px;font-weight:700;margin-bottom:14px;color:var(--text);">💰 Expense Breakdown</div>
+          <div id="expBreakdown"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ HR / PAYROLL ══ -->
+    <div class="pg" id="pg-hr">
+      <div class="sh"><h2>👨‍💼 HR & Payroll System</h2>
+        <button class="btn" onclick="showModal('empModal')">+ Add Employee</button>
+      </div>
+      <div class="g4" id="hrKPIs"></div>
+      <div class="emp-grid" id="empGrid"></div>
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
+          <div style="font-size:14px;font-weight:700;color:var(--text);">💳 Payroll — March 2026</div>
+          <button class="btn btn-g" onclick="showToast('✅ Payroll processed!')">Process Payroll</button>
+        </div>
+        <div style="overflow-x:auto;"><table class="payroll-table" id="payrollTable"></table></div>
+      </div>
+    </div>
+
+    <!-- ══ CUSTOMER LOGIN ══ -->
+    <div class="pg" id="pg-customer">
+      <div class="sh"><h2>🔓 Customer Login & Profiles</h2>
+        <button class="btn" onclick="showModal('custModal')">+ Add Customer</button>
+      </div>
+      <div class="g4" id="custKPIs"></div>
+      <div class="cust-profile" id="custProfile"></div>
+    </div>
+
+    <!-- ══ SUPPLIERS ══ -->
+    <div class="pg" id="pg-supplier">
+      <div class="sh"><h2>📦 Supplier & Purchase Orders</h2>
+        <button class="btn" onclick="showModal('supModal')">+ New Order</button>
+      </div>
+      <div class="g4" id="supKPIs"></div>
+      <div class="sup-grid" id="supGrid"></div>
+      <div class="card">
+        <div style="font-size:14px;font-weight:700;margin-bottom:14px;color:var(--text);">📋 Purchase Orders</div>
+        <div style="overflow-x:auto;"><table class="po-table" id="poTable"></table></div>
+      </div>
+    </div>
+
+    <!-- ══ MARKETING ══ -->
+    <div class="pg" id="pg-marketing">
+      <div class="sh"><h2>🎯 Marketing Campaign Manager</h2>
+        <button class="btn" onclick="showModal('campModal')">+ New Campaign</button>
+      </div>
+      <div class="g4" id="mktKPIs"></div>
+      <div class="audience-builder">
+        <div style="font-size:14px;font-weight:700;color:var(--text);">🎯 Audience Builder</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:3px;">Filter customers for your next campaign</div>
+        <div class="ab-filters" id="abFilters"></div>
+        <div style="margin-top:12px;padding:10px;background:var(--hover);border-radius:8px;font-size:13px;color:var(--sub);" id="audienceCount">
+          🎯 Estimated audience: <strong style="color:var(--p);">248 customers</strong>
+        </div>
+      </div>
+      <div class="camp-grid" id="campGrid"></div>
+    </div>
+
+  </div><!-- pc -->
+</div><!-- main -->
+</div><!-- app -->
+
+<!-- MODALS -->
+<div class="mbg" id="photoModal">
+  <div class="mbox">
+    <div class="mhd"><h3>📸 Upload Food Photo</h3><button class="mcl" onclick="cm('photoModal')">✕</button></div>
+    <div class="mbd">
+      <div style="border:2px dashed var(--inpb);border-radius:10px;padding:30px;text-align:center;margin-bottom:14px;cursor:pointer;" onclick="showToast('📷 File picker would open!')">
+        <div style="font-size:36px;margin-bottom:8px;">📸</div>
+        <div style="font-size:13px;color:var(--sub);">Click to select photo</div>
+      </div>
+      <div class="mfr"><div class="mf"><label>Menu Item</label><select id="ph-item"><option>Classic Burger</option><option>Margherita Pizza</option><option>Crispy Chicken</option><option>Caesar Salad</option></select></div>
+      <div class="mf"><label>Photo Type</label><select><option>Main Photo</option><option>Gallery</option><option>Thumbnail</option></select></div></div>
+      <div class="mf"><label>Alt Text / Caption</label><input type="text" placeholder="Describe the photo..."></div>
+    </div>
+    <div class="mft"><button class="btn-c" onclick="cm('photoModal')">Cancel</button><button class="btn-sv" onclick="cm('photoModal');showToast('✅ Photo uploaded!')">📤 Upload</button></div>
+  </div>
+</div>
+
+<div class="mbg" id="empModal">
+  <div class="mbox">
+    <div class="mhd"><h3>➕ Add Employee</h3><button class="mcl" onclick="cm('empModal')">✕</button></div>
+    <div class="mbd">
+      <div class="mfr"><div class="mf"><label>Full Name</label><input id="en" type="text" placeholder="Employee name"></div>
+      <div class="mf"><label>Position</label><select id="ep"><option>Cashier</option><option>Kitchen Staff</option><option>Manager</option><option>Waiter</option><option>Driver</option></select></div></div>
+      <div class="mfr"><div class="mf"><label>Salary (SAR/mo)</label><input id="es" type="number" placeholder="3000"></div>
+      <div class="mf"><label>Branch</label><select><option>Main — Riyadh</option><option>Jeddah</option><option>Dubai</option></select></div></div>
+      <div class="mfr"><div class="mf"><label>Phone</label><input type="text" placeholder="+966..."></div>
+      <div class="mf"><label>Start Date</label><input type="date"></div></div>
+    </div>
+    <div class="mft"><button class="btn-c" onclick="cm('empModal')">Cancel</button><button class="btn-sv" onclick="addEmp()">➕ Add Employee</button></div>
+  </div>
+</div>
+
+<div class="mbg" id="supModal">
+  <div class="mbox">
+    <div class="mhd"><h3>📦 New Purchase Order</h3><button class="mcl" onclick="cm('supModal')">✕</button></div>
+    <div class="mbd">
+      <div class="mfr"><div class="mf"><label>Supplier</label><select><option>Al-Watania Farms</option><option>Saudi Beverages</option><option>Fresh Bakeries</option></select></div>
+      <div class="mf"><label>Priority</label><select><option>Normal</option><option>Urgent</option><option>Low</option></select></div></div>
+      <div class="mf"><label>Items & Quantities</label><textarea placeholder="e.g. Chicken 50kg, Beef 30kg..."></textarea></div>
+      <div class="mfr"><div class="mf"><label>Est. Amount (SAR)</label><input type="number" placeholder="0.00"></div>
+      <div class="mf"><label>Delivery Date</label><input type="date"></div></div>
+    </div>
+    <div class="mft"><button class="btn-c" onclick="cm('supModal')">Cancel</button><button class="btn-sv" onclick="cm('supModal');showToast('✅ Purchase order sent!')">📤 Send Order</button></div>
+  </div>
+</div>
+
+<div class="mbg" id="campModal">
+  <div class="mbox">
+    <div class="mhd"><h3>🎯 New Campaign</h3><button class="mcl" onclick="cm('campModal')">✕</button></div>
+    <div class="mbd">
+      <div class="mfr"><div class="mf"><label>Campaign Name</label><input id="cn" type="text" placeholder="e.g. Ramadan Special"></div>
+      <div class="mf"><label>Type</label><select><option>SMS</option><option>WhatsApp</option><option>Email</option><option>Push Notification</option></select></div></div>
+      <div class="mf"><label>Message</label><textarea placeholder="Campaign message..."></textarea></div>
+      <div class="mfr"><div class="mf"><label>Budget (SAR)</label><input type="number" placeholder="500"></div>
+      <div class="mf"><label>Launch Date</label><input type="date"></div></div>
+    </div>
+    <div class="mft"><button class="btn-c" onclick="cm('campModal')">Cancel</button><button class="btn-sv" onclick="cm('campModal');showToast('🚀 Campaign launched!')">🚀 Launch</button></div>
+  </div>
+</div>
+
+<div class="mbg" id="custModal">
+  <div class="mbox">
+    <div class="mhd"><h3>➕ Add Customer</h3><button class="mcl" onclick="cm('custModal')">✕</button></div>
+    <div class="mbd">
+      <div class="mfr"><div class="mf"><label>Full Name</label><input type="text" placeholder="Customer name"></div>
+      <div class="mf"><label>Phone</label><input type="text" placeholder="+966..."></div></div>
+      <div class="mf"><label>Email</label><input type="email" placeholder="customer@email.com"></div>
+      <div class="mfr"><div class="mf"><label>Password</label><input type="password" placeholder="Set password"></div>
+      <div class="mf"><label>Starting Points</label><input type="number" placeholder="0"></div></div>
+    </div>
+    <div class="mft"><button class="btn-c" onclick="cm('custModal')">Cancel</button><button class="btn-sv" onclick="cm('custModal');showToast('✅ Customer account created!')">Create Account</button></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ══ LANG ══
+var isAr = false;
+var T = {
+  en:{
+    "map":"Delivery Map","mobile":"Mobile App","supplier":"Suppliers","ai":"AI Recommendations","photos":"Food Photos",
+    "finance":"Financial Reports","hr":"HR & Payroll","customer":"Customer Login","marketing":"Marketing",
+    "ops":"Operations","menu-ai":"Menu & AI","biz":"Business","dark":"Dark Mode","lang":"العربية",
+    "active-del":"Active Deliveries","refresh":"Refresh","h-map":"🗺️ Live Delivery Tracking"
+  },
+  ar:{
+    "map":"خريطة التوصيل","mobile":"تطبيق الجوال","supplier":"الموردون","ai":"توصيات الذكاء الاصطناعي","photos":"صور الطعام",
+    "finance":"التقارير المالية","hr":"الموارد البشرية","customer":"تسجيل دخول العملاء","marketing":"التسويق",
+    "ops":"العمليات","menu-ai":"القائمة والذكاء الاصطناعي","biz":"الأعمال","dark":"الوضع الداكن","lang":"English",
+    "active-del":"التوصيلات النشطة","refresh":"تحديث","h-map":"🗺️ تتبع التوصيل المباشر"
+  }
+};
+function togLang(){
+  isAr=!isAr;
+  var dir=isAr?"rtl":"ltr";
+  var lang=isAr?"ar":"en";
+  document.documentElement.setAttribute("dir",dir);
+  document.documentElement.setAttribute("lang",lang);
+  document.getElementById("langBtn").textContent=isAr?"🌍 English":"🌍 عربي";
+  // Update all text
+  Object.keys(T.en).forEach(function(k){
+    var el=document.getElementById("t-"+k)||document.getElementById("lbl-"+k)||document.getElementById("h-"+k);
+    if(el)el.textContent=(isAr?T.ar:T.en)[k];
+  });
+  showToast(isAr?"🌍 Arabic Mode تم التفعيل":"🌍 English Mode Activated");
+}
+
+// ══ DARK MODE ══
+function togDark(){
+  var h=document.documentElement;
+  var dk=h.getAttribute("data-theme")==="dark";
+  h.setAttribute("data-theme",dk?"light":"dark");
+  document.getElementById("dkBtn").textContent=dk?"🌙":"☀️";
+  document.getElementById("dkIc").textContent=dk?"🌙":"☀️";
+  showToast(dk?"☀️ Light Mode":"🌙 Dark Mode");
+}
+
+// ══ SIDEBAR ══
+function togSb(){document.getElementById("sb").classList.toggle("open");}
+
+// ══ PAGE NAV ══
+var pgTitles={
+  map:"🗺️ Delivery Tracking Map",mobile:"📱 Mobile App UI",ai:"🤖 AI Recommendations",
+  photos:"📸 Food Photos",finance:"💹 Financial Reports",hr:"👨‍💼 HR & Payroll",
+  customer:"🔓 Customer Profiles",supplier:"📦 Suppliers & POs",marketing:"🎯 Marketing Campaigns"
+};
+function gp(p,btn){
+  document.querySelectorAll(".ni").forEach(function(b){b.classList.remove("on");});
+  if(btn)btn.classList.add("on");
+  document.querySelectorAll(".pg").forEach(function(x){x.classList.remove("on");});
+  document.getElementById("pg-"+p).classList.add("on");
+  document.getElementById("pgTitle").textContent=pgTitles[p]||p;
+  document.getElementById("sb").classList.remove("open");
+}
+
+// ══ MODAL ══
+function showModal(id){document.getElementById(id).classList.add("on");}
+function cm(id){document.getElementById(id).classList.remove("on");}
+document.addEventListener("click",function(e){
+  document.querySelectorAll(".mbg.on").forEach(function(m){if(e.target===m)m.classList.remove("on");});
+});
+
+// ══ TOAST ══
+function showToast(msg){
+  var t=document.getElementById("toast");t.textContent=msg;t.classList.add("on");
+  setTimeout(function(){t.classList.remove("on");},2500);
+}
+
+// ══ MAP ══
+var drivers=[
+  {id:"#D01",name:"Ahmed",order:"#ONL-041",status:"on-way",pct:75,color:var_grn()},
+  {id:"#D02",name:"Omar",order:"#ONL-042",status:"picked-up",pct:40,color:var_blu()},
+  {id:"#D03",name:"Khalid",order:"#ONL-043",status:"preparing",pct:15,color:var_org()},
+];
+function var_grn(){return"#10b981";}function var_blu(){return"#3b82f6";}function var_org(){return"#f5a623";}
+function renderMap(){
+  document.getElementById("mapKPIs").innerHTML=
+    mkpi("kp","🛵","3","Active Drivers")+mkpi("kg","✅","18","Delivered Today")+
+    mkpi("ko","⏱️","28m","Avg Delivery Time")+mkpi("kb","⭐","4.8","Driver Rating");
+  document.getElementById("deliveryRows").innerHTML=drivers.map(function(d){
+    var statusClr=d.status==="on-way"?"var(--grn)":d.status==="picked-up"?"var(--blu)":"var(--org)";
+    return "<div class='dl-row'>"+
+      "<div class='dl-driver' style='background:"+d.color+";'>"+d.name.charAt(0)+"</div>"+
+      "<div style='flex:1;'><div style='font-size:13px;font-weight:600;'>"+d.name+" <span class='dl-id'>"+d.id+"</span></div>"+
+        "<div style='font-size:11px;color:var(--muted);'>Order "+d.order+"</div></div>"+
+      "<div style='flex:1;'><div style='font-size:11px;font-weight:600;color:"+statusClr+";margin-bottom:4px;'>"+d.status.replace("-"," ")+"</div>"+
+        "<div class='progress-bar'><div class='pb-fill' style='width:"+d.pct+"%;background:"+statusClr+";'></div></div></div>"+
+      "<div style='font-size:12px;font-weight:700;color:"+statusClr+";'>"+d.pct+"%</div>"+
+      "<button onclick='showToast(\"📞 Calling "+d.name+"...\")' style='background:var(--hover);border:none;padding:5px 10px;border-radius:6px;font-size:11px;cursor:pointer;color:var(--sub);'>📞</button>"+
+    "</div>";
+  }).join("");
+}
+function refreshMap(){
+  drivers.forEach(function(d){d.pct=Math.min(100,d.pct+Math.round(Math.random()*15));});
+  renderMap();showToast("🔄 Map refreshed!");
+  // Animate drivers
+  var positions=[{l:62,t:35},{l:28,t:55},{l:70,t:65}];
+  drivers.forEach(function(d,i){
+    var el=document.getElementById("d"+(i+1));
+    if(el){
+      var nl=positions[i].l+(Math.random()*10-5);
+      var nt=positions[i].t+(Math.random()*10-5);
+      el.style.left=Math.max(5,Math.min(90,nl))+"%";
+      el.style.top=Math.max(10,Math.min(85,nt))+"%";
+    }
+  });
+}
+// Auto refresh map every 8 seconds
+setInterval(function(){
+  var el=document.querySelector("#pg-map");
+  if(el&&el.classList.contains("on"))refreshMap();
+},8000);
+
+// ══ MOBILE APP ══
+var phoneScreens={
+  home:function(){return "<div class='ph-hdr'><h3>🌟 BillZest</h3><span style='font-size:18px;'>🔔</span></div>"+
+    "<div class='ph-search'>🔍 Search menu items...</div>"+
+    "<div class='ph-cats'><button class='ph-cat on'>All</button><button class='ph-cat'>🍔</button><button class='ph-cat'>🍕</button><button class='ph-cat'>🥤</button></div>"+
+    "<div class='ph-items'>"+
+    "<div class='ph-item'><div class='ph-item-e'>🍔</div><div class='ph-item-n'>Classic Burger</div><div class='ph-item-p'>﷼ 32</div><button class='ph-item-add' onclick='showToast(\"🛒 Added!\")'>+</button></div>"+
+    "<div class='ph-item'><div class='ph-item-e'>🍕</div><div class='ph-item-n'>Margherita Pizza</div><div class='ph-item-p'>﷼ 45</div><button class='ph-item-add' onclick='showToast(\"🛒 Added!\")'>+</button></div>"+
+    "<div class='ph-item'><div class='ph-item-e'>🍗</div><div class='ph-item-n'>Crispy Chicken</div><div class='ph-item-p'>﷼ 28</div><button class='ph-item-add' onclick='showToast(\"🛒 Added!\")'>+</button></div>"+
+    "<div class='ph-item'><div class='ph-item-e'>🥤</div><div class='ph-item-n'>Lemon Mint</div><div class='ph-item-p'>﷼ 14</div><button class='ph-item-add' onclick='showToast(\"🛒 Added!\")'>+</button></div>"+
+    "</div>";},
+  cart:function(){return "<div class='ph-hdr'><h3>🛒 My Cart</h3></div>"+
+    "<div style='padding:8px;background:var(--hover);border-radius:10px;margin-bottom:8px;display:flex;justify-content:space-between;font-size:13px;'><span>🍔 Classic Burger x2</span><span style='font-weight:700;'>﷼ 64</span></div>"+
+    "<div style='padding:8px;background:var(--hover);border-radius:10px;margin-bottom:8px;display:flex;justify-content:space-between;font-size:13px;'><span>🥤 Cola x2</span><span style='font-weight:700;'>﷼ 16</span></div>"+
+    "<div style='margin-top:10px;padding:10px;background:var(--hover);border-radius:10px;'><div style='display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;'><span>Subtotal</span><span>﷼ 80</span></div><div style='display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;'><span>Delivery</span><span>﷼ 10</span></div><div style='display:flex;justify-content:space-between;font-size:14px;font-weight:700;'><span>Total</span><span style='color:var(--p);'>﷼ 103.5</span></div></div>"+
+    "<button onclick='showToast(\"✅ Order placed!\")' style='width:100%;background:var(--grn);color:#fff;border:none;padding:12px;border-radius:10px;font-size:13px;font-weight:700;margin-top:10px;cursor:pointer;font-family:inherit;'>Place Order ﷼ 103.5</button>";},
+  loyalty:function(){return "<div class='ph-hdr'><h3>⭐ Loyalty</h3></div>"+
+    "<div style='background:linear-gradient(135deg,var(--p),var(--pd));border-radius:14px;padding:18px;color:#fff;text-align:center;margin-bottom:12px;'><div style='font-size:11px;opacity:.8;'>Your Points</div><div style='font-size:36px;font-weight:800;font-family:JetBrains Mono,monospace;'>1,840</div><div style='font-size:11px;opacity:.8;'>🥈 Silver Member</div><div style='background:rgba(255,255,255,.2);height:6px;border-radius:3px;margin-top:10px;'><div style='height:100%;width:92%;background:#fff;border-radius:3px;'></div></div><div style='font-size:10px;margin-top:4px;'>160 pts to Gold 🥇</div></div>"+
+    "<div style='font-size:13px;font-weight:700;margin-bottom:8px;'>🎁 Rewards</div>"+
+    "<div style='padding:10px;background:var(--hover);border-radius:10px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;'><span style='font-size:12px;'>Free Fries</span><button onclick='showToast(\"🎁 Redeemed!\")' style='background:var(--org);color:#fff;border:none;padding:4px 10px;border-radius:6px;font-size:10px;font-weight:700;cursor:pointer;'>500 pts</button></div>"+
+    "<div style='padding:10px;background:var(--hover);border-radius:10px;display:flex;justify-content:space-between;align-items:center;'><span style='font-size:12px;'>10% Off Next Order</span><button onclick='showToast(\"🎁 Redeemed!\")' style='background:var(--p);color:#fff;border:none;padding:4px 10px;border-radius:6px;font-size:10px;font-weight:700;cursor:pointer;'>1000 pts</button></div>";},
+  track:function(){return "<div class='ph-hdr'><h3>🛵 Track Order</h3></div>"+
+    "<div style='background:var(--hover);border-radius:12px;padding:14px;margin-bottom:12px;'><div style='font-size:12px;font-weight:700;color:var(--p);margin-bottom:8px;'>#ONL-0041 • ﷼ 103.50</div>"+
+    "<div style='display:flex;gap:6px;margin-bottom:8px;'><div style='flex:1;text-align:center;'><div style='width:28px;height:28px;background:var(--grn);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;margin:0 auto 4px;'>✅</div><div style='font-size:9px;color:var(--grn);font-weight:600;'>Confirmed</div></div><div style='flex:1;border-top:2px solid var(--grn);margin-top:14px;'></div><div style='flex:1;text-align:center;'><div style='width:28px;height:28px;background:var(--grn);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;margin:0 auto 4px;'>🍳</div><div style='font-size:9px;color:var(--grn);font-weight:600;'>Preparing</div></div><div style='flex:1;border-top:2px dashed var(--bdr);margin-top:14px;'></div><div style='flex:1;text-align:center;'><div style='width:28px;height:28px;background:var(--bdr);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;margin:0 auto 4px;'>🛵</div><div style='font-size:9px;color:var(--muted);'>On Way</div></div><div style='flex:1;border-top:2px dashed var(--bdr);margin-top:14px;'></div><div style='flex:1;text-align:center;'><div style='width:28px;height:28px;background:var(--bdr);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;margin:0 auto 4px;'>🏠</div><div style='font-size:9px;color:var(--muted);'>Delivered</div></div></div>"+
+    "<div style='font-size:12px;color:var(--muted);'>Estimated arrival: <strong>25-30 min</strong></div></div>";},
+  profile:function(){return "<div class='ph-hdr'><h3>👤 My Profile</h3></div>"+
+    "<div style='text-align:center;margin-bottom:14px;'><div style='width:60px;height:60px;border-radius:50%;background:var(--p);color:#fff;font-size:22px;font-weight:700;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;'>M</div><div style='font-size:15px;font-weight:700;'>Mohammed Al-Saud</div><div style='font-size:12px;color:var(--muted);'>+966 50 123 4567</div></div>"+
+    "<div style='padding:10px;background:var(--hover);border-radius:10px;margin-bottom:6px;display:flex;justify-content:space-between;font-size:12px;'><span>📍 Saved Addresses</span><span style='color:var(--p);font-weight:600;'>3</span></div>"+
+    "<div style='padding:10px;background:var(--hover);border-radius:10px;margin-bottom:6px;display:flex;justify-content:space-between;font-size:12px;'><span>📋 My Orders</span><span style='color:var(--p);font-weight:600;'>48</span></div>"+
+    "<div style='padding:10px;background:var(--hover);border-radius:10px;display:flex;justify-content:space-between;font-size:12px;'><span>⭐ Loyalty Points</span><span style='color:var(--org);font-weight:700;'>2,840 pts</span></div>";},
+  orders:function(){return "<div class='ph-hdr'><h3>📋 My Orders</h3></div>"+
+    ["#ONL-0041","#ONL-0038","#ONL-0035"].map(function(id,i){
+      var statuses=["Preparing 🍳","Delivered ✅","Delivered ✅"];
+      var amts=["103.50","88.00","145.25"];
+      return "<div style='padding:10px;background:var(--hover);border-radius:10px;margin-bottom:8px;'><div style='display:flex;justify-content:space-between;margin-bottom:4px;'><span style='font-size:12px;font-weight:700;color:var(--p);'>"+id+"</span><span style='font-size:11px;color:var(--grn);font-weight:600;'>"+statuses[i]+"</span></div><div style='font-size:12px;color:var(--sub);'>Burger, Pizza, Cola...</div><div style='font-size:13px;font-weight:700;margin-top:4px;'>﷼ "+amts[i]+"</div></div>";
+    }).join("");},
+  support:function(){return "<div class='ph-hdr'><h3>💬 Support</h3></div>"+
+    "<div style='background:linear-gradient(135deg,var(--p),var(--teal));border-radius:12px;padding:16px;color:#fff;text-align:center;margin-bottom:12px;'><div style='font-size:24px;margin-bottom:6px;'>🤖</div><div style='font-size:13px;font-weight:700;'>AI Assistant</div><div style='font-size:11px;opacity:.8;margin-top:3px;'>24/7 Available</div></div>"+
+    "<div style='padding:10px;background:var(--hover);border-radius:10px;margin-bottom:6px;display:flex;align-items:center;gap:8px;'><span style='font-size:18px;'>📞</span><span style='font-size:12px;'>Call: 800 1000 119</span></div>"+
+    "<div style='padding:10px;background:var(--hover);border-radius:10px;margin-bottom:6px;display:flex;align-items:center;gap:8px;'><span style='font-size:18px;'>💬</span><span style='font-size:12px;'>WhatsApp Support</span></div>"+
+    "<div style='padding:10px;background:var(--hover);border-radius:10px;display:flex;align-items:center;gap:8px;'><span style='font-size:18px;'>🎫</span><span style='font-size:12px;'>Submit a Ticket</span></div>";}
+};
+function setScreen(s,btn){
+  document.querySelectorAll(".app-screen-btn").forEach(function(b){b.classList.remove("on");});
+  btn.classList.add("on");
+  var content=phoneScreens[s];
+  if(content)document.getElementById("phoneContent").innerHTML=content()+"<div class='ph-bottom-nav'>"+["🏠","🍽️","🛒","⭐","👤"].map(function(ic,i){return "<div class='ph-nav-item"+(i===0?" on":"")+"'><span class='ph-nav-ic'>"+ic+"</span></div>";}).join("")+"</div>";
+}
+
+// ══ AI RECS ══
+var aiItems=[
+  {e:"🥤",n:"Cold Lemon Mint",price:14,bg:"#e0f2fe",reason:"☀️ Hot weather — perfect cold drink! 94% match",score:"94%"},
+  {e:"🍔",n:"Classic Burger",price:32,bg:"#fff7ed",reason:"📈 Best seller this hour — 48 ordered today",score:"91%"},
+  {e:"🍟",n:"Loaded Fries",price:18,bg:"#fefce8",reason:"🔗 Pairs with Burger — 78% combo rate",score:"88%"},
+  {e:"🍰",n:"Chocolate Cake",price:25,bg:"#fdf2f8",reason:"🌙 Evening peak — desserts up 40% now",score:"85%"},
+  {e:"🥗",n:"Caesar Salad",price:22,bg:"#f0fdf4",reason:"🏋️ Health trend — popular with new customers",score:"82%"},
+  {e:"☕",n:"Iced Coffee",price:18,bg:"#f5f3ff",reason:"⏰ Afternoon dip — coffee orders spike now",score:"79%"},
+];
+function renderAI(){
+  document.getElementById("aiRecGrid").innerHTML=aiItems.map(function(it){
+    return "<div class='ai-rec-card'><div class='arc-img' style='background:"+it.bg+";'>"+it.e+
+      "<div class='arc-ai-badge'>🤖 AI Pick</div></div>"+
+      "<div class='arc-body'><div class='arc-name'>"+it.n+"</div><div class='arc-reason'>"+it.reason+"</div>"+
+      "<div class='arc-footer'><span class='arc-price'>﷼ "+it.price+"</span><span class='arc-score'>★ "+it.score+" match</span></div></div></div>";
+  }).join("");
+  document.getElementById("aiInsights").innerHTML=[
+    {ic:"🌡️",t:"Hot weather boosts drink orders by 34%",c:"var(--blu)"},
+    {ic:"⏰",t:"Peak dinner hour — max upselling window",c:"var(--org)"},
+    {ic:"📦",t:"Loaded Fries low stock — consider 86ing",c:"var(--red)"},
+    {ic:"💡",t:"Bundle Burger+Fries+Drink = +﷼18 avg",c:"var(--grn)"},
+  ].map(function(ins){
+    return "<div style='display:flex;gap:8px;padding:8px 0;border-bottom:1px solid var(--bdr);font-size:12px;'><span>"+ins.ic+"</span><span style='color:var(--sub);'>"+ins.t+"</span></div>";
+  }).join("");
+  document.getElementById("aiSettings").innerHTML=[
+    {lbl:"Weather-based suggestions",on:true},
+    {lbl:"Time-based promotions",on:true},
+    {lbl:"Low stock alerts",on:true},
+    {lbl:"Bundle recommendations",on:false},
+  ].map(function(s,i){
+    return "<div style='display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--bdr);font-size:12px;'><span style='color:var(--sub);'>"+s.lbl+"</span>"+
+      "<button onclick='this.classList.toggle(\"on\");showToast(\"⚙️ Setting updated!\")' style='width:36px;height:20px;background:"+(s.on?"var(--grn)":"var(--bdr)")+";border:none;border-radius:10px;position:relative;cursor:pointer;transition:background .2s;' class='"+(s.on?"on":"")+"'><span style='position:absolute;top:2px;left:"+(s.on?"18":"2")+"px;width:16px;height:16px;background:#fff;border-radius:50%;transition:left .2s;display:block;'></span></button>"+
+    "</div>";
+  }).join("");
+}
+function refreshAI(){renderAI();showToast("🤖 AI recommendations updated!");}
+
+// ══ PHOTOS ══
+var photos=[
+  {e:"🍔",n:"Classic Burger",cat:"Burgers",bg:"#fff7ed"},
+  {e:"🍕",n:"Margherita Pizza",cat:"Pizza",bg:"#fdf2f8"},
+  {e:"🍗",n:"Crispy Chicken",cat:"Chicken",bg:"#fefce8"},
+  {e:"🥗",n:"Caesar Salad",cat:"Salads",bg:"#f0fdf4"},
+  {e:"🍟",n:"Loaded Fries",cat:"Sides",bg:"#fef9c3"},
+  {e:"🥤",n:"Mango Smoothie",cat:"Drinks",bg:"#eff6ff"},
+  {e:"🍰",n:"Chocolate Cake",cat:"Desserts",bg:"#fdf2f8"},
+  {e:"🌮",n:"Chicken Wrap",cat:"Wraps",bg:"#f0fdf4"},
+];
+function renderPhotos(){
+  document.getElementById("photoGrid").innerHTML=photos.map(function(p){
+    return "<div class='photo-card'><div class='pc-img' style='background:"+p.bg+";'>"+p.e+
+      "<div class='pc-overlay'><button onclick='showToast(\"✏️ Edit photo\")' style='background:rgba(255,255,255,.9);border:none;padding:6px 12px;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;'>✏️ Edit</button></div></div>"+
+      "<div class='pc-body'><div class='pc-name'>"+p.n+"</div><div class='pc-cat'>"+p.cat+"</div></div></div>";
+  }).join("");
+}
+
+// ══ FINANCIAL ══
+function renderFinance(){
+  ["Q1 2026","Q2 2026","This Year","Last Year"].forEach(function(p,i){
+    var btn=document.createElement("button");
+    btn.className="fp-btn"+(i===0?" on":"");
+    btn.textContent=p;
+    btn.onclick=function(){document.querySelectorAll(".fp-btn").forEach(function(b){b.classList.remove("on");});this.classList.add("on");};
+    document.getElementById("finPeriod").appendChild(btn);
+  });
+  document.getElementById("finKPIs").innerHTML=
+    mkpi("kp","💰","﷼ 115,600","Total Revenue")+mkpi("kg","📉","﷼ 68,400","Total Expenses")+
+    mkpi("ko","📈","﷼ 47,200","Gross Profit")+mkpi("kb","💸","﷼ 17,340","VAT Collected");
+  document.getElementById("plTable").innerHTML=
+    "<thead><tr><th>Category</th><th>Amount</th><th>%</th></tr></thead><tbody>"+
+    "<tr class='section-row'><td colspan='3'>💰 REVENUE</td></tr>"+
+    "<tr><td>Food Sales</td><td>﷼ 98,200</td><td>85%</td></tr>"+
+    "<tr><td>Delivery Fees</td><td>﷼ 12,400</td><td>11%</td></tr>"+
+    "<tr><td>Online Orders</td><td>﷼ 5,000</td><td>4%</td></tr>"+
+    "<tr class='section-row'><td colspan='3'>📉 EXPENSES</td></tr>"+
+    "<tr><td>Food Cost</td><td>﷼ 34,200</td><td>30%</td></tr>"+
+    "<tr><td>Staff Salaries</td><td>﷼ 22,000</td><td>19%</td></tr>"+
+    "<tr><td>Rent & Utilities</td><td>﷼ 8,500</td><td>7%</td></tr>"+
+    "<tr><td>Marketing</td><td>﷼ 3,700</td><td>3%</td></tr>"+
+    "<tr class='total-row'><td>NET PROFIT</td><td style='color:var(--grn);'>﷼ 47,200</td><td style='color:var(--grn);'>41%</td></tr>"+
+    "</tbody>";
+  var exps=[{l:"Food Cost",v:34200,pct:50,c:"var(--org)"},{l:"Salaries",v:22000,pct:32,c:"var(--p)"},{l:"Rent",v:8500,pct:12,c:"var(--blu)"},{l:"Marketing",v:3700,pct:6,c:"var(--grn)"}];
+  document.getElementById("expBreakdown").innerHTML=exps.map(function(e){
+    return "<div style='margin-bottom:12px;'><div style='display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;'><span style='color:var(--sub);'>"+e.l+"</span><span style='font-weight:700;'>﷼ "+e.v.toLocaleString()+"</span></div><div style='height:7px;background:var(--bdr);border-radius:4px;'><div style='height:100%;width:"+e.pct+"%;background:"+e.c+";border-radius:4px;'></div></div></div>";
+  }).join("");
+}
+
+// ══ HR ══
+var employees=[
+  {id:1,name:"Sara Mohammed",role:"Manager",salary:8500,hrs:168,leaves:2,color:"#0284c7"},
+  {id:2,name:"Khalid Hassan",role:"Cashier",salary:4200,hrs:176,leaves:0,color:"#d97706"},
+  {id:3,name:"Omar Ibrahim",role:"Kitchen",salary:3800,hrs:180,leaves:1,color:"#dc2626"},
+  {id:4,name:"Layla Ahmad",role:"Waiter",salary:3200,hrs:160,leaves:3,color:"#15803d"},
+  {id:5,name:"Ahmed Ali",role:"Driver",salary:3500,hrs:192,leaves:0,color:"#7c3aed"},
+];
+function renderHR(){
+  document.getElementById("hrKPIs").innerHTML=
+    mkpi("kp","👥",employees.length,"Total Staff")+mkpi("kg","💰","﷼ "+employees.reduce(function(s,e){return s+e.salary;},0).toLocaleString(),"Monthly Payroll")+
+    mkpi("ko","✅",employees.filter(function(e){return e.leaves===0;}).length,"Full Attendance")+mkpi("kb","🏖️",employees.reduce(function(s,e){return s+e.leaves;},0),"Leave Days");
+  document.getElementById("empGrid").innerHTML=employees.map(function(e){
+    return "<div class='emp-card'>"+
+      "<div class='ec-av' style='background:"+e.color+";'>"+e.name.charAt(0)+"</div>"+
+      "<div class='ec-name'>"+e.name+"</div>"+
+      "<span class='ec-role tag tag-p'>"+e.role+"</span>"+
+      "<div class='ec-stats'><div class='ec-stat'><div class='ec-sv'>"+e.hrs+"h</div><div class='ec-sl'>Hours</div></div>"+
+      "<div class='ec-stat'><div class='ec-sv'>"+e.leaves+"d</div><div class='ec-sl'>Leaves</div></div></div>"+
+      "<button onclick='showToast(\"✏️ Edit "+e.name+"\")' style='background:var(--pl);color:var(--p);border:none;padding:6px 14px;border-radius:7px;font-size:11px;font-weight:600;cursor:pointer;width:100%;font-family:inherit;'>✏️ Edit</button>"+
+    "</div>";
+  }).join("");
+  document.getElementById("payrollTable").innerHTML=
+    "<thead><tr><th>Employee</th><th>Role</th><th>Hours</th><th>Base Salary</th><th>Bonus</th><th>Net Pay</th><th>Status</th></tr></thead><tbody>"+
+    employees.map(function(e){
+      var bonus=e.leaves===0?e.salary*0.1:0;
+      return "<tr><td style='font-weight:600;'>"+e.name+"</td><td><span class='tag tag-p'>"+e.role+"</span></td>"+
+        "<td style='font-family:JetBrains Mono,monospace;'>"+e.hrs+"h</td>"+
+        "<td>﷼ "+e.salary.toLocaleString()+"</td>"+
+        "<td style='color:var(--grn);'>"+( bonus>0?"﷼ "+Math.round(bonus):"-")+"</td>"+
+        "<td style='font-weight:800;color:var(--p);'>﷼ "+(e.salary+Math.round(bonus)).toLocaleString()+"</td>"+
+        "<td><span class='tag tag-g'>Pending</span></td></tr>";
+    }).join("")+"</tbody>";
+}
+function addEmp(){
+  var name=document.getElementById("en").value.trim();
+  var sal=parseInt(document.getElementById("es").value)||3000;
+  if(!name){showToast("⚠️ Enter name!");return;}
+  var colors=["#4f2d91","#0284c7","#d97706","#dc2626","#15803d"];
+  employees.push({id:Date.now(),name:name,role:document.getElementById("ep").value,salary:sal,hrs:0,leaves:0,color:colors[Math.floor(Math.random()*colors.length)]});
+  cm("empModal");renderHR();showToast("✅ Employee added!");
+}
+
+// ══ CUSTOMER ══
+var custList=[
+  {id:1,name:"Mohammed Al-Saud",phone:"+966 50 123",email:"m@email.com",pts:2840,tier:"gold",orders:48,spent:5840,color:"#d97706",joined:"Jan 2025"},
+  {id:2,name:"Fatima Hassan",phone:"+966 55 456",email:"f@email.com",pts:1920,tier:"gold",orders:32,spent:3920,color:"#7c3aed",joined:"Feb 2025"},
+  {id:3,name:"Abdullah Khalid",phone:"+966 54 789",email:"a@email.com",pts:1240,tier:"silver",orders:24,spent:2480,color:"#0284c7",joined:"Mar 2025"},
+];
+var selCust=0;
+function renderCustomer(){
+  document.getElementById("custKPIs").innerHTML=
+    mkpi("kp","👥","248","Total Customers")+mkpi("kg","🥇","42","Gold Members")+
+    mkpi("ko","🆕","18","New This Month")+mkpi("kb","💰","﷼ "+custList.reduce(function(s,c){return s+c.spent;},0).toLocaleString(),"Total Revenue");
+  renderCustProfile();
+}
+function renderCustProfile(){
+  var c=custList[selCust];
+  document.getElementById("custProfile").innerHTML=
+    "<div class='cp-sidebar'>"+
+      "<div class='cp-info'>"+
+        "<div class='cp-av' style='background:"+c.color+";'>"+c.name.charAt(0)+"</div>"+
+        "<div class='cp-name'>"+c.name+"</div>"+
+        "<div class='cp-phone'>"+c.phone+"</div>"+
+        "<div style='font-size:12px;color:var(--muted);margin-top:3px;'>"+c.email+"</div>"+
+        "<div style='font-size:11px;color:var(--muted);margin-top:3px;'>Member since: "+c.joined+"</div>"+
+        "<div class='cp-pts'><div class='cp-pts-val'>"+c.pts.toLocaleString()+"</div><div class='cp-pts-lbl'>Loyalty Points — 🥇 "+c.tier.charAt(0).toUpperCase()+c.tier.slice(1)+"</div></div>"+
+        "<div style='display:flex;gap:6px;margin-top:10px;'><button class='btn' style='flex:1;font-size:11px;' onclick='showToast(\"📲 SMS sent!\")'>📲 SMS</button><button class='btn btn-g' style='flex:1;font-size:11px;' onclick='showToast(\"⭐ Points added!\")'>⭐ +pts</button></div>"+
+      "</div>"+
+      "<div class='cp-orders'><div style='font-size:13px;font-weight:700;margin-bottom:10px;color:var(--text);'>📋 Recent Orders</div>"+
+        ["#ONL-041","#ORD-038","#ONL-035"].map(function(id,i){
+          return "<div class='co-row'><span class='co-id'>"+id+"</span><span style='flex:1;font-size:12px;color:var(--sub);'>Burger, Pizza...</span><span style='font-weight:700;font-size:12px;color:var(--grn);'>﷼ "+(88+i*22).toFixed(2)+"</span></div>";
+        }).join("")+
+      "</div>"+
+    "</div>"+
+    "<div>"+
+      "<div class='card' style='margin-bottom:12px;'><div style='font-size:14px;font-weight:700;margin-bottom:12px;color:var(--text);'>👥 All Customers</div>"+
+        custList.map(function(cu,i){
+          return "<div onclick='selCust="+i+";renderCustomer();' style='display:flex;align-items:center;gap:10px;padding:10px;border-radius:9px;cursor:pointer;border:1.5px solid "+(i===selCust?"var(--p)":"var(--bdr)")+";background:"+(i===selCust?"var(--pl)":"var(--card)")+";margin-bottom:6px;transition:all .2s;'>"+
+            "<div style='width:36px;height:36px;border-radius:50%;background:"+cu.color+";display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0;'>"+cu.name.charAt(0)+"</div>"+
+            "<div style='flex:1;'><div style='font-size:13px;font-weight:600;'>"+cu.name+"</div><div style='font-size:11px;color:var(--muted);'>"+cu.pts.toLocaleString()+" pts • "+cu.orders+" orders</div></div>"+
+            "<span class='tag "+(cu.tier==="gold"?"tag-o":"tag-b")+"'>"+(cu.tier==="gold"?"🥇":"🥈")+cu.tier+"</span>"+
+          "</div>";
+        }).join("")+
+      "</div>"+
+    "</div>";
+}
+
+// ══ SUPPLIERS ══
+var suppliers=[
+  {id:1,name:"Al-Watania Farms",cat:"Meat & Chicken",icon:"🥩",color:"#dc2626",orders:24,spend:42000,pending:2,rating:4.8},
+  {id:2,name:"Saudi Beverages",cat:"Drinks & Juices",icon:"🥤",color:"#0284c7",orders:18,spend:18500,pending:1,rating:4.6},
+  {id:3,name:"Fresh Bakeries",cat:"Bread & Pastry",icon:"🍞",color:"#d97706",orders:32,spend:12000,pending:0,rating:4.9},
+  {id:4,name:"Green Valley",cat:"Vegetables & Salads",icon:"🥗",color:"#15803d",orders:28,spend:9800,pending:1,rating:4.7},
+];
+var purchaseOrders=[
+  {id:"PO-001",sup:"Al-Watania Farms",items:"Chicken 50kg, Beef 30kg",amt:3200,date:"Mar 20",status:"delivered"},
+  {id:"PO-002",sup:"Saudi Beverages",items:"Cola 200 cans, Juices 50L",amt:1800,date:"Mar 21",status:"pending"},
+  {id:"PO-003",sup:"Fresh Bakeries",items:"Burger buns 500, Wraps 200",amt:650,date:"Mar 22",status:"ordered"},
+  {id:"PO-004",sup:"Green Valley",items:"Lettuce 20kg, Tomatoes 15kg",amt:480,date:"Mar 22",status:"pending"},
+];
+function renderSupplier(){
+  document.getElementById("supKPIs").innerHTML=
+    mkpi("kp","🏭",suppliers.length,"Total Suppliers")+mkpi("kg","💰","﷼ 82,300","Monthly Spend")+
+    mkpi("ko","📋",purchaseOrders.filter(function(p){return p.status==="pending";}).length,"Pending Orders")+
+    mkpi("kb","⭐","4.75","Avg Supplier Rating");
+  document.getElementById("supGrid").innerHTML=suppliers.map(function(s){
+    return "<div class='sup-card'>"+
+      "<div class='sc-hdr'><div class='sc-av2' style='background:"+s.color+"20;'>"+s.icon+"</div>"+
+        "<div><div class='sc-name'>"+s.name+"</div><div class='sc-cat'>"+s.cat+"</div></div></div>"+
+      "<div class='sc-stats2'>"+
+        "<div class='sc-st'><div class='sc-stv'>"+s.orders+"</div><div class='sc-stl'>Orders</div></div>"+
+        "<div class='sc-st'><div class='sc-stv'>﷼"+Math.round(s.spend/1000)+"K</div><div class='sc-stl'>Spend</div></div>"+
+        "<div class='sc-st'><div class='sc-stv'>"+s.rating+"★</div><div class='sc-stl'>Rating</div></div>"+
+      "</div>"+
+      "<div style='display:flex;gap:6px;'><button class='btn' style='flex:1;font-size:11px;' onclick='showModal(\"supModal\")'>📦 Order</button>"+
+        "<button class='btn btn-s' style='flex:1;font-size:11px;' onclick='showToast(\"📞 Calling supplier...\")'>📞 Call</button></div>"+
+    "</div>";
+  }).join("");
+  var statusColors={delivered:"var(--grn)",pending:"var(--yel)",ordered:"var(--blu)"};
+  document.getElementById("poTable").innerHTML=
+    "<thead><tr><th>PO #</th><th>Supplier</th><th>Items</th><th>Amount</th><th>Date</th><th>Status</th><th>Action</th></tr></thead><tbody>"+
+    purchaseOrders.map(function(po){
+      return "<tr><td style='font-family:JetBrains Mono,monospace;font-size:12px;color:var(--p);font-weight:600;'>"+po.id+"</td>"+
+        "<td style='font-weight:600;'>"+po.sup+"</td>"+
+        "<td style='font-size:12px;color:var(--sub);'>"+po.items+"</td>"+
+        "<td style='font-weight:700;'>﷼ "+po.amt.toLocaleString()+"</td>"+
+        "<td style='font-size:12px;color:var(--muted);'>"+po.date+"</td>"+
+        "<td><span class='tag' style='background:"+statusColors[po.status]+"20;color:"+statusColors[po.status]+";'>"+po.status+"</span></td>"+
+        "<td><button onclick='showToast(\"✅ Status updated!\")' style='background:var(--hover);border:none;padding:4px 10px;border-radius:6px;font-size:11px;cursor:pointer;color:var(--sub);'>Update</button></td>"+
+      "</tr>";
+    }).join("")+"</tbody>";
+}
+
+// ══ MARKETING ══
+var campaigns=[
+  {id:1,name:"Ramadan Special",type:"WhatsApp + SMS",color:"linear-gradient(135deg,#4f2d91,#7c3aed)",sent:248,opened:189,converted:42,budget:500,spent:320,status:"active"},
+  {id:2,name:"Weekend Offer",type:"Push Notification",color:"linear-gradient(135deg,#059669,#10b981)",sent:312,opened:248,converted:67,budget:300,spent:300,status:"ended"},
+  {id:3,name:"New Customer",type:"Email",color:"linear-gradient(135deg,#d97706,#f59e0b)",sent:145,opened:98,converted:28,budget:200,spent:145,status:"active"},
+  {id:4,name:"Loyalty Boost",type:"SMS",color:"linear-gradient(135deg,#dc2626,#ef4444)",sent:42,opened:38,converted:18,budget:150,spent:80,status:"scheduled"},
+];
+var abTags=["All Customers","Gold Members","Silver Members","New (30d)","Inactive (60d)","Riyadh Only","Jeddah Only","High Spenders","Birthday Month"];
+function renderMarketing(){
+  document.getElementById("mktKPIs").innerHTML=
+    mkpi("kp","📢",campaigns.filter(function(c){return c.status==="active";}).length,"Active Campaigns")+
+    mkpi("kg","📤",campaigns.reduce(function(s,c){return s+c.sent;},0),"Total Sent")+
+    mkpi("ko","💡","42%","Avg Open Rate")+
+    mkpi("kb","🎯","18%","Conversion Rate");
+  document.getElementById("abFilters").innerHTML=abTags.map(function(t,i){
+    return "<button class='ab-filter"+(i===0?" on":"")+"' onclick='togABFilter(this,\""+t+"\")'>"+t+"</button>";
+  }).join("");
+  document.getElementById("campGrid").innerHTML=campaigns.map(function(c){
+    var openRate=Math.round(c.opened/c.sent*100);
+    var convRate=Math.round(c.converted/c.sent*100);
+    var budgetPct=Math.round(c.spent/c.budget*100);
+    return "<div class='camp-card'>"+
+      "<div class='camp-top' style='background:"+c.color+";'>"+
+        "<div class='camp-status'>"+c.status+"</div>"+
+        "<div class='camp-name'>"+c.name+"</div>"+
+        "<div class='camp-type'>"+c.type+"</div>"+
+      "</div>"+
+      "<div class='camp-body'>"+
+        "<div class='camp-stats'>"+
+          "<div class='cs2'><div class='cs2v'>"+c.sent+"</div><div class='cs2l'>Sent</div></div>"+
+          "<div class='cs2'><div class='cs2v'>"+openRate+"%</div><div class='cs2l'>Opened</div></div>"+
+          "<div class='cs2'><div class='cs2v'>"+convRate+"%</div><div class='cs2l'>Converted</div></div>"+
+        "</div>"+
+        "<div style='font-size:11px;color:var(--muted);margin-bottom:4px;'>Budget: ﷼ "+c.spent+" / ﷼ "+c.budget+"</div>"+
+        "<div class='prog-bar'><div class='prog-fill' style='width:"+budgetPct+"%;background:var(--p);'></div></div>"+
+        "<div style='display:flex;gap:6px;margin-top:10px;'>"+
+          "<button class='btn' style='flex:1;font-size:11px;' onclick='showToast(\"📊 Campaign details!\")'>📊 Stats</button>"+
+          "<button class='btn btn-s' style='flex:1;font-size:11px;' onclick='showToast(\"📋 Duplicating...\")'>📋 Duplicate</button>"+
+        "</div>"+
+      "</div>"+
+    "</div>";
+  }).join("");
+}
+var abCount=248;
+function togABFilter(btn,tag){
+  btn.classList.toggle("on");
+  abCount=Math.round(248*(0.5+Math.random()*0.5));
+  document.getElementById("audienceCount").innerHTML="🎯 Estimated audience: <strong style='color:var(--p);'>"+abCount+" customers</strong>";
+}
+
+// ══ KPI HELPER ══
+function mkpi(cls,icon,val,lbl){
+  return "<div class='kpi "+cls+"'><div class='kpi-ic'>"+icon+"</div><div class='kpi-v'>"+val+"</div><div class='kpi-l'>"+lbl+"</div></div>";
+}
+
+// ══ INIT ══
+renderMap();
+setScreen("home",document.querySelector(".app-screen-btn.on"));
+document.getElementById("appStats").innerHTML=[
+  {ic:"📥",l:"Total Downloads",v:"12,480"},
+  {ic:"⭐",l:"App Store Rating",v:"4.8★"},
+  {ic:"👥",l:"Active Users",v:"3,240"},
+  {ic:"📱",l:"Daily Orders",v:"148"},
+].map(function(s){return "<div style='display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--bdr);font-size:13px;'><span>"+s.ic+" "+s.l+"</span><span style='font-weight:700;color:var(--p);'>"+s.v+"</span></div>";}).join("");
+renderAI();
+renderPhotos();
+renderFinance();
+renderHR();
+renderCustomer();
+renderSupplier();
+renderMarketing();
+</script>
+</body>
+</html>
