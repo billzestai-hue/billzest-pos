@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BillZest — Sales Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e0b1a;
+    --sidebar: #130f23;
+    --card: #1a1530;
+    --card2: #201b38;
+    --border: rgba(255,255,255,0.07);
+    --primary: #7c3aed;
+    --primary-light: #a78bfa;
+    --accent: #f59e0b;
+    --accent2: #10b981;
+    --danger: #ef4444;
+    --info: #3b82f6;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --white: #ffffff;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: 'Sora', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    width: 240px;
+    background: var(--sidebar);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    z-index: 100;
+  }
+  .sidebar-logo {
+    padding: 28px 24px 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  .sidebar-logo .logo {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--white);
+    letter-spacing: -0.5px;
+  }
+  .sidebar-logo .logo span { color: var(--accent); }
+  .sidebar-logo .sub {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 2px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .sidebar-nav { padding: 20px 12px; flex: 1; }
+  .nav-section-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--muted);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 0 12px;
+    margin: 18px 0 8px;
+  }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 2px;
+  }
+  .nav-item:hover { background: rgba(124,58,237,0.12); color: var(--text); }
+  .nav-item.active { background: rgba(124,58,237,0.2); color: var(--primary-light); }
+  .nav-item .icon { font-size: 16px; width: 20px; text-align: center; }
+  .nav-item .badge {
+    margin-left: auto;
+    background: var(--primary);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 20px;
+  }
+  .sidebar-bottom {
+    padding: 16px 12px;
+    border-top: 1px solid var(--border);
+  }
+  .user-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: var(--card);
+  }
+  .user-avatar {
+    width: 34px; height: 34px;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+  }
+  .user-name { font-size: 13px; font-weight: 600; color: var(--text); }
+  .user-role { font-size: 11px; color: var(--muted); }
+
+  /* ── MAIN ── */
+  .main {
+    margin-left: 240px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  /* TOPBAR */
+  .topbar {
+    background: var(--sidebar);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .topbar-title { font-size: 18px; font-weight: 700; color: var(--white); }
+  .topbar-right { display: flex; align-items: center; gap: 16px; }
+  .topbar-search {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 8px 14px;
+    font-size: 13px;
+    color: var(--muted);
+    cursor: text;
+  }
+  .topbar-search input {
+    background: none;
+    border: none;
+    outline: none;
+    color: var(--text);
+    font-family: 'Sora', sans-serif;
+    font-size: 13px;
+    width: 180px;
+  }
+  .topbar-search input::placeholder { color: var(--muted); }
+  .topbar-btn {
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    padding: 9px 18px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: 'Sora', sans-serif;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .topbar-btn:hover { background: #6d28d9; }
+  .notif-btn {
+    width: 36px; height: 36px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    cursor: pointer;
+    position: relative;
+  }
+  .notif-dot {
+    position: absolute;
+    top: 6px; right: 6px;
+    width: 7px; height: 7px;
+    background: var(--danger);
+    border-radius: 50%;
+  }
+
+  /* CONTENT */
+  .content { padding: 28px 32px; }
+
+  /* KPI CARDS */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-bottom: 28px;
+  }
+  .kpi-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 22px 20px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s;
+  }
+  .kpi-card:hover { transform: translateY(-2px); }
+  .kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: 16px 16px 0 0;
+  }
+  .kpi-card.purple::before { background: var(--primary); }
+  .kpi-card.gold::before { background: var(--accent); }
+  .kpi-card.green::before { background: var(--accent2); }
+  .kpi-card.blue::before { background: var(--info); }
+  .kpi-label { font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 10px; }
+  .kpi-value { font-size: 28px; font-weight: 800; color: var(--white); font-family: 'JetBrains Mono', monospace; margin-bottom: 8px; }
+  .kpi-value .unit { font-size: 14px; font-weight: 500; color: var(--muted); }
+  .kpi-change { font-size: 12px; font-weight: 600; }
+  .kpi-change.up { color: var(--accent2); }
+  .kpi-change.down { color: var(--danger); }
+  .kpi-icon { position: absolute; top: 20px; right: 20px; font-size: 28px; opacity: 0.15; }
+
+  /* FILTER BAR */
+  .filter-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .filter-bar select, .filter-bar input[type=date] {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    color: var(--text);
+    font-family: 'Sora', sans-serif;
+    font-size: 13px;
+    padding: 8px 12px;
+    outline: none;
+    cursor: pointer;
+    transition: border 0.2s;
+  }
+  .filter-bar select:focus, .filter-bar input[type=date]:focus { border-color: var(--primary); }
+  .filter-bar select option { background: var(--card2); }
+  .filter-label { font-size: 13px; font-weight: 600; color: var(--muted); }
+  .btn-export {
+    margin-left: auto;
+    background: var(--card2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Sora', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 9px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .btn-export:hover { border-color: var(--primary); color: var(--primary-light); }
+  .btn-add-sale {
+    background: var(--primary);
+    color: #fff;
+    font-family: 'Sora', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 9px;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.2s;
+  }
+  .btn-add-sale:hover { background: #6d28d9; }
+
+  /* TABLE */
+  .table-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    overflow: hidden;
+  }
+  .table-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  .table-header h3 { font-size: 16px; font-weight: 700; color: var(--white); }
+  .table-header span { font-size: 13px; color: var(--muted); }
+  .table-wrap { overflow-x: auto; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  thead tr {
+    background: var(--card2);
+    border-bottom: 1px solid var(--border);
+  }
+  thead th {
+    padding: 13px 16px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+    transition: color 0.2s;
+  }
+  thead th:hover { color: var(--primary-light); }
+  thead th.sorted { color: var(--primary-light); }
+  tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+    cursor: pointer;
+  }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: rgba(124,58,237,0.06); }
+  tbody td {
+    padding: 14px 16px;
+    color: var(--text);
+    white-space: nowrap;
+    vertical-align: middle;
+  }
+  .td-name { font-weight: 600; color: var(--white); }
+  .td-contact { font-size: 11px; color: var(--muted); margin-top: 2px; font-family: 'JetBrains Mono', monospace; }
+  .plan-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+  }
+  .plan-basic { background: rgba(59,130,246,0.15); color: #60a5fa; }
+  .plan-pro { background: rgba(124,58,237,0.2); color: #a78bfa; }
+  .plan-enterprise { background: rgba(245,158,11,0.15); color: #fbbf24; }
+  .amount-cell { font-family: 'JetBrains Mono', monospace; font-weight: 600; color: var(--accent2); }
+  .commission-cell { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent); }
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .status-paid { background: rgba(16,185,129,0.15); color: #34d399; }
+  .status-pending { background: rgba(245,158,11,0.15); color: #fbbf24; }
+  .status-trial { background: rgba(59,130,246,0.15); color: #60a5fa; }
+  .status-dot { width: 6px; height: 6px; border-radius: 50%; }
+  .status-paid .status-dot { background: #34d399; }
+  .status-pending .status-dot { background: #fbbf24; }
+  .status-trial .status-dot { background: #60a5fa; }
+  .country-flag { font-size: 16px; margin-right: 4px; }
+  .rep-cell { display: flex; align-items: center; gap: 8px; }
+  .rep-avatar {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+  }
+  .action-btns { display: flex; gap: 6px; }
+  .action-btn {
+    width: 28px; height: 28px;
+    border-radius: 7px;
+    border: 1px solid var(--border);
+    background: var(--card2);
+    color: var(--muted);
+    font-size: 13px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+  .action-btn:hover { border-color: var(--primary); color: var(--primary-light); background: rgba(124,58,237,0.15); }
+  .action-btn.del:hover { border-color: var(--danger); color: var(--danger); background: rgba(239,68,68,0.1); }
+
+  /* PAGINATION */
+  .pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    border-top: 1px solid var(--border);
+  }
+  .pagination-info { font-size: 13px; color: var(--muted); }
+  .pagination-btns { display: flex; gap: 6px; }
+  .page-btn {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--card2);
+    color: var(--muted);
+    font-size: 13px;
+    font-family: 'Sora', sans-serif;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+  .page-btn.active, .page-btn:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+  /* ADD SALE MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+  }
+  .modal-overlay.open { display: flex; }
+  .modal-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 32px;
+    width: 500px;
+    max-width: 95vw;
+    position: relative;
+    animation: popIn 0.25s ease;
+  }
+  @keyframes popIn {
+    from { opacity:0; transform:scale(0.94) translateY(10px); }
+    to { opacity:1; transform:scale(1) translateY(0); }
+  }
+  .modal-box h3 { font-size: 18px; font-weight: 700; color: var(--white); margin-bottom: 22px; }
+  .modal-close {
+    position: absolute;
+    top: 18px; right: 18px;
+    background: var(--card2);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    width: 30px; height: 30px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .modal-close:hover { color: var(--white); background: var(--danger); border-color: var(--danger); }
+  .modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .modal-field { display: flex; flex-direction: column; gap: 6px; }
+  .modal-field.full { grid-column: span 2; }
+  .modal-field label { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; }
+  .modal-field input, .modal-field select {
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    color: var(--text);
+    font-family: 'Sora', sans-serif;
+    font-size: 13px;
+    padding: 10px 13px;
+    outline: none;
+    transition: border 0.2s;
+  }
+  .modal-field input:focus, .modal-field select:focus { border-color: var(--primary); }
+  .modal-field select option { background: #1a1530; }
+  .modal-actions { display: flex; gap: 10px; margin-top: 22px; }
+  .btn-cancel {
+    flex: 1;
+    background: var(--card2);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: 'Sora', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 11px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-cancel:hover { border-color: var(--danger); color: var(--danger); }
+  .btn-save {
+    flex: 2;
+    background: var(--primary);
+    border: none;
+    color: #fff;
+    font-family: 'Sora', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 11px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-save:hover { background: #6d28d9; }
+
+  /* MINI CHART */
+  .charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 28px; }
+  .chart-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 22px;
+  }
+  .chart-card h4 { font-size: 14px; font-weight: 700; color: var(--white); margin-bottom: 18px; }
+  .bar-chart { display: flex; align-items: flex-end; gap: 8px; height: 90px; }
+  .bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 5px; }
+  .bar {
+    width: 100%;
+    border-radius: 6px 6px 0 0;
+    transition: opacity 0.2s;
+    cursor: pointer;
+    min-width: 24px;
+  }
+  .bar:hover { opacity: 0.8; }
+  .bar-label { font-size: 10px; color: var(--muted); font-weight: 600; }
+  .donut-wrap { display: flex; align-items: center; gap: 20px; }
+  .donut-legend { display: flex; flex-direction: column; gap: 10px; }
+  .legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--muted); }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .legend-val { font-weight: 700; color: var(--text); margin-left: auto; padding-left: 8px; }
+
+  /* ── SIDEBAR TOGGLE BUTTON ── */
+  .sidebar-toggle {
+    display: none;
+    position: fixed;
+    top: 14px; left: 14px;
+    z-index: 300;
+    background: var(--primary);
+    border: none;
+    color: #fff;
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    font-size: 18px;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 12px rgba(124,58,237,0.4);
+  }
+  .sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    z-index: 98;
+    backdrop-filter: blur(2px);
+  }
+  .sidebar-overlay.open { display: block; }
+
+  /* ── TABLET 1024px ── */
+  @media (max-width: 1024px) {
+    .sidebar { width: 200px; }
+    .main { margin-left: 200px; }
+    .kpi-grid { grid-template-columns: repeat(2,1fr); gap: 14px; }
+    .charts-row { grid-template-columns: 1fr; }
+    .kpi-value { font-size: 22px; }
+    .content { padding: 20px 18px; }
+    .topbar { padding: 14px 20px; }
+    .topbar-search input { width: 120px; }
+  }
+
+  /* ── MOBILE 768px ── */
+  @media (max-width: 768px) {
+    /* Sidebar slide-in */
+    .sidebar {
+      transform: translateX(-100%);
+      transition: transform 0.28s cubic-bezier(.4,0,.2,1);
+      z-index: 99;
+      width: 240px;
+    }
+    .sidebar.open { transform: translateX(0); }
+    .sidebar-toggle { display: flex; }
+    .main { margin-left: 0; }
+
+    /* Topbar */
+    .topbar { padding: 13px 14px 13px 58px; gap: 8px; flex-wrap: wrap; }
+    .topbar-title { font-size: 14px; }
+    .topbar-search { display: none; }
+    .topbar-btn { padding: 7px 12px; font-size: 12px; }
+    .notif-btn { width: 32px; height: 32px; font-size: 14px; }
+
+    /* Content */
+    .content { padding: 14px 12px; }
+
+    /* KPIs — 2 column */
+    .kpi-grid { grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+    .kpi-card { padding: 14px 12px; border-radius: 12px; }
+    .kpi-label { font-size: 10px; margin-bottom: 6px; }
+    .kpi-value { font-size: 17px; margin-bottom: 5px; }
+    .kpi-change { font-size: 10px; }
+    .kpi-icon { font-size: 20px; top: 12px; right: 12px; }
+
+    /* Charts */
+    .charts-row { grid-template-columns: 1fr; gap: 10px; margin-bottom: 14px; }
+    .chart-card { padding: 14px; border-radius: 12px; }
+    .chart-card h4 { font-size: 12px; margin-bottom: 10px; }
+    .bar-chart { height: 65px; gap: 5px; }
+    .bar-label { font-size: 9px; }
+    .donut-wrap { gap: 12px; }
+    .legend-item { font-size: 11px; }
+
+    /* Filters */
+    .filter-bar { gap: 6px; overflow-x: auto; padding-bottom: 4px; flex-wrap: nowrap; }
+    .filter-label { display: none; }
+    .filter-bar select { font-size: 11px; padding: 6px 8px; min-width: 90px; flex-shrink: 0; border-radius: 7px; }
+    .btn-export { font-size: 11px; padding: 6px 10px; white-space: nowrap; flex-shrink: 0; }
+    .btn-add-sale { font-size: 11px; padding: 6px 10px; white-space: nowrap; flex-shrink: 0; }
+
+    /* Table */
+    .table-card { border-radius: 12px; overflow: hidden; }
+    .table-header { padding: 12px 14px; }
+    .table-header h3 { font-size: 13px; }
+    .table-header span { font-size: 11px; }
+    .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    table { font-size: 12px; min-width: 560px; }
+    thead th { padding: 9px 10px; font-size: 10px; }
+    tbody td { padding: 10px 10px; }
+    .td-name { font-size: 12px; }
+    .td-contact { font-size: 10px; }
+    .plan-badge { font-size: 10px; padding: 3px 7px; }
+    .status-badge { font-size: 10px; padding: 3px 7px; }
+    .amount-cell { font-size: 12px; }
+    .commission-cell { font-size: 11px; }
+    .rep-avatar { width: 22px; height: 22px; font-size: 9px; }
+    .action-btn { width: 26px; height: 26px; font-size: 12px; }
+
+    /* Pagination */
+    .pagination { padding: 10px 12px; flex-wrap: wrap; gap: 8px; }
+    .pagination-info { font-size: 11px; }
+    .page-btn { width: 28px; height: 28px; font-size: 11px; border-radius: 7px; }
+
+    /* Modal */
+    .modal-box { padding: 20px 14px; margin: 0 10px; width: calc(100% - 20px); max-width: 100%; }
+    .modal-grid { grid-template-columns: 1fr; gap: 10px; }
+    .modal-field.full { grid-column: span 1; }
+    .modal-box h3 { font-size: 15px; margin-bottom: 14px; }
+    .modal-field label { font-size: 10px; }
+    .modal-field input, .modal-field select { font-size: 13px; padding: 9px 11px; }
+    .btn-cancel, .btn-save { font-size: 13px; padding: 10px; }
+  }
+
+  /* ── SMALL MOBILE 420px ── */
+  @media (max-width: 420px) {
+    .kpi-value { font-size: 15px; }
+    .kpi-label { font-size: 9px; }
+    .topbar-title { font-size: 13px; }
+    .topbar-btn { font-size: 11px; padding: 6px 10px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR TOGGLE (Mobile) -->
+<button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo">Bill<span>Zest</span></div>
+    <div class="sub">Sales Dashboard</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Main</div>
+    <div class="nav-item"><span class="icon">📊</span> Overview</div>
+    <div class="nav-item active"><span class="icon">💰</span> Sales <span class="badge">24</span></div>
+    <div class="nav-item"><span class="icon">👥</span> Customers</div>
+    <div class="nav-item"><span class="icon">📅</span> Demo Bookings</div>
+
+    <div class="nav-section-label">Finance</div>
+    <div class="nav-item"><span class="icon">🧾</span> Invoices</div>
+    <div class="nav-item"><span class="icon">💳</span> Payments</div>
+    <div class="nav-item"><span class="icon">🏆</span> Commission</div>
+
+    <div class="nav-section-label">Settings</div>
+    <div class="nav-item"><span class="icon">👨‍💼</span> Sales Reps</div>
+    <div class="nav-item"><span class="icon">⚙️</span> Settings</div>
+  </nav>
+  <div class="sidebar-bottom">
+    <div class="user-card">
+      <div class="user-avatar">AD</div>
+      <div>
+        <div class="user-name">Admin</div>
+        <div class="user-role">Super Admin</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-title">💰 Sales Management</div>
+    <div class="topbar-right">
+      <div class="topbar-search">
+        🔍 <input type="text" id="searchInput" placeholder="Search customer, rep..." oninput="filterTable()">
+      </div>
+      <div class="notif-btn">🔔<div class="notif-dot"></div></div>
+      <button class="topbar-btn" onclick="openModal()">+ Add Sale</button>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- KPI CARDS -->
+    <div class="kpi-grid">
+      <div class="kpi-card purple">
+        <div class="kpi-icon">💰</div>
+        <div class="kpi-label">Total Revenue</div>
+        <div class="kpi-value">﷼ <span id="kpiRevenue">0</span></div>
+        <div class="kpi-change up">↑ 18.4% vs last month</div>
+      </div>
+      <div class="kpi-card gold">
+        <div class="kpi-icon">🧾</div>
+        <div class="kpi-label">Total Sales</div>
+        <div class="kpi-value"><span id="kpiSales">0</span> <span class="unit">deals</span></div>
+        <div class="kpi-change up">↑ 5 new this week</div>
+      </div>
+      <div class="kpi-card green">
+        <div class="kpi-icon">✅</div>
+        <div class="kpi-label">Paid</div>
+        <div class="kpi-value"><span id="kpiPaid">0</span> <span class="unit">deals</span></div>
+        <div class="kpi-change up">↑ 82% conversion</div>
+      </div>
+      <div class="kpi-card blue">
+        <div class="kpi-icon">🏆</div>
+        <div class="kpi-label">Total Commission</div>
+        <div class="kpi-value">﷼ <span id="kpiComm">0</span></div>
+        <div class="kpi-change up">↑ 12.1% this month</div>
+      </div>
+    </div>
+
+    <!-- CHARTS ROW -->
+    <div class="charts-row">
+      <div class="chart-card">
+        <h4>📈 Monthly Revenue (SAR)</h4>
+        <div class="bar-chart" id="barChart"></div>
+      </div>
+      <div class="chart-card">
+        <h4>🥧 Sales by Plan</h4>
+        <div class="donut-wrap">
+          <svg width="100" height="100" viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="38" fill="none" stroke="#1a1530" stroke-width="16"/>
+            <circle cx="50" cy="50" r="38" fill="none" stroke="#7c3aed" stroke-width="16" stroke-dasharray="72 167" stroke-dashoffset="25" transform="rotate(-90 50 50)"/>
+            <circle cx="50" cy="50" r="38" fill="none" stroke="#f59e0b" stroke-width="16" stroke-dasharray="58 181" stroke-dashoffset="-47" transform="rotate(-90 50 50)"/>
+            <circle cx="50" cy="50" r="38" fill="none" stroke="#10b981" stroke-width="16" stroke-dasharray="37 202" stroke-dashoffset="-105" transform="rotate(-90 50 50)"/>
+            <text x="50" y="54" text-anchor="middle" fill="#e2e8f0" font-size="12" font-family="Sora" font-weight="700">Plans</text>
+          </svg>
+          <div class="donut-legend">
+            <div class="legend-item"><div class="legend-dot" style="background:#7c3aed"></div> Pro <span class="legend-val">42%</span></div>
+            <div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div> Basic <span class="legend-val">34%</span></div>
+            <div class="legend-item"><div class="legend-dot" style="background:#10b981"></div> Enterprise <span class="legend-val">24%</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FILTER BAR -->
+    <div class="filter-bar">
+      <span class="filter-label">Filter:</span>
+      <select id="filterStatus" onchange="filterTable()">
+        <option value="">All Status</option>
+        <option value="Paid">Paid</option>
+        <option value="Pending">Pending</option>
+        <option value="Trial">Trial</option>
+      </select>
+      <select id="filterPlan" onchange="filterTable()">
+        <option value="">All Plans</option>
+        <option value="Basic">Basic</option>
+        <option value="Pro">Pro</option>
+        <option value="Enterprise">Enterprise</option>
+      </select>
+      <select id="filterCountry" onchange="filterTable()">
+        <option value="">All Countries</option>
+        <option value="Saudi Arabia">Saudi Arabia</option>
+        <option value="UAE">UAE</option>
+        <option value="Kuwait">Kuwait</option>
+        <option value="Egypt">Egypt</option>
+        <option value="Jordan">Jordan</option>
+      </select>
+      <select id="filterRep" onchange="filterTable()">
+        <option value="">All Reps</option>
+        <option value="Ahmed K">Ahmed K</option>
+        <option value="Sara M">Sara M</option>
+        <option value="Khalid R">Khalid R</option>
+        <option value="Layla H">Layla H</option>
+      </select>
+      <button class="btn-export" onclick="exportCSV()">⬇️ Export CSV</button>
+      <button class="btn-add-sale" onclick="openModal()">➕ Add Sale</button>
+    </div>
+
+    <!-- TABLE -->
+    <div class="table-card">
+      <div class="table-header">
+        <h3>All Sales Records</h3>
+        <span id="recordCount">Loading...</span>
+      </div>
+      <div class="table-wrap">
+        <table id="salesTable">
+          <thead>
+            <tr>
+              <th onclick="sortTable('id')">#</th>
+              <th onclick="sortTable('name')">Customer ↕</th>
+              <th onclick="sortTable('plan')">Plan ↕</th>
+              <th onclick="sortTable('amount')">Amount ↕</th>
+              <th onclick="sortTable('date')">Date ↕</th>
+              <th onclick="sortTable('status')">Status ↕</th>
+              <th onclick="sortTable('country')">Country ↕</th>
+              <th onclick="sortTable('rep')">Sales Rep ↕</th>
+              <th onclick="sortTable('commission')">Commission ↕</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+      <div class="pagination">
+        <div class="pagination-info" id="pageInfo">Showing 1–10 of 24</div>
+        <div class="pagination-btns" id="pageBtns"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ADD SALE MODAL -->
+<div class="modal-overlay" id="addModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <h3>➕ Add New Sale</h3>
+    <div class="modal-grid">
+      <div class="modal-field"><label>Customer Name</label><input type="text" id="m_name" placeholder="e.g. Al Baik Restaurant"></div>
+      <div class="modal-field"><label>Contact (Phone/Email)</label><input type="text" id="m_contact" placeholder="+966 5xx xxx xxxx"></div>
+      <div class="modal-field"><label>Plan</label>
+        <select id="m_plan">
+          <option value="Basic">Basic — ﷼1888/mo</option>
+          <option value="Pro">Pro — ﷼2888/mo</option>
+          <option value="Enterprise">Enterprise — Custom</option>
+        </select>
+      </div>
+      <div class="modal-field"><label>Amount (SAR)</label><input type="number" id="m_amount" placeholder="e.g. 1888"></div>
+      <div class="modal-field"><label>Date</label><input type="date" id="m_date"></div>
+      <div class="modal-field"><label>Status</label>
+        <select id="m_status">
+          <option value="Paid">Paid</option>
+          <option value="Pending">Pending</option>
+          <option value="Trial">Trial</option>
+        </select>
+      </div>
+      <div class="modal-field"><label>Country</label>
+        <select id="m_country">
+          <option value="Saudi Arabia">🇸🇦 Saudi Arabia</option>
+          <option value="UAE">🇦🇪 UAE</option>
+          <option value="Kuwait">🇰🇼 Kuwait</option>
+          <option value="Egypt">🇪🇬 Egypt</option>
+          <option value="Jordan">🇯🇴 Jordan</option>
+        </select>
+      </div>
+      <div class="modal-field"><label>Sales Rep</label>
+        <select id="m_rep">
+          <option value="Ahmed K">Ahmed K</option>
+          <option value="Sara M">Sara M</option>
+          <option value="Khalid R">Khalid R</option>
+          <option value="Layla H">Layla H</option>
+        </select>
+      </div>
+      <div class="modal-field full"><label>Commission (%)</label><input type="number" id="m_comm" placeholder="e.g. 10" min="0" max="100"></div>
+    </div>
+    <div id="modal-err" style="color:#ef4444;font-size:12px;margin-top:10px;display:none;"></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-save" onclick="saveSale()">💾 Save Sale</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── SIDEBAR TOGGLE (Mobile) ──
+  function toggleSidebar() {
+    document.querySelector('.sidebar').classList.toggle('open');
+    document.getElementById('sidebarOverlay').classList.toggle('open');
+  }
+  // Close sidebar on nav item click (mobile)
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', () => {
+      if (window.innerWidth <= 768) toggleSidebar();
+    });
+  });
+
+  // ── DATA ──
+  const repColors = { 'Ahmed K': '#7c3aed', 'Sara M': '#10b981', 'Khalid R': '#f59e0b', 'Layla H': '#3b82f6' };
+  const countryFlags = { 'Saudi Arabia':'🇸🇦', 'UAE':'🇦🇪', 'Kuwait':'🇰🇼', 'Egypt':'🇪🇬', 'Jordan':'🇯🇴' };
+
+  let salesData = [
+    { id:1, name:'Al Baik Restaurant', contact:'+966501234567', plan:'Pro', amount:2888, date:'2025-03-01', status:'Paid', country:'Saudi Arabia', rep:'Ahmed K', commission:10 },
+    { id:2, name:'Cafe Bateel', contact:'cafe@bateel.com', plan:'Enterprise', amount:5500, date:'2025-03-03', status:'Paid', country:'UAE', rep:'Sara M', commission:8 },
+    { id:3, name:'Burger Hub Kuwait', contact:'+96522086665', plan:'Basic', amount:1888, date:'2025-03-05', status:'Pending', country:'Kuwait', rep:'Khalid R', commission:12 },
+    { id:4, name:'Zaatar w Zeit', contact:'info@zaatar.com', plan:'Pro', amount:2888, date:'2025-03-06', status:'Paid', country:'Jordan', rep:'Layla H', commission:10 },
+    { id:5, name:'Koshary El Tahrir', contact:'+201023456789', plan:'Basic', amount:1888, date:'2025-03-08', status:'Trial', country:'Egypt', rep:'Ahmed K', commission:0 },
+    { id:6, name:'Nando\'s KSA', contact:'+966581234567', plan:'Enterprise', amount:6200, date:'2025-03-09', status:'Paid', country:'Saudi Arabia', rep:'Sara M', commission:8 },
+    { id:7, name:'The Cheesecake Factory', contact:'tcf@uae.com', plan:'Pro', amount:2888, date:'2025-03-10', status:'Paid', country:'UAE', rep:'Khalid R', commission:10 },
+    { id:8, name:'Hardee\'s Egypt', contact:'+20109876543', plan:'Basic', amount:1888, date:'2025-03-11', status:'Pending', country:'Egypt', rep:'Layla H', commission:12 },
+    { id:9, name:'Pizza Hut Jordan', contact:'ph@jordan.com', plan:'Pro', amount:2888, date:'2025-03-12', status:'Paid', country:'Jordan', rep:'Ahmed K', commission:10 },
+    { id:10, name:'Herfy Foods', contact:'+966512345678', plan:'Enterprise', amount:7000, date:'2025-03-13', status:'Paid', country:'Saudi Arabia', rep:'Sara M', commission:8 },
+    { id:11, name:'Shake Shack UAE', contact:'ss@uae.com', plan:'Pro', amount:2888, date:'2025-03-14', status:'Trial', country:'UAE', rep:'Khalid R', commission:0 },
+    { id:12, name:'Mama\'s Kitchen', contact:'+96522012345', plan:'Basic', amount:1888, date:'2025-03-15', status:'Paid', country:'Kuwait', rep:'Layla H', commission:12 },
+    { id:13, name:'Smoke & Grill', contact:'sg@ksa.com', plan:'Pro', amount:2888, date:'2025-03-16', status:'Pending', country:'Saudi Arabia', rep:'Ahmed K', commission:10 },
+    { id:14, name:'Foul Mohamed', contact:'+20111234567', plan:'Basic', amount:1888, date:'2025-03-17', status:'Paid', country:'Egypt', rep:'Sara M', commission:12 },
+    { id:15, name:'Kudu Restaurant', contact:'+966598765432', plan:'Enterprise', amount:5800, date:'2025-03-18', status:'Paid', country:'Saudi Arabia', rep:'Khalid R', commission:8 },
+    { id:16, name:'Just Falafel', contact:'jf@uae.com', plan:'Basic', amount:1888, date:'2025-03-19', status:'Trial', country:'UAE', rep:'Layla H', commission:0 },
+    { id:17, name:'Tikka Restaurant', contact:'+962796543210', plan:'Pro', amount:2888, date:'2025-03-20', status:'Paid', country:'Jordan', rep:'Ahmed K', commission:10 },
+    { id:18, name:'Panda Restaurant', contact:'+966534567890', plan:'Enterprise', amount:8000, date:'2025-03-21', status:'Paid', country:'Saudi Arabia', rep:'Sara M', commission:8 },
+    { id:19, name:'Lina\'s Bakery', contact:'linas@kw.com', plan:'Basic', amount:1888, date:'2025-03-22', status:'Pending', country:'Kuwait', rep:'Khalid R', commission:12 },
+    { id:20, name:'Sushi Hub Dubai', contact:'sushi@uae.com', plan:'Pro', amount:2888, date:'2025-03-23', status:'Paid', country:'UAE', rep:'Layla H', commission:10 },
+    { id:21, name:'Cairo Grill', contact:'+20123456789', plan:'Basic', amount:1888, date:'2025-03-24', status:'Trial', country:'Egypt', rep:'Ahmed K', commission:0 },
+    { id:22, name:'Amman Sweets', contact:'+962799887766', plan:'Pro', amount:2888, date:'2025-03-25', status:'Paid', country:'Jordan', rep:'Sara M', commission:10 },
+    { id:23, name:'Al Romansiah', contact:'+966509876543', plan:'Enterprise', amount:9500, date:'2025-03-26', status:'Paid', country:'Saudi Arabia', rep:'Khalid R', commission:8 },
+    { id:24, name:'Green Salad Spot', contact:'green@eg.com', plan:'Basic', amount:1888, date:'2025-03-27', status:'Pending', country:'Egypt', rep:'Layla H', commission:12 },
+  ];
+
+  let filtered = [...salesData];
+  let currentPage = 1;
+  const perPage = 10;
+  let sortCol = 'date';
+  let sortDir = -1;
+
+  // ── KPI CALC ──
+  function updateKPIs() {
+    const total = salesData.reduce((s,r) => s + r.amount, 0);
+    const paid = salesData.filter(r => r.status === 'Paid').length;
+    const comm = salesData.reduce((s,r) => s + Math.round(r.amount * r.commission / 100), 0);
+    document.getElementById('kpiRevenue').textContent = total.toLocaleString();
+    document.getElementById('kpiSales').textContent = salesData.length;
+    document.getElementById('kpiPaid').textContent = paid;
+    document.getElementById('kpiComm').textContent = comm.toLocaleString();
+  }
+
+  // ── BAR CHART ──
+  function drawBarChart() {
+    const months = ['Oct','Nov','Dec','Jan','Feb','Mar'];
+    const vals = [38000, 52000, 61000, 45000, 70000, salesData.reduce((s,r)=>s+r.amount,0)];
+    const max = Math.max(...vals);
+    const colors = ['#4c1d95','#5b21b6','#6d28d9','#7c3aed','#8b5cf6','#a78bfa'];
+    const el = document.getElementById('barChart');
+    el.innerHTML = months.map((m,i) => `
+      <div class="bar-wrap">
+        <div class="bar" style="height:${Math.round(vals[i]/max*80)}px;background:${colors[i]}" title="﷼${vals[i].toLocaleString()}"></div>
+        <div class="bar-label">${m}</div>
+      </div>`).join('');
+  }
+
+  // ── RENDER TABLE ──
+  function renderTable() {
+    const start = (currentPage - 1) * perPage;
+    const pageData = filtered.slice(start, start + perPage);
+    const tbody = document.getElementById('tableBody');
+    tbody.innerHTML = pageData.map((r, i) => {
+      const commAmt = Math.round(r.amount * r.commission / 100);
+      const planClass = r.plan === 'Basic' ? 'plan-basic' : r.plan === 'Pro' ? 'plan-pro' : 'plan-enterprise';
+      const statusClass = r.status === 'Paid' ? 'status-paid' : r.status === 'Pending' ? 'status-pending' : 'status-trial';
+      const initials = r.rep.split(' ').map(w=>w[0]).join('');
+      return `<tr>
+        <td style="color:var(--muted);font-size:12px;font-family:'JetBrains Mono',monospace;">#${String(r.id).padStart(3,'0')}</td>
+        <td>
+          <div class="td-name">${r.name}</div>
+          <div class="td-contact">${r.contact}</div>
+        </td>
+        <td><span class="plan-badge ${planClass}">${r.plan}</span></td>
+        <td class="amount-cell">﷼ ${r.amount.toLocaleString()}</td>
+        <td style="color:var(--muted);font-size:12px;">${formatDate(r.date)}</td>
+        <td><span class="status-badge ${statusClass}"><div class="status-dot"></div>${r.status}</span></td>
+        <td>${countryFlags[r.country] || ''} ${r.country}</td>
+        <td>
+          <div class="rep-cell">
+            <div class="rep-avatar" style="background:${repColors[r.rep]||'#7c3aed'}">${initials}</div>
+            ${r.rep}
+          </div>
+        </td>
+        <td class="commission-cell">${r.commission}% · ﷼${commAmt.toLocaleString()}</td>
+        <td>
+          <div class="action-btns">
+            <button class="action-btn" title="Edit" onclick="editRow(${r.id})">✏️</button>
+            <button class="action-btn del" title="Delete" onclick="deleteRow(${r.id})">🗑️</button>
+          </div>
+        </td>
+      </tr>`;
+    }).join('');
+
+    document.getElementById('recordCount').textContent = `${filtered.length} records`;
+    document.getElementById('pageInfo').textContent = `Showing ${start+1}–${Math.min(start+perPage, filtered.length)} of ${filtered.length}`;
+    renderPagination();
+  }
+
+  function formatDate(d) {
+    const dt = new Date(d);
+    return dt.toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
+  }
+
+  // ── PAGINATION ──
+  function renderPagination() {
+    const pages = Math.ceil(filtered.length / perPage);
+    const el = document.getElementById('pageBtns');
+    el.innerHTML = '';
+    for (let i = 1; i <= pages; i++) {
+      const btn = document.createElement('button');
+      btn.className = 'page-btn' + (i === currentPage ? ' active' : '');
+      btn.textContent = i;
+      btn.onclick = () => { currentPage = i; renderTable(); };
+      el.appendChild(btn);
+    }
+  }
+
+  // ── FILTER ──
+  function filterTable() {
+    const search = document.getElementById('searchInput').value.toLowerCase();
+    const status = document.getElementById('filterStatus').value;
+    const plan = document.getElementById('filterPlan').value;
+    const country = document.getElementById('filterCountry').value;
+    const rep = document.getElementById('filterRep').value;
+    filtered = salesData.filter(r =>
+      (!search || r.name.toLowerCase().includes(search) || r.contact.toLowerCase().includes(search) || r.rep.toLowerCase().includes(search)) &&
+      (!status || r.status === status) &&
+      (!plan || r.plan === plan) &&
+      (!country || r.country === country) &&
+      (!rep || r.rep === rep)
+    );
+    currentPage = 1;
+    renderTable();
+  }
+
+  // ── SORT ──
+  function sortTable(col) {
+    if (sortCol === col) sortDir *= -1; else { sortCol = col; sortDir = 1; }
+    filtered.sort((a,b) => {
+      let av = a[col], bv = b[col];
+      if (typeof av === 'string') return av.localeCompare(bv) * sortDir;
+      return (av - bv) * sortDir;
+    });
+    renderTable();
+  }
+
+  // ── DELETE ──
+  function deleteRow(id) {
+    if (!confirm('Delete this sale record?')) return;
+    salesData = salesData.filter(r => r.id !== id);
+    filtered = filtered.filter(r => r.id !== id);
+    renderTable();
+    updateKPIs();
+  }
+
+  // ── EDIT ──
+  function editRow(id) {
+    const r = salesData.find(x => x.id === id);
+    if (!r) return;
+    editingId = id;
+    document.getElementById('m_name').value = r.name;
+    document.getElementById('m_contact').value = r.contact;
+    document.getElementById('m_plan').value = r.plan;
+    document.getElementById('m_amount').value = r.amount;
+    document.getElementById('m_date').value = r.date;
+    document.getElementById('m_status').value = r.status;
+    document.getElementById('m_country').value = r.country;
+    document.getElementById('m_rep').value = r.rep;
+    document.getElementById('m_comm').value = r.commission;
+    document.querySelector('#addModal h3').textContent = '✏️ Edit Sale Record';
+    document.querySelector('.btn-save').textContent = '💾 Update Sale';
+    document.getElementById('modal-err').style.display = 'none';
+    document.getElementById('addModal').classList.add('open');
+  }
+
+  // ── ADD MODAL ──
+  let editingId = null; // track which record is being edited
+
+  function openModal(forEdit = false) {
+    editingId = null;
+    if (!forEdit) {
+      // Clear fields for new sale
+      ['m_name','m_contact','m_amount','m_comm'].forEach(id => document.getElementById(id).value = '');
+      document.getElementById('m_plan').value = 'Basic';
+      document.getElementById('m_status').value = 'Paid';
+      document.getElementById('m_country').value = 'Saudi Arabia';
+      document.getElementById('m_rep').value = 'Ahmed K';
+      document.getElementById('m_date').value = new Date().toISOString().split('T')[0];
+      document.querySelector('#addModal h3').textContent = '➕ Add New Sale';
+      document.querySelector('.btn-save').textContent = '💾 Save Sale';
+    }
+    document.getElementById('modal-err').style.display = 'none';
+    document.getElementById('addModal').classList.add('open');
+  }
+  function closeModal() {
+    document.getElementById('addModal').classList.remove('open');
+    editingId = null;
+  }
+  document.getElementById('addModal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+
+  function saveSale() {
+    const name = document.getElementById('m_name').value.trim();
+    const contact = document.getElementById('m_contact').value.trim();
+    const amount = parseFloat(document.getElementById('m_amount').value);
+    const commission = parseFloat(document.getElementById('m_comm').value);
+    const errEl = document.getElementById('modal-err');
+
+    if (!name || !contact || !amount) { errEl.textContent = '⚠️ Please fill all required fields.'; errEl.style.display = 'block'; return; }
+    if (isNaN(commission) || commission < 0 || commission > 100) { errEl.textContent = '⚠️ Commission must be 0–100.'; errEl.style.display = 'block'; return; }
+
+    const saleObj = {
+      id: editingId || (salesData.length ? Math.max(...salesData.map(r=>r.id)) + 1 : 1),
+      name, contact,
+      plan: document.getElementById('m_plan').value,
+      amount,
+      date: document.getElementById('m_date').value,
+      status: document.getElementById('m_status').value,
+      country: document.getElementById('m_country').value,
+      rep: document.getElementById('m_rep').value,
+      commission
+    };
+
+    if (editingId) {
+      // UPDATE existing record
+      const idx = salesData.findIndex(r => r.id === editingId);
+      if (idx !== -1) salesData[idx] = saleObj;
+    } else {
+      // ADD new record
+      salesData.unshift(saleObj);
+    }
+
+    closeModal();
+    filterTable();
+    updateKPIs();
+  }
+
+  // ── EXPORT CSV ──
+  function exportCSV() {
+    const headers = ['ID','Customer','Contact','Plan','Amount (SAR)','Date','Status','Country','Sales Rep','Commission %','Commission SAR'];
+    const rows = filtered.map(r => [
+      r.id, r.name, r.contact, r.plan, r.amount, r.date, r.status, r.country, r.rep, r.commission,
+      Math.round(r.amount * r.commission / 100)
+    ]);
+    const csv = [headers, ...rows].map(r => r.map(v => `"${v}"`).join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'BillZest_Sales_' + new Date().toISOString().split('T')[0] + '.csv';
+    a.click();
+  }
+
+  // ── INIT ──
+  updateKPIs();
+  drawBarChart();
+  filterTable();
+</script>
+</body>
+</html>
