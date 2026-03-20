@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BillZest AI Support</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Poppins',sans-serif;background:#f4f4f8;}
+:root{--p:#4f2d91;--pd:#3b1f6e;--pl:#f0ebff;--org:#f5a623;--grn:#10b981;--red:#ef4444;--teal:#00b5a3;--bdr:#e0e0e0;}
+
+/* ══ CHAT BUBBLE (Fixed bottom right) ══ */
+.chat-bubble{position:fixed;bottom:24px;right:24px;z-index:9999;}
+
+/* Pulse ring */
+.cb-ring{position:absolute;inset:-6px;border-radius:50%;background:rgba(79,45,145,.2);animation:ring 2s ease-out infinite;}
+@keyframes ring{0%{transform:scale(1);opacity:.8;}100%{transform:scale(1.5);opacity:0;}}
+
+/* Main button */
+.cb-btn{width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,var(--p),var(--teal));border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:26px;box-shadow:0 6px 24px rgba(79,45,145,.4);transition:transform .2s;position:relative;z-index:1;}
+.cb-btn:hover{transform:scale(1.1);}
+.cb-notif{position:absolute;top:-3px;right:-3px;width:18px;height:18px;background:var(--red);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;border:2px solid #fff;}
+.cb-online{position:absolute;bottom:2px;right:2px;width:12px;height:12px;background:var(--grn);border-radius:50%;border:2px solid #fff;animation:blink 2s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.4;}}
+
+/* ══ CHAT WINDOW ══ */
+.chat-window{position:fixed;bottom:100px;right:24px;width:370px;height:580px;background:#fff;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,.2);display:none;flex-direction:column;z-index:9998;overflow:hidden;animation:slideUp .3s ease;}
+.chat-window.open{display:flex;}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+
+/* Header */
+.cw-hdr{background:linear-gradient(135deg,var(--p),var(--pd));padding:16px 18px;display:flex;align-items:center;gap:12px;position:relative;}
+.cw-av{width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;border:2px solid rgba(255,255,255,.3);}
+.cw-info{flex:1;}
+.cw-name{font-size:14px;font-weight:700;color:#fff;}
+.cw-status{font-size:11px;color:rgba(255,255,255,.8);display:flex;align-items:center;gap:4px;margin-top:1px;}
+.cw-status::before{content:'';width:6px;height:6px;background:var(--grn);border-radius:50%;display:block;animation:blink 1.5s infinite;}
+.cw-actions{display:flex;gap:6px;}
+.cw-act-btn{background:rgba(255,255,255,.15);border:none;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;color:#fff;transition:background .2s;}
+.cw-act-btn:hover{background:rgba(255,255,255,.25);}
+.cw-close{background:rgba(255,255,255,.15);border:none;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:16px;color:#fff;display:flex;align-items:center;justify-content:center;}
+.cw-close:hover{background:rgba(255,255,255,.25);}
+
+/* Powered by */
+.cw-powered{background:rgba(0,0,0,.06);padding:4px 18px;font-size:10px;color:rgba(255,255,255,.7);text-align:center;}
+
+/* Messages */
+.cw-msgs{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;background:#f8f8fc;}
+.cw-msgs::-webkit-scrollbar{width:4px;}
+.cw-msgs::-webkit-scrollbar-thumb{background:#ddd;border-radius:2px;}
+
+/* Message bubbles */
+.msg{max-width:82%;display:flex;flex-direction:column;}
+.msg.bot{align-self:flex-start;}
+.msg.user{align-self:flex-end;}
+.msg-bubble{padding:10px 14px;border-radius:16px;font-size:13px;line-height:1.55;}
+.msg.bot .msg-bubble{background:#fff;color:#1a1a1a;border-radius:4px 16px 16px 16px;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+.msg.user .msg-bubble{background:linear-gradient(135deg,var(--p),var(--pd));color:#fff;border-radius:16px 16px 4px 16px;}
+.msg-time{font-size:10px;color:#aaa;margin-top:3px;padding:0 4px;}
+.msg.user .msg-time{text-align:right;}
+
+/* Bot avatar */
+.bot-av{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--p),var(--teal));display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;margin-bottom:2px;}
+
+/* Typing indicator */
+.typing-wrap{display:flex;align-items:flex-end;gap:6px;align-self:flex-start;}
+.typing-bubble{background:#fff;border-radius:4px 16px 16px 16px;padding:12px 16px;display:flex;gap:4px;align-items:center;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+.typing-dot{width:7px;height:7px;background:#ccc;border-radius:50%;animation:typ .9s ease-in-out infinite;}
+.typing-dot:nth-child(2){animation-delay:.2s;}
+.typing-dot:nth-child(3){animation-delay:.4s;}
+@keyframes typ{0%,60%,100%{transform:translateY(0);}30%{transform:translateY(-8px);}}
+
+/* Quick replies */
+.quick-replies{padding:8px 14px;display:flex;gap:6px;flex-wrap:wrap;background:#f8f8fc;border-top:1px solid #eee;}
+.qr-chip{padding:6px 13px;border:1.5px solid var(--bdr);border-radius:20px;font-size:11px;cursor:pointer;font-family:'Poppins',sans-serif;color:#555;background:#fff;transition:all .2s;white-space:nowrap;}
+.qr-chip:hover{border-color:var(--p);color:var(--p);background:var(--pl);}
+
+/* Input */
+.cw-inp{padding:12px 14px;border-top:1px solid #eee;display:flex;gap:8px;align-items:flex-end;background:#fff;}
+.cw-inp textarea{flex:1;border:1.5px solid var(--bdr);border-radius:12px;padding:9px 13px;font-size:13px;font-family:'Poppins',sans-serif;outline:none;resize:none;max-height:80px;min-height:38px;overflow-y:auto;transition:border .2s;line-height:1.4;}
+.cw-inp textarea:focus{border-color:var(--p);}
+.send-btn{width:38px;height:38px;border-radius:12px;background:var(--p);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;}
+.send-btn:hover{background:var(--pd);transform:scale(1.05);}
+.send-btn svg{width:16px;height:16px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.attach-btn{width:34px;height:34px;border-radius:10px;background:var(--pl);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px;transition:all .2s;}
+.attach-btn:hover{background:var(--bdr);}
+
+/* Rating */
+.rating-wrap{background:#fff;border-radius:12px;padding:12px 14px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+.rating-stars{display:flex;justify-content:center;gap:6px;margin-top:8px;}
+.star-btn{background:none;border:none;font-size:22px;cursor:pointer;transition:transform .2s;color:#ddd;}
+.star-btn:hover,.star-btn.on{color:var(--org);transform:scale(1.2);}
+
+/* API Config Panel */
+.config-panel{position:fixed;bottom:100px;right:24px;width:370px;background:#fff;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,.2);display:none;z-index:9997;padding:24px;animation:slideUp .3s ease;}
+.config-panel.open{display:block;}
+.cp-title{font-size:16px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.cp-close{background:none;border:none;font-size:20px;cursor:pointer;color:#aaa;margin-left:auto;}
+.cf{margin-bottom:12px;}
+.cf label{display:block;font-size:11px;font-weight:700;color:#666;margin-bottom:4px;text-transform:uppercase;}
+.cf input,.cf textarea{width:100%;padding:10px 12px;border:1.5px solid var(--bdr);border-radius:8px;font-size:13px;font-family:'Poppins',sans-serif;outline:none;transition:border .2s;}
+.cf input:focus,.cf textarea:focus{border-color:var(--p);}
+.cf textarea{resize:vertical;min-height:80px;font-size:12px;}
+.btn-save-cfg{width:100%;background:var(--p);color:#fff;border:none;padding:11px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Poppins',sans-serif;}
+
+/* DEMO PAGE */
+.demo-page{max-width:900px;margin:0 auto;padding:40px 20px;}
+.dp-hero{background:linear-gradient(135deg,#0d1b4b,var(--p));border-radius:20px;padding:40px;text-align:center;color:#fff;margin-bottom:32px;}
+.dp-logo{font-size:32px;font-weight:800;margin-bottom:8px;}
+.dp-logo span{color:var(--org);}
+.dp-sub{font-size:15px;opacity:.8;margin-bottom:20px;}
+.dp-features{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:24px;}
+.dp-feat{background:rgba(255,255,255,.1);border-radius:12px;padding:16px;text-align:center;}
+.dp-feat-ic{font-size:28px;margin-bottom:8px;}
+.dp-feat-title{font-size:13px;font-weight:700;}
+.dp-feat-desc{font-size:11px;opacity:.7;margin-top:4px;}
+.install-card{background:#fff;border-radius:16px;border:1px solid var(--bdr);padding:24px;margin-bottom:20px;}
+.ic-title{font-size:16px;font-weight:700;margin-bottom:16px;}
+.code-block{background:#1a1a2e;border-radius:10px;padding:16px;font-family:'Courier New',monospace;font-size:12px;color:#a78bfa;overflow-x:auto;margin-bottom:12px;position:relative;}
+.copy-btn{position:absolute;top:10px;right:10px;background:var(--p);color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;font-family:'Poppins',sans-serif;}
+.install-steps{list-style:none;}
+.install-steps li{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid #f5f5f5;font-size:13px;color:#555;}
+.is-num{width:24px;height:24px;background:var(--p);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px;}
+
+/* Toast */
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(60px);background:#1a1a1a;color:#fff;padding:11px 22px;border-radius:28px;font-size:12px;font-weight:600;z-index:99999;transition:transform .3s;white-space:nowrap;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+
+@media(max-width:420px){
+  .chat-window,.config-panel{width:calc(100vw - 16px);right:8px;}
+  .dp-features{grid-template-columns:1fr 1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- DEMO PAGE -->
+<div class="demo-page">
+  <div class="dp-hero">
+    <div class="dp-logo">Bill<span>Zest</span> AI Support</div>
+    <div class="dp-sub">24/7 AI Customer Support — Powered by Claude</div>
+    <div style="background:rgba(255,255,255,.15);border-radius:10px;padding:10px 16px;display:inline-flex;align-items:center;gap:8px;font-size:13px;">
+      <span style="width:8px;height:8px;background:var(--grn);border-radius:50%;display:inline-block;animation:blink 1.5s infinite;"></span>
+      AI is online and ready
+    </div>
+    <div class="dp-features">
+      <div class="dp-feat"><div class="dp-feat-ic">🤖</div><div class="dp-feat-title">Claude AI</div><div class="dp-feat-desc">Powered by Anthropic</div></div>
+      <div class="dp-feat"><div class="dp-feat-ic">🌍</div><div class="dp-feat-title">Arabic + English</div><div class="dp-feat-desc">Bilingual support</div></div>
+      <div class="dp-feat"><div class="dp-feat-ic">⚡</div><div class="dp-feat-title">Instant Reply</div><div class="dp-feat-desc">No waiting time</div></div>
+      <div class="dp-feat"><div class="dp-feat-ic">🎯</div><div class="dp-feat-title">Smart Routing</div><div class="dp-feat-desc">Complex → Human</div></div>
+      <div class="dp-feat"><div class="dp-feat-ic">📊</div><div class="dp-feat-title">Chat History</div><div class="dp-feat-desc">All saved</div></div>
+      <div class="dp-feat"><div class="dp-feat-ic">🔒</div><div class="dp-feat-title">Secure</div><div class="dp-feat-desc">End-to-end</div></div>
+    </div>
+  </div>
+
+  <!-- INSTALL CARD -->
+  <div class="install-card">
+    <div class="ic-title">📋 How to Add to Your Website</div>
+    <ul class="install-steps">
+      <li><div class="is-num">1</div><div>Copy the code below</div></li>
+      <li><div class="is-num">2</div><div>Open your <strong>index.html</strong> on GitHub</div></li>
+      <li><div class="is-num">3</div><div>Paste just before <code style="background:#f5f5f5;padding:2px 6px;border-radius:4px;">&lt;/body&gt;</code></div></li>
+      <li><div class="is-num">4</div><div>Commit changes — Done! ✅</div></li>
+    </ul>
+    <div style="margin-top:16px;font-size:13px;font-weight:700;margin-bottom:8px;color:#1a1a1a;">📋 Paste this code in index.html:</div>
+    <div class="code-block" id="embedCode">
+      <button class="copy-btn" onclick="copyCode()">📋 Copy</button>
+      &lt;!-- BillZest AI Support --&gt;<br>
+      &lt;script src="https://www.billzestpos.com/billzest-ai-widget.js"&gt;&lt;/script&gt;
+    </div>
+    <div style="font-size:12px;color:#888;">Or use the full widget file below ↓</div>
+  </div>
+
+  <div class="install-card">
+    <div class="ic-title">⚙️ AI Configuration</div>
+    <div class="cf">
+      <label>Anthropic API Key (Optional — for real AI)</label>
+      <input type="password" id="apiKeyInput" placeholder="sk-ant-api03-xxxxxxxxxx" oninput="saveAPIKey()">
+    </div>
+    <div style="font-size:12px;color:#888;margin-top:-8px;margin-bottom:12px;">Without API key: Smart pre-programmed responses. With key: Full Claude AI! 🤖</div>
+    <div class="cf">
+      <label>Business Name</label>
+      <input type="text" id="bizName" placeholder="BillZest POS" value="BillZest POS" oninput="updateConfig()">
+    </div>
+    <div class="cf">
+      <label>Support Email</label>
+      <input type="email" id="supportEmail" placeholder="info@billzestpos.com" value="info@billzestpos.com" oninput="updateConfig()">
+    </div>
+    <div class="cf">
+      <label>WhatsApp Number</label>
+      <input type="text" id="waNumber" placeholder="+966 50 000 0000" value="+966 50 000 0000" oninput="updateConfig()">
+    </div>
+    <div class="cf">
+      <label>Custom AI Instructions (Optional)</label>
+      <textarea id="customPrompt" placeholder="e.g. Always be friendly. Offer free demo. Speak both Arabic and English.">You are a helpful customer support AI for BillZest POS. Help customers with their questions about our restaurant management system. Be friendly, professional, and helpful. Offer free demo when relevant. Support both Arabic and English.</textarea>
+    </div>
+    <button class="btn-save-cfg" onclick="saveConfig()">💾 Save Configuration</button>
+  </div>
+
+  <div style="text-align:center;color:#aaa;font-size:13px;padding:20px;">
+    💬 Chat widget is active → Bottom right corner ↘️
+  </div>
+</div>
+
+<!-- ══ CHAT BUBBLE ══ -->
+<div class="chat-bubble" id="chatBubble">
+  <div class="cb-ring"></div>
+  <button class="cb-btn" onclick="toggleChat()" id="chatToggleBtn">
+    <span id="chatIcon">💬</span>
+    <div class="cb-notif" id="chatNotif" style="display:none;">1</div>
+    <div class="cb-online"></div>
+  </button>
+</div>
+
+<!-- ══ CHAT WINDOW ══ -->
+<div class="chat-window" id="chatWindow">
+  <!-- Header -->
+  <div class="cw-hdr">
+    <div class="cw-av">🤖</div>
+    <div class="cw-info">
+      <div class="cw-name" id="cwBotName">BillZest AI Support</div>
+      <div class="cw-status">Online — Typically replies instantly</div>
+    </div>
+    <div class="cw-actions">
+      <button class="cw-act-btn" onclick="clearChat()" title="Clear chat">🗑️</button>
+      <button class="cw-act-btn" onclick="toggleLang()" title="Toggle Arabic/English" id="langToggleBtn">🌍</button>
+    </div>
+    <button class="cw-close" onclick="toggleChat()">✕</button>
+  </div>
+  <div class="cw-powered">🤖 Powered by Claude AI · BillZest Support</div>
+
+  <!-- Messages -->
+  <div class="cw-msgs" id="cwMsgs"></div>
+
+  <!-- Quick Replies -->
+  <div class="quick-replies" id="quickReplies"></div>
+
+  <!-- Input -->
+  <div class="cw-inp">
+    <button class="attach-btn" onclick="showToast('📎 File upload coming soon!')">📎</button>
+    <textarea id="cwInput" placeholder="Type your message..." rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+    <button class="send-btn" onclick="sendMsg()">
+      <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ══ CONFIG ══
+var CONFIG = {
+  apiKey: localStorage.getItem('bz_ai_key') || '',
+  bizName: 'BillZest POS',
+  supportEmail: 'info@billzestpos.com',
+  waNumber: '+966 50 000 0000',
+  prompt: 'You are a helpful customer support AI for BillZest POS restaurant management system. Be friendly, professional, and concise. Help with: pricing, features, technical issues, orders, login problems. Offer free demo. Support Arabic and English. Keep replies short (2-3 sentences max). End with a helpful follow-up question.'
+};
+var chatHistory = [];
+var isArabic = false;
+var chatOpen = false;
+var notifShown = false;
+
+// ══ SAVE API KEY ══
+function saveAPIKey(){
+  CONFIG.apiKey = document.getElementById('apiKeyInput').value.trim();
+  localStorage.setItem('bz_ai_key', CONFIG.apiKey);
+}
+function updateConfig(){
+  CONFIG.bizName = document.getElementById('bizName').value || 'BillZest POS';
+  CONFIG.supportEmail = document.getElementById('supportEmail').value;
+  CONFIG.waNumber = document.getElementById('waNumber').value;
+  document.getElementById('cwBotName').textContent = CONFIG.bizName + ' AI';
+}
+function saveConfig(){
+  CONFIG.prompt = document.getElementById('customPrompt').value || CONFIG.prompt;
+  updateConfig();
+  showToast('✅ Configuration saved!');
+}
+
+// ══ CHAT TOGGLE ══
+function toggleChat(){
+  chatOpen = !chatOpen;
+  var cw = document.getElementById('chatWindow');
+  cw.classList.toggle('open', chatOpen);
+  document.getElementById('chatIcon').textContent = chatOpen ? '✕' : '💬';
+  document.getElementById('chatNotif').style.display = 'none';
+  if(chatOpen && chatHistory.length === 0) initChat();
+  if(chatOpen) setTimeout(function(){ document.getElementById('cwInput').focus(); }, 300);
+}
+
+// ══ INIT CHAT ══
+function initChat(){
+  chatHistory = [];
+  document.getElementById('cwMsgs').innerHTML = '';
+  var welcome = isArabic ?
+    'مرحباً! أنا مساعد بيل زست الذكي 🤖\n\nكيف يمكنني مساعدتك اليوم؟' :
+    'Hello! I\'m BillZest AI Support 🤖\n\nI can help you with:\n• Pricing & Plans\n• Technical Issues\n• Orders & Billing\n• Features & Setup\n\nHow can I help you today?';
+  addMsg('bot', welcome);
+  renderQuickReplies();
+}
+
+// ══ QUICK REPLIES ══
+var QRS_EN = ['💰 Pricing', '🛒 POS Features', '❓ Login Problem', '📞 Talk to Human', '🆓 Free Demo', '🌙 عربي'];
+var QRS_AR = ['💰 الأسعار', '🛒 مميزات النظام', '❓ مشكلة تسجيل', '📞 تحدث مع موظف', '🆓 تجربة مجانية', '🌐 English'];
+
+function renderQuickReplies(){
+  var qrs = isArabic ? QRS_AR : QRS_EN;
+  document.getElementById('quickReplies').innerHTML = qrs.map(function(q){
+    return '<button class="qr-chip" onclick="sendQuick(\''+q+'\')">'+q+'</button>';
+  }).join('');
+}
+
+function sendQuick(q){
+  if(q === '🌙 عربي' || q === '🌐 English'){toggleLang();return;}
+  sendMsgText(q);
+}
+
+// ══ SEND MESSAGE ══
+function handleKey(e){
+  if(e.key === 'Enter' && !e.shiftKey){e.preventDefault();sendMsg();}
+}
+function autoResize(el){
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 80) + 'px';
+}
+function sendMsg(){
+  var inp = document.getElementById('cwInput');
+  var msg = inp.value.trim();
+  if(!msg) return;
+  inp.value = '';
+  inp.style.height = 'auto';
+  sendMsgText(msg);
+}
+function sendMsgText(msg){
+  addMsg('user', msg);
+  chatHistory.push({role:'user', content:msg});
+  showTyping();
+  document.getElementById('quickReplies').innerHTML = '';
+
+  var key = CONFIG.apiKey || localStorage.getItem('bz_ai_key') || '';
+  if(key && key.startsWith('sk-ant')){
+    callClaudeAPI(msg, key);
+  } else {
+    var delay = 600 + Math.random() * 800;
+    setTimeout(function(){
+      hideTyping();
+      var reply = getSmartReply(msg.toLowerCase());
+      addMsg('bot', reply);
+      chatHistory.push({role:'assistant', content:reply});
+      renderQuickReplies();
+    }, delay);
+  }
+}
+
+// ══ CLAUDE API ══
+function callClaudeAPI(msg, key){
+  var messages = chatHistory.slice(-10).map(function(m){
+    return {role: m.role, content: m.content};
+  });
+  fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 400,
+      system: CONFIG.prompt,
+      messages: messages
+    })
+  })
+  .then(function(r){return r.json();})
+  .then(function(d){
+    hideTyping();
+    var reply = d.content && d.content[0] ? d.content[0].text : getSmartReply(msg.toLowerCase());
+    addMsg('bot', reply);
+    chatHistory.push({role:'assistant', content:reply});
+    renderQuickReplies();
+  })
+  .catch(function(){
+    hideTyping();
+    var reply = getSmartReply(msg.toLowerCase());
+    addMsg('bot', reply);
+    renderQuickReplies();
+  });
+}
+
+// ══ SMART REPLIES (No API) ══
+function getSmartReply(msg){
+  var ar = isArabic;
+
+  // Greeting
+  if(/hello|hi|hey|مرحبا|السلام|اهلا/.test(msg))
+    return ar ? 'مرحباً! كيف يمكنني مساعدتك اليوم؟ 😊' : 'Hello! Welcome to BillZest Support 😊 How can I help you today?';
+
+  // Pricing
+  if(/price|pricing|cost|كم|سعر|تكلف|اسعار|how much/.test(msg))
+    return ar ? 'أسعارنا تبدأ من ﷼1,888/شهر للباقة الأساسية!\n\n🥉 أساسية: ﷼1,888/شهر\n🥈 متقدمة: ﷼2,888/شهر\n🥇 مؤسسات: حسب الطلب\n\nهل تريد تجربة مجانية 14 يوم؟' :
+      'Our plans start from ﷼1,888/month!\n\n🥉 Basic: ﷼1,888/mo\n🥈 Pro: ﷼2,888/mo\n🥇 Enterprise: Custom\n\nAll plans include 14-day FREE trial! Want to start?';
+
+  // Free trial / demo
+  if(/free|trial|demo|تجربة|مجان|demo/.test(msg))
+    return ar ? '🎁 نعم! تجربة مجانية 14 يوم بدون بطاقة ائتمان!\n\nللبدء: www.billzestpos.com\nأو تواصل معنا: info@billzestpos.com' :
+      '🎁 Yes! 14-day FREE trial, no credit card needed!\n\nStart at: www.billzestpos.com\nOr email: info@billzestpos.com\n\nShall I schedule a live demo for you?';
+
+  // Login problem
+  if(/login|password|sign in|cant|كلمة مرور|تسجيل|دخول|لا استطيع/.test(msg))
+    return ar ? '🔐 مشكلة في تسجيل الدخول؟\n\n1. تأكد من البريد الإلكتروني\n2. استخدم "نسيت كلمة المرور"\n3. تواصل: info@billzestpos.com\n\nهل تحتاج مساعدة أخرى؟' :
+      '🔐 Login issues? Here\'s what to try:\n\n1. Check your email address\n2. Click "Forgot Password"\n3. Clear browser cache\n4. Try different browser\n\nStill having issues? Email: info@billzestpos.com';
+
+  // Technical / error
+  if(/error|problem|issue|not working|crash|bug|خطأ|مشكل|لا يعمل/.test(msg))
+    return ar ? '⚠️ نأسف لهذه المشكلة!\n\nيرجى:\n1. تحديث الصفحة\n2. مسح الكاش\n3. إرسال صورة للخطأ على: info@billzestpos.com\n\nسيتواصل معك فريقنا خلال ساعة! ⚡' :
+      '⚠️ Sorry for the trouble!\n\nPlease try:\n1. Refresh the page\n2. Clear browser cache\n3. Try incognito mode\n\nIf still broken, send screenshot to: info@billzestpos.com\nWe\'ll fix it within 1 hour! ⚡';
+
+  // Features / POS
+  if(/feature|pos|system|kitchen|order|inventory|report|مميزات|نظام|مطعم/.test(msg))
+    return ar ? '🚀 مميزات بيل زست:\n\n🛒 نقطة بيع متكاملة\n📊 تقارير فورية\n👨‍🍳 شاشة المطبخ\n📱 طلبات أونلاين\n⭐ نقاط الولاء\n🏪 إدارة الفروع\n🌍 عربي + إنجليزي\n\nهل تريد عرضاً توضيحياً؟' :
+      '🚀 BillZest Features:\n\n🛒 Complete POS System\n📊 Real-time Analytics\n👨‍🍳 Kitchen Display (KDS)\n📱 Online Ordering\n⭐ Loyalty Program\n🏪 Multi-Branch\n🌍 Arabic + English\n\nWant a live demo?';
+
+  // Human / escalate
+  if(/human|agent|talk|speak|person|موظف|انسان|تحدث/.test(msg))
+    return ar ? '👤 سيتواصل معك أحد موظفينا قريباً!\n\n📞 هاتف: 800 1000 119\n💬 واتساب: '+CONFIG.waNumber+'\n📧 إيميل: '+CONFIG.supportEmail+'\n\nأوقات العمل: 24/7 🕐' :
+      '👤 Connecting you to our team!\n\n📞 Phone: 800 1000 119\n💬 WhatsApp: '+CONFIG.waNumber+'\n📧 Email: '+CONFIG.supportEmail+'\n\nAvailable: 24/7 🕐';
+
+  // WhatsApp
+  if(/whatsapp|واتساب/.test(msg)){
+    window.open('https://wa.me/'+CONFIG.waNumber.replace(/[^0-9]/g,'')+'?text=Hello BillZest Support!', '_blank');
+    return ar ? '✅ تم فتح واتساب! سيرد عليك فريقنا قريباً 💬' : '✅ Opening WhatsApp! Our team will reply shortly 💬';
+  }
+
+  // Payment / billing
+  if(/payment|bill|invoice|pay|invoice|دفع|فاتور/.test(msg))
+    return ar ? '💳 للمدفوعات والفواتير:\n\n📧 billing@billzestpos.com\nأو من خلال لوحة التحكم → الفواتير\n\nهل تحتاج فاتورة محددة؟' :
+      '💳 For payments & billing:\n\n📧 billing@billzestpos.com\nOr: Dashboard → Billing\n\nNeed a specific invoice?';
+
+  // Arabic question
+  if(/arabic|عربي|language|لغة/.test(msg)){
+    toggleLang();
+    return ar ? '✅ تم التحويل للإنجليزية!' : '✅ تم التحويل للعربية! كيف يمكنني مساعدتك؟';
+  }
+
+  // Default
+  return ar ?
+    'شكراً على تواصلك مع بيل زست! 🙏\n\nلم أفهم سؤالك بشكل كامل. هل يمكنك التوضيح أكثر؟\nأو تواصل مباشرة: '+CONFIG.supportEmail :
+    'Thanks for reaching out to BillZest! 🙏\n\nI didn\'t fully understand your question. Could you please clarify?\n\nOr contact us directly:\n📧 '+CONFIG.supportEmail+'\n💬 WhatsApp: '+CONFIG.waNumber;
+}
+
+// ══ ADD MESSAGE ══
+function addMsg(from, text){
+  var el = document.getElementById('cwMsgs');
+  var now = new Date();
+  var time = now.getHours()+':'+String(now.getMinutes()).padStart(2,'0');
+  var div = document.createElement('div');
+  div.className = 'msg '+from;
+
+  if(from === 'bot'){
+    div.innerHTML =
+      '<div style="display:flex;gap:6px;align-items:flex-end;">'+
+        '<div class="bot-av">🤖</div>'+
+        '<div class="msg-bubble">'+text.replace(/\n/g,'<br>')+'</div>'+
+      '</div>'+
+      '<div class="msg-time">'+time+'</div>';
+  } else {
+    div.innerHTML =
+      '<div class="msg-bubble">'+text+'</div>'+
+      '<div class="msg-time">'+time+'</div>';
+  }
+  el.appendChild(div);
+  el.scrollTop = el.scrollHeight;
+
+  // Show rating after 3 bot messages
+  var botMsgs = el.querySelectorAll('.msg.bot').length;
+  if(from === 'bot' && botMsgs === 3){
+    setTimeout(showRating, 1000);
+  }
+}
+
+// ══ TYPING ══
+function showTyping(){
+  var el = document.getElementById('cwMsgs');
+  var div = document.createElement('div');
+  div.id = 'typingWrap';
+  div.className = 'typing-wrap';
+  div.innerHTML = '<div class="bot-av">🤖</div><div class="typing-bubble"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>';
+  el.appendChild(div);
+  el.scrollTop = el.scrollHeight;
+}
+function hideTyping(){
+  var t = document.getElementById('typingWrap');
+  if(t) t.remove();
+}
+
+// ══ RATING ══
+function showRating(){
+  var el = document.getElementById('cwMsgs');
+  var div = document.createElement('div');
+  div.className = 'msg bot';
+  div.innerHTML =
+    '<div style="display:flex;gap:6px;align-items:flex-end;">'+
+      '<div class="bot-av">🤖</div>'+
+      '<div class="rating-wrap">'+
+        '<div style="font-size:12px;font-weight:600;color:#555;">'+(isArabic?'كيف كانت تجربتك؟':'How was my help?')+'</div>'+
+        '<div class="rating-stars">'+
+          [1,2,3,4,5].map(function(n){
+            return '<button class="star-btn" onclick="rateChat('+n+',this)">★</button>';
+          }).join('')+
+        '</div>'+
+      '</div>'+
+    '</div>';
+  el.appendChild(div);
+  el.scrollTop = el.scrollHeight;
+}
+function rateChat(n, btn){
+  document.querySelectorAll('.star-btn').forEach(function(b,i){b.classList.toggle('on',i<n);});
+  setTimeout(function(){
+    addMsg('bot', n>=4 ?
+      (isArabic?'شكراً جزيلاً! يسعدنا خدمتك 🌟':'Thank you! Glad I could help! 🌟') :
+      (isArabic?'نأسف لعدم رضاك! سنتواصل معك قريباً 🙏':'Sorry I didn\'t help more! A human agent will follow up 🙏'));
+  },500);
+}
+
+// ══ TOGGLE LANG ══
+function toggleLang(){
+  isArabic = !isArabic;
+  document.getElementById('langToggleBtn').textContent = isArabic ? '🌐' : '🌍';
+  document.getElementById('cwInput').placeholder = isArabic ? 'اكتب رسالتك...' : 'Type your message...';
+  renderQuickReplies();
+  addMsg('bot', isArabic ? '✅ تم التحويل للعربية! كيف يمكنني مساعدتك؟' : '✅ Switched to English! How can I help?');
+}
+
+// ══ CLEAR CHAT ══
+function clearChat(){
+  chatHistory = [];
+  document.getElementById('cwMsgs').innerHTML = '';
+  initChat();
+  showToast(isArabic?'تم مسح المحادثة':'Chat cleared!');
+}
+
+// ══ COPY CODE ══
+function copyCode(){
+  var code = '<script src="https://www.billzestpos.com/billzest-ai-widget.js"><\/script>';
+  navigator.clipboard && navigator.clipboard.writeText(code);
+  showToast('📋 Code copied!');
+}
+
+// ══ TOAST ══
+function showToast(msg){
+  var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show');},2500);
+}
+
+// ══ AUTO SHOW NOTIFICATION ══
+setTimeout(function(){
+  if(!notifShown && !chatOpen){
+    notifShown=true;
+    document.getElementById('chatNotif').style.display='flex';
+  }
+},3000);
+
+// Load saved API key
+if(localStorage.getItem('bz_ai_key')){
+  document.getElementById('apiKeyInput').value = localStorage.getItem('bz_ai_key');
+  CONFIG.apiKey = localStorage.getItem('bz_ai_key');
+}
+</script>
+</body>
+</html>
