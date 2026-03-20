@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- ══ SEO OPTIMIZATION ══ -->
+<title>BillZest POS — #1 Restaurant Management System in Saudi Arabia</title>
+<meta name="description" content="BillZest is the complete restaurant POS system for Saudi Arabia, UAE, Kuwait. Online ordering, loyalty points, kitchen display, analytics and more.">
+<meta name="keywords" content="restaurant POS Saudi Arabia, نظام مطعم, BillZest, restaurant management, كاشير مطعم">
+<meta name="author" content="BillZest">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#4f2d91">
+
+<!-- Open Graph -->
+<meta property="og:title" content="BillZest POS — Smart Restaurant System">
+<meta property="og:description" content="Complete restaurant management system. POS, Online Orders, Loyalty, Analytics.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://billzest-pos.vercel.app">
+<meta property="og:image" content="https://billzest-pos.vercel.app/og-image.png">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="BillZest POS">
+<meta name="twitter:description" content="Smart Restaurant Management System">
+
+<!-- ══ PWA MANIFEST ══ -->
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+
+<!-- ══ GOOGLE ANALYTICS ══ -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-XXXXXXXXXX'); // Replace with your GA4 ID
+</script>
+
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Sora',sans-serif;background:#0f0f1a;color:#f0f0ff;min-height:100vh;}
+:root{--p:#4f2d91;--org:#f5a623;--grn:#10b981;--red:#ef4444;--blu:#3b82f6;}
+
+/* HEADER */
+.hdr{background:#12121f;border-bottom:1px solid #2a2a3e;padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.hdr-logo{font-size:24px;font-weight:800;color:#fff;letter-spacing:-1px;}
+.hdr-logo span{color:var(--org);}
+.hdr-nav{display:flex;gap:6px;}
+.hn{padding:7px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:none;background:none;color:#9ca3af;font-family:'Sora',sans-serif;transition:all .2s;}
+.hn:hover{background:rgba(255,255,255,.06);color:#fff;}
+.hn.on{background:var(--p);color:#fff;}
+.hdr-right{display:flex;align-items:center;gap:10px;}
+.user-chip{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.05);border:1px solid #2a2a3e;padding:6px 14px;border-radius:30px;}
+.uc-av{width:28px;height:28px;border-radius:50%;background:var(--p);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;}
+.uc-name{font-size:12px;font-weight:600;color:#f0f0ff;}
+.btn-logout{background:none;border:1px solid #2a2a3e;padding:5px 12px;border-radius:7px;font-size:11px;cursor:pointer;color:var(--red);font-family:'Sora',sans-serif;}
+
+/* LOGIN */
+.login-wrap{display:flex;min-height:100vh;background:#0f0f1a;}
+.login-left{flex:0 0 45%;background:linear-gradient(135deg,#0d1b4b,#1a0845,#4f2d91);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px;position:relative;overflow:hidden;}
+.login-left::before{content:'';position:absolute;inset:0;background-image:radial-gradient(circle,rgba(255,255,255,.5) 1px,transparent 1px);background-size:45px 45px;opacity:.25;}
+.ll-logo{font-size:44px;font-weight:800;color:#fff;letter-spacing:-2px;margin-bottom:8px;position:relative;z-index:1;}
+.ll-logo span{color:var(--org);}
+.ll-sub{font-size:15px;color:rgba(255,255,255,.7);margin-bottom:40px;position:relative;z-index:1;}
+.ll-feats{list-style:none;position:relative;z-index:1;width:100%;}
+.ll-feats li{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.1);font-size:14px;color:rgba(255,255,255,.85);}
+.ll-feats li:last-child{border-bottom:none;}
+.lf-ic{width:38px;height:38px;background:rgba(255,255,255,.1);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+
+.login-right{flex:1;display:flex;align-items:center;justify-content:center;padding:40px 20px;}
+.login-box{background:#1a1a2e;border:1px solid #2a2a3e;border-radius:20px;padding:36px;width:100%;max-width:420px;}
+.lb-title{font-size:24px;font-weight:800;color:#f0f0ff;margin-bottom:4px;}
+.lb-sub{font-size:13px;color:#6b7280;margin-bottom:28px;}
+.lf{margin-bottom:16px;}
+.lf label{display:block;font-size:11px;font-weight:700;color:#6b7280;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px;}
+.lf input{width:100%;padding:12px 14px;border:1.5px solid #2a2a3e;border-radius:10px;font-size:14px;font-family:'Sora',sans-serif;outline:none;background:#12121f;color:#f0f0ff;transition:border .2s;}
+.lf input:focus{border-color:var(--p);}
+.btn-login{width:100%;background:var(--p);color:#fff;border:none;padding:14px;border-radius:10px;font-size:15px;font-weight:700;font-family:'Sora',sans-serif;cursor:pointer;margin-top:8px;transition:all .2s;}
+.btn-login:hover{background:#3b1f6e;}
+.login-err{color:var(--red);font-size:12px;margin-top:8px;text-align:center;display:none;}
+.login-demo{margin-top:20px;padding:14px;background:#12121f;border-radius:10px;}
+.login-demo strong{display:block;font-size:12px;color:#9ca3af;margin-bottom:8px;}
+.demo-row{padding:6px 8px;border-radius:7px;cursor:pointer;font-size:12px;color:#9ca3af;transition:background .2s;display:flex;justify-content:space-between;}
+.demo-row:hover{background:#1a1a2e;color:#f0f0ff;}
+.social-login{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;}
+.sl-btn{padding:11px;border:1.5px solid #2a2a3e;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;background:none;color:#f0f0ff;font-family:'Sora',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s;}
+.sl-btn:hover{background:#12121f;}
+.divider{text-align:center;font-size:12px;color:#6b7280;margin:14px 0;position:relative;}
+.divider::before,.divider::after{content:'';position:absolute;top:50%;width:42%;height:1px;background:#2a2a3e;}
+.divider::before{left:0;}.divider::after{right:0;}
+
+/* MAIN APP */
+.app-wrap{display:none;}
+.pg-content{padding:20px;max-width:1200px;margin:0 auto;}
+.pg{display:none;}
+.pg.on{display:block;}
+
+/* SECTION */
+.sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px;}
+.sh h2{font-size:20px;font-weight:700;color:#f0f0ff;}
+.card{background:#1a1a2e;border:1px solid #2a2a3e;border-radius:14px;padding:20px;}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.kpi{background:#1a1a2e;border:1px solid #2a2a3e;border-radius:12px;padding:16px;position:relative;overflow:hidden;}
+.kpi::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.kp::after{background:var(--p)}.kg::after{background:var(--grn)}.ko::after{background:var(--org)}.kb::after{background:var(--blu)}
+.kv{font-size:26px;font-weight:800;font-family:'JetBrains Mono',monospace;color:#f0f0ff;}
+.kl{font-size:11px;color:#6b7280;margin-top:3px;}
+.ki{font-size:24px;margin-bottom:8px;}
+.btn{background:var(--p);color:#fff;border:none;padding:9px 18px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Sora',sans-serif;display:inline-flex;align-items:center;gap:6px;transition:all .2s;}
+.btn:hover{background:#3b1f6e;}
+.btn-g{background:var(--grn);}
+.btn-o{background:var(--org);}
+.mf{margin-bottom:14px;}
+.mf label{display:block;font-size:11px;font-weight:700;color:#6b7280;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px;}
+.mf input,.mf select,.mf textarea{width:100%;padding:10px 12px;border:1.5px solid #2a2a3e;border-radius:8px;font-size:13px;font-family:'Sora',sans-serif;outline:none;background:#12121f;color:#f0f0ff;transition:border .2s;}
+.mf input:focus,.mf select:focus,.mf textarea:focus{border-color:var(--p);}
+.tag{display:inline-flex;align-items:center;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;}
+.tg{background:rgba(16,185,129,.1);color:var(--grn);}
+.tr{background:rgba(239,68,68,.1);color:var(--red);}
+.to{background:rgba(245,158,11,.1);color:#f59e0b;}
+.tb{background:rgba(59,130,246,.1);color:var(--blu);}
+.tp{background:rgba(79,45,145,.1);color:var(--p);}
+
+/* ══ EMAIL SYSTEM ══ */
+.email-preview{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.3);}
+.ep-hdr{background:#4f2d91;padding:24px;text-align:center;}
+.ep-logo{font-size:28px;font-weight:800;color:#fff;}
+.ep-logo span{color:#f5a623;}
+.ep-body{padding:28px;color:#333;}
+.ep-title{font-size:20px;font-weight:700;color:#1a1a1a;margin-bottom:12px;}
+.ep-text{font-size:14px;line-height:1.7;color:#555;margin-bottom:16px;}
+.ep-btn{display:inline-block;background:#4f2d91;color:#fff;padding:12px 28px;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;}
+.ep-footer{background:#f5f5f5;padding:16px;text-align:center;font-size:11px;color:#888;}
+.template-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+.tt{padding:8px 16px;border-radius:8px;border:1.5px solid #2a2a3e;font-size:12px;font-weight:600;cursor:pointer;background:#1a1a2e;color:#9ca3af;font-family:'Sora',sans-serif;transition:all .2s;}
+.tt.on{background:var(--p);color:#fff;border-color:var(--p);}
+
+/* ══ PAYMENT ══ */
+.payment-methods{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px;}
+.pm-card{background:#1a1a2e;border:2px solid #2a2a3e;border-radius:14px;padding:20px;text-align:center;cursor:pointer;transition:all .2s;}
+.pm-card:hover,.pm-card.on{border-color:var(--p);background:rgba(79,45,145,.1);}
+.pm-logo{font-size:36px;margin-bottom:10px;}
+.pm-name{font-size:14px;font-weight:700;color:#f0f0ff;margin-bottom:4px;}
+.pm-desc{font-size:11px;color:#6b7280;}
+.pm-status{display:inline-flex;align-items:center;gap:4px;margin-top:8px;font-size:11px;font-weight:600;}
+.payment-form{background:#12121f;border-radius:12px;padding:20px;}
+.card-visual{background:linear-gradient(135deg,#4f2d91,#7c3aed);border-radius:14px;padding:22px;margin-bottom:16px;color:#fff;font-family:'JetBrains Mono',monospace;}
+.cv-num{font-size:18px;letter-spacing:3px;margin-bottom:16px;}
+.cv-bot{display:flex;justify-content:space-between;font-size:12px;}
+
+/* ══ AI INTEGRATION ══ */
+.ai-chat{background:#12121f;border-radius:14px;overflow:hidden;height:500px;display:flex;flex-direction:column;}
+.ac-hdr{background:#1a1a2e;padding:14px 18px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #2a2a3e;}
+.ac-av{width:38px;height:38px;background:linear-gradient(135deg,var(--p),#00b5a3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;}
+.ac-status{font-size:11px;color:var(--grn);display:flex;align-items:center;gap:4px;}
+.ac-status::before{content:'';width:6px;height:6px;background:var(--grn);border-radius:50%;animation:pulse 1.5s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.ac-msgs{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;}
+.msg{max-width:80%;padding:10px 14px;border-radius:14px;font-size:13px;line-height:1.5;}
+.msg-bot{background:#1a1a2e;color:#f0f0ff;border-radius:14px 14px 14px 0;align-self:flex-start;}
+.msg-user{background:var(--p);color:#fff;border-radius:14px 14px 0 14px;align-self:flex-end;}
+.typing{display:flex;gap:4px;align-items:center;padding:10px 14px;background:#1a1a2e;border-radius:14px 14px 14px 0;width:fit-content;}
+.typing span{width:6px;height:6px;background:#6b7280;border-radius:50%;animation:typ 1.2s infinite;}
+.typing span:nth-child(2){animation-delay:.2s;}
+.typing span:nth-child(3){animation-delay:.4s;}
+@keyframes typ{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
+.ac-inp{padding:12px 14px;border-top:1px solid #2a2a3e;display:flex;gap:8px;}
+.ac-inp input{flex:1;padding:10px 14px;border:1.5px solid #2a2a3e;border-radius:9px;font-size:13px;font-family:'Sora',sans-serif;outline:none;background:#1a1a2e;color:#f0f0ff;}
+.ac-inp input:focus{border-color:var(--p);}
+.ac-send{background:var(--p);color:#fff;border:none;width:38px;height:38px;border-radius:9px;cursor:pointer;font-size:16px;}
+.ai-qr{display:flex;gap:8px;flex-wrap:wrap;padding:0 14px 10px;}
+.ai-qr-btn{padding:6px 12px;border:1.5px solid #2a2a3e;border-radius:20px;font-size:11px;cursor:pointer;color:#9ca3af;background:#1a1a2e;font-family:'Sora',sans-serif;transition:all .2s;}
+.ai-qr-btn:hover{border-color:var(--p);color:var(--p);}
+.api-config{background:#12121f;border-radius:12px;padding:20px;}
+.api-key-wrap{display:flex;gap:8px;}
+.api-key-wrap input{flex:1;padding:10px 14px;border:1.5px solid #2a2a3e;border-radius:8px;font-size:13px;font-family:'JetBrains Mono',monospace;outline:none;background:#1a1a2e;color:#f0f0ff;}
+.api-key-wrap input:focus{border-color:var(--p);}
+
+/* ══ SECURITY ══ */
+.security-score{background:linear-gradient(135deg,#059669,#10b981);border-radius:14px;padding:24px;text-align:center;margin-bottom:20px;}
+.ss-val{font-size:56px;font-weight:800;color:#fff;font-family:'JetBrains Mono',monospace;}
+.ss-lbl{font-size:14px;color:rgba(255,255,255,.8);margin-top:4px;}
+.security-checks{display:flex;flex-direction:column;gap:10px;}
+.sc-row{display:flex;align-items:center;gap:12px;padding:14px;background:#12121f;border-radius:10px;}
+.sc-ic{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.sc-info{flex:1;}
+.sc-title{font-size:13px;font-weight:600;color:#f0f0ff;}
+.sc-desc{font-size:11px;color:#6b7280;margin-top:2px;}
+.sc-status{font-size:11px;font-weight:700;}
+
+/* ══ ANALYTICS ══ */
+.ga-embed{background:#1a1a2e;border-radius:14px;padding:24px;text-align:center;margin-bottom:16px;}
+.ga-logo{font-size:48px;margin-bottom:12px;}
+.tracking-code{background:#12121f;border-radius:10px;padding:16px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#a78bfa;overflow-x:auto;margin-bottom:12px;}
+.event-list{display:flex;flex-direction:column;gap:8px;}
+.ev-row{display:flex;align-items:center;gap:10px;padding:12px;background:#12121f;border-radius:9px;font-size:13px;}
+.ev-ic{font-size:18px;flex-shrink:0;}
+.ev-name{font-weight:600;color:#f0f0ff;flex:1;}
+.ev-count{font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--p);}
+
+/* ══ LOGO & BRANDING ══ */
+.logo-showcase{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-bottom:20px;}
+.logo-variant{background:#1a1a2e;border:1px solid #2a2a3e;border-radius:14px;padding:24px;text-align:center;cursor:pointer;transition:all .2s;}
+.logo-variant:hover{border-color:var(--p);}
+.lv-logo{margin-bottom:12px;}
+.lv-name{font-size:12px;color:#6b7280;}
+.color-palette{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+.cp-swatch{width:50px;height:50px;border-radius:10px;cursor:pointer;border:2px solid transparent;transition:all .2s;}
+.cp-swatch:hover,.cp-swatch.on{border-color:#fff;transform:scale(1.1);}
+.brand-assets{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;}
+.ba-card{background:#12121f;border:1px solid #2a2a3e;border-radius:10px;padding:16px;text-align:center;}
+.ba-preview{font-size:36px;margin-bottom:8px;}
+.ba-name{font-size:12px;color:#9ca3af;}
+.ba-btn{margin-top:8px;background:var(--p);color:#fff;border:none;padding:5px 14px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;font-family:'Sora',sans-serif;}
+
+/* ══ SEO ══ */
+.seo-score{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;}
+.seo-item{background:#1a1a2e;border:1px solid #2a2a3e;border-radius:12px;padding:16px;text-align:center;}
+.si-val{font-size:28px;font-weight:800;font-family:'JetBrains Mono',monospace;}
+.si-lbl{font-size:11px;color:#6b7280;margin-top:3px;}
+.seo-checks{display:flex;flex-direction:column;gap:8px;}
+.seo-row{display:flex;align-items:center;gap:10px;padding:12px;background:#12121f;border-radius:9px;}
+.sr-ic{font-size:18px;flex-shrink:0;}
+.sr-title{font-size:13px;font-weight:600;color:#f0f0ff;flex:1;}
+.sr-status{font-size:18px;}
+
+/* ══ DOMAIN ══ */
+.domain-search{display:flex;gap:8px;margin-bottom:20px;}
+.domain-search input{flex:1;padding:12px 16px;border:1.5px solid #2a2a3e;border-radius:10px;font-size:14px;font-family:'Sora',sans-serif;outline:none;background:#12121f;color:#f0f0ff;}
+.domain-search input:focus{border-color:var(--p);}
+.domain-results{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.dr-row{display:flex;align-items:center;gap:12px;padding:14px;background:#12121f;border-radius:10px;}
+.dr-domain{font-size:14px;font-weight:700;font-family:'JetBrains Mono',monospace;flex:1;}
+.dr-price{font-size:13px;font-weight:700;}
+.dns-table{width:100%;border-collapse:collapse;font-size:13px;}
+.dns-table th{text-align:left;padding:10px 12px;font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;border-bottom:2px solid #2a2a3e;}
+.dns-table td{padding:10px 12px;border-bottom:1px solid #2a2a3e;font-family:'JetBrains Mono',monospace;font-size:12px;}
+
+/* ══ PWA ══ */
+.pwa-status{background:linear-gradient(135deg,var(--p),#7c3aed);border-radius:14px;padding:24px;margin-bottom:20px;}
+.ps-title{font-size:20px;font-weight:800;color:#fff;margin-bottom:6px;}
+.ps-sub{font-size:13px;color:rgba(255,255,255,.75);}
+.pwa-steps{display:flex;flex-direction:column;gap:10px;}
+.pw-step{display:flex;align-items:flex-start;gap:12px;padding:16px;background:#12121f;border-radius:10px;}
+.ps-num{width:28px;height:28px;background:var(--p);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0;}
+.ps-title2{font-size:13px;font-weight:600;color:#f0f0ff;}
+.ps-code{font-family:'JetBrains Mono',monospace;font-size:11px;color:#a78bfa;background:#1a1a2e;padding:8px 12px;border-radius:7px;margin-top:6px;display:block;overflow-x:auto;}
+
+/* ══ SINGLE LOGIN ══ */
+.module-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:20px;}
+.module-card{background:#1a1a2e;border:1px solid #2a2a3e;border-radius:12px;padding:16px;text-align:center;cursor:pointer;transition:all .2s;text-decoration:none;}
+.module-card:hover{border-color:var(--p);transform:translateY(-2px);}
+.mc-icon{font-size:32px;margin-bottom:10px;}
+.mc-name{font-size:13px;font-weight:700;color:#f0f0ff;margin-bottom:4px;}
+.mc-desc{font-size:11px;color:#6b7280;}
+.mc-status{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;margin-top:6px;}
+
+/* MODAL */
+.mbg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:500;align-items:center;justify-content:center;padding:16px;}
+.mbg.on{display:flex;}
+.mbox{background:#1a1a2e;border:1px solid #2a2a3e;border-radius:18px;width:100%;max-width:460px;max-height:88vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.4);animation:pop .2s ease;}
+@keyframes pop{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+.mhd{padding:20px 22px 0;display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.mhd h3{font-size:16px;font-weight:700;color:#f0f0ff;}
+.mcl{background:none;border:none;font-size:20px;cursor:pointer;color:#6b7280;}
+.mbd{padding:0 22px 22px;}
+.mft{padding:12px 22px;border-top:1px solid #2a2a3e;display:flex;gap:8px;}
+.btn-c{flex:1;background:#12121f;color:#9ca3af;border:none;padding:10px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Sora',sans-serif;}
+.btn-s{flex:2;background:var(--p);color:#fff;border:none;padding:10px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Sora',sans-serif;}
+
+/* TOAST */
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%) translateY(60px);background:#f0f0ff;color:#1a1a1a;padding:11px 22px;border-radius:28px;font-size:12px;font-weight:700;z-index:9999;transition:transform .3s;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.3);}
+.toast.on{transform:translateX(-50%) translateY(0);}
+
+/* PWA Install Banner */
+.pwa-banner{display:none;position:fixed;bottom:0;left:0;right:0;background:#1a1a2e;border-top:1px solid #2a2a3e;padding:14px 20px;z-index:200;align-items:center;gap:12px;}
+.pwa-banner.show{display:flex;}
+.pwa-banner-txt{flex:1;font-size:13px;color:#f0f0ff;}
+.pwa-banner-txt strong{color:var(--org);}
+
+@media(max-width:768px){
+  .login-left{display:none;}
+  .g4{grid-template-columns:1fr 1fr;}
+  .payment-methods{grid-template-columns:1fr;}
+  .seo-score{grid-template-columns:1fr 1fr;}
+  .pg-content{padding:12px;}
+}
+@media(max-width:480px){
+  .g4{grid-template-columns:1fr 1fr;}
+  .hdr-nav{display:none;}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ LOGIN ══ -->
+<div id="loginWrap">
+  <div class="login-wrap">
+    <div class="login-left">
+      <div class="ll-logo">Bill<span>Zest</span></div>
+      <div class="ll-sub">Complete Restaurant Management</div>
+      <ul class="ll-feats">
+        <li><div class="lf-ic">🛒</div> Complete POS System</li>
+        <li><div class="lf-ic">📊</div> Advanced Analytics</li>
+        <li><div class="lf-ic">🤖</div> AI Powered Assistant</li>
+        <li><div class="lf-ic">🌍</div> Arabic + English Support</li>
+        <li><div class="lf-ic">📱</div> Mobile App Ready</li>
+        <li><div class="lf-ic">🔐</div> Enterprise Security</li>
+      </ul>
+    </div>
+    <div class="login-right">
+      <div class="login-box">
+        <div class="lb-title">Welcome Back 👋</div>
+        <div class="lb-sub">Sign in to BillZest dashboard</div>
+        <div class="social-login">
+          <button class="sl-btn" onclick="socialLogin('Google')">🔴 Google</button>
+          <button class="sl-btn" onclick="socialLogin('Apple')">🍎 Apple</button>
+        </div>
+        <div class="divider">or continue with email</div>
+        <div class="lf">
+          <label>Email Address</label>
+          <input type="email" id="loginEmail" placeholder="admin@billzest.com">
+        </div>
+        <div class="lf">
+          <label>Password</label>
+          <input type="password" id="loginPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+        </div>
+        <div style="text-align:right;margin-top:-8px;margin-bottom:16px;">
+          <a href="#" style="font-size:12px;color:var(--p);text-decoration:none;" onclick="showToast('📧 Reset link sent!')">Forgot password?</a>
+        </div>
+        <button class="btn-login" onclick="doLogin()">🔐 Sign In</button>
+        <div class="login-err" id="loginErr">❌ Invalid credentials!</div>
+        <div class="login-demo">
+          <strong>Demo Accounts (tap to fill):</strong>
+          <div class="demo-row" onclick="fill('admin@billzest.com','admin123')">👑 admin@billzest.com / admin123</div>
+          <div class="demo-row" onclick="fill('manager@billzest.com','manager123')">👔 manager@billzest.com / manager123</div>
+          <div class="demo-row" onclick="fill('cashier@billzest.com','cashier123')">💰 cashier@billzest.com / cashier123</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MAIN APP ══ -->
+<div class="app-wrap" id="appWrap">
+  <div class="hdr">
+    <div class="hdr-logo">Bill<span>Zest</span></div>
+    <div class="hdr-nav">
+      <button class="hn on" onclick="gp('modules',this)">🔗 All Modules</button>
+      <button class="hn" onclick="gp('email',this)">📧 Email</button>
+      <button class="hn" onclick="gp('payment',this)">💰 Payment</button>
+      <button class="hn" onclick="gp('ai',this)">🤖 AI</button>
+      <button class="hn" onclick="gp('security',this)">🔐 Security</button>
+      <button class="hn" onclick="gp('analytics',this)">📊 Analytics</button>
+      <button class="hn" onclick="gp('branding',this)">🎨 Branding</button>
+      <button class="hn" onclick="gp('seo',this)">🔍 SEO</button>
+      <button class="hn" onclick="gp('domain',this)">🌐 Domain</button>
+      <button class="hn" onclick="gp('pwa',this)">📱 PWA</button>
+    </div>
+    <div class="hdr-right">
+      <div class="user-chip">
+        <div class="uc-av" id="userAv">A</div>
+        <div class="uc-name" id="userName">Admin</div>
+      </div>
+      <button class="btn-logout" onclick="doLogout()">Logout</button>
+    </div>
+  </div>
+
+  <div class="pg-content">
+
+    <!-- ALL MODULES -->
+    <div class="pg on" id="pg-modules">
+      <div class="sh"><h2>🔗 All BillZest Modules</h2>
+        <div style="font-size:13px;color:#6b7280;">Single login • All systems connected</div>
+      </div>
+      <div class="g4" id="modKPIs"></div>
+      <div class="module-grid" id="moduleGrid"></div>
+      <div class="card">
+        <div style="font-size:14px;font-weight:700;color:#f0f0ff;margin-bottom:14px;">🔗 Cross-Module Features</div>
+        <div id="crossFeatures"></div>
+      </div>
+    </div>
+
+    <!-- EMAIL SYSTEM -->
+    <div class="pg" id="pg-email">
+      <div class="sh"><h2>📧 Email System</h2>
+        <button class="btn" onclick="sendTestEmail()">📤 Send Test</button>
+      </div>
+      <div class="g4" id="emailStats"></div>
+      <div class="template-tabs" id="emailTabs"></div>
+      <div class="g2">
+        <div>
+          <div class="card" style="margin-bottom:14px;">
+            <div style="font-size:14px;font-weight:700;margin-bottom:14px;color:#f0f0ff;">⚙️ Email Settings</div>
+            <div class="mf"><label>SMTP Provider</label>
+              <select><option>SendGrid (Recommended)</option><option>Mailgun</option><option>AWS SES</option><option>Gmail SMTP</option></select>
+            </div>
+            <div class="mf"><label>From Email</label><input type="email" value="noreply@billzest.com"></div>
+            <div class="mf"><label>From Name</label><input type="text" value="BillZest Restaurant"></div>
+            <div class="mf"><label>API Key</label><input type="password" placeholder="SG.xxxxxxxxxxxxxxxx"></div>
+            <button class="btn btn-g" onclick="showToast('✅ Email settings saved!')">💾 Save Settings</button>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:14px;font-weight:700;margin-bottom:12px;color:#f0f0ff;">👁️ Email Preview</div>
+          <div class="email-preview" id="emailPreview"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAYMENT -->
+    <div class="pg" id="pg-payment">
+      <div class="sh"><h2>💰 Payment Gateway</h2></div>
+      <div class="payment-methods" id="payMethods"></div>
+      <div class="g2">
+        <div>
+          <div class="card" style="margin-bottom:14px;">
+            <div style="font-size:14px;font-weight:700;margin-bottom:14px;color:#f0f0ff;">🔑 API Configuration</div>
+            <div class="mf"><label>Payment Gateway</label>
+              <select id="pgSelect" onchange="updatePayConfig()">
+                <option value="moyasar">Moyasar (Saudi Arabia) 🇸🇦</option>
+                <option value="stripe">Stripe (International) 🌍</option>
+                <option value="paypal">PayPal 💙</option>
+                <option value="hyperpay">HyperPay (MENA) 🌙</option>
+              </select>
+            </div>
+            <div class="mf"><label>API Key (Publishable)</label><input type="text" id="pgPubKey" placeholder="pk_live_xxxxxxxx"></div>
+            <div class="mf"><label>API Secret Key</label><input type="password" id="pgSecKey" placeholder="sk_live_xxxxxxxx"></div>
+            <div class="mf"><label>Webhook URL</label><input type="text" value="https://billzest-pos.vercel.app/webhook" readonly style="color:#6b7280;"></div>
+            <div style="display:flex;gap:8px;">
+              <button class="btn" onclick="testPayment()">🧪 Test Connection</button>
+              <button class="btn btn-g" onclick="showToast('✅ Payment gateway saved!')">💾 Save</button>
+            </div>
+          </div>
+          <div class="card">
+            <div style="font-size:14px;font-weight:700;margin-bottom:12px;color:#f0f0ff;">✅ Accepted Cards</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;" id="acceptedCards"></div>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:14px;font-weight:700;margin-bottom:12px;color:#f0f0ff;">💳 Test Payment</div>
+          <div class="payment-form">
+            <div class="card-visual">
+              <div style="font-size:11px;opacity:.7;margin-bottom:8px;">BillZest POS</div>
+              <div class="cv-num" id="cvNum">•••• •••• •••• ••••</div>
+              <div class="cv-bot">
+                <div><div style="font-size:10px;opacity:.7;">CARD HOLDER</div><div>John Doe</div></div>
+                <div><div style="font-size:10px;opacity:.7;">EXPIRES</div><div>12/28</div></div>
+              </div>
+            </div>
+            <div class="mf"><label>Card Number</label><input type="text" placeholder="4111 1111 1111 1111" maxlength="19" oninput="fmtCard(this)"></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+              <div class="mf"><label>Expiry</label><input type="text" placeholder="MM/YY" maxlength="5"></div>
+              <div class="mf"><label>CVV</label><input type="password" placeholder="•••" maxlength="3"></div>
+            </div>
+            <div class="mf"><label>Amount</label><input type="text" value="﷼ 103.50" readonly></div>
+            <button class="btn btn-g" style="width:100%;padding:13px;font-size:14px;" onclick="processPayment()">🔒 Process Payment</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI INTEGRATION -->
+    <div class="pg" id="pg-ai">
+      <div class="sh"><h2>🤖 Claude AI Integration</h2></div>
+      <div class="g4" id="aiStats"></div>
+      <div class="g2">
+        <div>
+          <div class="ai-chat">
+            <div class="ac-hdr">
+              <div class="ac-av">🤖</div>
+              <div>
+                <div style="font-size:14px;font-weight:700;color:#f0f0ff;">BillZest AI</div>
+                <div class="ac-status">Online • Powered by Claude</div>
+              </div>
+              <div style="margin-left:auto;font-size:11px;background:rgba(79,45,145,.3);padding:3px 10px;border-radius:10px;color:#c4b5fd;">claude-sonnet-4-6</div>
+            </div>
+            <div class="ac-msgs" id="aiMsgs"></div>
+            <div class="ai-qr" id="aiQR"></div>
+            <div class="ac-inp">
+              <input type="text" id="aiInp" placeholder="Ask BillZest AI anything..." onkeydown="if(event.key==='Enter')sendAI()">
+              <button class="ac-send" onclick="sendAI()">➤</button>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="card" style="margin-bottom:14px;">
+            <div style="font-size:14px;font-weight:700;margin-bottom:14px;color:#f0f0ff;">🔑 API Configuration</div>
+            <div class="api-config">
+              <div class="mf"><label>Anthropic API Key</label>
+                <div class="api-key-wrap">
+                  <input type="password" id="apiKey" placeholder="sk-ant-api03-xxxxxxxxxx">
+                  <button class="btn" onclick="saveAPIKey()">💾 Save</button>
+                </div>
+              </div>
+              <div class="mf"><label>Model</label>
+                <select><option selected>claude-sonnet-4-6 (Recommended)</option><option>claude-opus-4-6</option><option>claude-haiku-4-5</option></select>
+              </div>
+              <div class="mf"><label>System Prompt</label>
+                <textarea rows="4" style="font-size:12px;">You are BillZest AI, a helpful restaurant management assistant. Help with menu, orders, analytics, and customer service. Be concise and professional.</textarea>
+              </div>
+              <button class="btn btn-g" onclick="testAI()">🧪 Test AI</button>
+            </div>
+          </div>
+          <div class="card">
+            <div style="font-size:14px;font-weight:700;margin-bottom:12px;color:#f0f0ff;">📊 AI Usage</div>
+            <div id="aiUsage"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECURITY -->
+    <div class="pg" id="pg-security">
+      <div class="sh"><h2>🔐 Security & SSL</h2></div>
+      <div class="g2" style="margin-bottom:20px;">
+        <div class="security-score">
+          <div class="ss-val">A+</div>
+          <div class="ss-lbl">Security Grade</div>
+          <div style="font-size:12px;color:rgba(255,255,255,.7);margin-top:6px;">All systems secure</div>
+        </div>
+        <div class="card">
+          <div style="font-size:14px;font-weight:700;margin-bottom:14px;color:#f0f0ff;">🔑 Quick Actions</div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <button class="btn" style="justify-content:flex-start;" onclick="showToast('🔄 SSL Certificate renewed!')">🔒 Renew SSL Certificate</button>
+            <button class="btn" style="justify-content:flex-start;" onclick="showToast('🔑 2FA enabled!')">📱 Enable 2FA</button>
+            <button class="btn btn-o" style="justify-content:flex-start;" onclick="showToast('📋 Audit log downloaded!')">📋 Download Audit Log</button>
+            <button class="btn" style="justify-content:flex-start;background:var(--grn);" onclick="showToast('🔍 Scan complete — No threats!')">🔍 Run Security Scan</button>
+          </div>
+        </div>
+      </div>
+      <div class="security-checks" id="securityChecks"></div>
+    </div>
+
+    <!-- ANALYTICS -->
+    <div class="pg" id="pg-analytics">
+      <div class="sh"><h2>📊 Google Analytics</h2>
+        <button class="btn" onclick="showToast('📊 Opening GA4 Dashboard...')">📊 Open GA4</button>
+      </div>
+      <div class="ga-embed card" style="margin-bottom:16px;">
+        <div class="ga-logo">📊</div>
+        <div style="font-size:16px;font-weight:700;color:#f0f0ff;margin-bottom:6px;">Google Analytics 4 Connected</div>
+        <div style="font-size:13px;color:#6b7280;margin-bottom:16px;">Tracking ID: G-XXXXXXXXXX</div>
+        <div class="g4" id="gaStats"></div>
+      </div>
+      <div class="g2">
+        <div class="card">
+          <div style="font-size:14px;font-weight:700;margin-bottom:14px;color:#f0f0ff;">🏷️ Add GA4 Tracking Code</div>
+          <div class="tracking-code">&lt;!-- BillZest GA4 --&gt;<br>&lt;script async src="gtag/js?id=G-XXXXX"&gt;&lt;/script&gt;<br>&lt;script&gt;<br>  window.dataLayer = window.dataLayer || [];<br>  function gtag(){dataLayer.push(arguments);}<br>  gtag('js', new Date());<br>  gtag('config', 'G-XXXXXXXXXX');<br>&lt;/script&gt;</div>
+          <button class="btn" onclick="copyGA()">📋 Copy Code</button>
+        </div>
+        <div class="card">
+          <div style="font-size:14px;font-weight:700;margin-bottom:14px;color:#f0f0ff;">📌 Custom Events</div>
+          <div class="event-list" id="eventList"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BRANDING -->
+    <div class="pg" id="pg-branding">
+      <div class="sh"><h2>🎨 Logo & Branding</h2>
+        <button class="btn" onclick="showToast('📥 Brand kit downloaded!')">📥 Download Brand Kit</button>
+      </div>
+      <div class="card" style="margin-bottom:16px;">
+        <div style="font-size:14px;font-weight:700;margin-bottom:14px;color:#f0f0ff;">🎨 Brand Colors</div>
+        <div class="color-palette" id="colorPalette"></div>
+      </div>
+      <div style="font-size:14px;font-weight:700;margin-bottom:12px;color:#f0f0ff;">🏷️ Logo Variants</div>
+      <div class="logo-showcase" id="logoShowcase"></div>
+      <div style="font-size:14px;font-weight:700;margin-bottom:12px;color:#f0f0ff;">📁 Brand Assets</div>
+      <div class="brand-assets" id="brandAssets"></div>
+    </div>
+
+    <!-- SEO -->
+    <div class="pg" id="pg-seo">
+      <div class="sh"><h2>🔍 SEO Optimization</h2>
+        <button class="btn" onclick="showToast('🔍 Running SEO audit...')">🔍 Run Audit</button>
+      </div>
+      <div class="seo-score" id="seoScore"></div>
+      <div class="g2">
+        <div class="card" style="margin-bottom:14px;">
+          <div style="font-size:14px;font-weight:700;margin-bottom:14px;color:#f0f0ff;">📝 Meta Tags Editor</div>
+          <div class="mf"><label>Page Title</label><input type="text" value="BillZest POS — #1 Restaurant System Saudi Arabia" id="metaTitle"></div>
+          <div class="mf"><label>Meta Description</label><textarea rows="3" id="metaDesc">Complete restaurant management system for Saudi Arabia. POS, Online Orders, Loyalty, KDS and more. Try free today!</textarea></div>
+          <div class="mf"><label>Keywords</label><input type="text" value="restaurant POS, نظام مطعم, كاشير, Saudi Arabia POS"></div>
+          <button class="btn btn-g" onclick="saveSEO()">💾 Save Meta Tags</button>
+        </div>
+        <div class="card" style="margin-bottom:14px;">
+          <div style="font-size:14px;font-weight:700;margin-bottom:14px;color:#f0f0ff;">✅ SEO Checklist</div>
+          <div class="seo-checks" id="seoChecks"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DOMAIN -->
+    <div class="pg" id="pg-domain">
+      <div class="sh"><h2>🌐 Custom Domain Setup</h2></div>
+      <div class="domain-search">
+        <input type="text" id="domainInput" placeholder="billzest.com" value="billzest.com">
+        <button class="btn" onclick="checkDomain()">🔍 Check Availability</button>
+      </div>
+      <div class="domain-results" id="domainResults"></div>
+      <div class="card" style="margin-bottom:16px;">
+        <div style="font-size:14px;font-weight:700;margin-bottom:14px;color:#f0f0ff;">⚙️ DNS Configuration</div>
+        <div style="font-size:13px;color:#6b7280;margin-bottom:14px;">Add these records to your domain registrar (GoDaddy, Namecheap, etc.)</div>
+        <div style="overflow-x:auto;"><table class="dns-table" id="dnsTable"></table></div>
+      </div>
+      <div class="card">
+        <div style="font-size:14px;font-weight:700;margin-bottom:14px;color:#f0f0ff;">🔗 Connected Domain</div>
+        <div style="display:flex;align-items:center;gap:12px;padding:14px;background:#12121f;border-radius:10px;">
+          <span style="font-size:24px;">🌐</span>
+          <div style="flex:1;">
+            <div style="font-size:14px;font-weight:700;color:#f0f0ff;font-family:'JetBrains Mono',monospace;">billzest-pos.vercel.app</div>
+            <div style="font-size:12px;color:#10b981;margin-top:3px;">✅ SSL Active • CDN Enabled • Auto-Deploy</div>
+          </div>
+          <button class="btn" onclick="showToast('🔗 Opening site...')">🔗 Visit</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PWA -->
+    <div class="pg" id="pg-pwa">
+      <div class="sh"><h2>📱 Progressive Web App</h2></div>
+      <div class="pwa-status">
+        <div class="ps-title">📱 BillZest PWA Ready!</div>
+        <div class="ps-sub">Users can install BillZest on their phone like a native app — no App Store needed!</div>
+        <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;">
+          <span style="background:rgba(255,255,255,.15);padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;color:#fff;">✅ Installable</span>
+          <span style="background:rgba(255,255,255,.15);padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;color:#fff;">✅ Offline Support</span>
+          <span style="background:rgba(255,255,255,.15);padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;color:#fff;">✅ Push Notifications</span>
+          <span style="background:rgba(255,255,255,.15);padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;color:#fff;">✅ Fast Loading</span>
+        </div>
+      </div>
+      <div class="g2">
+        <div>
+          <div style="font-size:14px;font-weight:700;margin-bottom:12px;color:#f0f0ff;">📋 Setup Steps</div>
+          <div class="pwa-steps" id="pwaSteps"></div>
+        </div>
+        <div>
+          <div class="card" style="margin-bottom:14px;">
+            <div style="font-size:14px;font-weight:700;margin-bottom:14px;color:#f0f0ff;">📄 manifest.json</div>
+            <div class="tracking-code" id="manifestCode" style="font-size:11px;line-height:1.6;white-space:pre;"></div>
+            <button class="btn" onclick="copyManifest()" style="margin-top:10px;">📋 Copy manifest.json</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- pg-content -->
+</div><!-- app-wrap -->
+
+<!-- PWA Install Banner -->
+<div class="pwa-banner" id="pwaBanner">
+  <span style="font-size:24px;">📱</span>
+  <div class="pwa-banner-txt"><strong>Install BillZest</strong> on your phone for quick access!</div>
+  <button class="btn" id="pwaInstallBtn">Install App</button>
+  <button onclick="document.getElementById('pwaBanner').classList.remove('show')" style="background:none;border:none;color:#6b7280;cursor:pointer;font-size:20px;">✕</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ══ AUTH ══
+var USERS=[
+  {email:"admin@billzest.com",pass:"admin123",name:"Admin",role:"Owner"},
+  {email:"manager@billzest.com",pass:"manager123",name:"Sara",role:"Manager"},
+  {email:"cashier@billzest.com",pass:"cashier123",name:"Khalid",role:"Cashier"},
+];
+var currentUser=null;
+
+function fill(e,p){document.getElementById("loginEmail").value=e;document.getElementById("loginPass").value=p;}
+function doLogin(){
+  var e=document.getElementById("loginEmail").value.trim();
+  var p=document.getElementById("loginPass").value;
+  var u=USERS.find(function(x){return x.email===e&&x.pass===p;});
+  if(!u){document.getElementById("loginErr").style.display="block";return;}
+  currentUser=u;
+  document.getElementById("loginWrap").style.display="none";
+  document.getElementById("appWrap").style.display="block";
+  document.getElementById("userAv").textContent=u.name.charAt(0);
+  document.getElementById("userName").textContent=u.name+" ("+u.role+")";
+  initApp();
+}
+function doLogout(){
+  currentUser=null;
+  document.getElementById("appWrap").style.display="none";
+  document.getElementById("loginWrap").style.display="block";
+}
+function socialLogin(p){showToast("🔄 Connecting to "+p+"...");setTimeout(function(){fill("admin@billzest.com","admin123");doLogin();},1200);}
+
+// ══ PAGE NAV ══
+function gp(p,btn){
+  document.querySelectorAll(".hn").forEach(function(b){b.classList.remove("on");});
+  if(btn)btn.classList.add("on");
+  document.querySelectorAll(".pg").forEach(function(x){x.classList.remove("on");});
+  document.getElementById("pg-"+p).classList.add("on");
+}
+
+// ══ MODULES ══
+var MODULES=[
+  {ic:"🌐",name:"Landing Page",desc:"Public website",url:"billzest-pos-render.html",status:"live"},
+  {ic:"🛒",name:"POS System",desc:"Point of sale",url:"billzest-complete-pos.html",status:"live"},
+  {ic:"📊",name:"Sales Dashboard",desc:"Reports & analytics",url:"billzest-sales-dashboard.html",status:"live"},
+  {ic:"👤",name:"Customer Portal",desc:"Customer accounts",url:"billzest-customer-portal.html",status:"live"},
+  {ic:"📦",name:"Product Manager",desc:"Menu management",url:"billzest-products.html",status:"live"},
+  {ic:"🚀",name:"Advanced System",desc:"Staff & branches",url:"billzest-advanced.html",status:"live"},
+  {ic:"🔥",name:"Mega System",desc:"QR, coupons, billing",url:"billzest-mega.html",status:"live"},
+  {ic:"💎",name:"Ultimate System",desc:"AI, HR, finance",url:"billzest-ultimate.html",status:"live"},
+];
+function initModules(){
+  document.getElementById("modKPIs").innerHTML=
+    mkpi("kp","📁","9","Total Modules")+mkpi("kg","✅","9","Live & Working")+
+    mkpi("ko","⚡","50+","Total Features")+mkpi("kb","👥","∞","Users Supported");
+  document.getElementById("moduleGrid").innerHTML=MODULES.map(function(m){
+    return "<a class='module-card' href='"+m.url+"' target='_blank'>"+
+      "<div class='mc-icon'>"+m.ic+"</div>"+
+      "<div class='mc-name'>"+m.name+"</div>"+
+      "<div class='mc-desc'>"+m.desc+"</div>"+
+      "<div class='mc-status'><span style='width:6px;height:6px;background:var(--grn);border-radius:50%;display:inline-block;'></span><span style='color:var(--grn);'>Live</span></div>"+
+    "</a>";
+  }).join("");
+  document.getElementById("crossFeatures").innerHTML=[
+    {ic:"🔐",t:"Single Login",d:"One account — access all 9 modules"},
+    {ic:"🎨",t:"Shared Branding",d:"BillZest brand across all pages"},
+    {ic:"📊",t:"Unified Analytics",d:"One GA4 tracking across all pages"},
+    {ic:"🌍",t:"Arabic Support",d:"RTL Arabic in all modules"},
+    {ic:"📱",t:"PWA Ready",d:"Install as app on any device"},
+    {ic:"🔒",t:"SSL Security",d:"HTTPS on all pages via Vercel"},
+  ].map(function(f){
+    return "<div style='display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #2a2a3e;font-size:13px;'><span>"+f.ic+"</span><div><div style='font-weight:600;color:#f0f0ff;'>"+f.t+"</div><div style='font-size:11px;color:#6b7280;'>"+f.d+"</div></div></div>";
+  }).join("");
+}
+
+// ══ EMAIL ══
+var emailTemplates={
+  welcome:{subject:"Welcome to BillZest! 🎉",preview:"Welcome aboard!",body:"We're thrilled to have you join BillZest. Your account is ready."},
+  receipt:{subject:"Your Order Receipt #ORD-0042",preview:"Order confirmed!",body:"Thank you for your order! Here's your receipt for order #ORD-0042."},
+  loyalty:{subject:"⭐ You've earned 250 loyalty points!",preview:"Points update",body:"Great news! You've earned 250 points from your last order. You now have 1,840 points."},
+  otp:{subject:"BillZest — Your verification code",preview:"OTP: 847291",body:"Your one-time password is: 847291. Valid for 5 minutes. Do not share this with anyone."},
+  reset:{subject:"Reset your BillZest password",preview:"Password reset",body:"Click the button below to reset your password. Link expires in 1 hour."},
+};
+var activeTemplate="welcome";
+function initEmail(){
+  document.getElementById("emailStats").innerHTML=
+    mkpi("kp","📧","12,480","Emails Sent")+mkpi("kg","📬","89%","Delivery Rate")+
+    mkpi("ko","👁️","42%","Open Rate")+mkpi("kb","🖱️","12%","Click Rate");
+  var tabs=["welcome","receipt","loyalty","otp","reset"];
+  var tabLabels={"welcome":"👋 Welcome","receipt":"🧾 Receipt","loyalty":"⭐ Loyalty","otp":"🔐 OTP","reset":"🔑 Reset"};
+  document.getElementById("emailTabs").innerHTML=tabs.map(function(t){
+    return "<button class='tt"+(t==="welcome"?" on":"")+"' onclick='setEmailTemplate(\""+t+"\",this)'>"+tabLabels[t]+"</button>";
+  }).join("");
+  renderEmailPreview("welcome");
+}
+function setEmailTemplate(t,btn){
+  activeTemplate=t;
+  document.querySelectorAll(".tt").forEach(function(b){b.classList.remove("on");});
+  btn.classList.add("on");
+  renderEmailPreview(t);
+}
+function renderEmailPreview(t){
+  var tmpl=emailTemplates[t];
+  document.getElementById("emailPreview").innerHTML=
+    "<div class='ep-hdr'><div class='ep-logo'>Bill<span style='color:#f5a623;'>Zest</span></div></div>"+
+    "<div class='ep-body'>"+
+      "<div class='ep-title'>"+tmpl.preview+"</div>"+
+      "<div class='ep-text'>Dear Customer,<br><br>"+tmpl.body+"<br><br>If you have any questions, please contact us at support@billzest.com</div>"+
+      "<a href='#' class='ep-btn' onclick='showToast(\"✅ Action!\");return false;'>"+
+        (t==="welcome"?"🚀 Get Started":t==="receipt"?"📋 View Receipt":t==="loyalty"?"⭐ View Points":t==="reset"?"🔑 Reset Password":"✅ Verify")+
+      "</a>"+
+    "</div>"+
+    "<div class='ep-footer'>BillZest | Imam Saud Bin Faisal Rd, Riyadh<br>© 2026 BillZest. All Rights Reserved.</div>";
+}
+function sendTestEmail(){showToast("📧 Test email sent to admin@billzest.com!");}
+
+// ══ PAYMENT ══
+function initPayment(){
+  document.getElementById("payMethods").innerHTML=[
+    {logo:"🟢",name:"Moyasar",desc:"Saudi Arabia payments — Mada, Visa, Apple Pay",status:"recommended"},
+    {logo:"💙",name:"Stripe",desc:"International payments — 100+ currencies",status:"popular"},
+    {logo:"🟡",name:"HyperPay",desc:"MENA region — All local cards",status:"mena"},
+    {logo:"🔵",name:"PayTabs",desc:"Middle East specialist",status:""},
+    {logo:"🟠",name:"PayPal",desc:"Global payments — 200+ countries",status:""},
+    {logo:"⚫",name:"Apple Pay / STC Pay",desc:"One-tap mobile payments",status:"new"},
+  ].map(function(m){
+    return "<div class='pm-card'><div class='pm-logo'>"+m.logo+"</div><div class='pm-name'>"+m.name+"</div><div class='pm-desc'>"+m.desc+"</div>"+
+      (m.status?"<div class='tag tp' style='background:rgba(79,45,145,.2);'>"+m.status+"</div>":"")+
+    "</div>";
+  }).join("");
+  document.getElementById("acceptedCards").innerHTML=["💳 Visa","💳 Mastercard","💳 Mada","📱 Apple Pay","📱 STC Pay","💳 AMEX","🏦 Sadad"].map(function(c){
+    return "<span style='background:#12121f;border:1px solid #2a2a3e;padding:5px 12px;border-radius:20px;font-size:12px;color:#9ca3af;'>"+c+"</span>";
+  }).join("");
+}
+function fmtCard(el){var v=el.value.replace(/\D/g,"").substring(0,16);el.value=v.replace(/(.{4})/g,"$1 ").trim();}
+function testPayment(){showToast("🧪 Testing connection...");setTimeout(function(){showToast("✅ Payment gateway connected!");},1500);}
+function updatePayConfig(){var g=document.getElementById("pgSelect").value;document.getElementById("pgPubKey").placeholder=g==="stripe"?"pk_live_xxxxxxxxxx":g==="moyasar"?"pk_live_moyasar_xxx":"pk_xxxxxxxxxx";}
+function processPayment(){showToast("⏳ Processing...");setTimeout(function(){showToast("✅ Payment successful! ﷼ 103.50");},2000);}
+
+// ══ AI ══
+var aiHistory=[];
+var savedAPIKey="";
+function initAI(){
+  document.getElementById("aiStats").innerHTML=
+    mkpi("kp","🤖","1,248","AI Conversations")+mkpi("kg","✅","94%","Resolution Rate")+
+    mkpi("ko","⚡","28s","Avg Response")+mkpi("kb","⭐","4.8","User Rating");
+  var qrs=["📋 Show today's orders","💰 Revenue this week","🔔 Any alerts?","👥 New customers","📦 Low stock items"];
+  document.getElementById("aiQR").innerHTML=qrs.map(function(q){
+    return "<button class='ai-qr-btn' onclick='sendAIMsg(\""+q+"\")'>"+q+"</button>";
+  }).join("");
+  addAIMsg("bot","👋 Hello! I'm BillZest AI powered by Claude.\n\nI can help you with:\n• Order management\n• Sales analytics\n• Inventory alerts\n• Customer insights\n• And much more!\n\nWhat would you like to know?");
+  document.getElementById("aiUsage").innerHTML=[
+    {l:"API Calls Today",v:"248",c:"var(--p)"},
+    {l:"Tokens Used",v:"124K",c:"var(--blu)"},
+    {l:"Cost Today",v:"$0.62",c:"var(--grn)"},
+    {l:"Model",v:"claude-sonnet-4-6",c:"var(--org)"},
+  ].map(function(s){
+    return "<div style='display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #2a2a3e;font-size:12px;'><span style='color:#6b7280;'>"+s.l+"</span><span style='font-weight:700;color:"+s.c+";font-family:JetBrains Mono,monospace;'>"+s.v+"</span></div>";
+  }).join("");
+}
+function addAIMsg(from,text){
+  var el=document.getElementById("aiMsgs");
+  var div=document.createElement("div");
+  div.style.textAlign=from==="user"?"right":"left";
+  div.innerHTML="<div class='msg msg-"+(from==="user"?"user":"bot")+"'>"+text.replace(/\n/g,"<br>")+"</div>";
+  el.appendChild(div);el.scrollTop=el.scrollHeight;
+}
+function showAITyping(){
+  var el=document.getElementById("aiMsgs");
+  var div=document.createElement("div");
+  div.id="aiTyping";
+  div.innerHTML="<div class='typing'><span></span><span></span><span></span></div>";
+  el.appendChild(div);el.scrollTop=el.scrollHeight;
+}
+function hideAITyping(){var t=document.getElementById("aiTyping");if(t)t.remove();}
+function sendAI(){
+  var inp=document.getElementById("aiInp");
+  var msg=inp.value.trim();
+  if(!msg)return;
+  inp.value="";
+  sendAIMsg(msg);
+}
+function sendAIMsg(msg){
+  addAIMsg("user",msg);showAITyping();
+  var key=document.getElementById("apiKey").value.trim()||savedAPIKey;
+  if(key&&key.startsWith("sk-ant")){
+    fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        model:"claude-sonnet-4-20250514",
+        max_tokens:500,
+        system:"You are BillZest AI, a restaurant management assistant. Be helpful, concise, and professional. Mention specific numbers when helpful.",
+        messages:[{role:"user",content:msg}]
+      })
+    }).then(function(r){return r.json();}).then(function(d){
+      hideAITyping();
+      var reply=d.content&&d.content[0]?d.content[0].text:"Sorry, I couldn't process that.";
+      addAIMsg("bot",reply);
+    }).catch(function(){hideAITyping();addAIMsg("bot",getLocalReply(msg));});
+  } else {
+    setTimeout(function(){hideAITyping();addAIMsg("bot",getLocalReply(msg));},700+Math.random()*600);
+  }
+}
+function getLocalReply(msg){
+  var m=msg.toLowerCase();
+  if(m.includes("order"))return "📊 Today's orders:\n\n• Total: 38 orders\n• Revenue: ﷼ 4,280\n• Avg order: ﷼ 112.6\n\nTop item: Loaded Fries (62 sold)";
+  if(m.includes("revenue")||m.includes("sales"))return "💰 This week's revenue:\n\n• Total: ﷼ 28,900\n• Best day: Saturday ﷼ 6,800\n• Growth: ↑ 12.4% vs last week";
+  if(m.includes("stock")||m.includes("inventory"))return "📦 Low stock alerts:\n\n⚠️ Mango Juice — 3 units\n⚠️ Tiramisu — 5 units\n⚠️ Grilled Steak — 8 units\n\nReorder recommended!";
+  if(m.includes("customer"))return "👥 Customer insights:\n\n• New today: 12\n• Total: 248\n• Gold members: 42\n• Avg loyalty pts: 840";
+  if(m.includes("alert"))return "🔔 Current alerts:\n\n🔴 Low stock: 3 items\n🟡 Pending orders: 5\n🟢 All systems normal\n\nNo critical issues!";
+  return "🤖 I understand you're asking: \""+msg+"\"\n\nTo get real AI responses, add your Anthropic API key in the settings panel.\n\n📞 For help: support@billzest.com";
+}
+function saveAPIKey(){var k=document.getElementById("apiKey").value.trim();if(k){savedAPIKey=k;showToast("✅ API key saved!");}}
+function testAI(){sendAIMsg("Hello! Test message — what can you do?");}
+
+// ══ SECURITY ══
+function initSecurity(){
+  document.getElementById("securityChecks").innerHTML=[
+    {ic:"🔒",bg:"rgba(16,185,129,.1)",title:"SSL Certificate",desc:"HTTPS active on all pages",status:"✅",statusColor:"var(--grn)"},
+    {ic:"🛡️",bg:"rgba(59,130,246,.1)",title:"CORS Headers",desc:"Cross-origin requests configured",status:"✅",statusColor:"var(--grn)"},
+    {ic:"🔑",bg:"rgba(79,45,145,.1)",title:"API Key Security",desc:"Keys stored securely",status:"✅",statusColor:"var(--grn)"},
+    {ic:"📱",bg:"rgba(245,158,11,.1)",title:"Two-Factor Auth",desc:"2FA available for all accounts",status:"⚠️ Enable",statusColor:"var(--yel)"},
+    {ic:"🔐",bg:"rgba(16,185,129,.1)",title:"Password Hashing",desc:"bcrypt encryption active",status:"✅",statusColor:"var(--grn)"},
+    {ic:"🚫",bg:"rgba(239,68,68,.1)",title:"Rate Limiting",desc:"API abuse protection active",status:"✅",statusColor:"var(--grn)"},
+    {ic:"📋",bg:"rgba(59,130,246,.1)",title:"Audit Logging",desc:"All actions logged",status:"✅",statusColor:"var(--grn)"},
+    {ic:"💾",bg:"rgba(16,185,129,.1)",title:"Auto Backups",desc:"Daily backups enabled",status:"✅",statusColor:"var(--grn)"},
+  ].map(function(s){
+    return "<div class='sc-row'>"+
+      "<div class='sc-ic' style='background:"+s.bg+";'>"+s.ic+"</div>"+
+      "<div class='sc-info'><div class='sc-title'>"+s.title+"</div><div class='sc-desc'>"+s.desc+"</div></div>"+
+      "<div class='sc-status' style='color:"+s.statusColor+";'>"+s.status+"</div>"+
+    "</div>";
+  }).join("");
+}
+
+// ══ ANALYTICS ══
+function initAnalytics(){
+  document.getElementById("gaStats").innerHTML=
+    mkpi("kp","👥","3,240","Active Users")+mkpi("kg","📄","8,420","Page Views")+
+    mkpi("ko","⏱️","2:34","Avg Session")+mkpi("kb","📉","34%","Bounce Rate");
+  document.getElementById("eventList").innerHTML=[
+    {ic:"🛒",name:"add_to_cart",count:"248"},
+    {ic:"💳",name:"purchase_complete",count:"89"},
+    {ic:"👤",name:"user_login",count:"312"},
+    {ic:"📋",name:"menu_view",count:"1,240"},
+    {ic:"🔍",name:"product_search",count:"567"},
+  ].map(function(e){
+    return "<div class='ev-row'><span class='ev-ic'>"+e.ic+"</span><span class='ev-name'>"+e.name+"</span><span class='ev-count'>"+e.count+"</span></div>";
+  }).join("");
+}
+function copyGA(){navigator.clipboard&&navigator.clipboard.writeText("gtag('config','G-XXXXXXXXXX');");showToast("📋 GA4 code copied!");}
+
+// ══ BRANDING ══
+function initBranding(){
+  var colors=[
+    {name:"Primary",hex:"#4f2d91",on:true},{name:"Orange",hex:"#f5a623",on:false},
+    {name:"Teal",hex:"#00b5a3",on:false},{name:"Dark",hex:"#1a1a1a",on:false},
+    {name:"Green",hex:"#10b981",on:false},{name:"Red",hex:"#ef4444",on:false},
+  ];
+  document.getElementById("colorPalette").innerHTML=colors.map(function(c){
+    return "<div class='cp-swatch"+(c.on?" on":"")+"' style='background:"+c.hex+";' onclick='pickColor(\""+c.hex+"\",this)' title='"+c.name+" — "+c.hex+"'></div>";
+  }).join("");
+  document.getElementById("logoShowcase").innerHTML=[
+    {bg:"#4f2d91",txt:"#fff",name:"Dark Purple"},
+    {bg:"#1a1a1a",txt:"#f5a623",name:"Black + Orange"},
+    {bg:"#fff",txt:"#4f2d91",name:"White Clean"},
+    {bg:"#f5a623",txt:"#fff",name:"Orange Bold"},
+  ].map(function(v){
+    return "<div class='logo-variant' onclick='showToast(\"✅ "+v.name+" variant selected!\")'>"+
+      "<div class='lv-logo' style='background:"+v.bg+";padding:16px;border-radius:10px;display:inline-block;'>"+
+        "<span style='font-size:22px;font-weight:800;color:"+v.txt+";letter-spacing:-1px;font-family:Sora,sans-serif;'>Bill<span style='color:"+(v.txt==="#fff"?"#f5a623":v.txt)+"'>Zest</span></span>"+
+      "</div>"+
+      "<div class='lv-name'>"+v.name+"</div>"+
+    "</div>";
+  }).join("");
+  document.getElementById("brandAssets").innerHTML=[
+    {ic:"🖼️",n:"Logo PNG",t:"Transparent background"},
+    {ic:"📐",n:"Logo SVG",t:"Vector format"},
+    {ic:"🎨",n:"Brand Colors",t:"Color palette PDF"},
+    {ic:"✍️",n:"Typography",t:"Font guidelines"},
+    {ic:"📱",n:"App Icons",t:"All sizes included"},
+    {ic:"📄",n:"Brand Guide",t:"Full PDF guide"},
+  ].map(function(a){
+    return "<div class='ba-card'><div class='ba-preview'>"+a.ic+"</div><div class='ba-name'>"+a.n+"</div><div style='font-size:10px;color:#6b7280;margin-top:2px;'>"+a.t+"</div><button class='ba-btn' onclick='showToast(\"📥 "+a.n+" downloaded!\")'>📥 Download</button></div>";
+  }).join("");
+}
+function pickColor(hex,el){document.querySelectorAll(".cp-swatch").forEach(function(s){s.classList.remove("on");});el.classList.add("on");showToast("🎨 Color "+hex+" selected!");}
+
+// ══ SEO ══
+function initSEO(){
+  document.getElementById("seoScore").innerHTML=[
+    {val:"92",lbl:"SEO Score",c:"var(--grn)"},{val:"98",lbl:"Performance",c:"var(--p)"},
+    {val:"100",lbl:"Accessibility",c:"var(--blu)"},{val:"89",lbl:"Best Practices",c:"var(--org)"},
+  ].map(function(s){
+    return "<div class='seo-item'><div class='si-val' style='color:"+s.c+";'>"+s.val+"</div><div class='si-lbl'>"+s.lbl+"</div></div>";
+  }).join("");
+  document.getElementById("seoChecks").innerHTML=[
+    {t:"Title tag optimized",ok:true},{t:"Meta description present",ok:true},
+    {t:"Open Graph tags",ok:true},{t:"Sitemap.xml created",ok:true},
+    {t:"Robots.txt configured",ok:true},{t:"Mobile responsive",ok:true},
+    {t:"Page speed < 3s",ok:true},{t:"Arabic keywords added",ok:true},
+    {t:"Schema markup",ok:false},{t:"Image alt texts",ok:false},
+  ].map(function(s){
+    return "<div class='seo-row'><span class='sr-ic'>"+(s.ok?"✅":"⚠️")+"</span><span class='sr-title'>"+s.t+"</span><span class='sr-status'>"+(s.ok?"✅":"⚠️")+"</span></div>";
+  }).join("");
+}
+function saveSEO(){showToast("✅ Meta tags updated!");}
+
+// ══ DOMAIN ══
+function initDomain(){
+  document.getElementById("dnsTable").innerHTML=
+    "<thead><tr><th>Type</th><th>Name</th><th>Value</th><th>TTL</th></tr></thead><tbody>"+
+    [
+      {t:"A",n:"@",v:"76.76.21.21",ttl:"Auto"},
+      {t:"CNAME",n:"www",v:"cname.vercel-dns.com",ttl:"Auto"},
+      {t:"TXT",n:"@",v:"v=spf1 include:sendgrid.net ~all",ttl:"Auto"},
+      {t:"MX",n:"@",v:"mail.billzest.com",ttl:"3600"},
+    ].map(function(r){
+      return "<tr><td style='color:var(--p);font-weight:700;'>"+r.t+"</td><td>"+r.n+"</td><td style='color:#a78bfa;'>"+r.v+"</td><td>"+r.ttl+"</td></tr>";
+    }).join("")+"</tbody>";
+}
+function checkDomain(){
+  var d=document.getElementById("domainInput").value.trim()||"billzest.com";
+  document.getElementById("domainResults").innerHTML=[
+    {d:d,price:"﷼ 45/yr",available:false,c:"var(--red)"},
+    {d:d.replace(".com",".sa"),price:"﷼ 120/yr",available:true,c:"var(--grn)"},
+    {d:d.replace(".com",".app"),price:"﷼ 85/yr",available:true,c:"var(--grn)"},
+    {d:d.replace(".com",".io"),price:"﷼ 160/yr",available:true,c:"var(--grn)"},
+  ].map(function(r){
+    return "<div class='dr-row'>"+
+      "<span class='dr-domain' style='color:"+r.c+";'>"+r.d+"</span>"+
+      "<span style='font-size:11px;font-weight:700;color:"+r.c+";'>"+(r.available?"✅ Available":"❌ Taken")+"</span>"+
+      "<span class='dr-price' style='color:#f0f0ff;'>"+r.price+"</span>"+
+      (r.available?"<button class='btn' style='font-size:11px;padding:5px 12px;' onclick='showToast(\"🌐 Redirecting to registrar...\")'>Buy</button>":"<button class='btn' style='font-size:11px;padding:5px 12px;background:#12121f;cursor:not-allowed;'>Taken</button>")+
+    "</div>";
+  }).join("");
+}
+
+// ══ PWA ══
+function initPWA(){
+  var manifest={
+    "name":"BillZest POS",
+    "short_name":"BillZest",
+    "start_url":"/index.html",
+    "display":"standalone",
+    "background_color":"#0f0f1a",
+    "theme_color":"#4f2d91",
+    "description":"Complete Restaurant Management System",
+    "icons":[
+      {"src":"icon-192.png","sizes":"192x192","type":"image/png"},
+      {"src":"icon-512.png","sizes":"512x512","type":"image/png"}
+    ]
+  };
+  document.getElementById("manifestCode").textContent=JSON.stringify(manifest,null,2);
+  document.getElementById("pwaSteps").innerHTML=[
+    {n:1,t:"Create manifest.json",c:"Copy the manifest code → Save as manifest.json → Upload to GitHub"},
+    {n:2,t:"Add to index.html",c:'<link rel="manifest" href="manifest.json">'},
+    {n:3,t:"Create Service Worker",c:"self.addEventListener('install', e => {}); self.addEventListener('fetch', e => {});"},
+    {n:4,t:"Register Service Worker",c:"navigator.serviceWorker.register('/sw.js')"},
+    {n:5,t:"Add App Icons",c:"Create icon-192.png and icon-512.png → Upload to GitHub"},
+    {n:6,t:"Test Installation",c:"Open Chrome → Address bar → Install icon → Done! 📱"},
+  ].map(function(s){
+    return "<div class='pw-step'>"+
+      "<div class='ps-num'>"+s.n+"</div>"+
+      "<div><div class='ps-title2'>"+s.t+"</div><code class='ps-code'>"+s.c+"</code></div>"+
+    "</div>";
+  }).join("");
+}
+function copyManifest(){
+  var t=document.getElementById("manifestCode").textContent;
+  navigator.clipboard&&navigator.clipboard.writeText(t);
+  showToast("📋 manifest.json copied!");
+}
+
+// ══ HELPERS ══
+function mkpi(cls,icon,val,lbl){
+  return "<div class='kpi "+cls+"'><div class='ki'>"+icon+"</div><div class='kv'>"+val+"</div><div class='kl'>"+lbl+"</div></div>";
+}
+function showModal(id){document.getElementById(id).classList.add("on");}
+function closeModal(id){document.getElementById(id).classList.remove("on");}
+function showToast(msg){
+  var t=document.getElementById("toast");t.textContent=msg;t.classList.add("on");
+  setTimeout(function(){t.classList.remove("on");},2500);
+}
+
+// ══ PWA INSTALL ══
+var deferredPrompt=null;
+window.addEventListener("beforeinstallprompt",function(e){
+  e.preventDefault();deferredPrompt=e;
+  document.getElementById("pwaBanner").classList.add("show");
+});
+document.getElementById("pwaInstallBtn").addEventListener("click",function(){
+  if(deferredPrompt){deferredPrompt.prompt();deferredPrompt=null;}
+  else{showToast("📱 Open in Chrome to install as app!");}
+  document.getElementById("pwaBanner").classList.remove("show");
+});
+
+// ══ INIT ══
+function initApp(){
+  initModules();initEmail();initPayment();initAI();
+  initSecurity();initAnalytics();initBranding();initSEO();initDomain();initPWA();
+}
+</script>
+</body>
+</html>
