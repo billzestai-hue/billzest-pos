@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BillZest App Marketplace — Apps for Every Restaurant Need</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Poppins',sans-serif;background:#fff;color:#1a1a1a;}
+:root{--p:#4f2d91;--pd:#3b1f6e;--pl:#f0ebff;--org:#f5a623;--grn:#10b981;--red:#ef4444;--bdr:#e0e0e0;}
+
+/* NAV */
+nav{background:#fff;border-bottom:1px solid var(--bdr);padding:0 20px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;}
+.nav-logo{font-size:22px;font-weight:800;color:#1a1a1a;letter-spacing:-0.5px;}
+.nav-logo span{color:var(--org);}
+.nav-right{display:flex;align-items:center;gap:10px;}
+.btn-demo{background:var(--p);color:#fff;border:none;padding:10px 16px;border-radius:6px;font-size:13px;font-weight:600;font-family:'Poppins',sans-serif;cursor:pointer;line-height:1.3;text-align:center;}
+.btn-login{background:#fff;color:var(--p);border:2px solid var(--p);padding:8px 18px;border-radius:6px;font-size:13px;font-weight:600;font-family:'Poppins',sans-serif;cursor:pointer;}
+.nav-lang{font-size:13px;color:#333;cursor:pointer;}
+
+/* HERO SPLIT */
+.hero-split{display:grid;grid-template-columns:1fr 1fr;min-height:600px;}
+.hs-left{background:var(--p);padding:48px 40px;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden;}
+.hs-left::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,0,0,.2),transparent);}
+.hs-apps-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:32px;position:relative;z-index:1;}
+.hag-item{border-radius:12px;overflow:hidden;display:flex;align-items:center;justify-content:center;height:72px;font-size:28px;font-weight:800;color:#fff;}
+.hs-title{font-size:32px;font-weight:800;color:#fff;line-height:1.3;margin-bottom:12px;position:relative;z-index:1;}
+.hs-desc{font-size:14px;color:rgba(255,255,255,.8);line-height:1.7;margin-bottom:16px;position:relative;z-index:1;}
+.hs-link{font-size:14px;font-weight:600;color:var(--org);position:relative;z-index:1;cursor:pointer;}
+
+.hs-right{background:#f8f8f8;padding:40px 36px;overflow-y:auto;}
+.form-title{font-size:18px;font-weight:700;color:#1a1a1a;margin-bottom:6px;}
+.form-sub{font-size:14px;color:#666;margin-bottom:24px;}
+.ff{margin-bottom:14px;}
+.ff label{display:block;font-size:13px;font-weight:500;color:#333;margin-bottom:5px;}
+.ff label sup{color:var(--red);}
+.ff input,.ff select,.ff textarea{width:100%;padding:10px 14px;border:1px solid #ccc;border-radius:6px;font-size:14px;font-family:'Poppins',sans-serif;color:#333;background:#fff;outline:none;transition:border .2s;}
+.ff input:focus,.ff select:focus,.ff textarea:focus{border-color:var(--p);}
+.ff textarea{resize:vertical;min-height:90px;}
+.ffr{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.btn-submit{background:var(--p);color:#fff;border:none;padding:12px 28px;border-radius:6px;font-size:15px;font-weight:600;font-family:'Poppins',sans-serif;cursor:pointer;margin-top:8px;transition:all .2s;}
+.btn-submit:hover{background:var(--pd);}
+
+/* MARKETPLACE */
+.marketplace{padding:48px 24px;}
+.mp-title{font-size:28px;font-weight:700;text-align:center;margin-bottom:28px;color:#1a1a1a;}
+
+/* CATEGORY TABS */
+.cat-tabs{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:32px;}
+.ct{padding:7px 16px;border-radius:6px;font-size:13px;font-weight:500;cursor:pointer;border:1px solid #ddd;background:#fff;color:#555;font-family:'Poppins',sans-serif;transition:all .2s;}
+.ct.active{background:var(--p);color:#fff;border-color:var(--p);}
+.ct:hover:not(.active){border-color:var(--p);color:var(--p);}
+
+/* APPS GRID */
+.apps-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;max-width:1100px;margin:0 auto;}
+.app-card{display:flex;align-items:flex-start;gap:12px;padding:16px;border:1px solid #eee;border-radius:10px;cursor:pointer;transition:all .2s;background:#fff;}
+.app-card:hover{border-color:var(--p);box-shadow:0 4px 16px rgba(79,45,145,.1);transform:translateY(-2px);}
+.app-logo{width:52px;height:52px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:#fff;flex-shrink:0;}
+.app-info{}
+.app-name{font-size:14px;font-weight:700;color:#1a1a1a;margin-bottom:4px;}
+.app-desc{font-size:12px;color:#777;line-height:1.4;}
+.app-cat{font-size:10px;font-weight:600;color:var(--p);margin-top:4px;background:var(--pl);padding:2px 8px;border-radius:10px;display:inline-block;}
+
+/* CTA BANNER */
+.cta-banner{background:var(--p);padding:52px 24px;text-align:center;margin-top:48px;}
+.cta-title{font-size:24px;font-weight:700;color:#fff;margin-bottom:16px;}
+.cta-btn{background:transparent;color:#fff;border:2px solid #fff;padding:14px 40px;border-radius:8px;font-size:16px;font-weight:600;font-family:'Poppins',sans-serif;cursor:pointer;transition:all .2s;}
+.cta-btn:hover{background:#fff;color:var(--p);}
+
+/* FOOTER */
+footer{background:#f5f5f5;border-top:1px solid var(--bdr);padding:40px 24px 20px;}
+.foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:28px;max-width:1100px;margin:0 auto 24px;}
+.fg-logo{font-size:20px;font-weight:800;color:#1a1a1a;margin-bottom:10px;}
+.fg-logo span{color:var(--org);}
+.fg-desc{font-size:12px;color:#666;line-height:1.7;margin-bottom:8px;}
+.fg-ph{font-size:12px;color:#444;}
+.fc h4{font-size:13px;font-weight:700;color:#1a1a1a;margin-bottom:12px;}
+.fc a{display:block;font-size:12px;color:#666;text-decoration:none;margin-bottom:8px;cursor:pointer;}
+.fc a:hover{color:var(--p);}
+.foot-bot{border-top:1px solid var(--bdr);padding-top:16px;display:flex;align-items:center;justify-content:space-between;max-width:1100px;margin:0 auto;flex-wrap:wrap;gap:8px;}
+.pay-logos{display:flex;gap:6px;align-items:center;flex-wrap:wrap;}
+.pay{height:26px;padding:2px 8px;border:1px solid #ddd;border-radius:4px;display:flex;align-items:center;background:#fff;font-size:10px;font-weight:800;}
+.pay.v{color:#1a1f71;}.pay.mc{background:linear-gradient(to right,#eb001b,#f79e1b);border:none;color:#fff;}
+.pay.ma{background:#00a651;border:none;color:#fff;}.pay.st{background:#6d2077;border:none;color:#fff;}
+.socs{display:flex;gap:8px;}
+.soc{width:28px;height:28px;border-radius:50%;border:1px solid #ddd;display:flex;align-items:center;justify-content:center;color:#666;font-size:11px;font-weight:700;cursor:pointer;transition:all .2s;}
+.soc:hover{background:var(--p);color:#fff;border-color:var(--p);}
+
+/* TOAST */
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(60px);background:#1a1a1a;color:#fff;padding:12px 22px;border-radius:30px;font-size:13px;font-weight:600;z-index:9999;transition:transform .3s;white-space:nowrap;}
+.toast.on{transform:translateX(-50%) translateY(0);}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .hero-split{grid-template-columns:1fr;}
+  .apps-grid{grid-template-columns:repeat(2,1fr);}
+  .foot-grid{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:600px){
+  .apps-grid{grid-template-columns:repeat(2,1fr);}
+  .hs-apps-grid{grid-template-columns:repeat(4,1fr);}
+  .cat-tabs{gap:4px;}
+  .ct{padding:5px 12px;font-size:11px;}
+  .ffr{grid-template-columns:1fr;}
+  nav{padding:0 14px;}
+  .foot-grid{grid-template-columns:1fr;}
+}
+</style>
+
+<style>
+/* Arabic RTL */
+body.ar{direction:rtl;font-family:'Tajawal',sans-serif;}
+.login-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;align-items:center;justify-content:center;padding:20px;}
+.login-modal.open{display:flex;}
+.login-box{background:#fff;border-radius:16px;padding:36px;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:pop .2s ease;position:relative;}
+@keyframes pop{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+.lb-logo{font-size:28px;font-weight:800;color:#1a1a1a;text-align:center;margin-bottom:4px;}
+.lb-sub{font-size:13px;color:#888;text-align:center;margin-bottom:24px;}
+.lb-f{margin-bottom:14px;}
+.lb-f label{display:block;font-size:12px;font-weight:600;color:#555;margin-bottom:5px;text-transform:uppercase;}
+.lb-f input{width:100%;padding:11px 14px;border:1.5px solid #ddd;border-radius:8px;font-size:14px;font-family:inherit;outline:none;color:#333;}
+.lb-f input:focus{border-color:var(--p);}
+.lb-btn{width:100%;background:var(--p);color:#fff;border:none;padding:13px;border-radius:8px;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;margin-top:6px;}
+.lb-err{color:var(--red);font-size:12px;text-align:center;margin-top:6px;display:none;}
+.lb-demo{margin-top:16px;padding:12px;background:#f8f8f8;border-radius:8px;font-size:12px;color:#666;}
+.lb-demo strong{display:block;margin-bottom:6px;color:#333;}
+.lb-demo-row{padding:5px 8px;border-radius:6px;cursor:pointer;transition:background .2s;display:flex;justify-content:space-between;}
+.lb-demo-row:hover{background:#ececec;}
+.nav-lang{padding:6px 12px;border:1px solid var(--bdr);border-radius:6px;cursor:pointer;font-size:13px;background:none;font-family:inherit;transition:all .2s;}
+.nav-lang:hover{border-color:var(--p);color:var(--p);}
+.btn-login{transition:all .2s;}
+.btn-login:hover{background:var(--pl);}
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Bill<span>Zest</span></div>
+  <div class="nav-right">
+    <button class="btn-demo" onclick="showToast('📞 Booking demo...')">Get a 1-to-1<br>demo</button>
+    <button class="btn-login" onclick="openLogin()">Login</button>
+    <button class="nav-lang" id="langBtn" onclick="togLang()">🇸🇦 عربي</button>
+  </div>
+</nav>
+
+<!-- HERO SPLIT -->
+<div class="hero-split">
+  <!-- Left — Purple -->
+  <div class="hs-left">
+    <div class="hs-apps-grid" id="heroAppsGrid"></div>
+    <h1 class="hs-title">An App for Every Need...</h1>
+    <p class="hs-desc">BillZest's ecosystem goes way beyond the POS!<br><br>BillZest App Marketplace has dozens of third-party apps, classified into 15+ categories, that can enhance your restaurant or cafe's capabilities with advanced tools in Business Intelligence, delivery, marketing, and beyond...</p>
+    <span class="hs-link" onclick="document.querySelector('.marketplace').scrollIntoView({behavior:'smooth'})">Discover them now! →</span>
+  </div>
+
+  <!-- Right — Form -->
+  <div class="hs-right">
+    <div class="form-title">Got an App Restaurants Can't Do Without?</div>
+    <div class="form-sub">Become a Partner to BillZest App Marketplace!</div>
+
+    <div class="ffr">
+      <div class="ff"><label>First name<sup>*</sup></label><input type="text" placeholder="First name"></div>
+      <div class="ff"><label>Last name<sup>*</sup></label><input type="text" placeholder="Last name"></div>
+    </div>
+    <div class="ff"><label>Email<sup>*</sup></label><input type="email" placeholder="email@company.com"></div>
+    <div class="ff">
+      <label>Phone number<sup>*</sup></label>
+      <select style="margin-bottom:8px;"><option>Saudi Arabia (المملكة العربية السعودية)</option><option>UAE (+971)</option><option>Kuwait (+965)</option><option>Jordan (+962)</option><option>Egypt (+20)</option></select>
+      <input type="tel" value="+966" placeholder="+966 XX XXX XXXX">
+    </div>
+    <div class="ff"><label>Business name<sup>*</sup></label><input type="text" placeholder="Your company name"></div>
+    <div class="ff"><label>Your Website URL<sup>*</sup></label><input type="url" placeholder="https://yourapp.com"></div>
+    <div class="ff">
+      <label>Country<sup>*</sup></label>
+      <select><option value="">Please Select</option><option>Saudi Arabia</option><option>UAE</option><option>Kuwait</option><option>Jordan</option><option>Egypt</option></select>
+    </div>
+    <div class="ff"><label>Number of active clients<sup>*</sup></label><input type="number" placeholder="e.g. 50"></div>
+    <div class="ff"><label>Number of BillZest clients<sup>*</sup></label><input type="number" placeholder="e.g. 10"></div>
+    <div class="ff"><label>Years of operations<sup>*</sup></label><input type="number" placeholder="e.g. 3"></div>
+    <div class="ff">
+      <label>Is your application/platform ready?<sup>*</sup></label>
+      <select><option value="">Please Select</option><option>Yes, fully ready</option><option>In development</option><option>Planning stage</option></select>
+    </div>
+    <div class="ff">
+      <label>Is your app/platform integrated with any other POS?<sup>*</sup></label>
+      <select><option value="">Please Select</option><option>Yes</option><option>No</option><option>In progress</option></select>
+    </div>
+    <div class="ff"><label>Describe your app/platform<sup>*</sup></label><textarea placeholder="Tell us about your app, what it does, and how it helps restaurants..."></textarea></div>
+    <div class="ff"><label>Explain your business model and revenue streams<sup>*</sup></label><textarea placeholder="How do you monetize your app?"></textarea></div>
+    <button class="btn-submit" onclick="submitForm()" id="submitBtn">Submit</button>
+  </div>
+</div>
+
+<!-- MARKETPLACE -->
+<div class="marketplace">
+  <h2 class="mp-title">Browse BillZest Marketplace Apps</h2>
+
+  <!-- Category Tabs -->
+  <div class="cat-tabs" id="catTabs"></div>
+
+  <!-- Apps Grid -->
+  <div class="apps-grid" id="appsGrid"></div>
+</div>
+
+<!-- CTA -->
+<div class="cta-banner">
+  <div class="cta-title">Do You Have Any Questions About Integrating Marketplace Apps?</div>
+  <button class="cta-btn" onclick="showToast('📞 Connecting to support...')">Get the Answers!</button>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-grid">
+    <div>
+      <div class="fg-logo">Bill<span>Zest</span></div>
+      <p class="fg-desc">BillZest | Under the supervision and control of SAMA, and licensed as a Fintech company | Imam Saud Bin Faisal Rd, Riyadh 13515, 2nd floor.</p>
+      <p class="fg-ph">📧 info@billzestpos.com</p>
+      <div class="pay-logos" style="margin-top:12px;">
+        <div class="pay v">VISA</div>
+        <div class="pay mc">MC</div>
+        <div class="pay" style="color:#333;">Maestro</div>
+        <div class="pay" style="color:#2e77bc;">AMEX</div>
+        <div class="pay ma">mada</div>
+        <div class="pay st">سداد</div>
+      </div>
+    </div>
+    <div class="fc"><h4>BillZest</h4><a>Careers</a><a>Contact us</a><a>Support</a><a>Press & Media</a></div>
+    <div class="fc"><h4>Products</h4><a>Point of Sale</a><a>BillZest Pay</a><a>BillZest Enterprise</a><a>Online</a><a>Self Ordering</a><a>One Accounting</a></div>
+    <div class="fc"><h4>Resources</h4><a>Help Center</a></div>
+    <div class="fc"><h4>Legal</h4><a>Privacy Policy</a><a>Terms of Service</a><a>Consumer Protection</a><a>Accessibility</a><a>Cookie Policy</a></div>
+  </div>
+  <div class="foot-bot">
+    <span style="font-size:12px;color:#888;">BillZest © 2026. All Rights Reserved.</span>
+    <div class="socs">
+      <div class="soc">𝕏</div><div class="soc">f</div><div class="soc">◎</div><div class="soc">in</div>
+    </div>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ══ DATA ══
+var CATS = [
+  "All","Accounting","Chat Bot","Delivery Management","Digital Menu",
+  "Digital Receipts","Digital Signage","ERP","Food Aggregator",
+  "Inventory Management","Loyalty","Online Ordering",
+  "Ordering Platforms","Table Payments","Table Reservation"
+];
+
+var APPS = [
+  // Accounting
+  {name:"Qaema",desc:"Effortless Accounting and Financial Management",cat:"Accounting",color:"#6366f1",emoji:"💼"},
+  {name:"Xero",desc:"Cloud-based accounting software service",cat:"Accounting",color:"#1ab0d1",emoji:"📊"},
+  {name:"QuickBooks",desc:"Global cloud accounting program for all sectors",cat:"Accounting",color:"#2CA01C",emoji:"📋"},
+  {name:"Wafeq",desc:"Accounting and e-invoicing solution for business owners",cat:"Accounting",color:"#0052cc",emoji:"🧾"},
+  {name:"Kasb",desc:"Transform Your Business with Kasb ERP",cat:"Accounting",color:"#1e293b",emoji:"💰"},
+  {name:"Vom",desc:"Cloud Accounting Software Made Easy for You",cat:"Accounting",color:"#7c3aed",emoji:"☁️"},
+  {name:"Sanad",desc:"Innovative smart accountant to save costs and time",cat:"Accounting",color:"#059669",emoji:"🤝"},
+  {name:"InvoiceQ",desc:"Effortlessly handle tax-compliant invoices in one platform",cat:"Accounting",color:"#dc2626",emoji:"🧾"},
+
+  // Chat Bot
+  {name:"LeapAI",desc:"WhatsApp Invoices, Loyalty & Surveys",cat:"Chat Bot",color:"#f59e0b",emoji:"🤖"},
+  {name:"Chefadmin",desc:"Digitizing F&B operations for greater profitability",cat:"Chat Bot",color:"#7c3aed",emoji:"👨‍🍳"},
+  {name:"Mottasl",desc:"Unified platform to sustain and strengthen customer relationships",cat:"Chat Bot",color:"#0284c7",emoji:"💬"},
+
+  // Delivery Management
+  {name:"Deliverect",desc:"Omni-channel restaurant & Delivery management",cat:"Delivery Management",color:"#059669",emoji:"🛵"},
+  {name:"Roboost",desc:"Automating Home Delivery Operations",cat:"Delivery Management",color:"#dc2626",emoji:"🤖"},
+  {name:"Fleetrun",desc:"Your instant in-city delivery app",cat:"Delivery Management",color:"#f59e0b",emoji:"🚀"},
+  {name:"Armada",desc:"Drivers, On-Demand! Delivery solutions for growing your business",cat:"Delivery Management",color:"#1e40af",emoji:"🚚"},
+  {name:"Leajlak",desc:"Best Logistic Services for Food Delivery",cat:"Delivery Management",color:"#7c3aed",emoji:"⚡"},
+  {name:"FeedUs",desc:"Manage all your online orders from one place",cat:"Delivery Management",color:"#ea580c",emoji:"📦"},
+  {name:"Mrsool",desc:"The B2B service of Mrsool integrated with your POS",cat:"Delivery Management",color:"#000",emoji:"🛺"},
+  {name:"Holouly",desc:"All-in-One Solution for Smarter Restaurant Delivery",cat:"Delivery Management",color:"#0ea5e9",emoji:"🏍️"},
+
+  // Digital Menu
+  {name:"FineDine",desc:"AI-driven dine-in, pickup, and delivery solutions",cat:"Digital Menu",color:"#ef4444",emoji:"🍽️"},
+  {name:"EasyMenu",desc:"Menu-Building and Online Ordering Services",cat:"Digital Menu",color:"#16a34a",emoji:"📱"},
+  {name:"Menuhat",desc:"Enhance experience with online menu and ordering",cat:"Digital Menu",color:"#f59e0b",emoji:"📋"},
+  {name:"Qayimat",desc:"Unique Experience of the Digital Menu",cat:"Digital Menu",color:"#7c3aed",emoji:"✨"},
+  {name:"VastMenu",desc:"The best self-service solution for dine-in ordering",cat:"Digital Menu",color:"#0284c7",emoji:"🖥️"},
+
+  // Digital Receipts
+  {name:"WATEER",desc:"Turn receipts into a marketing channel",cat:"Digital Receipts",color:"#0f172a",emoji:"🧾"},
+  {name:"iisal",desc:"Electronic invoice, Zakat compliance, loyalty & Ads",cat:"Digital Receipts",color:"#1d4ed8",emoji:"📄"},
+  {name:"Payce",desc:"Scan, Order, Split — Pay Effortlessly",cat:"Digital Receipts",color:"#7c3aed",emoji:"💳"},
+
+  // Digital Signage
+  {name:"Nitx",desc:"Digital signage solution, control your screens from anywhere",cat:"Digital Signage",color:"#0ea5e9",emoji:"📺"},
+
+  // ERP
+  {name:"FlowERP",desc:"Smarter Management, Better Decisions",cat:"ERP",color:"#16a34a",emoji:"⚙️"},
+  {name:"PowerERP",desc:"A comprehensive cloud-based ERP system",cat:"ERP",color:"#dc2626",emoji:"💡"},
+  {name:"Mazeed",desc:"Financial Management Platform",cat:"ERP",color:"#7c3aed",emoji:"📊"},
+  {name:"Kasb ERP",desc:"Transform Your Business operations",cat:"ERP",color:"#1e293b",emoji:"🏢"},
+
+  // Food Aggregator
+  {name:"Noon Food",desc:"The Middle East's Local Food Delivery Platform",cat:"Food Aggregator",color:"#f59e0b",emoji:"🌙"},
+  {name:"FoodiZone",desc:"All Your Delivery Orders, One Powerful Platform",cat:"Food Aggregator",color:"#dc2626",emoji:"🍔"},
+  {name:"Blend",desc:"Full control over your delivery apps orders",cat:"Food Aggregator",color:"#7c3aed",emoji:"🔀"},
+  {name:"Urban Piper",desc:"Manage Online Sales Channels from Your POS",cat:"Food Aggregator",color:"#0284c7",emoji:"🌆"},
+
+  // Inventory Management
+  {name:"Supy",desc:"Data-Driven Restaurant Inventory Management Software",cat:"Inventory Management",color:"#0f172a",emoji:"📦"},
+  {name:"Stocktake Online",desc:"Smart restaurant stock control & inventory solution",cat:"Inventory Management",color:"#16a34a",emoji:"📊"},
+  {name:"ShopBrain",desc:"First AI-embedded inventory management platform",cat:"Inventory Management",color:"#7c3aed",emoji:"🧠"},
+  {name:"Prepit",desc:"Driving profitability through loyalty",cat:"Inventory Management",color:"#0284c7",emoji:"⚡"},
+
+  // Loyalty
+  {name:"Koinz",desc:"New generation of customer engagement",cat:"Loyalty",color:"#f59e0b",emoji:"⭐"},
+  {name:"LoyaPro",desc:"Loyalty app based on digital cards",cat:"Loyalty",color:"#7c3aed",emoji:"🎁"},
+  {name:"Resal",desc:"Interactive loyalty program with points, stamps, and more",cat:"Loyalty",color:"#dc2626",emoji:"💎"},
+  {name:"BrandWallet",desc:"Mobile Wallet Digital loyalty platform",cat:"Loyalty",color:"#059669",emoji:"👛"},
+  {name:"Zeal",desc:"Identify customers and grow loyalty at checkout",cat:"Loyalty",color:"#0284c7",emoji:"❤️"},
+  {name:"Bonat",desc:"Increase your sales and target clients with marketing tools",cat:"Loyalty",color:"#ea580c",emoji:"🚀"},
+
+  // Online Ordering
+  {name:"Zyda",desc:"Powers the restaurants' direct online ordering experience",cat:"Online Ordering",color:"#1e293b",emoji:"🛒"},
+  {name:"Jahez",desc:"Fastest app in food delivery",cat:"Online Ordering",color:"#f59e0b",emoji:"⚡"},
+  {name:"TAKER",desc:"Advanced online ordering system for your restaurant",cat:"Online Ordering",color:"#dc2626",emoji:"📱"},
+  {name:"Weevi",desc:"Online ordering with built-in growth tools",cat:"Online Ordering",color:"#7c3aed",emoji:"🌐"},
+  {name:"Fooder",desc:"Get 0% commission on online orders with WhatsApp",cat:"Online Ordering",color:"#16a34a",emoji:"🍕"},
+  {name:"Order",desc:"Your Own Website And App To Receive Orders",cat:"Online Ordering",color:"#0284c7",emoji:"📋"},
+
+  // Ordering Platforms
+  {name:"iWaiter",desc:"Streamlining dining: Order, Pay, Reserve, and More",cat:"Ordering Platforms",color:"#1e293b",emoji:"🍽️"},
+  {name:"Tapback",desc:"Simplifying dining experiences for guests and restaurants",cat:"Ordering Platforms",color:"#16a34a",emoji:"👆"},
+  {name:"Dyne",desc:"Your All-in-One App for Online Ordering & Table Payment",cat:"Ordering Platforms",color:"#7c3aed",emoji:"🥂"},
+  {name:"Local",desc:"Power instant QR orders and payments for your customers",cat:"Ordering Platforms",color:"#0284c7",emoji:"📍"},
+  {name:"Enabill",desc:"Give your guests the fastest way to pay with a single tap",cat:"Ordering Platforms",color:"#059669",emoji:"⚡"},
+  {name:"V-Thru",desc:"Swift curbside food ordering made easy",cat:"Ordering Platforms",color:"#1e293b",emoji:"🚗"},
+
+  // Table Payments
+  {name:"Loop By District",desc:"Seamless table payments for restaurant guests",cat:"Table Payments",color:"#7c3aed",emoji:"💳"},
+  {name:"Qlub",desc:"The fastest payment solution for Restaurants and Cafes",cat:"Table Payments",color:"#dc2626",emoji:"⚡"},
+  {name:"Fleetrun Pay",desc:"Instant in-city payments solution",cat:"Table Payments",color:"#f59e0b",emoji:"💰"},
+
+  // Table Reservation
+  {name:"Eat App",desc:"Reservation and Guest Experience Platform",cat:"Table Reservation",color:"#16a34a",emoji:"🍽️"},
+  {name:"Servme",desc:"Reservation, Guest Experience and Marketing Platform",cat:"Table Reservation",color:"#0284c7",emoji:"📅"},
+  {name:"Grubtech",desc:"All-in-one order, kitchen & delivery solution",cat:"Table Reservation",color:"#dc2626",emoji:"🍔"},
+  {name:"Foodee",desc:"Makes it easier for you!",cat:"Table Reservation",color:"#f59e0b",emoji:"🥗"},
+];
+
+var activeCat = "All";
+
+// ══ HERO APPS ══
+function renderHeroApps(){
+  var colors=["#ef4444","#f59e0b","#7c3aed","#0284c7","#16a34a","#dc2626","#059669","#1d4ed8"];
+  var names=["Koinz","FineDine","Supy","Xero","Deliverect","BrandWallet","Mrsool","Nitx"];
+  var emojis=["⭐","🍽️","📦","📊","🛵","👛","🛺","📺"];
+  document.getElementById("heroAppsGrid").innerHTML=names.map(function(n,i){
+    return "<div class='hag-item' style='background:"+colors[i]+";font-size:13px;font-weight:700;'>"+emojis[i]+"<br><span style='font-size:10px;'>"+n+"</span></div>";
+  }).join("");
+}
+
+// ══ CAT TABS ══
+function renderCatTabs(){
+  document.getElementById("catTabs").innerHTML=CATS.map(function(c){
+    return "<button class='ct"+(c===activeCat?" active":"")+"' onclick='setCat(\""+c+"\")'>"+c+"</button>";
+  }).join("");
+}
+
+function setCat(c){
+  activeCat=c;
+  renderCatTabs();
+  renderApps();
+}
+
+// ══ APPS GRID ══
+function renderApps(){
+  var filtered = activeCat==="All" ? APPS : APPS.filter(function(a){return a.cat===activeCat;});
+  document.getElementById("appsGrid").innerHTML=filtered.map(function(a){
+    return "<div class='app-card' onclick='showToast(\"🔗 Opening "+a.name+"...\")'>"+
+      "<div class='app-logo' style='background:"+a.color+";'>"+a.emoji+"</div>"+
+      "<div class='app-info'>"+
+        "<div class='app-name'>"+a.name+"</div>"+
+        "<div class='app-desc'>"+a.desc+"</div>"+
+        "<span class='app-cat'>"+a.cat+"</span>"+
+      "</div>"+
+    "</div>";
+  }).join("");
+}
+
+// ══ FORM ══
+function submitForm(){
+  showToast("✅ Application submitted! We will contact you within 24 hours.");
+}
+
+// ══ TOAST ══
+function showToast(msg){
+  var t=document.getElementById("toast");t.textContent=msg;t.classList.add("on");
+  setTimeout(function(){t.classList.remove("on");},2500);
+}
+
+
+// ══ LANG ══
+var isAr = false;
+var translations = {
+  en: {
+    title: "An App for Every Need...",
+    desc: "BillZest's ecosystem goes way beyond the POS! BillZest App Marketplace has dozens of third-party apps, classified into 15+ categories.",
+    discover: "Discover them now! →",
+    formTitle: "Got an App Restaurants Can't Do Without?",
+    formSub: "Become a Partner to BillZest App Marketplace!",
+    submit: "Submit",
+    mpTitle: "Browse BillZest Marketplace Apps",
+    ctaTitle: "Do You Have Any Questions About Integrating Marketplace Apps?",
+    ctaBtn: "Get the Answers!",
+    loginSub: "Sign in to your dashboard",
+    loginBtn: "🔐 Sign In",
+    demoLbl: "Demo Accounts (tap to fill):",
+    lang: "🇸🇦 عربي",
+    login: "Login",
+    demo: "Get a 1-to-1 demo"
+  },
+  ar: {
+    title: "تطبيق لكل احتياج...",
+    desc: "نظام بيل زست يتجاوز نقطة البيع! متجر تطبيقات بيل زست يضم عشرات التطبيقات المصنفة في أكثر من 15 فئة.",
+    discover: "اكتشفها الآن! ←",
+    formTitle: "هل لديك تطبيق لا يمكن للمطاعم الاستغناء عنه؟",
+    formSub: "كن شريكاً في متجر تطبيقات بيل زست!",
+    submit: "إرسال",
+    mpTitle: "تصفح تطبيقات متجر بيل زست",
+    ctaTitle: "هل لديك أسئلة حول دمج تطبيقات المتجر؟",
+    ctaBtn: "احصل على الإجابات!",
+    loginSub: "سجّل دخولك إلى لوحة التحكم",
+    loginBtn: "🔐 تسجيل الدخول",
+    demoLbl: "حسابات تجريبية (انقر للملء):",
+    lang: "🌐 English",
+    login: "تسجيل الدخول",
+    demo: "احصل على عرض توضيحي"
+  }
+};
+function togLang(){
+  isAr = !isAr;
+  var t = isAr ? translations.ar : translations.en;
+  document.documentElement.setAttribute("dir", isAr?"rtl":"ltr");
+  document.body.classList.toggle("ar", isAr);
+  document.getElementById("langBtn").textContent = t.lang;
+  // Update text
+  var hsTitle = document.querySelector(".hs-title");
+  var hsDesc = document.querySelector(".hs-desc");
+  var hsLink = document.querySelector(".hs-link");
+  var formTitle = document.querySelector(".form-title");
+  var formSub = document.querySelector(".form-sub");
+  var submitBtn = document.getElementById("submitBtn");
+  var mpTitle = document.querySelector(".mp-title");
+  var ctaTitle = document.querySelector(".cta-title");
+  var ctaBtn = document.querySelector(".cta-btn");
+  var lbSub = document.getElementById("lb-sub-txt");
+  var lbBtn = document.getElementById("lb-btn-txt");
+  var lbDemo = document.getElementById("lb-demo-lbl");
+  var loginBtn = document.querySelector(".btn-login");
+  var demoBtn = document.querySelector(".btn-demo");
+  if(hsTitle) hsTitle.textContent = t.title;
+  if(hsDesc) hsDesc.textContent = t.desc;
+  if(hsLink) hsLink.textContent = t.discover;
+  if(formTitle) formTitle.textContent = t.formTitle;
+  if(formSub) formSub.textContent = t.formSub;
+  if(submitBtn) submitBtn.textContent = t.submit;
+  if(mpTitle) mpTitle.textContent = t.mpTitle;
+  if(ctaTitle) ctaTitle.textContent = t.ctaTitle;
+  if(ctaBtn) ctaBtn.textContent = t.ctaBtn;
+  if(lbSub) lbSub.textContent = t.loginSub;
+  if(lbBtn) lbBtn.textContent = t.loginBtn;
+  if(lbDemo) lbDemo.textContent = t.demoLbl;
+  if(loginBtn) loginBtn.textContent = t.login;
+  if(demoBtn) demoBtn.innerHTML = t.demo;
+  showToast(isAr ? "🌍 تم تغيير اللغة إلى العربية" : "🌍 Language changed to English");
+}
+
+// ══ LOGIN ══
+var USERS = [
+  {email:"admin@billzestpos.com", pass:"admin123"},
+  {email:"manager@billzestpos.com", pass:"manager123"},
+  {email:"info@billzestpos.com", pass:"billzest123"}
+];
+function openLogin(){document.getElementById("loginModal").classList.add("open");}
+function closeLogin(){document.getElementById("loginModal").classList.remove("open");}
+function fillLogin(e,p){document.getElementById("lb-email").value=e;document.getElementById("lb-pass").value=p;}
+function doLogin(){
+  var e=document.getElementById("lb-email").value.trim();
+  var p=document.getElementById("lb-pass").value;
+  var err=document.getElementById("lb-err");
+  err.style.display="none";
+  var u=USERS.find(function(x){return x.email===e&&x.pass===p;});
+  if(!u){err.style.display="block";return;}
+  closeLogin();
+  showToast("✅ Welcome! Redirecting to dashboard...");
+  setTimeout(function(){window.location.href="billzest-advanced.html";},1500);
+}
+document.addEventListener("click",function(e){
+  var modal=document.getElementById("loginModal");
+  if(e.target===modal) closeLogin();
+});
+
+// ══ INIT ══
+renderHeroApps();
+renderCatTabs();
+renderApps();
+</script>
+
+<!-- LOGIN MODAL -->
+<div class="login-modal" id="loginModal">
+  <div class="login-box" style="position:relative;">
+    <button onclick="closeLogin()" style="position:absolute;top:14px;right:14px;background:none;border:none;font-size:22px;cursor:pointer;color:#888;">✕</button>
+    <div class="lb-logo">Bill<span style="color:#f5a623;">Zest</span></div>
+    <div class="lb-sub" id="lb-sub-txt">Sign in to your dashboard</div>
+    <div class="lb-f"><label>Email</label><input type="email" id="lb-email" placeholder="admin@billzestpos.com" onkeydown="if(event.key==='Enter')doLogin()"></div>
+    <div class="lb-f"><label>Password</label><input type="password" id="lb-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
+    <button class="lb-btn" onclick="doLogin()" id="lb-btn-txt">🔐 Sign In</button>
+    <div class="lb-err" id="lb-err">❌ Invalid email or password!</div>
+    <div class="lb-demo">
+      <strong id="lb-demo-lbl">Demo Accounts (tap to fill):</strong>
+      <div class="lb-demo-row" onclick="fillLogin('admin@billzestpos.com','admin123')">👑 admin@billzestpos.com / admin123</div>
+      <div class="lb-demo-row" onclick="fillLogin('manager@billzestpos.com','manager123')">👔 manager@billzestpos.com / manager123</div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
