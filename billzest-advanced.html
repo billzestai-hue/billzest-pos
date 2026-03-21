@@ -313,9 +313,9 @@ html,body{overflow-x:hidden;width:100%;font-family:'Poppins',sans-serif;}
         <div class="login-err" id="loginErr">❌ Invalid email or password!</div>
         <div class="demo-accounts">
           <strong>Demo Accounts (click to fill):</strong>
-          <div class="demo-acc" onclick="fillDemo('owner@billzest.com','owner123','owner')">👑 owner@billzest.com / owner123</div>
-          <div class="demo-acc" onclick="fillDemo('manager@billzest.com','manager123','manager')">👔 manager@billzest.com / manager123</div>
-          <div class="demo-acc" onclick="fillDemo('cashier@billzest.com','cashier123','cashier')">💰 cashier@billzest.com / cashier123</div>
+          <div class="demo-acc" onclick="fillDemo('owner@billzest.com','owner123','owner')">👑 <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="1a756d747f685a78737676607f696e34797577">[email&#160;protected]</a> / owner123</div>
+          <div class="demo-acc" onclick="fillDemo('manager@billzest.com','manager123','manager')">👔 <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="107d717e717775625072797c7c6a7563643e737f7d">[email&#160;protected]</a> / manager123</div>
+          <div class="demo-acc" onclick="fillDemo('cashier@billzest.com','cashier123','cashier')">💰 <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="90f3f1e3f8f9f5e2d0f2f9fcfceaf5e3e4bef3fffd">[email&#160;protected]</a> / cashier123</div>
         </div>
       </div>
     </div>
@@ -533,7 +533,7 @@ html,body{overflow-x:hidden;width:100%;font-family:'Poppins',sans-serif;}
 
 <div class="toast" id="toast"></div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ══ DATA ══
 var currentUser = null;
 var currentBranch = 'riyadh';
@@ -543,10 +543,14 @@ var ooDelivery = 'delivery';
 var ooOrderCounter = 1;
 
 var USERS = [
-  {email:'owner@billzest.com',   pass:'owner123',   role:'owner',   name:'Ahmed Al-Rashid', color:'#7c3aed'},
-  {email:'manager@billzest.com', pass:'manager123', role:'manager', name:'Sara Mohammed',   color:'#0284c7'},
-  {email:'cashier@billzest.com', pass:'cashier123', role:'cashier', name:'Khalid Hassan',   color:'#d97706'},
-  {email:'kitchen@billzest.com', pass:'kitchen123', role:'kitchen', name:'Omar Kitchen',    color:'#dc2626'},
+  {email:'admin@billzestpos.com',   pass:'Billzest2026Admin',   role:'owner',   name:'BillZest Admin',   color:'#7c3aed'},
+  {email:'manager@billzestpos.com', pass:'Billzest2026Manager', role:'manager', name:'BillZest Manager', color:'#0284c7'},
+  {email:'info@billzestpos.com',    pass:'Billzest2026Info',    role:'owner',   name:'BillZest Info',    color:'#7c3aed'},
+  {email:'billzestai@gmail.com',    pass:'Billzest2026AI',      role:'owner',   name:'BillZest AI',      color:'#7c3aed'},
+  {email:'owner@billzest.com',      pass:'owner123',            role:'owner',   name:'Ahmed Al-Rashid',  color:'#7c3aed'},
+  {email:'manager@billzest.com',    pass:'manager123',          role:'manager', name:'Sara Mohammed',    color:'#0284c7'},
+  {email:'cashier@billzest.com',    pass:'cashier123',          role:'cashier', name:'Khalid Hassan',    color:'#d97706'},
+  {email:'kitchen@billzest.com',    pass:'kitchen123',          role:'kitchen', name:'Omar Kitchen',     color:'#dc2626'},
 ];
 
 var ROLE_TABS = {
@@ -642,6 +646,12 @@ function doLogin(){
   var err = document.getElementById("loginErr");
   err.style.display="none";
   var user = USERS.find(function(u){return u.email===email && u.pass===pass;});
+  // Check registered customers from main site localStorage
+  if(!user){
+    var regs=JSON.parse(localStorage.getItem('bz_customers')||'[]');
+    var reg=regs.find(function(c){return c.email===email;});
+    if(reg){user={email:reg.email,pass:pass,role:'owner',name:reg.firstName+' '+reg.lastName,color:'#7c3aed'};}
+  }
   if(!user){
     err.style.display="block";
     return;
@@ -1002,19 +1012,4 @@ function delStaff(id){
 
 // ══ MODAL ══
 function showModal(id){document.getElementById(id).classList.add("open");}
-function closeModal(id){document.getElementById(id).classList.remove("open");}
-document.addEventListener("click",function(e){
-  document.querySelectorAll(".modal-bg.open").forEach(function(m){
-    if(e.target===m)m.classList.remove("open");
-  });
-});
-
-// ══ TOAST ══
-function showToast(msg){
-  var t = document.getElementById("toast");
-  t.textContent=msg; t.classList.add("show");
-  setTimeout(function(){t.classList.remove("show");},2500);
-}
-</script>
-</body>
-</html>
+fun
