@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BillZest Admin — Customer Registrations</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Poppins',sans-serif;background:#f4f4f8;color:#1a1a1a;}
+:root{--p:#4f2d91;--pd:#3b1f6e;--pl:#f0ebff;--org:#f5a623;--grn:#10b981;--red:#ef4444;--bdr:#e0e0e0;}
+
+/* LOGIN */
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0d1b4b,#4f2d91);padding:20px;}
+.login-box{background:#fff;border-radius:20px;padding:40px;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,.3);}
+.lb-logo{font-size:32px;font-weight:800;text-align:center;margin-bottom:4px;}
+.lb-logo span{color:var(--org);}
+.lb-sub{font-size:13px;color:#888;text-align:center;margin-bottom:28px;}
+.lf{margin-bottom:14px;}
+.lf label{display:block;font-size:11px;font-weight:700;color:#666;margin-bottom:5px;text-transform:uppercase;}
+.lf input{width:100%;padding:12px 14px;border:1.5px solid #ddd;border-radius:9px;font-size:14px;font-family:'Poppins',sans-serif;outline:none;color:#333;}
+.lf input:focus{border-color:var(--p);}
+.btn-login{width:100%;background:var(--p);color:#fff;border:none;padding:13px;border-radius:9px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Poppins',sans-serif;}
+.lb-err{color:var(--red);font-size:12px;text-align:center;margin-top:8px;display:none;}
+
+/* APP */
+.app{display:none;}
+.hdr{background:#fff;border-bottom:1px solid var(--bdr);padding:0 24px;height:58px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.hdr-left{display:flex;align-items:center;gap:12px;}
+.hdr-logo{font-size:20px;font-weight:800;}
+.hdr-logo span{color:var(--org);}
+.hdr-badge{background:var(--red);color:#fff;font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;}
+.btn-logout{background:none;border:1px solid var(--bdr);padding:6px 14px;border-radius:7px;font-size:12px;cursor:pointer;color:var(--red);font-family:'Poppins',sans-serif;}
+.btn-back{background:var(--pl);color:var(--p);border:none;padding:7px 14px;border-radius:7px;font-size:12px;cursor:pointer;font-family:'Poppins',sans-serif;font-weight:600;}
+
+.content{padding:24px;max-width:1200px;margin:0 auto;}
+
+/* KPI CARDS */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px;}
+.kpi{background:#fff;border:1px solid var(--bdr);border-radius:12px;padding:18px;position:relative;overflow:hidden;}
+.kpi::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.kp::after{background:var(--p);}
+.kg::after{background:var(--grn);}
+.ko::after{background:var(--org);}
+.kr::after{background:var(--red);}
+.kpi-ic{font-size:26px;margin-bottom:8px;}
+.kpi-v{font-size:26px;font-weight:800;color:#1a1a1a;}
+.kpi-l{font-size:12px;color:#888;margin-top:3px;}
+
+/* TABLE */
+.table-wrap{background:#fff;border:1px solid var(--bdr);border-radius:14px;overflow:hidden;}
+.tw-header{padding:16px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--bdr);flex-wrap:wrap;gap:10px;}
+.tw-title{font-size:16px;font-weight:700;}
+.tw-actions{display:flex;gap:8px;}
+.search-inp{padding:8px 14px;border:1.5px solid var(--bdr);border-radius:8px;font-size:13px;font-family:'Poppins',sans-serif;outline:none;width:200px;}
+.search-inp:focus{border-color:var(--p);}
+.btn-export{background:var(--grn);color:#fff;border:none;padding:8px 16px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Poppins',sans-serif;}
+.btn-clear{background:var(--red);color:#fff;border:none;padding:8px 14px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Poppins',sans-serif;}
+
+table{width:100%;border-collapse:collapse;}
+thead tr{background:#f8f8f8;}
+th{text-align:left;padding:12px 16px;font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--bdr);}
+td{padding:14px 16px;font-size:13px;border-bottom:1px solid #f5f5f5;color:#1a1a1a;vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:#f9f9ff;}
+.status-new{background:rgba(79,45,145,.1);color:var(--p);padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;}
+.status-contacted{background:rgba(16,185,129,.1);color:var(--grn);padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;}
+.status-demo{background:rgba(245,158,11,.1);color:var(--org);padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;}
+.btn-contact{background:var(--p);color:#fff;border:none;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;font-family:'Poppins',sans-serif;}
+.btn-wa{background:#25D366;color:#fff;border:none;padding:5px 10px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;margin-left:4px;}
+.empty-state{text-align:center;padding:60px;color:#aaa;}
+.es-ic{font-size:56px;margin-bottom:12px;}
+.filter-row{display:flex;gap:6px;padding:12px 20px;border-bottom:1px solid var(--bdr);flex-wrap:wrap;}
+.fr-btn{padding:5px 14px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;border:1.5px solid var(--bdr);background:#fff;color:#888;font-family:'Poppins',sans-serif;transition:all .2s;}
+.fr-btn.on{background:var(--p);color:#fff;border-color:var(--p);}
+
+/* TOAST */
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(60px);background:#1a1a1a;color:#fff;padding:11px 22px;border-radius:28px;font-size:12px;font-weight:600;z-index:9999;transition:transform .3s;white-space:nowrap;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+
+@media(max-width:768px){.kpi-grid{grid-template-columns:1fr 1fr;}.content{padding:14px;}th,td{padding:10px 12px;font-size:12px;}table{display:block;overflow-x:auto;}}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginWrap">
+  <div class="login-box">
+    <div class="lb-logo">Bill<span>Zest</span></div>
+    <div class="lb-sub">Admin Panel — Customer Registrations</div>
+    <div class="lf">
+      <label>Email</label>
+      <input type="email" id="adEmail" placeholder="admin@billzestpos.com" onkeydown="if(event.key==='Enter')adLogin()">
+    </div>
+    <div class="lf">
+      <label>Password</label>
+      <input type="password" id="adPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')adLogin()">
+    </div>
+    <button class="btn-login" onclick="adLogin()">🔐 Login to Admin</button>
+    <div class="lb-err" id="adErr">❌ Invalid credentials!</div>
+    <div style="margin-top:16px;padding:12px;background:#f8f8f8;border-radius:8px;font-size:12px;color:#888;text-align:center;">
+      Use your BillZest admin credentials
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="app" id="appWrap">
+  <div class="hdr">
+    <div class="hdr-left">
+      <div class="hdr-logo">Bill<span>Zest</span> Admin</div>
+      <div class="hdr-badge" id="newBadge">0 New</div>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button class="btn-back" onclick="window.location.href='index.html'">← Back to Site</button>
+      <button class="btn-logout" onclick="adLogout()">Logout</button>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- KPIs -->
+    <div class="kpi-grid" id="kpiGrid"></div>
+
+    <!-- TABLE -->
+    <div class="table-wrap">
+      <div class="tw-header">
+        <div class="tw-title">👥 Customer Registrations</div>
+        <div class="tw-actions">
+          <input class="search-inp" type="text" placeholder="🔍 Search..." oninput="filterCustomers(this.value)" id="searchInp">
+          <button class="btn-export" onclick="exportCSV()">📥 Export CSV</button>
+          <button class="btn-clear" onclick="clearAll()">🗑️ Clear All</button>
+        </div>
+      </div>
+      <div class="filter-row" id="filterRow"></div>
+      <div id="tableContainer"></div>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ══ AUTH ══
+var ADMINS = [
+  {email:"admin@billzestpos.com", pass:"Billzest2026Admin"},
+  {email:"manager@billzestpos.com", pass:"Billzest2026Manager"},
+  {email:"info@billzestpos.com", pass:"Billzest2026Info"},
+  {email:"billzestai@gmail.com", pass:"Billzest2026AI"}
+];
+var searchQ = "";
+var activeFilter = "All";
+
+function adLogin(){
+  var e=document.getElementById("adEmail").value.trim();
+  var p=document.getElementById("adPass").value;
+  document.getElementById("adErr").style.display="none";
+  var u=ADMINS.find(function(x){return x.email===e&&x.pass===p;});
+  if(!u){document.getElementById("adErr").style.display="block";return;}
+  document.getElementById("loginWrap").style.display="none";
+  document.getElementById("appWrap").style.display="block";
+  initApp();
+}
+
+function adLogout(){
+  document.getElementById("appWrap").style.display="none";
+  document.getElementById("loginWrap").style.display="flex";
+}
+
+// ══ LOAD CUSTOMERS ══
+function getCustomers(){
+  return JSON.parse(localStorage.getItem('bz_customers')||'[]');
+}
+function saveCustomers(arr){
+  localStorage.setItem('bz_customers', JSON.stringify(arr));
+}
+
+// ══ INIT ══
+function initApp(){
+  // Add demo customers if empty
+  var existing = getCustomers();
+  if(!existing.length){
+    var demos = [
+      {id:1,firstName:"Mohammed",lastName:"Al-Saud",email:"m.alsaud@restaurant.com",phone:"+966 50 123 4567",business:"Al Baik Restaurant",branches:"2-5 Branches",country:"Saudi Arabia",date:"21/03/2026, 08:30",status:"New"},
+      {id:2,firstName:"Sara",lastName:"Mohammed",email:"sara@cafebateel.com",phone:"+971 55 987 6543",business:"Cafe Bateel",branches:"6-10 Branches",country:"UAE",date:"21/03/2026, 09:15",status:"Contacted"},
+      {id:3,firstName:"Khalid",lastName:"Hassan",email:"k.hassan@burgerhub.com",phone:"+965 99 456 789",business:"Burger Hub",branches:"1 Branch",country:"Kuwait",date:"21/03/2026, 10:00",status:"Demo Booked"},
+    ];
+    saveCustomers(demos);
+  }
+  renderAll();
+}
+
+function renderAll(){
+  var customers = getCustomers();
+  renderKPIs(customers);
+  renderFilters(customers);
+  renderTable(customers);
+  // Update new badge
+  var newCount = customers.filter(function(c){return c.status==="New";}).length;
+  document.getElementById("newBadge").textContent = newCount+" New";
+  document.getElementById("newBadge").style.display = newCount>0?"block":"none";
+}
+
+// ══ KPIs ══
+function renderKPIs(customers){
+  var total = customers.length;
+  var newC = customers.filter(function(c){return c.status==="New";}).length;
+  var countries = [...new Set(customers.map(function(c){return c.country;}))].length;
+  var today = new Date().toLocaleDateString('en-GB');
+  var todayC = customers.filter(function(c){return c.date && c.date.startsWith(today);}).length;
+
+  document.getElementById("kpiGrid").innerHTML =
+    kpiCard("kp","👥",total,"Total Registrations")+
+    kpiCard("kr","🆕",newC,"New (Uncontacted)")+
+    kpiCard("kg","📅",todayC,"Registered Today")+
+    kpiCard("ko","🌍",countries,"Countries");
+}
+function kpiCard(cls,ic,v,l){
+  return "<div class='kpi "+cls+"'><div class='kpi-ic'>"+ic+"</div><div class='kpi-v'>"+v+"</div><div class='kpi-l'>"+l+"</div></div>";
+}
+
+// ══ FILTERS ══
+function renderFilters(customers){
+  var statuses = ["All","New","Contacted","Demo Booked"];
+  document.getElementById("filterRow").innerHTML = statuses.map(function(s){
+    var count = s==="All" ? customers.length : customers.filter(function(c){return c.status===s;}).length;
+    return "<button class='fr-btn"+(s===activeFilter?" on":"")+"' onclick='setFilter(\""+s+"\")'>"+s+" ("+count+")</button>";
+  }).join("");
+}
+
+function setFilter(f){
+  activeFilter=f;
+  var customers=getCustomers();
+  renderFilters(customers);
+  renderTable(customers);
+}
+
+// ══ TABLE ══
+function renderTable(customers){
+  var filtered = customers.filter(function(c){
+    var fOk = activeFilter==="All" || c.status===activeFilter;
+    var sOk = !searchQ || 
+      (c.firstName+" "+c.lastName).toLowerCase().includes(searchQ) ||
+      c.email.toLowerCase().includes(searchQ) ||
+      c.business.toLowerCase().includes(searchQ) ||
+      c.country.toLowerCase().includes(searchQ);
+    return fOk && sOk;
+  });
+
+  if(!filtered.length){
+    document.getElementById("tableContainer").innerHTML =
+      "<div class='empty-state'><div class='es-ic'>👥</div><div style='font-size:15px;font-weight:600;'>No registrations yet</div><div style='font-size:13px;margin-top:6px;'>When customers register on your website, they will appear here!</div></div>";
+    return;
+  }
+
+  document.getElementById("tableContainer").innerHTML =
+    "<table><thead><tr>"+
+      "<th>#</th><th>Name</th><th>Email</th><th>Phone</th><th>Business</th><th>Branches</th><th>Country</th><th>Date</th><th>Status</th><th>Actions</th>"+
+    "</tr></thead><tbody>"+
+    filtered.map(function(c,i){
+      var statusClass = c.status==="New"?"status-new":c.status==="Contacted"?"status-contacted":"status-demo";
+      return "<tr>"+
+        "<td style='color:#aaa;font-size:12px;'>"+(i+1)+"</td>"+
+        "<td style='font-weight:700;'>"+c.firstName+" "+c.lastName+"</td>"+
+        "<td><a href='mailto:"+c.email+"' style='color:var(--p);text-decoration:none;'>"+c.email+"</a></td>"+
+        "<td>"+c.phone+"</td>"+
+        "<td style='font-weight:600;'>"+c.business+"</td>"+
+        "<td><span style='background:#f0ebff;color:var(--p);padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600;'>"+c.branches+"</span></td>"+
+        "<td>🌍 "+c.country+"</td>"+
+        "<td style='font-size:11px;color:#888;'>"+c.date+"</td>"+
+        "<td><span class='"+statusClass+"'>"+c.status+"</span></td>"+
+        "<td>"+
+          "<button class='btn-contact' onclick='updateStatus("+c.id+")'>"+(c.status==="New"?"📞 Contact":"✅ Done")+"</button>"+
+          "<button class='btn-wa' onclick='contactWA(\""+c.phone+"\",\""+c.firstName+"\",\""+c.business+"\")'  title='WhatsApp'>💬</button>"+
+        "</td>"+
+      "</tr>";
+    }).join("")+
+    "</tbody></table>";
+}
+
+function filterCustomers(q){
+  searchQ=q.toLowerCase();
+  renderTable(getCustomers());
+}
+
+function updateStatus(id){
+  var customers=getCustomers();
+  var c=customers.find(function(x){return x.id===id;});
+  if(!c)return;
+  var statuses=["New","Contacted","Demo Booked"];
+  var nextIdx=(statuses.indexOf(c.status)+1)%statuses.length;
+  c.status=statuses[nextIdx];
+  saveCustomers(customers);
+  renderAll();
+  showToast("✅ Status updated to: "+c.status);
+}
+
+function contactWA(phone, name, biz){
+  var msg = "Hello "+name+"! This is BillZest team. We saw your registration for "+biz+". We'd love to schedule a free demo for you! When are you available?";
+  window.open("https://wa.me/"+phone.replace(/[^0-9]/g,"")+
+    "?text="+encodeURIComponent(msg),"_blank");
+}
+
+// ══ EXPORT CSV ══
+function exportCSV(){
+  var customers=getCustomers();
+  if(!customers.length){showToast("⚠️ No data to export!");return;}
+  var headers=["ID","First Name","Last Name","Email","Phone","Business","Branches","Country","Date","Status"];
+  var rows=customers.map(function(c){
+    return [c.id,c.firstName,c.lastName,c.email,c.phone,c.business,c.branches,c.country,c.date,c.status]
+      .map(function(v){return'"'+String(v||"").replace(/"/g,'""')+'"';}).join(",");
+  });
+  var csv=headers.join(",")+"\n"+rows.join("\n");
+  var blob=new Blob([csv],{type:"text/csv;charset=utf-8;"});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement("a");
+  a.href=url;a.download="billzest-customers-"+Date.now()+".csv";
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast("📥 CSV downloaded! "+customers.length+" records");
+}
+
+// ══ CLEAR ALL ══
+function clearAll(){
+  if(!confirm("Delete ALL customer records? This cannot be undone!"))return;
+  localStorage.removeItem('bz_customers');
+  renderAll();
+  showToast("🗑️ All records deleted!");
+}
+
+// ══ TOAST ══
+function showToast(msg){
+  var t=document.getElementById("toast");
+  t.textContent=msg;t.classList.add("show");
+  setTimeout(function(){t.classList.remove("show");},2500);
+}
+
+// Auto-check for new registrations every 30 seconds
+setInterval(function(){
+  if(document.getElementById("appWrap").style.display!=="none"){
+    var customers=getCustomers();
+    var newC=customers.filter(function(c){return c.status==="New";}).length;
+    document.getElementById("newBadge").textContent=newC+" New";
+  }
+},30000);
+</script>
+</body>
+</html>
