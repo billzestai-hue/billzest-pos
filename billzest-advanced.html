@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>BillZest — Advanced System</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{overflow-x:hidden;width:100%;font-family:'Poppins',sans-serif;}
+:root{
+  --p:#4f2d91;--pd:#3b1f6e;--pl:#f0ebff;
+  --teal:#00b5a3;--org:#f5a623;--red:#ef4444;
+  --grn:#10b981;--blu:#3b82f6;--yel:#f59e0b;
+  --gray:#f4f4f8;--bdr:#e0e0e0;--dark:#1a1a1a;--muted:#888;
+}
+
+/* ══ LOGIN PAGE ══ */
+.login-page{display:flex;min-height:100vh;background:var(--gray);}
+.login-left{flex:0 0 42%;background:linear-gradient(135deg,#0d1b4b 0%,#1a0845 50%,#4f2d91 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px;position:relative;overflow:hidden;}
+.login-left::before{content:'';position:absolute;inset:0;background-image:radial-gradient(circle,rgba(255,255,255,0.6) 1px,transparent 1px);background-size:50px 50px;opacity:0.3;}
+.ll-logo{font-size:36px;font-weight:800;color:#fff;letter-spacing:-1px;margin-bottom:8px;position:relative;z-index:1;}
+.ll-logo span{color:var(--org);}
+.ll-sub{font-size:14px;color:rgba(255,255,255,0.7);margin-bottom:40px;position:relative;z-index:1;}
+.ll-features{list-style:none;position:relative;z-index:1;}
+.ll-features li{color:rgba(255,255,255,0.85);font-size:14px;padding:10px 0;display:flex;align-items:center;gap:12px;border-bottom:1px solid rgba(255,255,255,0.1);}
+.ll-features li:last-child{border-bottom:none;}
+.ll-features li .lf-icon{width:36px;height:36px;background:rgba(255,255,255,0.1);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+
+.login-right{flex:1;display:flex;align-items:center;justify-content:center;padding:40px 20px;}
+.login-box{background:#fff;border-radius:20px;padding:36px;width:100%;max-width:420px;box-shadow:0 8px 40px rgba(0,0,0,0.08);}
+.lb-title{font-size:24px;font-weight:800;color:var(--dark);margin-bottom:4px;}
+.lb-sub{font-size:13px;color:var(--muted);margin-bottom:28px;}
+.role-select{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px;}
+.role-btn{padding:14px 10px;border:2px solid var(--bdr);border-radius:12px;text-align:center;cursor:pointer;transition:all 0.2s;background:#fff;}
+.role-btn.active{border-color:var(--p);background:var(--pl);}
+.role-btn .ri{font-size:24px;margin-bottom:6px;}
+.role-btn .rl{font-size:12px;font-weight:700;color:#555;}
+.role-btn.active .rl{color:var(--p);}
+.lf{margin-bottom:16px;}
+.lf label{display:block;font-size:12px;font-weight:600;color:#555;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px;}
+.lf input,.lf select{width:100%;padding:12px 14px;border:1.5px solid var(--bdr);border-radius:10px;font-size:14px;font-family:'Poppins',sans-serif;outline:none;transition:border 0.2s;}
+.lf input:focus,.lf select:focus{border-color:var(--p);}
+.pw-wrap{position:relative;}
+.pw-wrap input{padding-right:44px;}
+.pw-eye{position:absolute;right:12px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:18px;color:var(--muted);}
+.btn-login{width:100%;background:var(--p);color:#fff;border:none;padding:14px;border-radius:10px;font-size:15px;font-weight:700;font-family:'Poppins',sans-serif;cursor:pointer;transition:all 0.2s;margin-top:8px;}
+.btn-login:hover{background:var(--pd);}
+.login-err{color:var(--red);font-size:12px;margin-top:8px;display:none;text-align:center;}
+.demo-accounts{display:none!important;margin-top:20px;padding:14px;background:var(--gray);border-radius:10px;font-size:12px;color:var(--muted);}
+.demo-accounts strong{color:var(--dark);display:block;margin-bottom:6px;}
+.demo-acc{cursor:pointer;padding:4px 8px;border-radius:6px;transition:background 0.2s;display:flex;justify-content:space-between;}
+.demo-acc:hover{background:#e8e8e8;}
+
+/* ══ MAIN APP ══ */
+.app{display:none;}
+.app-hdr{background:#fff;border-bottom:2px solid var(--bdr);padding:0 20px;height:58px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:200;}
+.app-logo{font-size:18px;font-weight:800;color:var(--dark);letter-spacing:-0.5px;flex-shrink:0;}
+.app-logo span{color:var(--org);}
+.app-branch{background:var(--pl);color:var(--p);padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;border:none;font-family:'Poppins',sans-serif;}
+.app-tabs{display:flex;gap:3px;flex:1;justify-content:center;overflow-x:auto;}
+.app-tab{padding:7px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:none;background:none;color:var(--muted);font-family:'Poppins',sans-serif;white-space:nowrap;transition:all 0.2s;}
+.app-tab.active{background:var(--p);color:#fff;}
+.app-tab:hover:not(.active){background:var(--pl);color:var(--p);}
+.user-info{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.user-av{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0;}
+.user-name{font-size:12px;font-weight:600;color:var(--dark);}
+.user-role{font-size:10px;color:var(--muted);}
+.btn-logout{background:none;border:1px solid var(--bdr);padding:5px 10px;border-radius:6px;font-size:11px;cursor:pointer;font-family:'Poppins',sans-serif;color:var(--red);}
+
+/* ══ PAGES ══ */
+.apg{display:none;padding:20px;max-width:1200px;margin:0 auto;}
+.apg.active{display:block;}
+
+/* ══ MULTI BRANCH ══ */
+.branch-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:24px;}
+.branch-card{background:#fff;border:1px solid var(--bdr);border-radius:14px;padding:20px;cursor:pointer;transition:all 0.2s;position:relative;}
+.branch-card:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(0,0,0,0.1);}
+.branch-card.active-branch{border-color:var(--p);box-shadow:0 4px 20px rgba(79,45,145,0.15);}
+.bc-header{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+.bc-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+.bc-name{font-size:16px;font-weight:700;color:var(--dark);}
+.bc-loc{font-size:12px;color:var(--muted);}
+.bc-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+.bc-stat{text-align:center;background:var(--gray);border-radius:8px;padding:8px;}
+.bc-stat-val{font-size:16px;font-weight:800;color:var(--p);}
+.bc-stat-lbl{font-size:10px;color:var(--muted);}
+.bc-status{position:absolute;top:14px;right:14px;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;}
+.bc-open{background:rgba(16,185,129,0.1);color:var(--grn);}
+.bc-closed{background:rgba(239,68,68,0.1);color:var(--red);}
+.branch-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px;}
+.bs-card{background:#fff;border:1px solid var(--bdr);border-radius:12px;padding:18px;}
+.bs-val{font-size:24px;font-weight:800;font-family:'JetBrains Mono',monospace;}
+.bs-lbl{font-size:12px;color:var(--muted);margin-top:3px;}
+
+/* ══ ONLINE ORDERING ══ */
+.oo-layout{display:grid;grid-template-columns:1fr 340px;gap:16px;}
+.oo-menu{background:#fff;border-radius:14px;border:1px solid var(--bdr);padding:20px;}
+.oo-menu h2{font-size:18px;font-weight:700;margin-bottom:16px;}
+.oo-cats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+.oo-cat{padding:7px 16px;border-radius:20px;border:1.5px solid var(--bdr);font-size:12px;font-weight:600;cursor:pointer;transition:all 0.2s;background:#fff;font-family:'Poppins',sans-serif;}
+.oo-cat.active{background:var(--p);color:#fff;border-color:var(--p);}
+.oo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;}
+.oo-item{border:1.5px solid var(--bdr);border-radius:12px;padding:14px;text-align:center;cursor:pointer;transition:all 0.2s;background:#fff;}
+.oo-item:hover{border-color:var(--p);transform:translateY(-2px);}
+.oo-emoji{font-size:40px;margin-bottom:8px;}
+.oo-name{font-size:12px;font-weight:700;margin-bottom:4px;}
+.oo-price{font-size:13px;font-weight:800;color:var(--p);}
+.oo-cart{background:#fff;border-radius:14px;border:1px solid var(--bdr);display:flex;flex-direction:column;height:fit-content;position:sticky;top:78px;}
+.oo-cart-hdr{padding:16px 18px;border-bottom:1px solid var(--bdr);}
+.oo-cart-hdr h3{font-size:15px;font-weight:700;}
+.oo-cart-body{padding:14px;flex:1;min-height:200px;}
+.oo-delivery{padding:14px;border-top:1px solid var(--bdr);}
+.oo-del-tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px;}
+.oo-del-tab{padding:9px;border:1.5px solid var(--bdr);border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;text-align:center;transition:all 0.2s;font-family:'Poppins',sans-serif;}
+.oo-del-tab.active{border-color:var(--p);background:var(--pl);color:var(--p);}
+.oo-addr{width:100%;padding:9px 12px;border:1.5px solid var(--bdr);border-radius:8px;font-size:13px;font-family:'Poppins',sans-serif;outline:none;margin-bottom:10px;resize:none;}
+.oo-addr:focus{border-color:var(--p);}
+.btn-place-order{width:100%;background:var(--grn);color:#fff;border:none;padding:13px;border-radius:10px;font-size:14px;font-weight:700;font-family:'Poppins',sans-serif;cursor:pointer;transition:all 0.2s;}
+.btn-place-order:hover{background:#059669;}
+.btn-place-order:disabled{background:#ccc;cursor:not-allowed;}
+.oo-orders{background:#fff;border-radius:14px;border:1px solid var(--bdr);padding:20px;margin-top:16px;}
+.order-item-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #f5f5f5;font-size:13px;}
+.order-item-row:last-child{border-bottom:none;}
+
+/* ══ LOYALTY ══ */
+.loyalty-wrap{}
+.loyalty-top{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:24px;}
+.loy-card{background:#fff;border:1px solid var(--bdr);border-radius:14px;padding:22px;text-align:center;}
+.loy-card.featured{background:linear-gradient(135deg,var(--p),var(--pd));color:#fff;border:none;}
+.loy-icon{font-size:36px;margin-bottom:10px;}
+.loy-val{font-size:32px;font-weight:800;font-family:'JetBrains Mono',monospace;}
+.loy-lbl{font-size:13px;opacity:0.8;margin-top:4px;}
+.loy-customers{background:#fff;border-radius:14px;border:1px solid var(--bdr);padding:20px;margin-bottom:16px;}
+.loy-customers h3{font-size:16px;font-weight:700;margin-bottom:16px;}
+.lc-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #f5f5f5;}
+.lc-row:last-child{border-bottom:none;}
+.lc-av{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#fff;flex-shrink:0;}
+.lc-name{font-size:14px;font-weight:600;}
+.lc-pts{font-size:12px;color:var(--muted);}
+.lc-badge{padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;margin-left:auto;}
+.lc-gold{background:rgba(245,158,11,0.15);color:var(--yel);}
+.lc-silver{background:rgba(107,114,128,0.15);color:#6b7280;}
+.lc-bronze{background:rgba(180,83,9,0.15);color:#b45309;}
+.pts-bar{width:100%;height:6px;background:#f0f0f0;border-radius:3px;margin-top:4px;}
+.pts-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--org),var(--p));}
+.btn-add-pts{background:var(--p);color:#fff;border:none;padding:6px 14px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Poppins',sans-serif;flex-shrink:0;}
+.loy-tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px;}
+.tier-card{border-radius:12px;padding:16px;text-align:center;}
+.tier-bronze{background:linear-gradient(135deg,#b45309,#d97706);}
+.tier-silver{background:linear-gradient(135deg,#6b7280,#9ca3af);}
+.tier-gold{background:linear-gradient(135deg,#d97706,#f59e0b);}
+.tier-card .tc-icon{font-size:28px;margin-bottom:6px;}
+.tier-card .tc-name{font-size:14px;font-weight:700;color:#fff;}
+.tier-card .tc-pts{font-size:11px;color:rgba(255,255,255,0.8);margin-top:2px;}
+.tier-card .tc-perks{font-size:10px;color:rgba(255,255,255,0.9);margin-top:8px;line-height:1.6;}
+
+/* ══ NOTIFICATIONS ══ */
+.notif-wrap{}
+.notif-compose{background:#fff;border:1px solid var(--bdr);border-radius:14px;padding:22px;margin-bottom:20px;}
+.notif-compose h3{font-size:16px;font-weight:700;margin-bottom:16px;}
+.notif-channels{display:flex;gap:10px;margin-bottom:16px;}
+.nc-btn{display:flex;align-items:center;gap:6px;padding:8px 16px;border:2px solid var(--bdr);border-radius:10px;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.2s;background:#fff;font-family:'Poppins',sans-serif;}
+.nc-btn.on{border-color:var(--p);background:var(--pl);color:var(--p);}
+.notif-target{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.nt-btn{padding:10px;border:1.5px solid var(--bdr);border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;text-align:center;transition:all 0.2s;background:#fff;font-family:'Poppins',sans-serif;}
+.nt-btn.on{border-color:var(--p);background:var(--pl);color:var(--p);}
+.nf{margin-bottom:14px;}
+.nf label{display:block;font-size:11px;font-weight:600;color:#555;margin-bottom:5px;text-transform:uppercase;}
+.nf input,.nf textarea,.nf select{width:100%;padding:10px 12px;border:1.5px solid var(--bdr);border-radius:8px;font-size:13px;font-family:'Poppins',sans-serif;outline:none;transition:border 0.2s;}
+.nf input:focus,.nf textarea:focus,.nf select:focus{border-color:var(--p);}
+.nf textarea{resize:vertical;min-height:80px;}
+.btn-send-notif{background:var(--grn);color:#fff;border:none;padding:12px 28px;border-radius:8px;font-size:14px;font-weight:700;font-family:'Poppins',sans-serif;cursor:pointer;}
+.notif-history{background:#fff;border:1px solid var(--bdr);border-radius:14px;padding:20px;}
+.notif-history h3{font-size:16px;font-weight:700;margin-bottom:16px;}
+.nh-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #f5f5f5;font-size:13px;}
+.nh-row:last-child{border-bottom:none;}
+.nh-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.nh-msg{flex:1;}
+.nh-title{font-weight:600;color:var(--dark);}
+.nh-meta{font-size:11px;color:var(--muted);margin-top:1px;}
+.nh-status{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;flex-shrink:0;}
+.nh-sent{background:rgba(16,185,129,0.1);color:var(--grn);}
+.nh-scheduled{background:rgba(245,158,11,0.1);color:var(--yel);}
+
+/* ══ STAFF ══ */
+.staff-wrap{}
+.staff-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;margin-bottom:20px;}
+.staff-card{background:#fff;border:1px solid var(--bdr);border-radius:14px;padding:20px;text-align:center;}
+.sc-av{width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:#fff;margin:0 auto 12px;}
+.sc-name{font-size:15px;font-weight:700;}
+.sc-role{font-size:12px;font-weight:600;padding:3px 12px;border-radius:20px;display:inline-block;margin:4px 0 12px;}
+.sc-role.manager{background:rgba(79,45,145,0.1);color:var(--p);}
+.sc-role.cashier{background:rgba(59,130,246,0.1);color:var(--blu);}
+.sc-role.kitchen{background:rgba(245,158,11,0.1);color:var(--yel);}
+.sc-stats{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px;}
+.sc-stat{background:var(--gray);border-radius:7px;padding:7px;}
+.sc-stat-val{font-size:14px;font-weight:800;color:var(--p);}
+.sc-stat-lbl{font-size:10px;color:var(--muted);}
+.sc-status{display:flex;align-items:center;gap:5px;justify-content:center;font-size:12px;font-weight:600;}
+.sc-dot{width:8px;height:8px;border-radius:50%;}
+.sc-online{color:var(--grn);}
+.sc-dot-on{background:var(--grn);}
+.sc-offline{color:var(--muted);}
+.sc-dot-off{background:#ccc;}
+.staff-actions{display:flex;gap:8px;justify-content:center;margin-top:10px;}
+.btn-staff-edit{background:var(--pl);color:var(--p);border:none;padding:6px 14px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;font-family:'Poppins',sans-serif;}
+.btn-staff-del{background:#fff0f0;color:var(--red);border:none;padding:6px 10px;border-radius:6px;font-size:12px;cursor:pointer;}
+
+/* ══ MODAL ══ */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:500;align-items:center;justify-content:center;padding:20px;}
+.modal-bg.open{display:flex;}
+.modal-box{background:#fff;border-radius:18px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.2);animation:pop .22s ease;}
+@keyframes pop{from{opacity:0;transform:scale(0.95);}to{opacity:1;transform:scale(1);}}
+.modal-hdr{padding:20px 22px 0;display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+.modal-hdr h3{font-size:17px;font-weight:700;}
+.modal-cls{background:none;border:none;font-size:20px;cursor:pointer;color:var(--muted);}
+.modal-body{padding:0 22px 22px;}
+.modal-foot{padding:14px 22px;border-top:1px solid var(--bdr);display:flex;gap:10px;}
+.btn-cancel{flex:1;background:#f5f5f5;color:#555;border:none;padding:11px;border-radius:8px;font-size:13px;font-weight:600;font-family:'Poppins',sans-serif;cursor:pointer;}
+.btn-save{flex:2;background:var(--p);color:#fff;border:none;padding:11px;border-radius:8px;font-size:13px;font-weight:700;font-family:'Poppins',sans-serif;cursor:pointer;}
+
+/* ══ TOAST ══ */
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(60px);background:#1a1a1a;color:#fff;padding:12px 22px;border-radius:30px;font-size:13px;font-weight:600;z-index:999;transition:transform 0.3s;white-space:nowrap;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+
+/* ══ RESPONSIVE ══ */
+@media(max-width:900px){
+  .login-left{display:none;}
+  .oo-layout{grid-template-columns:1fr;}
+  .branch-summary{grid-template-columns:1fr 1fr;}
+  .loyalty-top{grid-template-columns:1fr 1fr;}
+  .loy-tiers{grid-template-columns:1fr 1fr 1fr;}
+}
+@media(max-width:640px){
+  .apg{padding:12px;}
+  .app-hdr{padding:0 12px;height:auto;flex-wrap:wrap;padding:8px 12px;gap:6px;}
+  .app-tabs{gap:2px;width:100%;order:3;}
+  .app-tab{padding:6px 10px;font-size:11px;}
+  .branch-grid{grid-template-columns:1fr;}
+  .branch-summary{grid-template-columns:1fr 1fr;}
+  .oo-layout{grid-template-columns:1fr;}
+  .loyalty-top{grid-template-columns:1fr;}
+  .staff-grid{grid-template-columns:1fr 1fr;}
+  .notif-channels{flex-wrap:wrap;}
+  .loy-tiers{grid-template-columns:1fr;}
+}
+@media(max-width:380px){
+  .staff-grid{grid-template-columns:1fr;}
+  .branch-summary{grid-template-columns:1fr 1fr;}
+}
+.demo-accounts{display:none!important;} .demo-acc{display:none!important;}
+</style>
+</head>
+<body>
+
+<!-- ══ LOGIN PAGE ══ -->
+<div id="loginPage">
+  <div class="login-page">
+    <div class="login-left">
+      <div class="ll-logo">Bill<span>Zest</span></div>
+      <div class="ll-sub">Advanced Restaurant Management</div>
+      <ul class="ll-features">
+        <li><div class="lf-icon">🏪</div> Multi-Branch Management</li>
+        <li><div class="lf-icon">📱</div> Online Customer Ordering</li>
+        <li><div class="lf-icon">🎁</div> Loyalty Points & Rewards</li>
+        <li><div class="lf-icon">📲</div> SMS & WhatsApp Notifications</li>
+        <li><div class="lf-icon">👤</div> Staff Role Management</li>
+      </ul>
+    </div>
+    <div class="login-right">
+      <div class="login-box">
+        <div class="lb-title">Welcome Back! 👋</div>
+        <div class="lb-sub">Login to your BillZest dashboard</div>
+        <div class="role-select">
+          <div class="role-btn active" onclick="selRole('manager',this)">
+            <div class="ri">👔</div>
+            <div class="rl">Manager</div>
+          </div>
+          <div class="role-btn" onclick="selRole('cashier',this)">
+            <div class="ri">💰</div>
+            <div class="rl">Cashier</div>
+          </div>
+          <div class="role-btn" onclick="selRole('kitchen',this)">
+            <div class="ri">👨‍🍳</div>
+            <div class="rl">Kitchen</div>
+          </div>
+          <div class="role-btn" onclick="selRole('owner',this)">
+            <div class="ri">👑</div>
+            <div class="rl">Owner</div>
+          </div>
+        </div>
+        <div class="lf">
+          <label>Email</label>
+          <input type="email" id="loginEmail" placeholder="your@email.com">
+        </div>
+        <div class="lf">
+          <label>Password</label>
+          <div class="pw-wrap">
+            <input type="password" id="loginPass" placeholder="••••••••">
+            <span class="pw-eye" onclick="togPw()">👁️</span>
+          </div>
+        </div>
+        <div class="lf">
+          <label>Branch</label>
+          <select id="loginBranch">
+            <option value="riyadh">🏪 Main Branch — Riyadh</option>
+            <option value="jeddah">🏪 Jeddah Branch</option>
+            <option value="dammam">🏪 Dammam Branch</option>
+            <option value="dubai">🏪 Dubai Branch</option>
+          </select>
+        </div>
+        <button class="btn-login" onclick="doLogin()">🔐 Login</button>
+        <div class="login-err" id="loginErr">❌ Invalid email or password!</div>
+        <div class="demo-accounts">
+          <strong>Demo Accounts (click to fill):</strong>
+          <div class="demo-acc" onclick="fillDemo('owner@billzest.com','owner123','owner')">👑 <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="1a756d747f685a78737676607f696e34797577">[email&#160;protected]</a> / owner123</div>
+          <div class="demo-acc" onclick="fillDemo('manager@billzest.com','manager123','manager')">👔 <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="107d717e717775625072797c7c6a7563643e737f7d">[email&#160;protected]</a> / manager123</div>
+          <div class="demo-acc" onclick="fillDemo('cashier@billzest.com','cashier123','cashier')">💰 <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="90f3f1e3f8f9f5e2d0f2f9fcfceaf5e3e4bef3fffd">[email&#160;protected]</a> / cashier123</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MAIN APP ══ -->
+<div class="app" id="mainApp">
+  <div class="app-hdr">
+    <div class="app-logo">Bill<span>Zest</span></div>
+    <button class="app-branch" onclick="showModal('branchModal')" id="activeBranchBtn">🏪 Main Branch — Riyadh ▾</button>
+    <div class="app-tabs" id="appTabs"></div>
+    <div class="user-info">
+      <div class="user-av" id="userAv"></div>
+      <div>
+        <div class="user-name" id="userName"></div>
+        <div class="user-role" id="userRoleLbl"></div>
+      </div>
+      <button class="btn-logout" onclick="doLogout()">Logout</button>
+    </div>
+  </div>
+
+  <!-- BRANCHES PAGE -->
+  <div class="apg active" id="apg-branches">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px;">
+      <h2 style="font-size:20px;font-weight:700;">🏪 Multi-Branch Management</h2>
+      <button onclick="showModal('addBranchModal')" style="background:var(--p);color:#fff;border:none;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:600;font-family:'Poppins',sans-serif;cursor:pointer;">+ Add Branch</button>
+    </div>
+    <div class="branch-summary" id="branchSummary"></div>
+    <div class="branch-grid" id="branchGrid"></div>
+  </div>
+
+  <!-- ONLINE ORDER PAGE -->
+  <div class="apg" id="apg-online">
+    <h2 style="font-size:20px;font-weight:700;margin-bottom:16px;">📱 Customer Online Ordering</h2>
+    <div class="oo-layout">
+      <div>
+        <div class="oo-menu">
+          <h2>🍽️ Our Menu</h2>
+          <div class="oo-cats" id="ooCats"></div>
+          <div class="oo-grid" id="ooGrid"></div>
+        </div>
+        <div class="oo-orders">
+          <h3 style="font-size:15px;font-weight:700;margin-bottom:14px;">📋 Recent Online Orders</h3>
+          <div id="ooOrdersList"></div>
+        </div>
+      </div>
+      <div class="oo-cart">
+        <div class="oo-cart-hdr">
+          <h3>🛒 Your Order</h3>
+          <div style="font-size:11px;color:var(--muted);" id="ooOrderId">#ONL-0001</div>
+        </div>
+        <div class="oo-cart-body" id="ooCartBody">
+          <div style="text-align:center;padding:30px;color:var(--muted);font-size:13px;">
+            <div style="font-size:40px;margin-bottom:8px;">🛒</div>
+            Add items to order
+          </div>
+        </div>
+        <div class="oo-delivery">
+          <div class="oo-del-tabs">
+            <button class="oo-del-tab active" onclick="setDel('delivery',this)">🛵 Delivery</button>
+            <button class="oo-del-tab" onclick="setDel('pickup',this)">🏃 Pickup</button>
+          </div>
+          <textarea class="oo-addr" id="ooAddr" placeholder="Enter delivery address..." rows="2"></textarea>
+          <div id="ooCartSummary" style="font-size:13px;margin-bottom:10px;"></div>
+          <button class="btn-place-order" id="ooPlaceBtn" onclick="placeOnlineOrder()" disabled>Place Order — ﷼ 0.00</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOYALTY PAGE -->
+  <div class="apg" id="apg-loyalty">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px;">
+      <h2 style="font-size:20px;font-weight:700;">🎁 Loyalty Points & Rewards</h2>
+      <button onclick="showModal('addCustModal')" style="background:var(--p);color:#fff;border:none;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:600;font-family:'Poppins',sans-serif;cursor:pointer;">+ Add Customer</button>
+    </div>
+    <div class="loyalty-top" id="loyaltyTop"></div>
+    <div class="loy-tiers" id="loyTiers"></div>
+    <div class="loy-customers">
+      <h3>👥 Customer Loyalty Board</h3>
+      <div id="loyCustomers"></div>
+    </div>
+  </div>
+
+  <!-- NOTIFICATIONS PAGE -->
+  <div class="apg" id="apg-notifications">
+    <h2 style="font-size:20px;font-weight:700;margin-bottom:20px;">📲 SMS & WhatsApp Notifications</h2>
+    <div class="notif-compose">
+      <h3>✉️ Send Notification</h3>
+      <div class="notif-channels">
+        <button class="nc-btn on" onclick="togChannel(this,'sms')">📱 SMS</button>
+        <button class="nc-btn on" onclick="togChannel(this,'wa')">💬 WhatsApp</button>
+        <button class="nc-btn" onclick="togChannel(this,'email')">📧 Email</button>
+      </div>
+      <div class="notif-target">
+        <button class="nt-btn on" onclick="togTarget(this,'all')">👥 All Customers</button>
+        <button class="nt-btn" onclick="togTarget(this,'gold')">⭐ Gold Members</button>
+        <button class="nt-btn" onclick="togTarget(this,'new')">🆕 New Customers</button>
+        <button class="nt-btn" onclick="togTarget(this,'inactive')">😴 Inactive (30d)</button>
+      </div>
+      <div class="nf">
+        <label>Template</label>
+        <select onchange="loadTemplate(this.value)">
+          <option value="">Custom message</option>
+          <option value="offer">🎉 Special Offer</option>
+          <option value="loyalty">⭐ Loyalty Points Update</option>
+          <option value="order">📦 Order Status</option>
+          <option value="welcome">👋 Welcome New Customer</option>
+        </select>
+      </div>
+      <div class="nf">
+        <label>Title</label>
+        <input type="text" id="notifTitle" placeholder="Notification title...">
+      </div>
+      <div class="nf">
+        <label>Message</label>
+        <textarea id="notifMsg" placeholder="Type your message..."></textarea>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <button class="btn-send-notif" onclick="sendNotif()">📤 Send Now</button>
+        <button onclick="scheduleNotif()" style="background:var(--yel);color:#fff;border:none;padding:12px 22px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Poppins',sans-serif;">⏰ Schedule</button>
+        <span style="font-size:12px;color:var(--muted);" id="recipientCount">Sending to: 248 customers</span>
+      </div>
+    </div>
+    <div class="notif-history">
+      <h3>📋 Notification History</h3>
+      <div id="notifHistory"></div>
+    </div>
+  </div>
+
+  <!-- STAFF PAGE -->
+  <div class="apg" id="apg-staff">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px;">
+      <h2 style="font-size:20px;font-weight:700;">👤 Staff Management</h2>
+      <button onclick="showModal('addStaffModal')" style="background:var(--p);color:#fff;border:none;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:600;font-family:'Poppins',sans-serif;cursor:pointer;">+ Add Staff</button>
+    </div>
+    <div class="staff-grid" id="staffGrid"></div>
+  </div>
+</div>
+
+<!-- BRANCH MODAL -->
+<div class="modal-bg" id="branchModal">
+  <div class="modal-box">
+    <div class="modal-hdr"><h3>🏪 Switch Branch</h3><button class="modal-cls" onclick="closeModal('branchModal')">✕</button></div>
+    <div class="modal-body" id="branchSwitcher"></div>
+  </div>
+</div>
+
+<!-- ADD BRANCH MODAL -->
+<div class="modal-bg" id="addBranchModal">
+  <div class="modal-box">
+    <div class="modal-hdr"><h3>➕ Add New Branch</h3><button class="modal-cls" onclick="closeModal('addBranchModal')">✕</button></div>
+    <div class="modal-body">
+      <div class="nf"><label>Branch Name</label><input type="text" id="newBranchName" placeholder="e.g. Jeddah Branch"></div>
+      <div class="nf"><label>Location / City</label><input type="text" id="newBranchLoc" placeholder="e.g. Jeddah, Saudi Arabia"></div>
+      <div class="nf"><label>Manager Name</label><input type="text" id="newBranchMgr" placeholder="Manager name"></div>
+      <div class="nf"><label>Phone</label><input type="text" id="newBranchPhone" placeholder="+966 XX XXX XXXX"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-cancel" onclick="closeModal('addBranchModal')">Cancel</button>
+      <button class="btn-save" onclick="addBranch()">➕ Add Branch</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD STAFF MODAL -->
+<div class="modal-bg" id="addStaffModal">
+  <div class="modal-box">
+    <div class="modal-hdr"><h3>➕ Add Staff Member</h3><button class="modal-cls" onclick="closeModal('addStaffModal')">✕</button></div>
+    <div class="modal-body">
+      <div class="nf"><label>Full Name</label><input type="text" id="sName" placeholder="Staff name"></div>
+      <div class="nf"><label>Email</label><input type="email" id="sEmail" placeholder="staff@email.com"></div>
+      <div class="nf"><label>Role</label>
+        <select id="sRole">
+          <option value="cashier">💰 Cashier</option>
+          <option value="kitchen">👨‍🍳 Kitchen Staff</option>
+          <option value="manager">👔 Manager</option>
+          <option value="waiter">🍽️ Waiter</option>
+        </select>
+      </div>
+      <div class="nf"><label>Branch</label>
+        <select id="sBranch">
+          <option>Main Branch — Riyadh</option>
+          <option>Jeddah Branch</option>
+          <option>Dammam Branch</option>
+          <option>Dubai Branch</option>
+        </select>
+      </div>
+      <div class="nf"><label>Password</label><input type="password" id="sPass" placeholder="Set password"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-cancel" onclick="closeModal('addStaffModal')">Cancel</button>
+      <button class="btn-save" onclick="addStaff()">➕ Add Staff</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD CUSTOMER MODAL -->
+<div class="modal-bg" id="addCustModal">
+  <div class="modal-box">
+    <div class="modal-hdr"><h3>➕ Add Loyalty Customer</h3><button class="modal-cls" onclick="closeModal('addCustModal')">✕</button></div>
+    <div class="modal-body">
+      <div class="nf"><label>Customer Name</label><input type="text" id="cName" placeholder="Full name"></div>
+      <div class="nf"><label>Phone</label><input type="text" id="cPhone" placeholder="+966 XX XXX XXXX"></div>
+      <div class="nf"><label>Email</label><input type="email" id="cEmail" placeholder="customer@email.com"></div>
+      <div class="nf"><label>Starting Points</label><input type="number" id="cPts" placeholder="0" min="0"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-cancel" onclick="closeModal('addCustModal')">Cancel</button>
+      <button class="btn-save" onclick="addCustomer()">➕ Add Customer</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// ══ DATA ══
+var currentUser = null;
+var currentBranch = 'riyadh';
+var selectedRole = 'manager';
+var ooCart = [];
+var ooDelivery = 'delivery';
+var ooOrderCounter = 1;
+
+var USERS = [
+  {email:'admin@billzestpos.com',   pass:'Billzest2026Admin',   role:'owner',   name:'BillZest Admin',   color:'#7c3aed'},
+  {email:'manager@billzestpos.com', pass:'Billzest2026Manager', role:'manager', name:'BillZest Manager', color:'#0284c7'},
+  {email:'info@billzestpos.com',    pass:'Billzest2026Info',    role:'owner',   name:'BillZest Info',    color:'#7c3aed'},
+  {email:'billzestai@gmail.com',    pass:'Billzest2026AI',      role:'owner',   name:'BillZest AI',      color:'#7c3aed'},
+  {email:'owner@billzest.com',      pass:'owner123',            role:'owner',   name:'Ahmed Al-Rashid',  color:'#7c3aed'},
+  {email:'manager@billzest.com',    pass:'manager123',          role:'manager', name:'Sara Mohammed',    color:'#0284c7'},
+  {email:'cashier@billzest.com',    pass:'cashier123',          role:'cashier', name:'Khalid Hassan',    color:'#d97706'},
+  {email:'kitchen@billzest.com',    pass:'kitchen123',          role:'kitchen', name:'Omar Kitchen',     color:'#dc2626'},
+];
+
+var ROLE_TABS = {
+  owner:   ['branches','online','loyalty','notifications','staff'],
+  manager: ['branches','online','loyalty','notifications','staff'],
+  cashier: ['online'],
+  kitchen: ['online'],
+};
+
+var ROLE_LABELS = {branches:'🏪 Branches', online:'📱 Online Orders', loyalty:'🎁 Loyalty', notifications:'📲 Notifications', staff:'👤 Staff'};
+
+var branches = [
+  {id:'riyadh', name:'Main Branch',  city:'Riyadh, KSA',  icon:'🏪', color:'#4f2d91', revenue:48200, orders:312, staff:8,  status:'open'},
+  {id:'jeddah', name:'Jeddah Branch',city:'Jeddah, KSA',  icon:'🏪', color:'#0284c7', revenue:32100, orders:218, staff:6,  status:'open'},
+  {id:'dammam', name:'Dammam Branch',city:'Dammam, KSA',  icon:'🏪', color:'#d97706', revenue:21500, orders:147, staff:5,  status:'open'},
+  {id:'dubai',  name:'Dubai Branch', city:'Dubai, UAE',   icon:'🏪', color:'#dc2626', revenue:55800, orders:389, staff:9,  status:'open'},
+  {id:'kuwait', name:'Kuwait Branch',city:'Kuwait City',  icon:'🏪', color:'#15803d', revenue:18900, orders:128, staff:4,  status:'closed'},
+];
+
+var staffList = [
+  {id:1,name:'Ahmed Al-Rashid',email:'owner@billzest.com',   role:'owner',   branch:'Main Branch',   color:'#7c3aed', orders:0,  sales:0,   online:true},
+  {id:2,name:'Sara Mohammed',  email:'manager@billzest.com', role:'manager', branch:'Main Branch',   color:'#0284c7', orders:148,sales:18400,online:true},
+  {id:3,name:'Khalid Hassan',  email:'cashier@billzest.com', role:'cashier', branch:'Main Branch',   color:'#d97706', orders:89, sales:11200,online:true},
+  {id:4,name:'Omar Kitchen',   email:'kitchen@billzest.com', role:'kitchen', branch:'Main Branch',   color:'#dc2626', orders:0,  sales:0,   online:false},
+  {id:5,name:'Layla Ahmad',    email:'layla@billzest.com',   role:'cashier', branch:'Jeddah Branch', color:'#15803d', orders:72, sales:9100, online:true},
+  {id:6,name:'Yousef Ali',     email:'yousef@billzest.com',  role:'manager', branch:'Dubai Branch',  color:'#0284c7', orders:201,sales:25800,online:false},
+];
+
+var customers = [
+  {id:1,name:'Mohammed Al-Saud',   phone:'+966 50 123 4567',pts:2840,tier:'gold',   color:'#d97706',orders:48},
+  {id:2,name:'Fatima Hassan',      phone:'+966 55 987 6543',pts:1920,tier:'gold',   color:'#7c3aed',orders:32},
+  {id:3,name:'Abdullah Khalid',    phone:'+966 54 456 7890',pts:1240,tier:'silver', color:'#0284c7',orders:24},
+  {id:4,name:'Noura Al-Rashid',    phone:'+966 56 321 0987',pts:980, tier:'silver', color:'#dc2626',orders:19},
+  {id:5,name:'Omar Ibrahim',       phone:'+966 58 654 3210',pts:560, tier:'bronze', color:'#15803d',orders:12},
+  {id:6,name:'Hessa Mohammed',     phone:'+966 50 789 0123',pts:320, tier:'bronze', color:'#b45309',orders:8},
+  {id:7,name:'Faisal Al-Mutairi',  phone:'+966 55 234 5678',pts:180, tier:'bronze', color:'#6b7280',orders:4},
+];
+
+var menuItems = [
+  {id:1,name:'Classic Burger',    cat:'🍔 Burgers', price:32,emoji:'🍔'},
+  {id:2,name:'Cheese Burger',     cat:'🍔 Burgers', price:38,emoji:'🍔'},
+  {id:3,name:'Margherita Pizza',  cat:'🍕 Pizza',   price:45,emoji:'🍕'},
+  {id:4,name:'Pepperoni Pizza',   cat:'🍕 Pizza',   price:50,emoji:'🍕'},
+  {id:5,name:'Crispy Chicken',    cat:'🍗 Chicken', price:28,emoji:'🍗'},
+  {id:6,name:'Chicken Shawarma',  cat:'🍗 Chicken', price:30,emoji:'🍗'},
+  {id:7,name:'Loaded Fries',      cat:'🍟 Sides',   price:18,emoji:'🍟'},
+  {id:8,name:'Onion Rings',       cat:'🍟 Sides',   price:15,emoji:'🍟'},
+  {id:9,name:'Cola',              cat:'🥤 Drinks',  price:8, emoji:'🥤'},
+  {id:10,name:'Lemon Mint',       cat:'🥤 Drinks',  price:14,emoji:'🥤'},
+  {id:11,name:'Chocolate Cake',   cat:'🍰 Desserts',price:25,emoji:'🍰'},
+  {id:12,name:'Kunafa',           cat:'🍰 Desserts',price:28,emoji:'🍰'},
+];
+
+var onlineOrders = [
+  {id:'#ONL-0021',customer:'Mohammed Al-Saud',items:'Burger x2, Cola x2',total:88,status:'delivered',time:'2h ago',type:'delivery'},
+  {id:'#ONL-0020',customer:'Fatima Hassan',   items:'Pizza x1, Fries x1',total:63,status:'preparing',time:'45m ago',type:'pickup'},
+  {id:'#ONL-0019',customer:'Abdullah Khalid', items:'Chicken x2',        total:56,status:'on-way',  time:'20m ago',type:'delivery'},
+];
+
+var notifHistory = [
+  {icon:'📱',bg:'#dbeafe',title:'Eid Special Offer',msg:'20% off on all items this Eid!',sent:'248 customers',time:'2 days ago',status:'sent'},
+  {icon:'⭐',bg:'#fef3c7',title:'Loyalty Points Update',msg:'You have earned 500 points!',sent:'Gold members (42)',time:'1 week ago',status:'sent'},
+  {icon:'🎉',bg:'#dcfce7',title:'Weekend Special',msg:'Free fries with every burger order',sent:'All (248)',time:'Sat 2:00 PM',status:'scheduled'},
+];
+
+var ooActiveCat = 'All';
+
+// ══ LOGIN ══
+function selRole(role, el){
+  selectedRole = role;
+  document.querySelectorAll(".role-btn").forEach(function(b){b.classList.remove("active");});
+  el.classList.add("active");
+}
+function togPw(){
+  var inp = document.getElementById("loginPass");
+  inp.type = inp.type==="password"?"text":"password";
+}
+function fillDemo(email, pass, role){
+  document.getElementById("loginEmail").value = email;
+  document.getElementById("loginPass").value = pass;
+  var roleMap = {owner:"owner",manager:"manager",cashier:"cashier"};
+  var btns = document.querySelectorAll(".role-btn .rl");
+  document.querySelectorAll(".role-btn").forEach(function(btn){
+    if(btn.querySelector(".rl").textContent.toLowerCase()===role || (role==="owner"&&btn.querySelector(".rl").textContent==="Owner")){
+      selRole(role,btn);
+    }
+  });
+}
+function doLogin(){
+  var email = document.getElementById("loginEmail").value.trim();
+  var pass = document.getElementById("loginPass").value;
+  var branch = document.getElementById("loginBranch").value;
+  var err = document.getElementById("loginErr");
+  err.style.display="none";
+  var user = USERS.find(function(u){return u.email===email && u.pass===pass;});
+  // Check registered customers from main site localStorage
+  if(!user){
+    var regs=JSON.parse(localStorage.getItem('bz_customers')||'[]');
+    var reg=regs.find(function(c){return c.email===email&&c.pass===pass;});
+    if(reg){user={email:reg.email,pass:pass,role:'owner',name:reg.firstName+' '+reg.lastName,color:'#7c3aed'};}
+  }
+  if(!user){
+    err.style.display="block";
+    return;
+  }
+  currentUser = user;
+  currentBranch = branch;
+  document.getElementById("loginPage").style.display="none";
+  document.getElementById("mainApp").style.display="block";
+  initApp();
+}
+
+// ══ INIT APP ══
+function initApp(){
+  // User info
+  var av = document.getElementById("userAv");
+  av.textContent = currentUser.name.charAt(0);
+  av.style.background = currentUser.color;
+  document.getElementById("userName").textContent = currentUser.name;
+  document.getElementById("userRoleLbl").textContent = currentUser.role.charAt(0).toUpperCase()+currentUser.role.slice(1);
+
+  // Tabs based on role
+  var tabs = ROLE_TABS[currentUser.role]||["online"];
+  var tabsEl = document.getElementById("appTabs");
+  tabsEl.innerHTML = tabs.map(function(t,i){
+    return "<button class='app-tab"+(i===0?" active":"")+"' onclick='goTab(\""+t+"\",this)'>"+ROLE_LABELS[t]+"</button>";
+  }).join("");
+
+  // Show first page
+  document.querySelectorAll(".apg").forEach(function(p){p.classList.remove("active");});
+  document.getElementById("apg-"+tabs[0]).classList.add("active");
+
+  // Render pages
+  renderBranches();
+  renderOnlineMenu();
+  renderOnlineOrders();
+  renderLoyalty();
+  renderNotifHistory();
+  renderStaff();
+}
+
+function doLogout(){
+  currentUser=null;
+  document.getElementById("mainApp").style.display="none";
+  document.getElementById("loginPage").style.display="block";
+}
+
+function goTab(t, btn){
+  document.querySelectorAll(".app-tab").forEach(function(b){b.classList.remove("active");});
+  btn.classList.add("active");
+  document.querySelectorAll(".apg").forEach(function(p){p.classList.remove("active");});
+  document.getElementById("apg-"+t).classList.add("active");
+}
+
+// ══ BRANCHES ══
+function renderBranches(){
+  // Summary
+  var totalRev = branches.reduce(function(s,b){return s+b.revenue;},0);
+  var totalOrd = branches.reduce(function(s,b){return s+b.orders;},0);
+  var totalStaff = branches.reduce(function(s,b){return s+b.staff;},0);
+  document.getElementById("branchSummary").innerHTML =
+    bsCard("💰","var(--p)","Total Revenue","﷼ "+totalRev.toLocaleString())+
+    bsCard("🧾","var(--grn)","Total Orders",totalOrd)+
+    bsCard("👤","var(--blu)","Total Staff",totalStaff)+
+    bsCard("🏪","var(--org)","Active Branches",branches.filter(function(b){return b.status==="open";}).length);
+
+  document.getElementById("branchGrid").innerHTML = branches.map(function(b){
+    return "<div class='branch-card"+(b.id===currentBranch?" active-branch":"")+"' onclick='switchBranch(\""+b.id+"\")'>"+
+      "<div class='bc-status "+(b.status==="open"?"bc-open":"bc-closed")+"'>"+(b.status==="open"?"● Open":"● Closed")+"</div>"+
+      "<div class='bc-header'>"+
+        "<div class='bc-icon' style='background:"+b.color+"20;'>"+b.icon+"</div>"+
+        "<div><div class='bc-name'>"+b.name+"</div><div class='bc-loc'>📍 "+b.city+"</div></div>"+
+      "</div>"+
+      "<div class='bc-stats'>"+
+        "<div class='bc-stat'><div class='bc-stat-val'>﷼"+Math.round(b.revenue/1000)+"K</div><div class='bc-stat-lbl'>Revenue</div></div>"+
+        "<div class='bc-stat'><div class='bc-stat-val'>"+b.orders+"</div><div class='bc-stat-lbl'>Orders</div></div>"+
+        "<div class='bc-stat'><div class='bc-stat-val'>"+b.staff+"</div><div class='bc-stat-lbl'>Staff</div></div>"+
+      "</div>"+
+    "</div>";
+  }).join("");
+
+  // Branch switcher
+  document.getElementById("branchSwitcher").innerHTML = branches.map(function(b){
+    return "<div onclick='switchBranch(\""+b.id+"\")' style='padding:12px;border-radius:10px;cursor:pointer;margin-bottom:6px;border:1.5px solid "+(b.id===currentBranch?"var(--p)":"var(--bdr)")+";background:"+(b.id===currentBranch?"var(--pl)":"#fff")+";display:flex;align-items:center;gap:12px;'>"+
+      "<div style='font-size:22px;'>"+b.icon+"</div>"+
+      "<div><div style='font-size:14px;font-weight:700;'>"+b.name+"</div><div style='font-size:12px;color:var(--muted);'>"+b.city+"</div></div>"+
+      "<div style='margin-left:auto;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:"+(b.status==="open"?"rgba(16,185,129,0.1)":"rgba(239,68,68,0.1)")+";color:"+(b.status==="open"?"var(--grn)":"var(--red)")+"'>"+b.status+"</div>"+
+    "</div>";
+  }).join("");
+}
+
+function bsCard(icon,color,lbl,val){
+  return "<div class='bs-card'><div style='font-size:28px;margin-bottom:6px;'>"+icon+"</div><div class='bs-val' style='color:"+color+";'>"+val+"</div><div class='bs-lbl'>"+lbl+"</div></div>";
+}
+
+function switchBranch(id){
+  currentBranch = id;
+  var b = branches.find(function(x){return x.id===id;});
+  if(b) document.getElementById("activeBranchBtn").textContent = "🏪 "+b.name+" ▾";
+  closeModal("branchModal");
+  renderBranches();
+  showToast("✅ Switched to "+b.name);
+}
+
+function addBranch(){
+  var name = document.getElementById("newBranchName").value.trim();
+  var city = document.getElementById("newBranchLoc").value.trim();
+  if(!name||!city){showToast("⚠️ Fill all fields!");return;}
+  branches.push({id:"branch"+Date.now(),name:name,city:city,icon:"🏪",color:"#4f2d91",revenue:0,orders:0,staff:0,status:"open"});
+  closeModal("addBranchModal");
+  renderBranches();
+  showToast("✅ Branch added!");
+}
+
+// ══ ONLINE ORDERING ══
+function renderOnlineMenu(){
+  var cats = ["All"];
+  menuItems.forEach(function(m){if(!cats.includes(m.cat))cats.push(m.cat);});
+  document.getElementById("ooCats").innerHTML = cats.map(function(c){
+    return "<button class='oo-cat"+(ooActiveCat===c?" active":"")+"' onclick='setOoCat(\""+c+"\")'> "+c+"</button>";
+  }).join("");
+  var filtered = ooActiveCat==="All"?menuItems:menuItems.filter(function(m){return m.cat===ooActiveCat;});
+  document.getElementById("ooGrid").innerHTML = filtered.map(function(m){
+    return "<div class='oo-item' onclick='ooAdd("+m.id+")'>"+
+      "<div class='oo-emoji'>"+m.emoji+"</div>"+
+      "<div class='oo-name'>"+m.name+"</div>"+
+      "<div class='oo-price'>﷼ "+m.price.toFixed(2)+"</div>"+
+    "</div>";
+  }).join("");
+}
+function setOoCat(c){ooActiveCat=c;renderOnlineMenu();}
+function ooAdd(id){
+  var m = menuItems.find(function(x){return x.id===id;});
+  if(!m)return;
+  var ex = ooCart.find(function(x){return x.id===id;});
+  if(ex)ex.qty++;
+  else ooCart.push({id:m.id,name:m.name,price:m.price,emoji:m.emoji,qty:1});
+  renderOoCart();
+  showToast("✅ "+m.name+" added!");
+}
+function ooQty(id,d){
+  var i = ooCart.findIndex(function(x){return x.id===id;});
+  if(i===-1)return;
+  ooCart[i].qty+=d;
+  if(ooCart[i].qty<=0)ooCart.splice(i,1);
+  renderOoCart();
+}
+function renderOoCart(){
+  var el = document.getElementById("ooCartBody");
+  if(!ooCart.length){
+    el.innerHTML="<div style='text-align:center;padding:30px;color:var(--muted);font-size:13px;'><div style='font-size:40px;margin-bottom:8px;'>🛒</div>Add items to order</div>";
+    document.getElementById("ooCartSummary").innerHTML="";
+    document.getElementById("ooPlaceBtn").disabled=true;
+    document.getElementById("ooPlaceBtn").textContent="Place Order — ﷼ 0.00";
+    return;
+  }
+  el.innerHTML = ooCart.map(function(i){
+    return "<div class='order-item-row'>"+
+      "<span style='font-size:22px;'>"+i.emoji+"</span>"+
+      "<div style='flex:1;'><div style='font-size:13px;font-weight:600;'>"+i.name+"</div><div style='font-size:11px;color:var(--muted);'>﷼ "+i.price+" each</div></div>"+
+      "<div style='display:flex;align-items:center;gap:6px;'>"+
+        "<button onclick='ooQty("+i.id+",-1)' style='width:24px;height:24px;border-radius:6px;border:1.5px solid var(--bdr);background:#fff;cursor:pointer;font-size:14px;font-weight:700;'>−</button>"+
+        "<span style='font-size:13px;font-weight:700;min-width:20px;text-align:center;'>"+i.qty+"</span>"+
+        "<button onclick='ooQty("+i.id+",1)' style='width:24px;height:24px;border-radius:6px;border:1.5px solid var(--bdr);background:#fff;cursor:pointer;font-size:14px;font-weight:700;'>+</button>"+
+      "</div>"+
+      "<span style='font-size:13px;font-weight:700;color:var(--p);min-width:55px;text-align:right;'>﷼ "+(i.price*i.qty).toFixed(2)+"</span>"+
+    "</div>";
+  }).join("");
+  var sub = ooCart.reduce(function(s,i){return s+i.price*i.qty;},0);
+  var del = ooDelivery==="delivery"?10:0;
+  var total = (sub+del)*1.15;
+  document.getElementById("ooCartSummary").innerHTML =
+    "<div style='font-size:12px;color:#555;margin-bottom:4px;'>Subtotal: ﷼ "+sub.toFixed(2)+"</div>"+
+    (del?"<div style='font-size:12px;color:#555;margin-bottom:4px;'>Delivery: ﷼ "+del.toFixed(2)+"</div>":"")+
+    "<div style='font-size:12px;color:#555;margin-bottom:4px;'>VAT 15%: ﷼ "+((sub+del)*0.15).toFixed(2)+"</div>"+
+    "<div style='font-size:14px;font-weight:800;color:var(--dark);'>Total: ﷼ "+total.toFixed(2)+"</div>";
+  document.getElementById("ooPlaceBtn").disabled=false;
+  document.getElementById("ooPlaceBtn").textContent="Place Order — ﷼ "+total.toFixed(2);
+}
+function setDel(type,btn){
+  ooDelivery=type;
+  document.querySelectorAll(".oo-del-tab").forEach(function(b){b.classList.remove("active");});
+  btn.classList.add("active");
+  renderOoCart();
+}
+function placeOnlineOrder(){
+  if(!ooCart.length)return;
+  var addr = document.getElementById("ooAddr").value.trim();
+  if(ooDelivery==="delivery"&&!addr){showToast("⚠️ Enter delivery address!");return;}
+  var sub = ooCart.reduce(function(s,i){return s+i.price*i.qty;},0);
+  var total = (sub+(ooDelivery==="delivery"?10:0))*1.15;
+  var ordId = "#ONL-"+String(ooOrderCounter+21).padStart(4,"0");
+  ooOrderCounter++;
+  onlineOrders.unshift({id:ordId,customer:"Customer",items:ooCart.map(function(i){return i.name+" x"+i.qty;}).join(", "),total:total,status:"new",time:"Just now",type:ooDelivery});
+  ooCart=[];
+  renderOoCart();
+  renderOnlineOrders();
+  showToast("🎉 Order "+ordId+" placed!");
+}
+function renderOnlineOrders(){
+  var statusColors = {new:"#3b82f6",preparing:"#f59e0b","on-way":"#8b5cf6",delivered:"#10b981",cancelled:"#ef4444"};
+  document.getElementById("ooOrdersList").innerHTML = onlineOrders.slice(0,5).map(function(o){
+    return "<div style='display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid #f5f5f5;font-size:13px;'>"+
+      "<span style='font-family:JetBrains Mono,monospace;font-weight:700;color:var(--p);font-size:12px;'>"+o.id+"</span>"+
+      "<div style='flex:1;'><div style='font-weight:600;'>"+o.customer+"</div><div style='font-size:11px;color:var(--muted);'>"+o.items+"</div></div>"+
+      "<span style='font-size:11px;background:rgba(0,0,0,0.06);padding:2px 8px;border-radius:10px;'>"+o.type+"</span>"+
+      "<span style='font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:"+(statusColors[o.status]||"#888")+"20;color:"+(statusColors[o.status]||"#888")+";'>"+o.status+"</span>"+
+      "<span style='font-weight:700;color:var(--grn);'>﷼ "+o.total.toFixed(2)+"</span>"+
+    "</div>";
+  }).join("");
+}
+
+// ══ LOYALTY ══
+function renderLoyalty(){
+  var totalPts = customers.reduce(function(s,c){return s+c.pts;},0);
+  var goldC = customers.filter(function(c){return c.tier==="gold";}).length;
+  document.getElementById("loyaltyTop").innerHTML =
+    "<div class='loy-card featured'><div class='loy-icon'>⭐</div><div class='loy-val'>"+totalPts.toLocaleString()+"</div><div class='loy-lbl'>Total Points Issued</div></div>"+
+    "<div class='loy-card'><div class='loy-icon'>👥</div><div class='loy-val' style='color:var(--p);'>"+customers.length+"</div><div class='loy-lbl'>Enrolled Customers</div></div>"+
+    "<div class='loy-card'><div class='loy-icon'>🏆</div><div class='loy-val' style='color:var(--yel);'>"+goldC+"</div><div class='loy-lbl'>Gold Members</div></div>";
+
+  document.getElementById("loyTiers").innerHTML =
+    "<div class='tier-card tier-bronze'><div class='tc-icon'>🥉</div><div class='tc-name'>Bronze</div><div class='tc-pts'>0 – 999 pts</div><div class='tc-perks'>5% discount<br>Birthday reward</div></div>"+
+    "<div class='tier-card tier-silver'><div class='tc-icon'>🥈</div><div class='tc-name'>Silver</div><div class='tc-pts'>1,000 – 1,999 pts</div><div class='tc-perks'>10% discount<br>Free delivery<br>Priority support</div></div>"+
+    "<div class='tier-card tier-gold'><div class='tc-icon'>🥇</div><div class='tc-name'>Gold</div><div class='tc-pts'>2,000+ pts</div><div class='tc-perks'>15% discount<br>Free items<br>VIP support<br>Early offers</div></div>";
+
+  document.getElementById("loyCustomers").innerHTML = customers.map(function(c){
+    var maxPts = 3000;
+    var pct = Math.min(100,Math.round(c.pts/maxPts*100));
+    var tierColors = {gold:"lc-gold",silver:"lc-silver",bronze:"lc-bronze"};
+    var tierEmojis = {gold:"🥇",silver:"🥈",bronze:"🥉"};
+    return "<div class='lc-row'>"+
+      "<div class='lc-av' style='background:"+c.color+";'>"+c.name.charAt(0)+"</div>"+
+      "<div style='flex:1;'>"+
+        "<div style='display:flex;align-items:center;gap:8px;'>"+
+          "<span class='lc-name'>"+c.name+"</span>"+
+          "<span class='lc-badge "+tierColors[c.tier]+"'>"+tierEmojis[c.tier]+" "+c.tier+"</span>"+
+        "</div>"+
+        "<div class='lc-pts'>"+c.pts.toLocaleString()+" pts • "+c.orders+" orders</div>"+
+        "<div class='pts-bar'><div class='pts-fill' style='width:"+pct+"%;'></div></div>"+
+      "</div>"+
+      "<button class='btn-add-pts' onclick='addPts("+c.id+")'>+ Points</button>"+
+    "</div>";
+  }).join("");
+}
+
+function addPts(id){
+  var c = customers.find(function(x){return x.id===id;});
+  if(!c)return;
+  var pts = parseInt(prompt("Add points for "+c.name+":", "100"))||0;
+  if(pts>0){
+    c.pts+=pts;
+    if(c.pts>=2000)c.tier="gold";
+    else if(c.pts>=1000)c.tier="silver";
+    renderLoyalty();
+    showToast("⭐ "+pts+" points added to "+c.name+"!");
+  }
+}
+
+function addCustomer(){
+  var name = document.getElementById("cName").value.trim();
+  var phone = document.getElementById("cPhone").value.trim();
+  if(!name||!phone){showToast("⚠️ Fill required fields!");return;}
+  var pts = parseInt(document.getElementById("cPts").value)||0;
+  var colors = ["#4f2d91","#0284c7","#d97706","#dc2626","#15803d"];
+  customers.push({id:Date.now(),name:name,phone:phone,pts:pts,tier:pts>=2000?"gold":pts>=1000?"silver":"bronze",color:colors[Math.floor(Math.random()*colors.length)],orders:0});
+  closeModal("addCustModal");
+  renderLoyalty();
+  showToast("✅ Customer added!");
+}
+
+// ══ NOTIFICATIONS ══
+function togChannel(btn){btn.classList.toggle("on");}
+function togTarget(btn,t){
+  document.querySelectorAll(".nt-btn").forEach(function(b){b.classList.remove("on");});
+  btn.classList.add("on");
+  var counts = {all:248,gold:42,new:18,inactive:35};
+  document.getElementById("recipientCount").textContent="Sending to: "+(counts[t]||248)+" customers";
+}
+function loadTemplate(type){
+  var templates = {
+    offer:{title:"🎉 Special Offer Just For You!",msg:"Hi [Name]! Enjoy 20% OFF on your next order. Use code SAVE20 at checkout. Valid today only! 🍽️"},
+    loyalty:{title:"⭐ Your Loyalty Points Update",msg:"Hi [Name]! You now have [Points] points. You're [X] points away from Gold tier! Keep ordering to unlock exclusive rewards. 🏆"},
+    order:{title:"📦 Your Order is on its way!",msg:"Hi [Name]! Your order #[OrderID] has been confirmed and is being prepared. Estimated delivery: 30 minutes. Thank you! 🛵"},
+    welcome:{title:"👋 Welcome to BillZest!",msg:"Welcome [Name]! Thank you for joining us. Enjoy 10% off your first order. We can't wait to serve you! 🍔"},
+  };
+  if(templates[type]){
+    document.getElementById("notifTitle").value = templates[type].title;
+    document.getElementById("notifMsg").value = templates[type].msg;
+  }
+}
+function sendNotif(){
+  var title = document.getElementById("notifTitle").value.trim();
+  var msg = document.getElementById("notifMsg").value.trim();
+  if(!title||!msg){showToast("⚠️ Enter title and message!");return;}
+  notifHistory.unshift({icon:"📱",bg:"#dbeafe",title:title,msg:msg.substring(0,50)+"...",sent:"248 customers",time:"Just now",status:"sent"});
+  renderNotifHistory();
+  document.getElementById("notifTitle").value="";
+  document.getElementById("notifMsg").value="";
+  showToast("✅ Notification sent to 248 customers!");
+}
+function scheduleNotif(){
+  showToast("⏰ Notification scheduled!");
+}
+function renderNotifHistory(){
+  document.getElementById("notifHistory").innerHTML = notifHistory.map(function(n){
+    return "<div class='nh-row'>"+
+      "<div class='nh-icon' style='background:"+n.bg+";'>"+n.icon+"</div>"+
+      "<div class='nh-msg'><div class='nh-title'>"+n.title+"</div><div class='nh-meta'>"+n.sent+" • "+n.time+"</div></div>"+
+      "<span class='nh-status "+(n.status==="sent"?"nh-sent":"nh-scheduled")+"'>"+(n.status==="sent"?"✅ Sent":"⏰ Scheduled")+"</span>"+
+    "</div>";
+  }).join("");
+}
+
+// ══ STAFF ══
+function renderStaff(){
+  var roleColors = {owner:"#7c3aed",manager:"#0284c7",cashier:"#d97706",kitchen:"#dc2626",waiter:"#15803d"};
+  document.getElementById("staffGrid").innerHTML = staffList.map(function(s){
+    return "<div class='staff-card'>"+
+      "<div class='sc-av' style='background:"+s.color+";'>"+s.name.charAt(0)+"</div>"+
+      "<div class='sc-name'>"+s.name+"</div>"+
+      "<span class='sc-role "+(s.role==="manager"||s.role==="owner"?"manager":s.role==="kitchen"?"kitchen":"cashier")+"'>"+
+        (s.role==="owner"?"👑":s.role==="manager"?"👔":s.role==="kitchen"?"👨‍🍳":"💰")+" "+s.role+
+      "</span>"+
+      "<div style='font-size:11px;color:var(--muted);margin-bottom:10px;'>📍 "+s.branch+"</div>"+
+      "<div class='sc-stats'>"+
+        "<div class='sc-stat'><div class='sc-stat-val'>"+s.orders+"</div><div class='sc-stat-lbl'>Orders</div></div>"+
+        "<div class='sc-stat'><div class='sc-stat-val'>﷼"+Math.round(s.sales/1000)+"K</div><div class='sc-stat-lbl'>Sales</div></div>"+
+      "</div>"+
+      "<div class='sc-status "+(s.online?"sc-online":"sc-offline")+"'>"+
+        "<div class='sc-dot "+(s.online?"sc-dot-on":"sc-dot-off")+"'></div>"+
+        (s.online?"Online Now":"Offline")+
+      "</div>"+
+      "<div class='staff-actions'>"+
+        "<button class='btn-staff-edit' onclick='editStaff("+s.id+")'>✏️ Edit</button>"+
+        "<button class='btn-staff-del' onclick='delStaff("+s.id+")'>🗑️</button>"+
+      "</div>"+
+    "</div>";
+  }).join("");
+}
+function addStaff(){
+  var name = document.getElementById("sName").value.trim();
+  var email = document.getElementById("sEmail").value.trim();
+  var role = document.getElementById("sRole").value;
+  if(!name||!email){showToast("⚠️ Fill required fields!");return;}
+  var colors = ["#4f2d91","#0284c7","#d97706","#dc2626","#15803d","#7c3aed"];
+  staffList.push({id:Date.now(),name:name,email:email,role:role,branch:document.getElementById("sBranch").value,color:colors[Math.floor(Math.random()*colors.length)],orders:0,sales:0,online:false});
+  closeModal("addStaffModal");
+  renderStaff();
+  showToast("✅ Staff member added!");
+}
+function editStaff(id){showToast("✏️ Edit staff coming soon!");}
+function delStaff(id){
+  if(!confirm("Remove this staff member?"))return;
+  staffList = staffList.filter(function(s){return s.id!==id;});
+  renderStaff();
+  showToast("🗑️ Staff removed!");
+}
+
+// ══ MODAL ══
+function showModal(id){document.getElementById(id).classList.add("open");}
+fun
