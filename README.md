@@ -1,6 +1,6 @@
 # 🍽️ BillZest POS — Complete Restaurant Management System
 
-> The smartest restaurant management system in the Middle East 🌙
+> The Smartest Restaurant Management System in The Middle East 🌙
 
 [![Live Demo](https://img.shields.io/badge/Live-billzestpos.com-4f2d91?style=for-the-badge)](https://www.billzestpos.com)
 [![HTML](https://img.shields.io/badge/HTML-100%25-orange?style=for-the-badge)](https://www.billzestpos.com)
