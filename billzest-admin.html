@@ -80,6 +80,39 @@ tr:hover td{background:#f9f9ff;}
 
 @media(max-width:768px){.kpi-grid{grid-template-columns:1fr 1fr;}.content{padding:14px;}th,td{padding:10px 12px;font-size:12px;}table{display:block;overflow-x:auto;}}
 </style>
+
+<!-- Firebase Auth -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+  import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+  import { getFirestore, doc, setDoc, getDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+  const firebaseConfig = {
+    apiKey: "AIzaSyCN0akvFXOHM6WPHv9ve9noqqmau03TJRY",
+    authDomain: "billzest-pos.firebaseapp.com",
+    projectId: "billzest-pos",
+    storageBucket: "billzest-pos.firebasestorage.app",
+    messagingSenderId: "946546876429",
+    appId: "1:946546876429:web:9b4a7aa3cecbf3aea83544"
+  };
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+  window.FB = {auth, db};
+  window.fbSignIn = async function(email, pass) {
+    try { await signInWithEmailAndPassword(auth, email, pass); return {ok:true}; }
+    catch(e) { return {ok:false, code:e.code}; }
+  };
+  window.fbSignOut = async function() { try { await signOut(auth); } catch(e){} };
+  window.fbCreateUser = async function(email, pass, data) {
+    try {
+      const c = await createUserWithEmailAndPassword(auth, email, pass);
+      await setDoc(doc(db,"users",c.user.uid), {...data, email, uid:c.user.uid, createdAt:new Date().toISOString()});
+      await setDoc(doc(db,"customers",c.user.uid), {...data, email, uid:c.user.uid, date:new Date().toLocaleString('en-GB'), status:'New'});
+      return {ok:true, user:c.user};
+    } catch(e) { return {ok:false, code:e.code}; }
+  };
+  onAuthStateChanged(auth, function(user) { window._fbUser = user || null; });
+</script>
 </head>
 <body>
 
@@ -344,6 +377,31 @@ setInterval(function(){
     document.getElementById("newBadge").textContent=newC+" New";
   }
 },30000);
+
+// Load customers from Firebase Firestore
+async function loadFirebaseCustomers() {
+  try {
+    if(!window.FB) return;
+    const { collection, getDocs } = await import("https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js");
+    const snapshot = await getDocs(collection(window.FB.db, "customers"));
+    var fbCustomers = [];
+    snapshot.forEach(function(doc) {
+      fbCustomers.push(doc.data());
+    });
+    if(fbCustomers.length > 0) {
+      // Merge with localStorage customers
+      var existing = JSON.parse(localStorage.getItem('bz_customers')||'[]');
+      var emails = existing.map(function(c){return c.email;});
+      fbCustomers.forEach(function(c){
+        if(!emails.includes(c.email)) existing.unshift(c);
+      });
+      localStorage.setItem('bz_customers', JSON.stringify(existing));
+      renderAll();
+    }
+  } catch(e) { console.log('FB load:', e); }
+}
+// Load Firebase customers on startup
+setTimeout(loadFirebaseCustomers, 2000);
 </script>
 </body>
 </html>
