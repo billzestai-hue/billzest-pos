@@ -958,89 +958,44 @@ function initSEO(){
     return "<div class='seo-row'><span class='sr-ic'>"+(s.ok?"✅":"⚠️")+"</span><span class='sr-title'>"+s.t+"</span><span class='sr-status'>"+(s.ok?"✅":"⚠️")+"</span></div>";
   }).join("");
 }
-function saveSEO(){showToast("✅ Meta tags updated!");}
+// ══ AUTH SYSTEM ══
+var USERS = [
+  { email: "admin@billzest.com", pass: "admin123", name: "Asim", role: "Owner" }
+];
 
-// ══ DOMAIN ══
-function initDomain(){
-  document.getElementById("dnsTable").innerHTML=
-    "<thead><tr><th>Type</th><th>Name</th><th>Value</th><th>TTL</th></tr></thead><tbody>"+
-    [
-      {t:"A",n:"@",v:"76.76.21.21",ttl:"Auto"},
-      {t:"CNAME",n:"www",v:"cname.vercel-dns.com",ttl:"Auto"},
-      {t:"TXT",n:"@",v:"v=spf1 include:sendgrid.net ~all",ttl:"Auto"},
-      {t:"MX",n:"@",v:"mail.billzest.com",ttl:"3600"},
-    ].map(function(r){
-      return "<tr><td style='color:var(--p);font-weight:700;'>"+r.t+"</td><td>"+r.n+"</td><td style='color:#a78bfa;'>"+r.v+"</td><td>"+r.ttl+"</td></tr>";
-    }).join("")+"</tbody>";
-}
-function checkDomain(){
-  var d=document.getElementById("domainInput").value.trim()||"billzest.com";
-  document.getElementById("domainResults").innerHTML=[
-    {d:d,price:"﷼ 45/yr",available:false,c:"var(--red)"},
-    {d:d.replace(".com",".sa"),price:"﷼ 120/yr",available:true,c:"var(--grn)"},
-    {d:d.replace(".com",".app"),price:"﷼ 85/yr",available:true,c:"var(--grn)"},
-    {d:d.replace(".com",".io"),price:"﷼ 160/yr",available:true,c:"var(--grn)"},
-  ].map(function(r){
-    return "<div class='dr-row'>"+
-      "<span class='dr-domain' style='color:"+r.c+";'>"+r.d+"</span>"+
-      "<span style='font-size:11px;font-weight:700;color:"+r.c+";'>"+(r.available?"✅ Available":"❌ Taken")+"</span>"+
-      "<span class='dr-price' style='color:#f0f0ff;'>"+r.price+"</span>"+
-      (r.available?"<button class='btn' style='font-size:11px;padding:5px 12px;' onclick='showToast(\"🌐 Redirecting to registrar...\")'>Buy</button>":"<button class='btn' style='font-size:11px;padding:5px 12px;background:#12121f;cursor:not-allowed;'>Taken</button>")+
-    "</div>";
-  }).join("");
-}
+var currentUser = null;
 
-// ══ PWA ══
-function initPWA(){
-  var manifest={
-    "name":"BillZest POS",
-    "short_name":"BillZest",
-    "start_url":"/index.html",
-    "display":"standalone",
-    "background_color":"#0f0f1a",
-    "theme_color":"#4f2d91",
-    "description":"Complete Restaurant Management System",
-    "icons":[
-      {"src":"icon-192.png","sizes":"192x192","type":"image/png"},
-      {"src":"icon-512.png","sizes":"512x512","type":"image/png"}
-    ]
-  };
-  document.getElementById("manifestCode").textContent=JSON.stringify(manifest,null,2);
-  document.getElementById("pwaSteps").innerHTML=[
-    {n:1,t:"Create manifest.json",c:"Copy the manifest code → Save as manifest.json → Upload to GitHub"},
-    {n:2,t:"Add to index.html",c:'<link rel="manifest" href="manifest.json">'},
-    {n:3,t:"Create Service Worker",c:"self.addEventListener('install', e => {}); self.addEventListener('fetch', e => {});"},
-    {n:4,t:"Register Service Worker",c:"navigator.serviceWorker.register('/sw.js')"},
-    {n:5,t:"Add App Icons",c:"Create icon-192.png and icon-512.png → Upload to GitHub"},
-    {n:6,t:"Test Installation",c:"Open Chrome → Address bar → Install icon → Done! 📱"},
-  ].map(function(s){
-    return "<div class='pw-step'>"+
-      "<div class='ps-num'>"+s.n+"</div>"+
-      "<div><div class='ps-title2'>"+s.t+"</div><code class='ps-code'>"+s.c+"</code></div>"+
-    "</div>";
-  }).join("");
-}
-function copyManifest(){
-  var t=document.getElementById("manifestCode").textContent;
-  navigator.clipboard&&navigator.clipboard.writeText(t);
-  showToast("📋 manifest.json copied!");
+function doLogin() {
+  const emailInput = document.getElementById("loginEmail");
+  const passInput = document.getElementById("loginPass");
+  const errorMsg = document.getElementById("loginErr");
+  
+  const user = USERS.find(u => u.email === emailInput.value.trim() && u.pass === passInput.value);
+
+  if (user) {
+    currentUser = user;
+    errorMsg.style.display = "none";
+    document.getElementById("loginWrap").style.display = "none";
+    document.getElementById("appWrap").style.display = "block";
+    
+    // Dashboard par Asim naam dikhane ke liye
+    document.getElementById("userName").textContent = user.name + " (" + user.role + ")";
+    document.getElementById("userAv").textContent = user.name.charAt(0);
+    
+    showToast("👋 Welcome, " + user.name + "!");
+    
+    // Baaki functions ko reload karna
+    if(typeof initModules === "function") initModules();
+  } else {
+    errorMsg.style.display = "block";
+    errorMsg.textContent = "❌ Galat Email ya Password!";
+  }
 }
 
-// ══ HELPERS ══
-function mkpi(cls,icon,val,lbl){
-  return "<div class='kpi "+cls+"'><div class='ki'>"+icon+"</div><div class='kv'>"+val+"</div><div class='kl'>"+lbl+"</div></div>";
-}
-function showModal(id){document.getElementById(id).classList.add("on");}
-function closeModal(id){document.getElementById(id).classList.remove("on");}
-function showToast(msg){
-  var t=document.getElementById("toast");t.textContent=msg;t.classList.add("on");
-  setTimeout(function(){t.classList.remove("on");},2500);
+function doLogout() {
+  currentUser = null;
+  document.getElementById("appWrap").style.display = "none";
+  document.getElementById("loginWrap").style.display = "block";
+  showToast("🔒 Logged out successfully");
 }
 
-// ══ PWA INSTALL ══
-var deferredPrompt=null;
-window.addEventListener("beforeinstallprompt",function(e){
-  e.preventDefault();deferredPrompt=e;
-  document.getElementById("pwaBanner").classList.add("show");
-});
-docum
