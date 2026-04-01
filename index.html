@@ -972,58 +972,62 @@ window.BZ=(function(){
 
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
 
-<!-- Firebase SDK -->
-<script type="module">
+  <script type="module">
+  // 1. Firebase Libraries
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+  import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
   import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
-  
-const firebaseConfig = {
-  apiKey: "AIzaSyCN0akvFXOHM6WPHv9ve9noqqmau03TJRY",
-  authDomain: "billzest-pos.firebaseapp.com",
-  projectId: "billzest-pos",
-  storageBucket: "billzest-pos.firebasestorage.app",
-  messagingSenderId: "946546876429",
-  appId: "1:946546876429:web:9b4a7aa3cecbf3aea83544",
-  measurementId: "G-69WEHH9X5D"
-};
+  // 2. Configuration (Validated)
+  const firebaseConfig = {
+    apiKey: "AIzaSyCN0akvFXOHM6WPHv9ve9noqqmauO3TJRY",
+    authDomain: "billzest-pos.firebaseapp.com",
+    projectId: "billzest-pos",
+    storageBucket: "billzest-pos.firebasestorage.app",
+    messagingSenderId: "946546876429",
+    appId: "1:946546876429:web:9b4a7aa3cecbf3aea83544",
+    measurementId: "G-69WEHH9X5D"
+  };
 
+  // 3. Initialize
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getFirestore(app);
-
-  window.fbAuth = auth;
-
   const googleProvider = new GoogleAuthProvider();
 
-  // Handle redirect result on page load (for mobile)
-  // Auth state handled by onAuthStateChanged
+  // 4. GLOBAL EXPORT (Iske baghair button kaam nahi karenge)
+  window.fbAuth = auth;
+  window.fbDb = db;
 
-  // Google Sign In
+  // 5. Google Sign In Function
   window.fbGoogleSignIn = async function() {
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
       const userDoc = await getDoc(doc(db, "users", user.uid));
+      
       if (!userDoc.exists()) {
         await setDoc(doc(db, "users", user.uid), {
           firstName: user.displayName ? user.displayName.split(' ')[0] : 'User',
           lastName: user.displayName ? user.displayName.split(' ').slice(1).join(' ') : '',
-          email: user.email, uid: user.uid, plan: 'Basic',
-          createdAt: new Date().toISOString(), status: 'Trial'
+          email: user.email,
+          uid: user.uid,
+          plan: 'Basic',
+          createdAt: new Date().toISOString(),
+          status: 'Trial'
         });
       }
-      return {ok: true};
-    } catch(e) { return {ok: false, code: e.code}; }
+      return { ok: true };
+    } catch (e) {
+      console.error("Login Error:", e);
+      return { ok: false, code: e.code };
+    }
   };
 
-  // Create user (Register)
+  // 6. Registration Function
   window.fbCreateUser = async function(email, password, userData) {
-    var e=document.getElementById('fErr'),o=document.getElementById('fOk'),b=document.getElementById('sbBtn');
     try {
       const cred = await createUserWithEmailAndPassword(auth, email, password);
-      // Save extra data to Firestore
       await setDoc(doc(db, "users", cred.user.uid), {
         ...userData,
         email: email,
@@ -1031,40 +1035,15 @@ const firebaseConfig = {
         createdAt: new Date().toISOString(),
         status: 'Active'
       });
-      // Also save to admin customers list
-      await setDoc(doc(db, "customers", cred.user.uid), {
-        ...userData,
-        email: email,
-        uid: cred.user.uid,
-        date: new Date().toLocaleString('en-GB'),
-        status: 'New'
-      });
-      document.getElementById('fLoading').style.display='none';
-      o.innerHTML='<strong>Welcome '+userData.firstName+'!</strong> Account created! Redirecting...';
-      o.style.display='block';
-      b.textContent='Done!';
-      // Send notification email via formspree
-      fetch('https://formspree.io/f/xdknqdpw',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({_subject:'New Firebase Registration: '+userData.business,_replyto:email,name:userData.firstName+' '+userData.lastName,email:email,business:userData.business,plan:userData.plan,country:userData.country})}).catch(function(){});
-      setTimeout(function(){window.location.href='billzest-dashboard.html';}, 2000);
-    } catch(err) {
-      document.getElementById('fLoading').style.display='none';
-      b.textContent='Start Free Trial'; b.disabled=false;
-      if(err.code === 'auth/email-already-in-use') {
-        e.textContent='This email is already registered! Please login instead.';
-      } else if(err.code === 'auth/weak-password') {
-        e.textContent='Password too weak! Use at least 8 characters.';
-      } else {
-        e.textContent='Error: ' + err.message;
-      }
-      e.style.display='block';
+      return { ok: true };
+    } catch (e) {
+      return { ok: false, message: e.message };
     }
   };
+</script>
 
-  // Sign In (Login)
-  window.fbSignIn = async function(email, password) {
-    try {
-      const cred = await signInWithEmailAndPassword(auth, email, password);
-      window.BZ.closeLogin();
+
+
       window.BZ.toast('Welcome back! Redirecting...');
       setTimeout(function(){window.location.href='billzest-dashboard.html';}, 1500);
     } catch(err) {
