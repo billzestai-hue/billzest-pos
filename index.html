@@ -972,10 +972,18 @@ window.BZ=(function(){
 
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
 
-  <script type="module">
-  // 1. Firebase Libraries
+<script type="module">
+  // 1. Firebase Libraries (Redirect support ke saath)
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-  import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+  import { 
+    getAuth, 
+    GoogleAuthProvider, 
+    signInWithRedirect, 
+    getRedirectResult, 
+    signInWithEmailAndPassword, 
+    createUserWithEmailAndPassword, 
+    onAuthStateChanged 
+  } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
   import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
   // 2. Configuration (Validated)
@@ -995,17 +1003,15 @@ window.BZ=(function(){
   const db = getFirestore(app);
   const googleProvider = new GoogleAuthProvider();
 
-  // 4. GLOBAL EXPORT (Iske baghair button kaam nahi karenge)
+  // 4. Global Access (Taake buttons kaam karein)
   window.fbAuth = auth;
   window.fbDb = db;
 
-  // 5. Google Sign In Function
-  window.fbGoogleSignIn = async function() {
-    try {
-      const result = await signInWithPopup(auth, googleProvider);
+  // 5. Handle Redirect Result (Login ke baad data save karne ke liye)
+  getRedirectResult(auth).then(async (result) => {
+    if (result && result.user) {
       const user = result.user;
       const userDoc = await getDoc(doc(db, "users", user.uid));
-      
       if (!userDoc.exists()) {
         await setDoc(doc(db, "users", user.uid), {
           firstName: user.displayName ? user.displayName.split(' ')[0] : 'User',
@@ -1017,14 +1023,18 @@ window.BZ=(function(){
           status: 'Trial'
         });
       }
-      return { ok: true };
-    } catch (e) {
-      console.error("Login Error:", e);
-      return { ok: false, code: e.code };
+      window.location.href = 'billzest-dashboard.html';
     }
+  }).catch((error) => {
+    console.error("Redirect Error:", error);
+  });
+
+  // 6. Google Sign In Function (Redirect Method)
+  window.fbGoogleSignIn = function() {
+    signInWithRedirect(auth, googleProvider);
   };
 
-  // 6. Registration Function
+  // 7. Email Registration Function
   window.fbCreateUser = async function(email, password, userData) {
     try {
       const cred = await createUserWithEmailAndPassword(auth, email, password);
@@ -1040,7 +1050,16 @@ window.BZ=(function(){
       return { ok: false, message: e.message };
     }
   };
+
+  // 8. Login State Watcher
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      console.log("User logged in:", user.email);
+    }
+  });
 </script>
+
+
 
 
 
