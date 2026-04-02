@@ -7,23 +7,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --purple: #4f2d91;
-            --purple-light: #6a44b8;
-            --teal: #00b5a3;
-            --text-dark: #1a1a1a;
-            --text-gray: #666;
-            --bg-soft: #f8f9fa;
+            --purple: #4f2d91; /* Exact Foodics Purple */
+            --teal: #00b5a3;   /* Exact Foodics Teal */
             --white: #ffffff;
+            --bg-light: #f3f0f8;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
 
-        body {
-            font-family: 'Poppins', sans-serif;
-            color: var(--text-dark);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
+        body { overflow-x: hidden; color: #1a1a1a; }
 
         /* Navigation */
         nav {
@@ -38,53 +30,27 @@
             box-shadow: 0 2px 15px rgba(0,0,0,0.05);
         }
 
-        .logo {
-            font-size: 26px;
-            font-weight: 800;
-            color: var(--purple);
-            text-decoration: none;
-        }
-
+        .logo { font-size: 26px; font-weight: 800; color: var(--purple); text-decoration: none; }
         .logo span { color: var(--teal); }
 
         .nav-links { display: flex; gap: 30px; align-items: center; }
-        .nav-links a { text-decoration: none; color: var(--text-dark); font-weight: 500; font-size: 15px; transition: 0.3s; }
-        .nav-links a:hover { color: var(--purple); }
+        .nav-links a { text-decoration: none; color: #333; font-weight: 500; font-size: 15px; }
 
-        .btn-lang {
-            background: #eee;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-        }
-
-        .btn-get-started {
-            background: var(--purple);
-            color: var(--white);
-            padding: 12px 25px;
-            border-radius: 8px;
-            border: none;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .btn-get-started:hover { background: var(--purple-light); }
+        .btn-lang { background: #eee; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: 600; }
+        .btn-get-started { background: var(--purple); color: white; padding: 12px 25px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; }
 
         /* Hero Section */
         .hero {
             display: flex;
             align-items: center;
-            padding: 100px 8%;
-            background: linear-gradient(135deg, #fff 60%, #f0ebf7 100%);
+            padding: 80px 8% 120px 8%;
+            background: linear-gradient(135deg, #fff 55%, var(--bg-light) 100%);
             min-height: 85vh;
-            gap: 40px;
+            gap: 50px;
         }
 
-        .hero-content { flex: 1; }
-
+        .hero-text { flex: 1.2; }
+        
         .zatca-badge {
             display: inline-flex;
             align-items: center;
@@ -96,120 +62,71 @@
             font-weight: 700;
             font-size: 13px;
             margin-bottom: 25px;
+            border: 1px solid rgba(0,181,163,0.2);
         }
 
-        .hero-content h1 {
-            font-size: 3.8rem;
+        .hero-text h1 {
+            font-size: 4rem;
             color: var(--purple);
             line-height: 1.1;
             font-weight: 800;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
-        .hero-content p {
-            font-size: 1.2rem;
-            color: var(--text-gray);
-            margin-bottom: 35px;
+        .hero-text p {
+            font-size: 1.3rem;
+            color: #555;
+            margin-bottom: 45px;
             max-width: 550px;
         }
 
-        .hero-btns { display: flex; gap: 15px; }
+        .hero-btns { display: flex; gap: 20px; }
+        .btn-primary { background: var(--purple); color: white; padding: 20px 45px; border-radius: 12px; text-decoration: none; font-weight: 700; box-shadow: 0 10px 25px rgba(79, 45, 145, 0.2); }
+        .btn-outline { border: 2px solid var(--purple); color: var(--purple); padding: 20px 45px; border-radius: 12px; text-decoration: none; font-weight: 700; }
 
-        .btn-primary {
-            background: var(--purple);
-            color: white;
-            padding: 18px 40px;
-            border-radius: 10px;
-            text-decoration: none;
-            font-weight: 700;
-            box-shadow: 0 10px 20px rgba(79, 45, 145, 0.2);
-        }
-
-        .btn-secondary {
-            background: white;
-            color: var(--purple);
-            border: 2px solid var(--purple);
-            padding: 18px 40px;
-            border-radius: 10px;
-            text-decoration: none;
-            font-weight: 700;
-        }
-
-        .hero-image {
-            flex: 1;
-            position: relative;
-        }
-
-        .hero-image img {
-            width: 110%;
-            transform: perspective(1200px) rotateY(-20deg) rotateX(5deg);
-            border-radius: 20px;
-            box-shadow: -30px 40px 70px rgba(0,0,0,0.15);
-            transition: 0.5s ease;
+        /* Tilted Image Style */
+        .hero-visual { flex: 1; perspective: 1500px; display: flex; justify-content: flex-end; }
+        .hero-visual img {
+            width: 120%;
+            transform: rotateY(-25deg) rotateX(10deg) rotateZ(-2deg);
+            border-radius: 24px;
+            box-shadow: -40px 40px 80px rgba(79, 45, 145, 0.15);
         }
 
         /* Features Section */
-        .features {
-            padding: 100px 8%;
-            background: var(--white);
-            text-align: center;
-        }
-
-        .features h2 {
-            font-size: 2.5rem;
-            color: var(--purple);
-            margin-bottom: 60px;
-            font-weight: 800;
-        }
-
-        .feature-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-        }
-
-        .feature-card {
-            background: var(--bg-soft);
-            padding: 50px 30px;
-            border-radius: 20px;
-            transition: 0.3s;
-            cursor: pointer;
-            border: 1px solid transparent;
-        }
-
-        .feature-card:hover {
-            background: var(--white);
-            border-color: var(--teal);
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
-        }
-
-        <section class="hero-container" style="display: flex; align-items: center; justify-content: space-between; padding: 100px 10%; background: linear-gradient(135deg, #fff 50%, #f3f0f8 100%); perspective: 2000px; overflow: hidden;">
-    
-    <div class="hero-text" style="flex: 1; z-index: 2;">
-        <div class="zatca-tag" style="display: inline-block; background: #e8f5f4; color: #00b5a3; padding: 6px 15px; border-radius: 50px; font-weight: 700; font-size: 13px; margin-bottom: 20px; border: 1px solid rgba(0,181,163,0.2);">
-            ✓ ZATCA Phase 2 Integrated
-        </div>
-        <h1 style="font-size: 3.8rem; color: #4f2d91; line-height: 1.1; font-weight: 800; margin-bottom: 25px;">
-            The Leading POS <br>for <span style="color:#00b5a3">Restaurants</span>
-        </h1>
-        <p style="font-size: 1.25rem; color: #555; margin-bottom: 40px; max-width: 500px;">
-            Manage your entire business from a single screen. BillZest POS is the most powerful tool for Saudi entrepreneurs.
-        </p>
+        .features { padding: 100px 8%; text-align: center; background: #fff; }
+        .features h2 { font-size: 2.8rem; color: var(--purple); margin-bottom: 60px; font-weight: 800; }
         
-        <div class="btn-group" style="display: flex; gap: 20px;">
-            <a href="#" style="background: #4f2d91; color: #fff; padding: 18px 40px; border-radius: 12px; font-weight: 700; text-decoration: none;">Get Started</a>
-            <a href="#" style="border: 2px solid #4f2d91; color: #4f2d91; padding: 18px 40px; border-radius: 12px; font-weight: 700; text-decoration: none;">Watch Demo</a>
-        </div>
-    </div>
+        .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .feature-card {
+            background: #fcfaff;
+            padding: 50px 35px;
+            border-radius: 25px;
+            text-align: left;
+            transition: 0.4s;
+            border: 1px solid #eee;
+        }
+        .feature-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.05); border-color: var(--teal); }
+        .feature-icon { font-size: 40px; margin-bottom: 25px; display: block; }
+        .feature-card h3 { color: var(--purple); font-size: 1.5rem; margin-bottom: 15px; font-weight: 700; }
+        .feature-card p { color: #666; font-size: 1rem; line-height: 1.6; }
 
-    <div class="hero-visual" style="flex: 1; display: flex; justify-content: flex-end;">
-        <img src="https://www.foodics.com/wp-content/uploads/2023/02/Main-Banner-Image.png" 
-             alt="BillZest Dashboard" 
-             style="width: 115%; transform: rotateY(-25deg) rotateX(10deg) rotateZ(-2deg); box-shadow: -50px 50px 100px rgba(79, 45, 145, 0.15); border-radius: 24px;">
-    </div>
-</section>
+        /* Partners/Logos Section */
+        .partners { padding: 50px 8%; background: #fff; border-top: 1px solid #eee; text-align: center; }
+        .partners p { color: #999; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 30px; font-size: 12px; }
+        .logo-row { display: flex; justify-content: space-around; align-items: center; opacity: 0.6; flex-wrap: wrap; gap: 30px; }
+        .logo-row img { height: 35px; filter: grayscale(100%); }
 
+        @media (max-width: 992px) {
+            .hero { flex-direction: column; text-align: center; padding-top: 50px; }
+            .hero-text h1 { font-size: 2.8rem; }
+            .hero-visual img { width: 100%; transform: none; margin-top: 40px; }
+            .hero-btns { justify-content: center; }
+            .nav-links { display: none; }
+        }
+    </style>
+</head>
+<body>
 
     <nav>
         <a href="#" class="logo">BillZest<span>POS</span></a>
@@ -223,17 +140,27 @@
     </nav>
 
     <section class="hero">
-        <div class="hero-content">
-            <div class="zatca-badge">✓ ZATCA Phase 2 Approved</div>
-            <h1>Empower Your <br><span>Restaurant Business</span></h1>
-            <p>The all-in-one POS system designed to streamline your operations, manage inventory, and boost sales. Built for the future of KSA retail.</p>
+        <div class="hero-content hero-text">
+            <div class="zatca-badge">✓ ZATCA Phase 2 Approved System</div>
+            <h1>The Leading POS <br>for <span style="color:var(--teal)">Restaurants</span></h1>
+            <p>From tableside ordering to kitchen management and deep analytics. BillZest is the most powerful tool for Saudi businesses.</p>
             <div class="hero-btns">
-                <a href="#" class="btn-primary">Book a Demo</a>
-                <a href="#" class="btn-secondary">Explore Features</a>
+                <a href="#" class="btn-primary">Get Started</a>
+                <a href="#" class="btn-outline">Watch Video</a>
             </div>
         </div>
-        <div class="hero-image">
-            <img src="https://www.foodics.com/wp-content/uploads/2023/02/Main-Banner-Image.png" alt="BillZest Dashboard">
+        <div class="hero-visual">
+            <img src="https://www.foodics.com/wp-content/uploads/2023/02/Main-Banner-Image.png" alt="BillZest VIP Dashboard">
+        </div>
+    </section>
+
+    <section class="partners">
+        <p>Trusted by industry leaders</p>
+        <div class="logo-row">
+            <span style="font-weight: 800; color: #ccc; font-size: 20px;">HIKVISION</span>
+            <span style="font-weight: 800; color: #ccc; font-size: 20px;">DAHUA</span>
+            <span style="font-weight: 800; color: #ccc; font-size: 20px;">EZVIZ</span>
+            <span style="font-weight: 800; color: #ccc; font-size: 20px;">TP-LINK</span>
         </div>
     </section>
 
@@ -241,19 +168,19 @@
         <h2>Everything you need to grow</h2>
         <div class="feature-grid">
             <div class="feature-card">
-                <span class="feature-icon">🛒</span>
-                <h3>Smart Ordering</h3>
-                <p>Speed up your service with intuitive tableside and cloud-based ordering.</p>
-            </div>
-            <div class="feature-card">
                 <span class="feature-icon">📦</span>
-                <h3>Inventory Control</h3>
-                <p>Track every ingredient and stock level in real-time across all branches.</p>
+                <h3>Inventory Management</h3>
+                <p>Track your stock levels in real-time, manage suppliers, and reduce waste with smart alerts.</p>
             </div>
             <div class="feature-card">
                 <span class="feature-icon">📊</span>
-                <h3>Deep Analytics</h3>
-                <p>Gain insights with professional reports to make data-driven decisions.</p>
+                <h3>Advanced Analytics</h3>
+                <p>Understand your sales trends and customer behavior with professional, easy-to-read reports.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">📱</span>
+                <h3>QR Menu & Ordering</h3>
+                <p>Let your customers order and pay directly from their phones for a faster service experience.</p>
             </div>
         </div>
     </section>
