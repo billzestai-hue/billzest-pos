@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BillZest Cafe POS | Best Coffee Shop POS System KSA</title>
+<meta name="description" content="BillZest Cafe POS — The perfect POS system for coffee shops & cafes in Saudi Arabia. Manage orders, loyalty, menu & staff. ZATCA-approved.">
+<link rel="canonical" href="https://www.billzestpos.com/billzest-cafe.html"/>
+<link rel="icon" href="favicon.svg">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--purple:#4f2d91;--purple-dark:#3b1f6e;--teal:#00b5a3;--orange:#f5a623;--coffee:#6b3f1e;--latte:#c8956c;--cream:#fdf6ee;--dark:#1a1a1a;}
+body{font-family:'Poppins',sans-serif;color:var(--dark);background:#fff;}
+
+.banner{background:linear-gradient(90deg,#3b1f6e,#4f2d91,#3b1f6e);background-size:200%;animation:shimmer 4s linear infinite;padding:10px 20px;text-align:center;}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.banner span{font-size:13px;font-weight:600;color:#fff;} .banner strong{color:var(--orange);}
+
+nav{display:flex;align-items:center;justify-content:space-between;padding:10px 20px;background:#fff;border-bottom:1px solid #e0e0e0;position:sticky;top:0;z-index:100;}
+.nav-logo{font-size:20px;font-weight:800;color:#1a1a1a;} .nav-logo span{color:var(--orange);}
+.btn-back{background:none;color:var(--purple);border:2px solid var(--purple);padding:7px 14px;border-radius:6px;font-size:12px;font-weight:600;font-family:'Poppins',sans-serif;cursor:pointer;text-decoration:none;display:inline-block;}
+.btn-demo{background:var(--coffee);color:#fff;border:none;padding:9px 16px;border-radius:6px;font-size:12px;font-weight:600;font-family:'Poppins',sans-serif;cursor:pointer;}
+
+/* HERO - warm cozy coffee feel */
+.hero{background:linear-gradient(135deg,#2c1507 0%,#4a2210 50%,#1a0c04 100%);min-height:520px;display:flex;align-items:center;justify-content:center;padding:60px 24px;position:relative;overflow:hidden;text-align:center;}
+.steam{position:absolute;inset:0;background-image:radial-gradient(ellipse at 30% 80%,rgba(200,149,108,.06) 0%,transparent 60%),radial-gradient(ellipse at 70% 20%,rgba(200,149,108,.04) 0%,transparent 50%);pointer-events:none;}
+.dots{position:absolute;inset:0;background-image:radial-gradient(circle,rgba(245,166,35,.3) 1px,transparent 1px);background-size:50px 50px;opacity:.3;pointer-events:none;}
+.hero-badge{font-size:12px;font-weight:700;color:var(--latte);letter-spacing:2px;text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;justify-content:center;gap:8px;position:relative;z-index:1;}
+.hero-badge::before,.hero-badge::after{content:'';width:30px;height:1px;background:var(--latte);display:block;}
+.hero h1{font-size:36px;font-weight:800;color:#fff;line-height:1.2;margin-bottom:16px;z-index:1;position:relative;}
+.hero h1 em{font-style:italic;color:var(--latte);}
+.hero p{font-size:15px;color:rgba(255,255,255,.75);max-width:520px;margin:0 auto 28px;z-index:1;position:relative;line-height:1.7;}
+.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;z-index:1;position:relative;}
+.btn-primary{background:var(--latte);color:#fff;border:none;padding:14px 28px;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Poppins',sans-serif;box-shadow:0 4px 20px rgba(200,149,108,.4);}
+.btn-secondary{background:rgba(255,255,255,.08);color:#fff;border:2px solid rgba(255,255,255,.3);padding:12px 28px;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;font-family:'Poppins',sans-serif;}
+.hero-stats{display:flex;gap:0;margin-top:36px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:12px;overflow:hidden;z-index:1;position:relative;max-width:480px;margin-left:auto;margin-right:auto;}
+.stat{flex:1;padding:16px 12px;text-align:center;border-right:1px solid rgba(255,255,255,.08);}
+.stat:last-child{border-right:none;}
+.stat-n{font-size:20px;font-weight:800;color:var(--latte);}
+.stat-l{font-size:11px;color:rgba(255,255,255,.6);margin-top:2px;}
+
+/* MENU TYPES */
+.menu-sec{background:var(--cream);padding:52px 24px;}
+.section-title{text-align:center;margin-bottom:36px;}
+.section-title h2{font-size:28px;font-weight:800;color:#1a1a1a;margin-bottom:8px;}
+.section-title p{font-size:14px;color:#666;max-width:500px;margin:0 auto;}
+.tag-coffee{display:inline-block;background:#fde8d0;color:var(--coffee);font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;}
+.tag-purple{display:inline-block;background:#f0ebff;color:var(--purple);font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;}
+
+.menu-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;max-width:800px;margin:0 auto;}
+.menu-item{background:#fff;border:1px solid #f0e0d0;border-radius:12px;padding:20px 14px;text-align:center;transition:all .2s;}
+.menu-item:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(107,63,30,.12);border-color:var(--latte);}
+.menu-emoji{font-size:32px;margin-bottom:8px;}
+.menu-name{font-size:13px;font-weight:700;color:#1a1a1a;}
+.menu-price{font-size:12px;color:var(--coffee);font-weight:600;margin-top:3px;}
+
+/* FEATURES */
+.section{padding:52px 24px;}
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;max-width:900px;margin:0 auto;}
+.feat-card{background:#fff;border:1px solid #e0e0e0;border-radius:12px;padding:24px;transition:all .2s;border-top:4px solid var(--latte);}
+.feat-card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,0,0,.08);}
+.feat-icon{font-size:28px;margin-bottom:12px;}
+.feat-card h3{font-size:15px;font-weight:700;color:#1a1a1a;margin-bottom:8px;}
+.feat-card p{font-size:13px;color:#555;line-height:1.6;}
+
+/* LOYALTY SECTION */
+.loyalty{background:linear-gradient(135deg,#6b3f1e,#4a2210);padding:52px 24px;text-align:center;}
+.loyalty h2{font-size:26px;font-weight:800;color:#fff;margin-bottom:12px;}
+.loyalty p{font-size:14px;color:rgba(255,255,255,.8);margin-bottom:32px;max-width:460px;margin-left:auto;margin-right:auto;}
+.loyalty-cards{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;max-width:700px;margin:0 auto;}
+.loyalty-card{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:20px;text-align:center;min-width:140px;flex:1;max-width:180px;}
+.loyalty-card .ico{font-size:28px;margin-bottom:8px;}
+.loyalty-card h3{font-size:14px;font-weight:700;color:#fff;margin-bottom:4px;}
+.loyalty-card p{font-size:12px;color:rgba(255,255,255,.7);}
+
+/* PRICING */
+.pricing{padding:52px 24px;background:var(--cream);}
+.price-cards{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;max-width:800px;margin:0 auto;}
+.price-card{background:#fff;border:2px solid #e0d0c0;border-radius:14px;padding:28px 22px;text-align:center;flex:1;min-width:220px;max-width:260px;}
+.price-card.popular{border-color:var(--coffee);box-shadow:0 8px 32px rgba(107,63,30,.15);}
+.pop-badge{background:var(--coffee);color:#fff;font-size:11px;font-weight:700;padding:3px 12px;border-radius:20px;display:inline-block;margin-bottom:12px;}
+.price-name{font-size:14px;color:#888;margin-bottom:6px;}
+.price-num{font-size:38px;font-weight:800;color:#1a1a1a;line-height:1;}
+.price-cur{font-size:16px;font-weight:700;vertical-align:top;margin-top:6px;display:inline-block;}
+.price-period{font-size:13px;color:#888;margin-bottom:16px;}
+.price-features{list-style:none;text-align:left;margin-bottom:20px;}
+.price-features li{font-size:13px;color:#444;padding:6px 0;display:flex;align-items:center;gap:8px;}
+.price-features li::before{content:'✓';color:var(--coffee);font-weight:700;flex-shrink:0;}
+.btn-plan{width:100%;background:var(--coffee);color:#fff;border:none;padding:12px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Poppins',sans-serif;}
+.btn-plan.outline{background:#fff;color:var(--coffee);border:2px solid var(--coffee);}
+
+/* CTA */
+.cta{background:linear-gradient(135deg,#4f2d91,#3b1f6e);padding:60px 24px;text-align:center;}
+.cta h2{font-size:28px;font-weight:800;color:#fff;margin-bottom:12px;}
+.cta p{font-size:15px;color:rgba(255,255,255,.85);margin-bottom:28px;max-width:480px;margin-left:auto;margin-right:auto;}
+.cta-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+.btn-cta-w{background:#fff;color:var(--purple);border:none;padding:14px 28px;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Poppins',sans-serif;}
+.btn-cta-o{background:var(--orange);color:#fff;border:none;padding:14px 28px;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Poppins',sans-serif;}
+
+footer{background:#1a1a1a;padding:24px;text-align:center;}
+footer p{font-size:13px;color:#888;}
+footer a{color:var(--orange);text-decoration:none;font-weight:600;}
+
+@media(max-width:640px){.hero h1{font-size:26px;}.hero-stats{flex-wrap:wrap;}}
+</style>
+</head>
+<body>
+
+<div class="banner">
+  <span>☕ <strong>BillZest Cafe POS</strong> — The Smartest Coffee Shop System in Saudi Arabia ✦ ZATCA Approved</span>
+</div>
+
+<nav>
+  <div class="nav-logo">Bill<span>Zest</span> <span style="font-size:13px;font-weight:600;color:#666;margin-left:6px;">Cafe</span></div>
+  <div style="display:flex;gap:8px;">
+    <a href="index.html" class="btn-back">← Home</a>
+    <button class="btn-demo" onclick="window.open('https://wa.me/966550898978','_blank')">Get Demo</button>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="steam"></div>
+  <div class="dots"></div>
+  <div style="position:relative;z-index:1;">
+    <div class="hero-badge">☕ Coffee Shop & Cafe POS</div>
+    <h1>Brew Better Business<br>with <em>BillZest Cafe POS</em></h1>
+    <p>From espresso orders to loyalty stamps, from kitchen tickets to end-of-day reports — run your entire cafe from one elegant, ZATCA-approved system.</p>
+    <div class="hero-btns">
+      <button class="btn-primary" onclick="window.open('https://wa.me/966550898978','_blank')">☕ Start Free 14-Day Trial</button>
+      <button class="btn-secondary" onclick="window.open('https://wa.me/966550898978','_blank')">📅 Book a Demo</button>
+    </div>
+    <div class="hero-stats" style="margin-top:36px;">
+      <div class="stat"><div class="stat-n">1,000+</div><div class="stat-l">Cafes</div></div>
+      <div class="stat"><div class="stat-n">30s</div><div class="stat-l">Order Speed</div></div>
+      <div class="stat"><div class="stat-n">98%</div><div class="stat-l">Satisfaction</div></div>
+      <div class="stat"><div class="stat-n">ZATCA</div><div class="stat-l">Approved</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="menu-sec">
+  <div class="section-title">
+    <div class="tag-coffee">☕ Menu Management</div>
+    <h2>All Cafe Items, One Screen</h2>
+    <p>Add your full menu with modifiers, sizes, and extras. Update anytime from any device.</p>
+  </div>
+  <div class="menu-grid">
+    <div class="menu-item"><div class="menu-emoji">☕</div><div class="menu-name">Espresso</div><div class="menu-price">From ﷼15</div></div>
+    <div class="menu-item"><div class="menu-emoji">🥛</div><div class="menu-name">Latte</div><div class="menu-price">From ﷼20</div></div>
+    <div class="menu-item"><div class="menu-emoji">🍵</div><div class="menu-name">Tea</div><div class="menu-price">From ﷼12</div></div>
+    <div class="menu-item"><div class="menu-emoji">🧁</div><div class="menu-name">Pastries</div><div class="menu-price">From ﷼18</div></div>
+    <div class="menu-item"><div class="menu-emoji">🥪</div><div class="menu-name">Sandwiches</div><div class="menu-price">From ﷼25</div></div>
+    <div class="menu-item"><div class="menu-emoji">🍰</div><div class="menu-name">Desserts</div><div class="menu-price">From ﷼22</div></div>
+    <div class="menu-item"><div class="menu-emoji">🧃</div><div class="menu-name">Cold Drinks</div><div class="menu-price">From ﷼16</div></div>
+    <div class="menu-item"><div class="menu-emoji">➕</div><div class="menu-name">Add Yours</div><div class="menu-price">Unlimited items</div></div>
+  </div>
+</section>
+
+<section class="section" style="background:#fff;">
+  <div class="section-title">
+    <div class="tag-purple">✦ Features</div>
+    <h2>Everything Your Cafe Needs</h2>
+    <p>Purpose-built for coffee shops, bakeries, and specialty cafes across KSA</p>
+  </div>
+  <div class="feat-grid">
+    <div class="feat-card">
+      <div class="feat-icon">⚡</div>
+      <h3>Fast Order Taking</h3>
+      <p>Take orders in under 30 seconds. Add modifiers (size, milk type, extras) with one tap. Never keep your customers waiting.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">☕</div>
+      <h3>Barista Display</h3>
+      <p>Orders go directly to your barista screen. Custom drink labels print automatically. Reduce errors and speed up service.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">💎</div>
+      <h3>Loyalty & Stamps</h3>
+      <p>Built-in loyalty program with digital stamp cards. Reward your regulars and keep them coming back every day.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">🛵</div>
+      <h3>Dine-in & Delivery</h3>
+      <p>Manage table orders, takeaway, and delivery from one system. Integrates with Talabat, HungerStation & more.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">📊</div>
+      <h3>Sales Reports</h3>
+      <p>See your best-selling drinks, peak hours, and daily revenue at a glance. Make smarter menu and staffing decisions.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">🧾</div>
+      <h3>ZATCA E-Invoicing</h3>
+      <p>Fully ZATCA Phase 2 compliant. QR code on every receipt. Automatic e-invoice generation — zero extra work.</p>
+    </div>
+  </div>
+</section>
+
+<section class="loyalty">
+  <h2>☕ Keep Customers Coming Back</h2>
+  <p>Our built-in loyalty system helps you build a community of regulars who love your cafe</p>
+  <div class="loyalty-cards">
+    <div class="loyalty-card"><div class="ico">🎟️</div><h3>Digital Stamps</h3><p>Buy 9, get 1 free — or any rule you set</p></div>
+    <div class="loyalty-card"><div class="ico">⭐</div><h3>Points System</h3><p>Earn points on every purchase</p></div>
+    <div class="loyalty-card"><div class="ico">🎁</div><h3>Birthday Rewards</h3><p>Auto birthday discounts for members</p></div>
+    <div class="loyalty-card"><div class="ico">📲</div><h3>SMS & WhatsApp</h3><p>Send offers directly to customers</p></div>
+  </div>
+</section>
+
+
+<!-- DEMO VIDEO SECTION -->
+<section style="background:linear-gradient(135deg,#2c1507,#1a0c04);padding:60px 24px;text-align:center;">
+  <div style="display:inline-block;background:rgba(200,149,108,.15);border:1px solid rgba(200,149,108,.3);color:#c8956c;font-size:11px;font-weight:700;padding:4px 14px;border-radius:20px;letter-spacing:1px;text-transform:uppercase;margin-bottom:14px;">▶ Live Demo</div>
+  <h2 style="font-size:26px;font-weight:800;color:#fff;margin-bottom:10px;">See BillZest Cafe POS in Action</h2>
+  <p style="font-size:14px;color:rgba(255,255,255,.7);margin-bottom:32px;max-width:460px;margin-left:auto;margin-right:auto;">From order to barista to payment — watch the full flow in seconds</p>
+
+  <div style="max-width:680px;margin:0 auto;border-radius:18px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.5);border:1px solid rgba(200,149,108,.2);">
+    <div style="background:#1a0804;padding:10px 16px;display:flex;align-items:center;gap:8px;">
+      <span style="width:12px;height:12px;border-radius:50%;background:#ff5f57;display:block;"></span>
+      <span style="width:12px;height:12px;border-radius:50%;background:#febc2e;display:block;"></span>
+      <span style="width:12px;height:12px;border-radius:50%;background:#28c840;display:block;"></span>
+      <span style="flex:1;background:rgba(255,255,255,.06);border-radius:4px;padding:4px 12px;font-size:11px;color:rgba(255,255,255,.4);text-align:center;">BillZest Cafe POS — Order Screen</span>
+    </div>
+    <div id="cafeDemoScreen" style="background:#120602;min-height:340px;position:relative;overflow:hidden;">
+      <!-- Slide 1: Order Taking -->
+      <div id="cafeslide1" style="position:absolute;inset:0;padding:18px;opacity:1;transition:opacity .6s;">
+        <div style="font-size:11px;color:#c8956c;font-weight:700;margin-bottom:10px;letter-spacing:1px;">STEP 1 — QUICK ORDER TAKING</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+          <div style="background:#2c1507;border-radius:8px;padding:10px;text-align:center;border:2px solid #c8956c;animation:popIn .4s .1s both;">
+            <div style="font-size:22px;">☕</div><div style="font-size:12px;font-weight:700;color:#fff;margin-top:4px;">Latte</div>
+            <div style="font-size:11px;color:#c8956c;">﷼ 20</div>
+            <div style="margin-top:6px;background:#c8956c;border-radius:4px;padding:3px;font-size:10px;font-weight:700;color:#fff;">✓ Added</div>
+          </div>
+          <div style="background:#1a0804;border-radius:8px;padding:10px;text-align:center;border:1px solid rgba(200,149,108,.2);animation:popIn .4s .2s both;">
+            <div style="font-size:22px;">🧁</div><div style="font-size:12px;font-weight:700;color:#fff;margin-top:4px;">Muffin</div>
+            <div style="font-size:11px;color:#c8956c;">﷼ 18</div>
+            <div style="margin-top:6px;background:#c8956c;border-radius:4px;padding:3px;font-size:10px;font-weight:700;color:#fff;">✓ Added</div>
+          </div>
+        </div>
+        <div style="background:#1a0804;border-radius:8px;padding:12px;animation:slideRight .4s .3s both;">
+          <div style="font-size:11px;color:rgba(255,255,255,.5);margin-bottom:8px;">Current Order</div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:6px;"><span style="font-size:12px;color:#fff;">Latte x1</span><span style="font-size:12px;color:#c8956c;font-weight:700;">﷼ 20</span></div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span style="font-size:12px;color:#fff;">Muffin x1</span><span style="font-size:12px;color:#c8956c;font-weight:700;">﷼ 18</span></div>
+          <div style="border-top:1px solid rgba(255,255,255,.1);padding-top:8px;display:flex;justify-content:space-between;"><span style="font-size:13px;font-weight:600;color:rgba(255,255,255,.7);">Total</span><span style="font-size:16px;font-weight:800;color:#c8956c;">﷼ 38</span></div>
+        </div>
+      </div>
+      <!-- Slide 2: Barista Screen -->
+      <div id="cafeslide2" style="position:absolute;inset:0;padding:18px;opacity:0;transition:opacity .6s;pointer-events:none;">
+        <div style="font-size:11px;color:#10b981;font-weight:700;margin-bottom:10px;letter-spacing:1px;">STEP 2 — BARISTA DISPLAY</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="background:#001a0a;border:2px solid #10b981;border-radius:10px;padding:12px;animation:popIn .4s .1s both;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;"><span style="font-size:13px;font-weight:700;color:#fff;">☕ Order #47</span><span style="background:#10b981;color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:10px;">IN PROGRESS</span></div>
+            <div style="background:rgba(255,255,255,.05);border-radius:6px;padding:8px;margin-bottom:6px;">
+              <div style="font-size:12px;color:#fff;font-weight:600;">Latte · Medium</div>
+              <div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:2px;">Oat milk · Extra shot · No sugar</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;margin-top:6px;">
+              <div style="flex:1;background:rgba(255,255,255,.1);border-radius:3px;height:6px;"><div style="background:#10b981;height:100%;border-radius:3px;width:65%;animation:grow .8s .5s both;"></div></div>
+              <span style="font-size:11px;color:#10b981;font-weight:600;">2m 30s</span>
+            </div>
+          </div>
+          <div style="background:#1a0a00;border:1px solid #f5a623;border-radius:10px;padding:12px;animation:popIn .4s .2s both;">
+            <div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-size:13px;font-weight:700;color:#fff;">☕ Order #48</span><span style="background:#f5a623;color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:10px;">WAITING</span></div>
+            <div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:6px;">Cappuccino · Muffin</div>
+          </div>
+        </div>
+      </div>
+      <!-- Slide 3: Loyalty -->
+      <div id="cafeslide3" style="position:absolute;inset:0;padding:18px;opacity:0;transition:opacity .6s;pointer-events:none;">
+        <div style="font-size:11px;color:#f5a623;font-weight:700;margin-bottom:10px;letter-spacing:1px;">STEP 3 — LOYALTY PROGRAM</div>
+        <div style="background:#1a0804;border-radius:10px;padding:14px;margin-bottom:10px;animation:popIn .4s .1s both;">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+            <div style="width:44px;height:44px;border-radius:50%;background:#c8956c;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:#fff;flex-shrink:0;">A</div>
+            <div><div style="font-size:13px;font-weight:700;color:#fff;">Ahmed Al-Saud</div><div style="font-size:11px;color:#c8956c;">⭐ Gold Member · 248 pts</div></div>
+          </div>
+          <div style="font-size:11px;color:rgba(255,255,255,.6);margin-bottom:8px;">Stamp Card — Buy 9 Get 1 Free</div>
+          <div style="display:flex;gap:5px;flex-wrap:wrap;">
+            <span style="font-size:18px;">☕</span><span style="font-size:18px;">☕</span><span style="font-size:18px;">☕</span><span style="font-size:18px;">☕</span><span style="font-size:18px;">☕</span><span style="font-size:18px;">☕</span><span style="font-size:18px;">☕</span><span style="font-size:18px;">☕</span><span style="font-size:18px;opacity:.3;">☕</span>
+          </div>
+          <div style="margin-top:8px;font-size:11px;color:#10b981;">1 more visit = FREE coffee! 🎉</div>
+        </div>
+        <div style="background:#10b98115;border:1px solid #10b981;border-radius:8px;padding:10px;text-align:center;animation:popIn .4s .3s both;">
+          <span style="font-size:12px;font-weight:700;color:#10b981;">+10 pts earned today · Total: 258 pts</span>
+        </div>
+      </div>
+      <!-- Dots -->
+      <div style="position:absolute;bottom:14px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:10;">
+        <div id="cafedot1" style="width:24px;height:6px;border-radius:3px;background:#c8956c;transition:all .3s;cursor:pointer;" onclick="showCafeSlide(1)"></div>
+        <div id="cafedot2" style="width:8px;height:6px;border-radius:3px;background:rgba(255,255,255,.3);transition:all .3s;cursor:pointer;" onclick="showCafeSlide(2)"></div>
+        <div id="cafedot3" style="width:8px;height:6px;border-radius:3px;background:rgba(255,255,255,.3);transition:all .3s;cursor:pointer;" onclick="showCafeSlide(3)"></div>
+      </div>
+    </div>
+    <div style="background:#111;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;">
+      <button onclick="prevCafeSlide()" style="background:rgba(255,255,255,.1);border:none;color:#fff;padding:6px 14px;border-radius:6px;font-size:12px;cursor:pointer;">◀ Prev</button>
+      <span id="cafeStepLabel" style="font-size:12px;color:rgba(255,255,255,.6);">Step 1 of 3</span>
+      <button onclick="nextCafeSlide()" style="background:#c8956c;border:none;color:#fff;padding:6px 14px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;">Next ▶</button>
+    </div>
+  </div>
+
+  <div style="margin-top:24px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+    <button onclick="window.open('https://wa.me/966550898978','_blank')" style="background:#c8956c;color:#fff;border:none;padding:13px 26px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Poppins',sans-serif;">🚀 Start Free Trial</button>
+    <button onclick="window.open('https://wa.me/966550898978','_blank')" style="background:rgba(255,255,255,.1);color:#fff;border:2px solid rgba(255,255,255,.3);padding:11px 26px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Poppins',sans-serif;">📅 Book Live Demo</button>
+  </div>
+</section>
+<script>
+var cafeCur=1,cafeTotal=3,cafeTimer;
+function showCafeSlide(n){
+  var oldSl=document.getElementById('cafeslide'+cafeCur);if(oldSl){oldSl.style.opacity='0';oldSl.style.pointerEvents='none';}
+  var oldDt=document.getElementById('cafedot'+cafeCur);if(oldDt){oldDt.style.width='8px';oldDt.style.background='rgba(255,255,255,.3)';}
+  cafeCur=n;
+  var sl=document.getElementById('cafeslide'+cafeCur);if(sl){sl.style.opacity='1';sl.style.pointerEvents='auto';}
+  var dt=document.getElementById('cafedot'+cafeCur);if(dt){dt.style.width='24px';dt.style.background='#c8956c';}
+  document.getElementById('cafeStepLabel').textContent='Step '+cafeCur+' of '+cafeTotal;
+}
+function nextCafeSlide(){showCafeSlide(cafeCur<cafeTotal?cafeCur+1:1);}
+function prevCafeSlide(){showCafeSlide(cafeCur>1?cafeCur-1:cafeTotal);}
+cafeTimer=setInterval(nextCafeSlide,3500);
+document.getElementById('cafeDemoScreen').addEventListener('touchstart',function(){clearInterval(cafeTimer);});
+</script>
+
+<section class="pricing">
+  <div class="section-title">
+    <div class="tag-coffee">☕ Pricing</div>
+    <h2>Affordable Plans for Every Cafe</h2>
+    <p>Whether you have 1 branch or 20, we have the right plan for you.</p>
+  </div>
+  <div class="price-cards">
+    <div class="price-card">
+      <div class="price-name">Starter</div>
+      <div class="price-num"><span class="price-cur">﷼</span>1,888</div>
+      <div class="price-period">/month · Billed Annually</div>
+      <ul class="price-features">
+        <li>1 Branch</li>
+        <li>Unlimited Menu Items</li>
+        <li>Basic Loyalty</li>
+        <li>ZATCA Invoicing</li>
+        <li>Email Support</li>
+      </ul>
+      <button class="btn-plan outline" onclick="window.open('https://wa.me/966550898978','_blank')">Start Free Trial</button>
+    </div>
+    <div class="price-card popular">
+      <div class="pop-badge">☕ Most Popular</div>
+      <div class="price-name">Professional</div>
+      <div class="price-num"><span class="price-cur">﷼</span>2,888</div>
+      <div class="price-period">/month · Billed Annually</div>
+      <ul class="price-features">
+        <li>Up to 5 Branches</li>
+        <li>Advanced Loyalty + SMS</li>
+        <li>Delivery Integration</li>
+        <li>Barista Display (KDS)</li>
+        <li>Advanced Reports</li>
+        <li>24/7 Priority Support</li>
+      </ul>
+      <button class="btn-plan" onclick="window.open('https://wa.me/966550898978','_blank')">Start Free Trial</button>
+    </div>
+    <div class="price-card">
+      <div class="price-name">Enterprise</div>
+      <div class="price-num" style="font-size:28px;">Custom</div>
+      <div class="price-period">Chain & franchise</div>
+      <ul class="price-features">
+        <li>Unlimited Branches</li>
+        <li>White Label App</li>
+        <li>Custom Loyalty App</li>
+        <li>Dedicated Manager</li>
+        <li>API Access</li>
+      </ul>
+      <button class="btn-plan outline" onclick="window.open('https://wa.me/966550898978','_blank')">Contact Sales</button>
+    </div>
+  </div>
+</section>
+
+<section class="cta">
+  <h2>Ready to Elevate Your Cafe? ☕</h2>
+  <p>Join 1,000+ cafes and coffee shops across KSA using BillZest. Start your free trial today — no credit card needed.</p>
+  <div class="cta-btns">
+    <button class="btn-cta-w" onclick="window.open('https://wa.me/966550898978','_blank')">🚀 Start Free Trial</button>
+    <button class="btn-cta-o" onclick="window.location.href='tel:+966550898978'">📞 Call Us Now</button>
+  </div>
+</section>
+
+<footer>
+  <p>© 2025 <a href="index.html">BillZest POS</a> · <a href="/cdn-cgi/l/email-protection#88e1e6eee7c8eae1e4e4f2edfbfcf8e7fba6ebe7e5"><span class="__cf_email__" data-cfemai
