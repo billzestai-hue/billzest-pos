@@ -64,7 +64,7 @@
 
 ---
 
-## 📞 Contact
+## 📞 Contact +966550898978
 
 - 📧 Email: info@billzestpos.com
 - 🌐 Website: [billzestpos.com](https://www.billzestpos.com)
@@ -75,4 +75,4 @@
 
 © 2026 BillZest. All Rights Reserved.
 
-Built with ❤️ using Claude AI
+Built with ❤️ using billzestPos
