@@ -180,6 +180,7 @@ body{font-family:'Poppins',sans-serif;background:#f4f4f8;color:#1a1a1a;}
         </div>
       </div>
       <div class="lf"><label>Business Name *</label><input type="text" id="regBiz" placeholder="My Restaurant"></div>
+      <div class="lf"><label>Business Type *</label><select id="regBizType"><option value="restaurant">🍽️ Restaurant</option><option value="cafe">☕ Cafe / Bakery</option><option value="grocery">🛒 Grocery / Supermarket</option><option value="retail">👔 Retail / Clothing</option><option value="electronics">⚡ Electronics / Mobile</option><option value="hotel">🏨 Hotel / Hospitality</option><option value="salon">💈 Salon / Spa</option><option value="pharmacy">💊 Pharmacy</option><option value="mall">🏬 Mall / Multi-Store</option><option value="other">🏪 Other</option></select></div>
       <div class="lf"><label>Phone</label><input type="tel" id="regPhone" placeholder="+966 5x xxx xxxx"></div>
       <div class="lf-row">
         <div class="lf"><label>Country</label>
@@ -229,10 +230,13 @@ body{font-family:'Poppins',sans-serif;background:#f4f4f8;color:#1a1a1a;}
     <!-- HOME PAGE -->
     <div class="page on" id="pageHome">
       <div class="welcome-card">
-        <div class="wc-bg">🍽️</div>
+        <div class="wc-bg">🏪</div>
         <div class="wc-greeting">Welcome back!</div>
         <div class="wc-name" id="wcName">Loading...</div>
-        <span class="wc-plan" id="wcPlan">Basic Plan</span>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:4px;">
+          <span class="wc-plan" id="wcPlan">Basic Plan</span>
+          <span class="wc-plan" id="wcBizType" style="background:rgba(255,255,255,.15);">🏪 Business</span>
+        </div>
         <div class="wc-trial">🎁 14-day free trial active</div>
       </div>
 
@@ -246,13 +250,16 @@ body{font-family:'Poppins',sans-serif;background:#f4f4f8;color:#1a1a1a;}
       <div class="section">
         <div class="section-hdr"><div class="section-title">⚡ Quick Actions</div></div>
         <div class="section-body">
-          <div class="actions-grid">
+          <div class="actions-grid" id="quickActionsGrid">
             <button class="action-btn" onclick="window.location.href='billzest-complete-pos.html'"><div class="ab-icon">🛒</div><div class="ab-label">Open POS</div></button>
-            <button class="action-btn" onclick="window.location.href='billzest-sales-dashboard.html'"><div class="ab-icon">📊</div><div class="ab-label">Dashboard</div></button>
+            <button class="action-btn" onclick="window.location.href='billzest-sales-dashboard.html'"><div class="ab-icon">📊</div><div class="ab-label">Sales Report</div></button>
             <button class="action-btn" onclick="window.location.href='billzest-product-manager.html'"><div class="ab-icon">📦</div><div class="ab-label">Products</div></button>
             <button class="action-btn" onclick="window.location.href='billzest-mega.html'"><div class="ab-icon">🔥</div><div class="ab-label">Mega System</div></button>
             <button class="action-btn" onclick="window.location.href='billzest-labels.html'"><div class="ab-icon">🏷️</div><div class="ab-label">Labels</div></button>
             <button class="action-btn" onclick="switchPage('pageSupport');setNav('bnSupport')"><div class="ab-icon">💬</div><div class="ab-label">Support</div></button>
+          </div>
+          <div id="bizTypeNotice" style="display:none;margin-top:12px;background:var(--pl);border-radius:10px;padding:12px 14px;border:1.5px solid var(--p);">
+            <div style="font-size:12px;font-weight:700;color:var(--p);" id="bizTypeNoticeText"></div>
           </div>
         </div>
       </div>
@@ -304,7 +311,7 @@ body{font-family:'Poppins',sans-serif;background:#f4f4f8;color:#1a1a1a;}
           <button onclick="window.open('https://wa.me/966550898978?text=Hello BillZest, I want to upgrade my plan!')" style="width:100%;background:var(--p);color:#fff;border:none;padding:13px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;margin-top:16px;font-family:'Poppins',sans-serif;">
             🚀 Upgrade Plan — WhatsApp Us
           </button>
-          <div style="text-align:center;font-size:12px;color:#888;margin-top:8px;">📧 <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="1b72757d745b79727777617e686f6b746835787476">[email&#160;protected]</a></div>
+          <div style="text-align:center;font-size:12px;color:#888;margin-top:8px;">📧 info@billzestpos.com</div>
         </div>
       </div>
     </div>
@@ -325,6 +332,7 @@ body{font-family:'Poppins',sans-serif;background:#f4f4f8;color:#1a1a1a;}
           <div class="profile-field"><label>Business</label><div class="profile-value" id="profileBiz">—</div></div>
           <div class="profile-field"><label>Phone</label><div class="profile-value" id="profilePhone">—</div></div>
           <div class="profile-field"><label>Country</label><div class="profile-value" id="profileCountry">—</div></div>
+          <div class="profile-field"><label>Business Type</label><div class="profile-value" id="profileBizType">—</div></div>
           <div class="profile-field"><label>Plan</label><div class="profile-value" id="profilePlan">—</div></div>
           <div class="profile-field"><label>Member Since</label><div class="profile-value" id="profileDate">—</div></div>
           <div class="profile-field"><label>Account Status</label><div class="profile-value" style="color:var(--grn);">✅ Active — Free Trial</div></div>
@@ -345,7 +353,7 @@ body{font-family:'Poppins',sans-serif;background:#f4f4f8;color:#1a1a1a;}
           </div>
           <div class="support-item" onclick="window.location.href='mailto:info@billzestpos.com'">
             <div class="si-icon">📧</div>
-            <div><div class="si-title">Email Support</div><div class="si-sub"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="b1d8dfd7def1d3d8ddddcbd4c2c5c1dec29fd2dedc">[email&#160;protected]</a></div></div>
+            <div><div class="si-title">Email Support</div><div class="si-sub">info@billzestpos.com</div></div>
           </div>
           <div class="support-item" onclick="window.open('https://www.billzestpos.com')">
             <div class="si-icon">🌐</div>
@@ -373,7 +381,7 @@ body{font-family:'Poppins',sans-serif;background:#f4f4f8;color:#1a1a1a;}
 
 <div class="toast" id="toast"></div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script type="module">
+<script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
 import {
   getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword,
@@ -397,7 +405,7 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const googleProvider = new GoogleAuthProvider();
 googleProvider.setCustomParameters({
-  client_id: '946546876429-1eclfru0dlqffi5josfisopm7898o59h.apps.googleusercontent.com'
+  client_id: "946546876429-1eclfru0dlqffi5josfisopm7898o59h.apps.googleusercontent.com"
 });
 window._auth = auth;
 
@@ -522,6 +530,19 @@ onAuthStateChanged(auth, async function(user) {
   }
 });
 
+const BIZ_CONFIG = {
+  restaurant: { icon: '🍽️', label: 'Restaurant' },
+  cafe:        { icon: '☕', label: 'Cafe / Bakery' },
+  grocery:     { icon: '🛒', label: 'Grocery Store' },
+  retail:      { icon: '👔', label: 'Retail Shop' },
+  electronics: { icon: '⚡', label: 'Electronics Shop' },
+  hotel:       { icon: '🏨', label: 'Hotel' },
+  salon:       { icon: '💈', label: 'Salon / Spa' },
+  pharmacy:    { icon: '💊', label: 'Pharmacy' },
+  mall:        { icon: '🏬', label: 'Mall / Multi-Store' },
+  other:       { icon: '🏪', label: 'Business' }
+};
+
 function loadDashboard(user, data) {
   document.getElementById('loginPage').style.display = 'none';
   document.getElementById('mainApp').style.display = 'block';
@@ -530,12 +551,24 @@ function loadDashboard(user, data) {
   var ln = data ? (data.lastName || '') : (user.displayName ? user.displayName.split(' ').slice(1).join(' ') : '');
   var name = (fn + ' ' + ln).trim() || user.email.split('@')[0];
   var plan = data ? (data.plan || 'Basic') : 'Basic';
+  var bizType = data ? (data.bizType || 'other') : 'other';
+  var biz = BIZ_CONFIG[bizType] || BIZ_CONFIG['other'];
   var initial = name.charAt(0).toUpperCase();
 
   document.getElementById('userName').textContent = name;
   document.getElementById('userAvatar').textContent = initial;
   document.getElementById('wcName').textContent = 'Hello, ' + fn + '! 👋';
   document.getElementById('wcPlan').textContent = plan + ' Plan';
+
+  // Update welcome card icon based on business type
+  var wcBg = document.querySelector('.wc-bg');
+  if (wcBg) wcBg.textContent = biz.icon;
+
+  // Update business type badge
+  var bizBadge = document.getElementById('wcBizType');
+  if (bizBadge) bizBadge.textContent = biz.icon + ' ' + biz.label;
+
+  // Update profile fields
   document.getElementById('profileAvatar').textContent = initial;
   document.getElementById('profileName').textContent = name;
   document.getElementById('profileEmail').textContent = user.email;
@@ -543,6 +576,7 @@ function loadDashboard(user, data) {
   document.getElementById('profilePhone').textContent = data ? (data.phone || '—') : '—';
   document.getElementById('profileCountry').textContent = data ? (data.country || '—') : '—';
   document.getElementById('profilePlan').textContent = plan;
+  document.getElementById('profileBizType').textContent = biz.icon + ' ' + biz.label;
   document.getElementById('profileDate').textContent = data && data.createdAt ? new Date(data.createdAt).toLocaleDateString('en-GB') : '—';
   document.getElementById('currentPlanName').textContent = plan;
 
@@ -552,6 +586,26 @@ function loadDashboard(user, data) {
   }
 
   loadFAQ();
+
+  // Show business type specific notice
+  var notices = {
+    restaurant: '🍽️ Your Restaurant POS is ready! Manage tables, orders & kitchen.',
+    cafe:        '☕ Your Cafe POS is ready! Quick billing & loyalty points enabled.',
+    grocery:     '🛒 Your Grocery POS is ready! Barcode scanning & stock management.',
+    retail:      '👔 Your Retail POS is ready! Size/color variants & inventory tracking.',
+    electronics: '⚡ Your Electronics POS is ready! Serial numbers & warranty tracking.',
+    hotel:       '🏨 Your Hotel POS is ready! Room management & service billing.',
+    salon:       '💈 Your Salon POS is ready! Appointment booking & service menu.',
+    pharmacy:    '💊 Your Pharmacy POS is ready! Medicine inventory & prescriptions.',
+    mall:        '🏬 Your Mall POS is ready! Multi-store management & reporting.',
+    other:       '🏪 Your POS System is ready! Start selling right away.'
+  };
+  var notice = document.getElementById('bizTypeNotice');
+  var noticeText = document.getElementById('bizTypeNoticeText');
+  if (notice && noticeText && notices[bizType]) {
+    noticeText.textContent = notices[bizType];
+    notice.style.display = 'block';
+  }
 }
 </script>
 
@@ -634,6 +688,7 @@ async function doRegister() {
   var phone = document.getElementById('regPhone').value.trim();
   var country = document.getElementById('regCountry').value;
   var plan = document.getElementById('regPlan').value;
+  var bizType = document.getElementById('regBizType') ? document.getElementById('regBizType').value : 'restaurant';
   var err = document.getElementById('registerErr');
   var ok = document.getElementById('registerOk');
   var btn = document.getElementById('registerBtn');
@@ -641,7 +696,7 @@ async function doRegister() {
   if (!first || !last || !email || !pass || !biz) { err.textContent = 'Please fill in all required fields.'; err.style.display = 'block'; return; }
   if (pass.length < 8) { err.textContent = 'Password must be at least 8 characters.'; err.style.display = 'block'; return; }
   btn.textContent = 'Creating account...'; btn.disabled = true;
-  var result = await window.fbRegister(email, pass, {firstName:first, lastName:last, business:biz, phone:phone, country:country, plan:plan});
+  var result = await window.fbRegister(email, pass, {firstName:first, lastName:last, business:biz, phone:phone, country:country, plan:plan, bizType:bizType});
   btn.innerHTML = '✨ Start Free Trial'; btn.disabled = false;
   if (result.ok) {
     ok.innerHTML = '🎉 <strong>Welcome ' + first + '!</strong> Account created!<br>Please check <strong>' + email + '</strong> to verify before signing in.';
