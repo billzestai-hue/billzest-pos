@@ -7,10 +7,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
-/* Your existing CSS (same as before - I'm keeping it compact) */
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:'Poppins',sans-serif;background:#f4f4f8;color:#1a1a1a;}
 :root{--p:#4f2d91;--pd:#3b1f6e;--pl:#f0ebff;--org:#f5a623;--grn:#10b981;--red:#ef4444;--teal:#00b5a3;--bdr:#e0e0e0;}
+
+/* Login Page */
 .login-page{min-height:100vh;background:linear-gradient(135deg,#0d1b4b,#4f2d91);display:flex;align-items:center;justify-content:center;padding:20px;}
 .login-card{background:#fff;border-radius:20px;padding:36px;width:100%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,.3);}
 .lc-logo{font-size:28px;font-weight:800;text-align:center;margin-bottom:4px;}
@@ -34,6 +35,8 @@ body{font-family:'Poppins',sans-serif;background:#f4f4f8;color:#1a1a1a;}
 .btn-google:hover{background:#f5f5f5;}
 .eye-wrap{position:relative;}
 .eye-btn{position:absolute;right:12px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:16px;background:none;border:none;padding:0;}
+
+/* Main App */
 .app{display:none;}
 .app-header{background:linear-gradient(135deg,var(--p),var(--pd));padding:0 20px;height:58px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
 .ah-logo{display:flex;align-items:center;gap:8px;}
@@ -44,26 +47,34 @@ body{font-family:'Poppins',sans-serif;background:#f4f4f8;color:#1a1a1a;}
 .ah-avatar{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#fff;border:2px solid rgba(255,255,255,.3);}
 .ah-name{font-size:13px;font-weight:600;color:#fff;max-width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .btn-logout{background:rgba(255,255,255,.15);border:none;color:#fff;padding:6px 12px;border-radius:6px;font-size:12px;cursor:pointer;font-family:'Poppins',sans-serif;}
+
 .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--bdr);display:flex;z-index:100;height:60px;}
 .bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;font-size:10px;font-weight:600;color:#aaa;transition:all .2s;border:none;background:none;font-family:'Poppins',sans-serif;}
 .bn-item.on{color:var(--p);}
 .bn-item .bn-icon{font-size:20px;}
+
 .content{padding:20px;padding-bottom:80px;max-width:800px;margin:0 auto;}
+
+/* Welcome Card */
 .welcome-card{background:linear-gradient(135deg,var(--p),var(--teal));border-radius:16px;padding:24px;margin-bottom:20px;position:relative;overflow:hidden;}
 .wc-bg{position:absolute;right:-20px;top:-20px;font-size:120px;opacity:.1;pointer-events:none;}
 .wc-greeting{font-size:13px;color:rgba(255,255,255,.8);margin-bottom:4px;}
 .wc-name{font-size:22px;font-weight:800;color:#fff;margin-bottom:8px;}
 .wc-plan{display:inline-block;background:rgba(255,255,255,.2);color:#fff;padding:4px 14px;border-radius:20px;font-size:12px;font-weight:600;}
 .wc-trial{font-size:12px;color:rgba(255,255,255,.8);margin-top:8px;}
+
 .stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:20px;}
 .stat-card{background:#fff;border-radius:12px;padding:16px;border:1px solid var(--bdr);}
 .stat-icon{font-size:24px;margin-bottom:8px;}
 .stat-val{font-size:22px;font-weight:800;color:#1a1a1a;}
 .stat-lbl{font-size:11px;color:#888;margin-top:2px;}
+
 .section{background:#fff;border-radius:14px;border:1px solid var(--bdr);margin-bottom:16px;overflow:hidden;}
 .section-hdr{padding:16px 18px;border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between;}
 .section-title{font-size:15px;font-weight:700;}
 .section-body{padding:16px 18px;}
+
+/* POS Interface */
 .pos-grid{display:flex;flex-direction:column;gap:16px;}
 .pos-items{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:10px;}
 .pos-item-card{background:#f9f9ff;border:1px solid var(--bdr);border-radius:12px;padding:12px;text-align:center;cursor:pointer;transition:all .2s;}
@@ -78,11 +89,15 @@ body{font-family:'Poppins',sans-serif;background:#f4f4f8;color:#1a1a1a;}
 .qty-btn{background:#eee;border:none;width:26px;height:26px;border-radius:6px;cursor:pointer;font-weight:700;}
 .cart-total{font-size:18px;font-weight:800;margin:12px 0;text-align:right;}
 .btn-checkout{background:var(--grn);color:#fff;border:none;padding:12px;border-radius:10px;font-weight:700;width:100%;cursor:pointer;}
+
+/* Product Manager */
 .product-list{display:grid;gap:10px;}
 .product-row{display:flex;justify-content:space-between;align-items:center;padding:10px;border-bottom:1px solid #eee;}
 .product-actions button{margin-left:8px;background:none;border:none;cursor:pointer;font-size:16px;}
 .add-product-form{display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:16px;}
 .add-product-form input{padding:10px;border:1px solid var(--bdr);border-radius:8px;}
+
+/* Branding Preview */
 .branding-preview{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding:16px;background:#f8f8f8;border-radius:12px;}
 .brand-logo-preview{width:60px;height:60px;border-radius:12px;background:#fff;display:flex;align-items:center;justify-content:center;border:1px solid var(--bdr);overflow:hidden;}
 .brand-logo-preview img{max-width:100%;max-height:100%;object-fit:contain;}
@@ -92,16 +107,23 @@ body{font-family:'Poppins',sans-serif;background:#f4f4f8;color:#1a1a1a;}
 .logo-upload-area{margin:12px 0;display:flex;flex-direction:column;gap:8px;}
 .logo-upload-area input{margin-bottom:8px;}
 .btn-brand-save{background:var(--p);color:#fff;border:none;padding:10px;border-radius:8px;cursor:pointer;width:100%;font-weight:600;}
+
+/* Report Chart */
 canvas{max-height:200px;width:100%;}
+
+/* Toast */
 .toast{position:fixed;bottom:70px;left:50%;transform:translateX(-50%) translateY(80px);background:#1a1a1a;color:#fff;padding:11px 22px;border-radius:28px;font-size:12px;font-weight:600;z-index:9999;transition:transform .3s;white-space:nowrap;pointer-events:none;}
 .toast.show{transform:translateX(-50%) translateY(0);}
+
 .loading{position:fixed;inset:0;background:rgba(255,255,255,.95);display:flex;align-items:center;justify-content:center;z-index:9999;flex-direction:column;gap:12px;}
 .loading-logo{font-size:32px;font-weight:800;color:var(--p);}
 .loading-logo span{color:var(--org);}
 .loading-spinner{width:40px;height:40px;border:3px solid var(--pl);border-top-color:var(--p);border-radius:50%;animation:spin .8s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
+
 .page{display:none;}
 .page.on{display:block;}
+
 @media(max-width:480px){
   .login-card{padding:24px 18px;}
   .pos-items{grid-template-columns:repeat(2,1fr);}
@@ -215,10 +237,9 @@ canvas{max-height:200px;width:100%;}
         <div class="logo-upload-area">
           <label>Company Logo (Image)</label>
           <input type="file" id="logoUpload" accept="image/*">
-          <small>Recommended size: 200x200px, PNG/JPG</small>
+          <small>Recommended size: 200x200px, PNG/JPG (will be stored as base64)</small>
         </div>
-        <!-- FIXED BUTTON: inline onclick + error handling -->
-        <button class="btn-brand-save" id="saveBrandBtn" onclick="if(window.saveBranding) window.saveBranding(); else alert('Function not ready. Please wait or refresh.');">💾 Save Brand Settings</button>
+        <button class="btn-brand-save" id="saveBrandBtn" onclick="window.saveBranding()">💾 Save Brand Settings</button>
       </div></div>
     </div>
 
@@ -252,7 +273,6 @@ canvas{max-height:200px;width:100%;}
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, sendEmailVerification, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 import { getFirestore, doc, setDoc, getDoc, collection, getDocs, addDoc, query, where, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-storage.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCN0akvFXOHM6WPHv9ve9noqqmauO3TJRY",
@@ -265,7 +285,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-const storage = getStorage(app);
 const googleProvider = new GoogleAuthProvider();
 
 // Expose functions globally
@@ -356,7 +375,7 @@ let currentUser = null;
 let userData = null;
 let products = [];
 let cart = [];
-let brandData = { companyName: '', logoURL: '', bizType: 'restaurant' };
+let brandData = { companyName: '', logoBase64: '', bizType: 'restaurant' };
 let chart = null;
 
 function showToast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3000); }
@@ -367,7 +386,7 @@ async function loadBrandData() {
   const snap = await getDoc(brandRef);
   if (snap.exists()) brandData = snap.data();
   else {
-    brandData = { companyName: userData?.business || 'My Business', logoURL: '', bizType: userData?.bizType || 'restaurant' };
+    brandData = { companyName: userData?.business || 'My Business', logoBase64: '', bizType: userData?.bizType || 'restaurant' };
     await setDoc(brandRef, brandData);
   }
   updateBrandUI();
@@ -375,17 +394,36 @@ async function loadBrandData() {
 function updateBrandUI() {
   const header = document.getElementById('brandHeader');
   if (header) {
-    if (brandData.logoURL) header.innerHTML = `<img src="${brandData.logoURL}" class="ah-logo-img" alt="logo"><div class="ah-logo-text"><span>${brandData.companyName.substring(0,15)}</span></div>`;
-    else header.innerHTML = `<div class="ah-logo-text">Bill<span>Zest</span> <span style="font-size:12px;">| ${brandData.companyName.substring(0,15)}</span></div>`;
+    if (brandData.logoBase64 && brandData.logoBase64.startsWith('data:image')) {
+      header.innerHTML = `<img src="${brandData.logoBase64}" class="ah-logo-img" alt="logo"><div class="ah-logo-text"><span>${brandData.companyName.substring(0,15)}</span></div>`;
+    } else {
+      header.innerHTML = `<div class="ah-logo-text">Bill<span>Zest</span> <span style="font-size:12px;">| ${brandData.companyName.substring(0,15)}</span></div>`;
+    }
   }
   const previewLogo = document.getElementById('logoPreview');
-  if (previewLogo) previewLogo.innerHTML = brandData.logoURL ? `<img src="${brandData.logoURL}" style="max-width:100%;max-height:100%;">` : '<span>🏪</span>';
+  if (previewLogo) {
+    if (brandData.logoBase64 && brandData.logoBase64.startsWith('data:image')) {
+      previewLogo.innerHTML = `<img src="${brandData.logoBase64}" style="max-width:100%;max-height:100%;">`;
+    } else {
+      previewLogo.innerHTML = '<span>🏪</span>';
+    }
+  }
   document.getElementById('previewCompanyName').innerText = brandData.companyName || 'Your Company';
   document.getElementById('previewBusinessType').innerText = (brandData.bizType || 'restaurant').toUpperCase();
   document.getElementById('companyNameInput').value = brandData.companyName || '';
   document.getElementById('companyBizTypeSelect').value = brandData.bizType || 'restaurant';
 }
-// MAIN SAVE FUNCTION - exposed to window
+
+// Convert file to base64
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
+  });
+}
+
 window.saveBranding = async function() {
   console.log("SaveBranding triggered");
   showToast("Saving...");
@@ -393,17 +431,19 @@ window.saveBranding = async function() {
     const newCompanyName = document.getElementById('companyNameInput').value.trim();
     const newBizType = document.getElementById('companyBizTypeSelect').value;
     if (!newCompanyName) { showToast('Please enter company name'); return; }
-    let logoURL = brandData.logoURL;
+    
+    let logoBase64 = brandData.logoBase64;
     const fileInput = document.getElementById('logoUpload');
     if (fileInput.files.length > 0) {
       const file = fileInput.files[0];
-      const storageRef = ref(storage, `logos/${currentUser.uid}/logo_${Date.now()}.${file.name.split('.').pop()}`);
-      await uploadBytes(storageRef, file);
-      logoURL = await getDownloadURL(storageRef);
+      // Resize image to max 200x200 before converting to base64 (optional but good)
+      logoBase64 = await fileToBase64(file);
+      // Optional: you could resize here, but base64 is fine for small logos
     }
+    
     const brandRef = doc(db, "brands", currentUser.uid);
-    await setDoc(brandRef, { companyName: newCompanyName, logoURL, bizType: newBizType }, { merge: true });
-    brandData = { companyName: newCompanyName, logoURL, bizType: newBizType };
+    await setDoc(brandRef, { companyName: newCompanyName, logoBase64, bizType: newBizType }, { merge: true });
+    brandData = { companyName: newCompanyName, logoBase64, bizType: newBizType };
     updateBrandUI();
     showToast('Brand settings saved!');
   } catch (err) {
@@ -412,7 +452,7 @@ window.saveBranding = async function() {
   }
 };
 
-// POS & Products functions (keep same)
+// POS & Products (same as before)
 async function renderPOSItems() {
   const container = document.getElementById('posItemsList');
   if (!container) return;
