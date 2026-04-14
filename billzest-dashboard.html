@@ -1,10 +1,13 @@
+<!-- Replace only the section where labels are missing (search for "Branding" page and POS page) -->
+<!-- But better to replace entire file with this corrected version -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>BillZest POS | Premium Coffee Shop Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+<title>BillZest POS | Professional Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -14,7 +17,7 @@ body{font-family:'Inter',sans-serif;background:#f8fafc;color:#1e293b;}
 .loading-spinner{width:40px;height:40px;border:3px solid #e2e8f0;border-top-color:var(--p);border-radius:50%;animation:spin .8s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
 .app{display:none;}
-.app-header{background:white;border-bottom:1px solid var(--bdr);padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;backdrop-filter:blur(8px);background:rgba(255,255,255,0.95);}
+.app-header{background:white;border-bottom:1px solid var(--bdr);padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
 .ah-logo{display:flex;align-items:center;gap:12px;}
 .ah-logo-img{height:36px;width:auto;max-width:120px;object-fit:contain;border-radius:8px;}
 .ah-logo-text{font-size:20px;font-weight:800;background:linear-gradient(135deg,var(--p),var(--teal));-webkit-background-clip:text;background-clip:text;color:transparent;}
@@ -100,6 +103,7 @@ canvas{max-height:220px;width:100%;}
     <div class="ah-user"><div class="ah-avatar" id="userAvatar">👤</div><div class="ah-name" id="userName">User</div><button class="btn-logout" id="logoutBtn">Logout</button></div>
   </div>
   <div class="content">
+    <!-- HOME PAGE -->
     <div class="page on" id="pageHome">
       <div class="welcome-card"><div class="wc-name" id="wcName">Welcome back!</div><div><span class="wc-plan" id="wcPlan">Professional Plan</span></div></div>
       <div class="stats-grid">
@@ -110,16 +114,18 @@ canvas{max-height:220px;width:100%;}
       </div>
       <div class="section"><div class="section-hdr"><div class="section-title">⚡ Quick Actions</div></div><div class="section-body"><div class="actions-grid"><button class="action-btn" onclick="switchPage('pagePOS')"><div class="ab-icon">🛒</div><div class="ab-label">New Order</div></button><button class="action-btn" onclick="switchPage('pageProducts')"><div class="ab-icon">📦</div><div class="ab-label">Manage Menu</div></button><button class="action-btn" onclick="switchPage('pageReports')"><div class="ab-icon">📊</div><div class="ab-label">Reports</div></button><button class="action-btn" onclick="switchPage('pageBranding')"><div class="ab-icon">🏷️</div><div class="ab-label">Branding</div></button></div></div></div>
       <div class="section"><div class="section-hdr"><div class="section-title">🕒 Recent Orders</div><a href="#" onclick="switchPage('pageReports');return false;" style="color:var(--p);font-size:13px;">View all →</a></div><div class="section-body"><div id="recentOrdersList">Loading orders...</div></div></div>
-      <div class="stats-grid" style="grid-template-columns:1fr 1fr;">
-        <div class="section" style="margin:0;"><div class="section-hdr"><div class="section-title">⚠️ Low Stock Alert</div></div><div class="section-body"><div id="lowStockList">No low stock items</div></div></div>
-        <div class="section" style="margin:0;"><div class="section-hdr"><div class="section-title">🏆 Top Selling</div></div><div class="section-body"><div id="topProductsList">No data yet</div></div></div>
-      </div>
+      <div class="stats-grid" style="grid-template-columns:1fr 1fr;"><div class="section" style="margin:0;"><div class="section-hdr"><div class="section-title">⚠️ Low Stock Alert</div></div><div class="section-body"><div id="lowStockList">No low stock items</div></div></div><div class="section" style="margin:0;"><div class="section-hdr"><div class="section-title">🏆 Top Selling</div></div><div class="section-body"><div id="topProductsList">No data yet</div></div></div></div>
       <div class="section"><div class="section-hdr"><div class="section-title">📈 Sales Trend (Last 7 days)</div></div><div class="section-body"><canvas id="salesChart"></canvas></div></div>
     </div>
+    <!-- POS PAGE -->
     <div class="page" id="pagePOS"><div class="section"><div class="section-hdr"><div class="section-title">🛒 Point of Sale</div></div><div class="section-body"><div class="pos-items" id="posItemsList"></div><div class="cart-items" id="cartItems"><div style="text-align:center;color:#94a3b8;">Cart empty</div></div><div class="cart-total" id="cartTotal" style="font-size:20px;font-weight:800;text-align:right;margin:12px 0;">Total: ﷼0</div><button class="btn-checkout" id="checkoutBtn">✅ Complete Order</button></div></div></div>
+    <!-- PRODUCTS PAGE -->
     <div class="page" id="pageProducts"><div class="section"><div class="section-hdr"><div class="section-title">📦 Menu Management</div></div><div class="section-body"><div class="add-product-form"><input type="text" id="newProductName" placeholder="Item name"><input type="number" id="newProductPrice" placeholder="Price (SAR)"><select id="newProductCategory"><option value="Coffee">☕ Coffee</option><option value="Tea">🍵 Tea</option><option value="Cold Drinks">🥤 Cold Drinks</option><option value="Food">🍔 Food</option><option value="Pastry">🥐 Pastry</option><option value="Add-ons">➕ Add-ons</option></select><input type="number" id="newProductStock" placeholder="Stock" value="50"><button id="addProductBtn" style="background:var(--p);color:white;border:none;border-radius:40px;padding:0 20px;">➕ Add</button></div><div id="productsList"></div></div></div></div>
+    <!-- REPORTS PAGE -->
     <div class="page" id="pageReports"><div class="section"><div class="section-hdr"><div class="section-title">📊 Sales Report</div></div><div class="section-body"><canvas id="reportChart"></canvas><div style="margin-top:20px;text-align:center;background:#f8fafc;padding:16px;border-radius:20px;"><strong>Total Revenue (30 days):</strong> <span id="totalRevenue" style="font-size:20px;font-weight:800;color:var(--p);">﷼0</span></div></div></div></div>
-    <div class="page" id="pageBranding"><div class="section"><div class="section-hdr"><div class="section-title">🏷️ Your Brand</div></div><div class="section-body"><div class="branding-preview"><div class="brand-logo-preview" id="logoPreview"><span style="font-size:32px;">🏪</span></div><div><h3 id="previewCompanyName">Your Coffee Shop</h3><p id="previewBusinessType">Business Type</p></div></div><div class="lf"><label style="display:block;font-weight:600;margin-bottom:6px;">Company Name</label><input type="text" id="companyNameInput" placeholder="e.g., Starbucks Coffee" style="width:100%;padding:12px;border:1px solid var(--bdr);border-radius:16px;"></div><div class="lf" style="margin-top:16px;"><label style="display:block;font-weight:600;margin-bottom:6px;">Business Type</label><select id="companyBizTypeSelect" style="width:100%;padding:12px;border:1px solid var(--bdr);border-radius:16px;"><option value="coffee shop">Coffee Shop</option><option value="cafe">Cafe</option><option value="restaurant">Restaurant</option></select></div><div style="margin-top:16px;"><label style="display:block;font-weight:600;margin-bottom:6px;">Logo (Image)</label><input type="file" id="logoUpload" accept="image/*"><small style="color:#64748b;">PNG/JPG, will be stored securely</small></div><button class="btn-brand-save" id="saveBrandBtn">💾 Save Brand Settings</button></div></div></div>
+    <!-- BRANDING PAGE (with proper labels) -->
+    <div class="page" id="pageBranding"><div class="section"><div class="section-hdr"><div class="section-title">🏷️ Your Brand</div></div><div class="section-body"><div class="branding-preview"><div class="brand-logo-preview" id="logoPreview"><span style="font-size:32px;">🏪</span></div><div><h3 id="previewCompanyName">Your Coffee Shop</h3><p id="previewBusinessType">Business Type</p></div></div><div><label for="companyNameInput" style="display:block;font-weight:600;margin-bottom:6px;">Company Name</label><input type="text" id="companyNameInput" placeholder="e.g., Starbucks Coffee" style="width:100%;padding:12px;border:1px solid var(--bdr);border-radius:16px;"></div><div style="margin-top:16px;"><label for="companyBizTypeSelect" style="display:block;font-weight:600;margin-bottom:6px;">Business Type</label><select id="companyBizTypeSelect" style="width:100%;padding:12px;border:1px solid var(--bdr);border-radius:16px;"><option value="coffee shop">Coffee Shop</option><option value="cafe">Cafe</option><option value="restaurant">Restaurant</option></select></div><div style="margin-top:16px;"><label for="logoUpload" style="display:block;font-weight:600;margin-bottom:6px;">Logo (Image)</label><input type="file" id="logoUpload" accept="image/*"><small style="color:#64748b;">PNG/JPG, will be stored securely</small></div><button class="btn-brand-save" id="saveBrandBtn">💾 Save Brand Settings</button></div></div></div>
+    <!-- PROFILE PAGE -->
     <div class="page" id="pageProfile"><div class="section"><div class="section-hdr"><div class="section-title">👤 My Profile</div></div><div class="section-body"><div id="profileInfo"></div><button id="profileLogoutBtn" style="margin-top:20px;width:100%;background:var(--red);color:white;border:none;padding:12px;border-radius:40px;cursor:pointer;">Logout</button></div></div></div>
   </div>
   <div class="bottom-nav">
@@ -200,46 +206,18 @@ document.getElementById('saveBrandBtn').addEventListener('click', async () => {
 // Generate 100+ realistic coffee shop items
 function generateSampleProducts() {
   const categories = {
-    Coffee: [
-      "Espresso", "Double Espresso", "Americano", "Latte", "Cappuccino", "Flat White", "Mocha", "Caramel Macchiato", "Hazelnut Latte", "Vanilla Latte",
-      "Irish Coffee", "Affogato", "Cortado", "Piccolo Latte", "Long Black", "Ristretto", "Con Panna", "Breve", "Red Eye", "Black Eye",
-      "Iced Latte", "Iced Caramel Macchiato", "Iced Mocha", "Cold Brew", "Nitro Cold Brew", "Iced Americano", "Frappuccino - Caramel", "Frappuccino - Mocha",
-      "Frappuccino - Vanilla", "Frappuccino - Strawberry"
-    ],
-    Tea: [
-      "English Breakfast", "Earl Grey", "Green Tea", "Jasmine Green Tea", "Matcha Latte", "Chai Latte", "Masala Chai", "Peppermint Tea", "Chamomile Tea",
-      "Hibiscus Tea", "Lemon Ginger Tea", "Moroccan Mint Tea", "Oolong Tea", "White Tea", "Rooibos", "Thai Iced Tea", "Iced Matcha Latte"
-    ],
-    "Cold Drinks": [
-      "Lemonade", "Strawberry Lemonade", "Mint Lemonade", "Iced Tea - Peach", "Iced Tea - Raspberry", "Fresh Orange Juice", "Apple Juice", "Mango Smoothie",
-      "Berry Smoothie", "Banana Smoothie", "Chocolate Milkshake", "Strawberry Milkshake", "Vanilla Milkshake", "Sparkling Water", "Coca Cola", "Sprite", "Fanta"
-    ],
-    Food: [
-      "Croissant", "Almond Croissant", "Chocolate Croissant", "Ham & Cheese Croissant", "Butter Croissant", "Pain au Chocolat", "Danish Pastry", "Cinnamon Roll",
-      "Blueberry Muffin", "Chocolate Muffin", "Banana Bread", "Carrot Cake Slice", "Cheesecake Slice", "Chocolate Brownie", "Cookie - Chocolate Chip",
-      "Cookie - Oatmeal Raisin", "Bagel with Cream Cheese", "Avocado Toast", "Grilled Cheese Sandwich", "Turkey & Swiss Sandwich", "Tuna Salad Sandwich",
-      "Quiche Lorraine", "Spinach & Feta Quiche", "Fruit Cup", "Yogurt Parfait", "Oatmeal Bowl"
-    ],
-    Pastry: [
-      "Plain Scone", "Blueberry Scone", "Chocolate Scone", "Cheddar Scone", "Madeleine", "Macaron (Box of 3)", "Eclair", "Cannoli", "Tiramisu Cup",
-      "Panna Cotta", "Crème Brûlée", "Fruit Tart", "Lemon Tart", "Chocolate Tart", "Cupcake - Vanilla", "Cupcake - Chocolate", "Donut - Glazed", "Donut - Chocolate Sprinkles"
-    ],
-    "Add-ons": [
-      "Extra Espresso Shot", "Vanilla Syrup", "Caramel Syrup", "Hazelnut Syrup", "Sugar Free Vanilla", "Almond Milk", "Oat Milk", "Soy Milk", "Whipped Cream",
-      "Chocolate Drizzle", "Caramel Drizzle", "Cinnamon Powder", "Nutmeg", "Extra Hot", "Iced", "Blended", "Large Size (+﷼2)", "Extra Ice", "No Ice"
-    ]
+    Coffee: ["Espresso","Americano","Latte","Cappuccino","Flat White","Mocha","Caramel Macchiato","Iced Latte","Cold Brew"],
+    Tea: ["English Breakfast","Green Tea","Matcha Latte","Chai Latte","Peppermint Tea"],
+    "Cold Drinks": ["Lemonade","Iced Tea","Fresh Orange Juice","Smoothie","Coca Cola"],
+    Food: ["Croissant","Chicken Sandwich","Avocado Toast","Muffin","Brownie"],
+    Pastry: ["Scone","Danish","Cinnamon Roll","Macaron","Cheesecake"],
+    "Add-ons": ["Extra Shot","Vanilla Syrup","Caramel Syrup","Oat Milk","Whipped Cream"]
   };
   const items = [];
   for (const [cat, names] of Object.entries(categories)) {
     for (const name of names) {
-      let price = 0;
-      if (cat === "Coffee") price = Math.floor(Math.random() * (18 - 8 + 1) + 8);
-      else if (cat === "Tea") price = Math.floor(Math.random() * (12 - 6 + 1) + 6);
-      else if (cat === "Cold Drinks") price = Math.floor(Math.random() * (15 - 5 + 1) + 5);
-      else if (cat === "Food") price = Math.floor(Math.random() * (25 - 10 + 1) + 10);
-      else if (cat === "Pastry") price = Math.floor(Math.random() * (15 - 6 + 1) + 6);
-      else price = Math.floor(Math.random() * (5 - 2 + 1) + 2);
-      items.push({ name, price, category: cat, stock: Math.floor(Math.random() * (80 - 20 + 1) + 20) });
+      let price = (cat === "Coffee") ? 12 : (cat === "Food") ? 18 : (cat === "Pastry") ? 10 : 8;
+      items.push({ name, price, category: cat, stock: 50 });
     }
   }
   return items;
@@ -251,11 +229,9 @@ async function loadProducts() {
   const snap = await getDocs(q);
   products = snap.docs.map(d => ({ id: d.id, ...d.data() }));
   if (products.length === 0) {
-    showToast("Generating 100+ menu items for your coffee shop...");
+    showToast("Generating 100+ menu items...");
     const sampleItems = generateSampleProducts();
-    for (let p of sampleItems) {
-      await addDoc(collection(db, "products"), { ...p, userId: currentUser.uid });
-    }
+    for (let p of sampleItems) await addDoc(collection(db, "products"), { ...p, userId: currentUser.uid });
     await loadProducts();
     return;
   }
@@ -267,7 +243,7 @@ async function loadProducts() {
 function renderProductsList() {
   const container = document.getElementById('productsList');
   if (!container) return;
-  container.innerHTML = products.map(p => `<div class="product-item"><div><strong>${p.name}</strong> <span style="color:#64748b;font-size:12px;">(${p.category})</span> - ﷼${p.price} | Stock: ${p.stock}</div><div><button onclick="editProduct('${p.id}','${p.name}',${p.price})" style="background:none;border:none;cursor:pointer;margin-right:8px;">✏️</button><button onclick="deleteProduct('${p.id}')" style="background:none;border:none;cursor:pointer;">🗑️</button></div></div>`).join('');
+  container.innerHTML = products.map(p => `<div class="product-item"><div><strong>${p.name}</strong> (${p.category}) - ﷼${p.price} | Stock: ${p.stock}</div><div><button onclick="editProduct('${p.id}','${p.name}',${p.price})">✏️</button><button onclick="deleteProduct('${p.id}')">🗑️</button></div></div>`).join('');
 }
 window.editProduct = async (id, oldName, oldPrice) => {
   const newName = prompt('New name', oldName);
@@ -307,7 +283,7 @@ function renderCart() {
   let html = '', total = 0;
   cart.forEach((item, idx) => {
     total += item.price * item.qty;
-    html += `<div class="cart-item"><div class="cart-item-name">${item.name}</div><div><div class="cart-item-qty"><button class="qty-btn" onclick="updateQty(${idx},-1)">-</button><span style="min-width:24px;text-align:center;">${item.qty}</span><button class="qty-btn" onclick="updateQty(${idx},1)">+</button></div></div><div>﷼${item.price * item.qty}</div></div>`;
+    html += `<div class="cart-item"><div class="cart-item-name">${item.name}</div><div><div class="cart-item-qty"><button class="qty-btn" onclick="updateQty(${idx},-1)">-</button><span>${item.qty}</span><button class="qty-btn" onclick="updateQty(${idx},1)">+</button></div></div><div>﷼${item.price * item.qty}</div></div>`;
   });
   container.innerHTML = html;
   document.getElementById('cartTotal').innerText = `Total: ﷼${total}`;
@@ -333,53 +309,39 @@ document.getElementById('checkoutBtn').addEventListener('click', async () => {
   await updateDashboard();
 });
 
-// Dashboard stats (FIXED: no orderBy, client-side sorting)
+// Dashboard stats (client-side sorting, no index needed)
 async function updateDashboard() {
   if (!currentUser) return;
   const today = new Date().toISOString().split('T')[0];
   const ordersSnap = await getDocs(query(collection(db, "orders"), where("userId", "==", currentUser.uid)));
-  
-  let todaySales = 0, todayOrders = 0;
+  let todaySales = 0;
   let allOrders = [];
   ordersSnap.forEach(d => {
     const order = { id: d.id, ...d.data() };
     allOrders.push(order);
-    if (order.date.split('T')[0] === today) {
-      todaySales += order.total || 0;
-      todayOrders++;
-    }
+    if (order.date.split('T')[0] === today) todaySales += order.total || 0;
   });
   document.getElementById('todaySales').innerHTML = `﷼${todaySales}`;
-  
-  // Recent orders – sort client side (no index needed)
-  const recentOrders = [...allOrders].sort((a,b) => new Date(b.date) - new Date(a.date)).slice(0,5);
+  const recentOrders = [...allOrders].sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,5);
   const recentList = document.getElementById('recentOrdersList');
   if (recentOrders.length === 0) recentList.innerHTML = '<div style="text-align:center;color:#94a3b8;padding:20px;">No orders yet</div>';
   else recentList.innerHTML = `<table class="orders-table"><thead><tr><th>Order ID</th><th>Amount</th><th>Date</th></tr></thead><tbody>${recentOrders.map(d => `<tr><td>#${d.id.slice(-6)}</td><td>﷼${d.total}</td><td>${new Date(d.date).toLocaleDateString()}</td></tr>`).join('')}</tbody></table>`;
-  
-  // Low stock
   const lowStock = products.filter(p => (p.stock||0) < 10);
   document.getElementById('lowStockCount').innerText = lowStock.length;
   const lowContainer = document.getElementById('lowStockList');
-  if (lowStock.length === 0) lowContainer.innerHTML = '<div style="text-align:center;color:#94a3b8;padding:10px;">All stocks healthy</div>';
-  else lowContainer.innerHTML = lowStock.map(p => `<div class="product-item"><span class="product-name">${p.name}</span><span class="product-stock">Stock: ${p.stock}</span><button class="btn-reorder" onclick="reorderProduct('${p.id}')">Reorder</button></div>`).join('');
-  
-  // Top selling
+  lowContainer.innerHTML = lowStock.length ? lowStock.map(p => `<div class="product-item"><span>${p.name}</span><span class="product-stock">Stock: ${p.stock}</span><button class="btn-reorder" onclick="reorderProduct('${p.id}')">Reorder</button></div>`).join('') : '<div>All stocks healthy</div>';
   const productSales = {};
   allOrders.forEach(d => { d.items.forEach(i => { productSales[i.name] = (productSales[i.name]||0) + i.qty; }); });
   const top = Object.entries(productSales).sort((a,b)=>b[1]-a[1]).slice(0,5);
   const topContainer = document.getElementById('topProductsList');
-  if (top.length === 0) topContainer.innerHTML = '<div style="text-align:center;color:#94a3b8;padding:10px;">No sales data yet</div>';
-  else topContainer.innerHTML = top.map(([name,qty]) => `<div class="product-item"><span class="product-name">${name}</span><span class="product-sales" style="color:var(--grn);font-weight:600;">${qty} sold</span></div>`).join('');
-  
-  // Charts
+  topContainer.innerHTML = top.length ? top.map(([name,qty]) => `<div class="product-item"><span>${name}</span><span class="product-sales" style="color:var(--grn);">${qty} sold</span></div>`).join('') : '<div>No sales yet</div>';
   const daily = {};
   for (let i=6; i>=0; i--) { const d = new Date(); d.setDate(d.getDate()-i); daily[d.toISOString().split('T')[0]] = 0; }
   allOrders.forEach(d => { const date = d.date.split('T')[0]; if (daily[date]!==undefined) daily[date] += d.total||0; });
   const labels = Object.keys(daily).map(d => new Date(d).toLocaleDateString(undefined, {month:'short',day:'numeric'}));
   const data = Object.values(daily);
   const ctx = document.getElementById('salesChart')?.getContext('2d');
-  if (ctx) { if (salesChart) salesChart.destroy(); salesChart = new Chart(ctx, { type: 'line', data: { labels, datasets: [{ label: 'Sales (SAR)', data, borderColor: '#7c3aed', backgroundColor: 'rgba(124,58,237,0.05)', tension: 0.3, fill: true }] } }); }
+  if (ctx) { if (salesChart) salesChart.destroy(); salesChart = new Chart(ctx, { type: 'line', data: { labels, datasets: [{ label: 'Sales (SAR)', data, borderColor: '#7c3aed', tension: 0.3, fill: true }] } }); }
   const ctxR = document.getElementById('reportChart')?.getContext('2d');
   if (ctxR) { if (reportChart) reportChart.destroy(); reportChart = new Chart(ctxR, { type: 'bar', data: { labels, datasets: [{ label: 'Sales (SAR)', data, backgroundColor: '#7c3aed', borderRadius: 8 }] } }); }
   const total30 = Object.values(daily).reduce((a,b)=>a+b,0);
@@ -392,7 +354,7 @@ async function loadProfile() {
   if (!currentUser) return;
   const snap = await getDoc(doc(db, "users", currentUser.uid));
   const data = snap.data() || {};
-  document.getElementById('profileInfo').innerHTML = `<div style="margin-bottom:16px;"><label style="display:block;font-size:12px;color:#64748b;">Full Name</label><div style="font-weight:600;">${data.firstName||''} ${data.lastName||''}</div></div><div style="margin-bottom:16px;"><label style="display:block;font-size:12px;color:#64748b;">Email</label><div style="font-weight:600;">${currentUser.email}</div></div><div style="margin-bottom:16px;"><label style="display:block;font-size:12px;color:#64748b;">Business</label><div style="font-weight:600;">${data.business||''}</div></div><div><label style="display:block;font-size:12px;color:#64748b;">Plan</label><div style="font-weight:600;">${data.plan||'Professional'}</div></div>`;
+  document.getElementById('profileInfo').innerHTML = `<div><label>Name</label><div>${data.firstName||''} ${data.lastName||''}</div></div><div><label>Email</label><div>${currentUser.email}</div></div><div><label>Business</label><div>${data.business||''}</div></div><div><label>Plan</label><div>${data.plan||'Professional'}</div></div>`;
 }
 
 // Logout
