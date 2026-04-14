@@ -239,7 +239,8 @@ canvas{max-height:200px;width:100%;}
           <input type="file" id="logoUpload" accept="image/*">
           <small>Recommended size: 200x200px, PNG/JPG</small>
         </div>
-        <button class="btn-brand-save" id="saveBrandBtn">💾 Save Brand Settings</button>
+        <!-- FIX: Inline onclick with window.saveBranding -->
+        <button class="btn-brand-save" onclick="window.saveBranding()">💾 Save Brand Settings</button>
       </div></div>
     </div>
 
@@ -409,25 +410,31 @@ function updateBrandUI() {
   document.getElementById('companyNameInput').value = brandData.companyName || '';
   document.getElementById('companyBizTypeSelect').value = brandData.bizType || 'restaurant';
 }
+// FIX: saveBranding is exposed to window and can be called from inline onclick
 window.saveBranding = async function() {
-  const newCompanyName = document.getElementById('companyNameInput').value.trim();
-  const newBizType = document.getElementById('companyBizTypeSelect').value;
-  if (!newCompanyName) { showToast('Please enter company name'); return; }
-  let logoURL = brandData.logoURL;
-  const fileInput = document.getElementById('logoUpload');
-  if (fileInput.files.length > 0) {
-    const file = fileInput.files[0];
-    const storageRef = ref(storage, `logos/${currentUser.uid}/logo_${Date.now()}.${file.name.split('.').pop()}`);
-    await uploadBytes(storageRef, file);
-    logoURL = await getDownloadURL(storageRef);
+  console.log("Save branding clicked");
+  try {
+    const newCompanyName = document.getElementById('companyNameInput').value.trim();
+    const newBizType = document.getElementById('companyBizTypeSelect').value;
+    if (!newCompanyName) { showToast('Please enter company name'); return; }
+    let logoURL = brandData.logoURL;
+    const fileInput = document.getElementById('logoUpload');
+    if (fileInput.files.length > 0) {
+      const file = fileInput.files[0];
+      const storageRef = ref(storage, `logos/${currentUser.uid}/logo_${Date.now()}.${file.name.split('.').pop()}`);
+      await uploadBytes(storageRef, file);
+      logoURL = await getDownloadURL(storageRef);
+    }
+    const brandRef = doc(db, "brands", currentUser.uid);
+    await setDoc(brandRef, { companyName: newCompanyName, logoURL, bizType: newBizType }, { merge: true });
+    brandData = { companyName: newCompanyName, logoURL, bizType: newBizType };
+    updateBrandUI();
+    showToast('Brand settings saved!');
+  } catch (err) {
+    console.error(err);
+    showToast('Error: ' + err.message);
   }
-  const brandRef = doc(db, "brands", currentUser.uid);
-  await setDoc(brandRef, { companyName: newCompanyName, logoURL, bizType: newBizType }, { merge: true });
-  brandData = { companyName: newCompanyName, logoURL, bizType: newBizType };
-  updateBrandUI();
-  showToast('Brand settings saved!');
 };
-document.getElementById('saveBrandBtn')?.addEventListener('click', window.saveBranding);
 
 // POS & Products
 async function renderPOSItems() {
