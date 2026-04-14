@@ -304,7 +304,7 @@ body{font-family:'Poppins',sans-serif;background:#f4f4f8;color:#1a1a1a;}
           <button onclick="window.open('https://wa.me/966550898978?text=Hello BillZest, I want to upgrade my plan!')" style="width:100%;background:var(--p);color:#fff;border:none;padding:13px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;margin-top:16px;font-family:'Poppins',sans-serif;">
             🚀 Upgrade Plan — WhatsApp Us
           </button>
-          <div style="text-align:center;font-size:12px;color:#888;margin-top:8px;">📧 info@billzestpos.com</div>
+          <div style="text-align:center;font-size:12px;color:#888;margin-top:8px;">📧 <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="1b72757d745b79727777617e686f6b746835787476">[email&#160;protected]</a></div>
         </div>
       </div>
     </div>
@@ -345,7 +345,7 @@ body{font-family:'Poppins',sans-serif;background:#f4f4f8;color:#1a1a1a;}
           </div>
           <div class="support-item" onclick="window.location.href='mailto:info@billzestpos.com'">
             <div class="si-icon">📧</div>
-            <div><div class="si-title">Email Support</div><div class="si-sub">info@billzestpos.com</div></div>
+            <div><div class="si-title">Email Support</div><div class="si-sub"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="b1d8dfd7def1d3d8ddddcbd4c2c5c1dec29fd2dedc">[email&#160;protected]</a></div></div>
           </div>
           <div class="support-item" onclick="window.open('https://www.billzestpos.com')">
             <div class="si-icon">🌐</div>
@@ -373,7 +373,7 @@ body{font-family:'Poppins',sans-serif;background:#f4f4f8;color:#1a1a1a;}
 
 <div class="toast" id="toast"></div>
 
-<script type="module">
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
 import {
   getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword,
@@ -384,7 +384,7 @@ import {
 import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCN0akvFXOHM6WPHv9ve9noqqmau03TJRY",
+  apiKey: "AIzaSyCN0akvFXOHM6WPHv9ve9noqqmauO3TJRY",
   authDomain: "billzest-pos.firebaseapp.com",
   projectId: "billzest-pos",
   storageBucket: "billzest-pos.firebasestorage.app",
@@ -396,6 +396,9 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 const googleProvider = new GoogleAuthProvider();
+googleProvider.setCustomParameters({
+  client_id: '946546876429-1eclfru0dlqffi5josfisopm7898o59h.apps.googleusercontent.com'
+});
 window._auth = auth;
 
 // Handle mobile Google redirect result
@@ -726,13 +729,4 @@ function loadFAQ() {
   }).join('');
 }
 
-function toggleFAQ(i) {
-  var ans = document.getElementById('faq-a-' + i);
-  var arrow = document.getElementById('faq-arrow-' + i);
-  var isOpen = ans.style.display === 'block';
-  ans.style.display = isOpen ? 'none' : 'block';
-  if(arrow){ arrow.textContent = isOpen ? '▼' : '▲'; arrow.style.color = isOpen ? '#aaa' : 'var(--p)'; }
-}
-</script>
-</body>
-</html>
+function t
