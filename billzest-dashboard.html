@@ -9,7 +9,7 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:'Inter',sans-serif;background:#f8fafc;color:#1e293b;}
-:root{--p:#7c3aed;--pd:#5b21b6;--pl:#ede9fe;--org:#f59e0b;--grn:#10b981;--red:#ef4444;--teal:#14b8a6;--bdr:#e2e8f0;--bg:#f8fafc;}
+:root{--p:#7c3aed;--pd:#5b21b6;--pl:#ede9fe;--org:#f59e0b;--grn:#10b981;--red:#ef4444;--teal:#14b8a6;--bdr:#e2e8f0;}
 .loading{position:fixed;inset:0;background:white;display:flex;align-items:center;justify-content:center;z-index:9999;flex-direction:column;gap:12px;}
 .loading-spinner{width:40px;height:40px;border:3px solid #e2e8f0;border-top-color:var(--p);border-radius:50%;animation:spin .8s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
@@ -91,7 +91,7 @@ canvas{max-height:220px;width:100%;}
 <div class="loading" id="loadingScreen">
   <div class="loading-spinner"></div>
   <div style="font-size:18px;font-weight:600;">BillZest POS</div>
-  <div style="font-size:13px;color:#64748b;">Loading your dashboard...</div>
+  <div style="font-size:13px;color:#64748b;">Loading your premium dashboard...</div>
 </div>
 
 <div class="app" id="mainApp">
@@ -136,7 +136,7 @@ canvas{max-height:220px;width:100%;}
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
 import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc, collection, getDocs, addDoc, query, where, updateDoc, deleteDoc, orderBy, limit } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+import { getFirestore, doc, setDoc, getDoc, collection, getDocs, addDoc, query, where, updateDoc, deleteDoc, limit } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCN0akvFXOHM6WPHv9ve9noqqmauO3TJRY",
@@ -333,8 +333,8 @@ document.getElementById('checkoutBtn').addEventListener('click', async () => {
   await updateDashboard();
 });
 
-// Dashboard stats
- {async function updateDashboard() {
+// Dashboard stats (FIXED: no orderBy, client-side sorting)
+async function updateDashboard() {
   if (!currentUser) return;
   const today = new Date().toISOString().split('T')[0];
   const ordersSnap = await getDocs(query(collection(db, "orders"), where("userId", "==", currentUser.uid)));
@@ -376,44 +376,6 @@ document.getElementById('checkoutBtn').addEventListener('click', async () => {
   const daily = {};
   for (let i=6; i>=0; i--) { const d = new Date(); d.setDate(d.getDate()-i); daily[d.toISOString().split('T')[0]] = 0; }
   allOrders.forEach(d => { const date = d.date.split('T')[0]; if (daily[date]!==undefined) daily[date] += d.total||0; });
-  const labels = Object.keys(daily).map(d => new Date(d).toLocaleDateString(undefined, {month:'short',day:'numeric'}));
-  const data = Object.values(daily);
-  const ctx = document.getElementById('salesChart')?.getContext('2d');
-  if (ctx) { if (salesChart) salesChart.destroy(); salesChart = new Chart(ctx, { type: 'line', data: { labels, datasets: [{ label: 'Sales (SAR)', data, borderColor: '#7c3aed', backgroundColor: 'rgba(124,58,237,0.05)', tension: 0.3, fill: true }] } }); }
-  const ctxR = document.getElementById('reportChart')?.getContext('2d');
-  if (ctxR) { if (reportChart) reportChart.destroy(); reportChart = new Chart(ctxR, { type: 'bar', data: { labels, datasets: [{ label: 'Sales (SAR)', data, backgroundColor: '#7c3aed', borderRadius: 8 }] } }); }
-  const total30 = Object.values(daily).reduce((a,b)=>a+b,0);
-  document.getElementById('totalRevenue').innerHTML = `﷼${total30}`;
-}
-  if (!currentUser) return;
-  const today = new Date().toISOString().split('T')[0];
-  const ordersSnap = await getDocs(query(collection(db, "orders"), where("userId", "==", currentUser.uid)));
-  let todaySales = 0, todayOrders = 0;
-  ordersSnap.forEach(d => { if (d.data().date.split('T')[0] === today) { todaySales += d.data().total || 0; todayOrders++; } });
-  document.getElementById('todaySales').innerHTML = `﷼${todaySales}`;
-  // recent orders
-  const recentQuery = query(collection(db, "orders"), where("userId","==",currentUser.uid), orderBy("date","desc"), limit(5));
-  const recentSnap = await getDocs(recentQuery);
-  const recentList = document.getElementById('recentOrdersList');
-  if (recentSnap.empty) recentList.innerHTML = '<div style="text-align:center;color:#94a3b8;padding:20px;">No orders yet</div>';
-  else recentList.innerHTML = `<table class="orders-table"><thead><tr><th>Order ID</th><th>Amount</th><th>Date</th></tr></thead><tbody>${recentSnap.docs.map(d => `<tr><td>#${d.id.slice(-6)}</td><td>﷼${d.data().total}</td><td>${new Date(d.data().date).toLocaleDateString()}</td></tr>`).join('')}</tbody></table>`;
-  // low stock
-  const lowStock = products.filter(p => (p.stock||0) < 10);
-  document.getElementById('lowStockCount').innerText = lowStock.length;
-  const lowContainer = document.getElementById('lowStockList');
-  if (lowStock.length === 0) lowContainer.innerHTML = '<div style="text-align:center;color:#94a3b8;padding:10px;">All stocks healthy</div>';
-  else lowContainer.innerHTML = lowStock.map(p => `<div class="product-item"><span class="product-name">${p.name}</span><span class="product-stock">Stock: ${p.stock}</span><button class="btn-reorder" onclick="reorderProduct('${p.id}')">Reorder</button></div>`).join('');
-  // top selling
-  const productSales = {};
-  ordersSnap.forEach(d => { d.data().items.forEach(i => { productSales[i.name] = (productSales[i.name]||0) + i.qty; }); });
-  const top = Object.entries(productSales).sort((a,b)=>b[1]-a[1]).slice(0,5);
-  const topContainer = document.getElementById('topProductsList');
-  if (top.length === 0) topContainer.innerHTML = '<div style="text-align:center;color:#94a3b8;padding:10px;">No sales data yet</div>';
-  else topContainer.innerHTML = top.map(([name,qty]) => `<div class="product-item"><span class="product-name">${name}</span><span class="product-sales" style="color:var(--grn);font-weight:600;">${qty} sold</span></div>`).join('');
-  // charts
-  const daily = {};
-  for (let i=6; i>=0; i--) { const d = new Date(); d.setDate(d.getDate()-i); daily[d.toISOString().split('T')[0]] = 0; }
-  ordersSnap.forEach(d => { const date = d.data().date.split('T')[0]; if (daily[date]!==undefined) daily[date] += d.data().total||0; });
   const labels = Object.keys(daily).map(d => new Date(d).toLocaleDateString(undefined, {month:'short',day:'numeric'}));
   const data = Object.values(daily);
   const ctx = document.getElementById('salesChart')?.getContext('2d');
