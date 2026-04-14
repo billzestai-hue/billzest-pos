@@ -199,6 +199,100 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:12px 2
 .tp-item{font-size:13px;color:#555;background:#fff;border:1px solid #ddd;padding:8px 16px;border-radius:8px;}
 .tp-item strong{color:var(--purple);}
 
+/* NEW: LANGUAGE COMPARISON TABLE SECTION */
+.lang-compare-section {
+  background: linear-gradient(135deg, #f8f7ff 0%, #ffffff 100%);
+  padding: 60px 40px;
+  border-top: 1px solid #e8e0f8;
+  border-bottom: 1px solid #e8e0f8;
+}
+.lang-compare-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.lang-compare-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+.lang-compare-header h2 {
+  font-size: 32px;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin-bottom: 12px;
+}
+.lang-compare-header p {
+  font-size: 16px;
+  color: #666;
+  max-width: 700px;
+  margin: 0 auto;
+}
+.lang-badge {
+  display: inline-flex;
+  gap: 16px;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+.lang-badge span {
+  background: #fff;
+  border: 2px solid var(--purple);
+  border-radius: 40px;
+  padding: 6px 20px;
+  font-weight: 700;
+  font-size: 14px;
+}
+.lang-badge span:first-child { background: var(--purple); color: #fff; }
+.lang-badge span:last-child { background: #fff; color: var(--purple); }
+.comp-table-wrapper {
+  overflow-x: auto;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+}
+.comp-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  min-width: 600px;
+}
+.comp-table th {
+  background: var(--purple);
+  color: #fff;
+  padding: 16px 20px;
+  font-weight: 700;
+  text-align: center;
+  font-size: 18px;
+}
+.comp-table td {
+  padding: 12px 20px;
+  border-bottom: 1px solid #eee;
+  vertical-align: top;
+}
+.comp-table tr:last-child td {
+  border-bottom: none;
+}
+.comp-table td:first-child {
+  font-weight: 700;
+  background-color: #faf9ff;
+  width: 30%;
+  color: #1a1a1a;
+}
+.comp-table td:nth-child(2) {
+  background-color: #fff;
+  color: #2c3e66;
+}
+.comp-table td:nth-child(3) {
+  background-color: #fff;
+  color: #8b5e3c;
+  direction: rtl;
+  text-align: right;
+  font-family: 'Tajawal', sans-serif;
+}
+@media (max-width: 768px) {
+  .lang-compare-section { padding: 40px 16px; }
+  .comp-table th, .comp-table td { padding: 10px 12px; font-size: 12px; }
+  .lang-compare-header h2 { font-size: 24px; }
+}
+
 /* RESPONSIVE NEW SECTIONS */
 @media(max-width:1000px){
   .vid-inner{flex-direction:column;gap:36px;}
@@ -595,17 +689,6 @@ nav button,nav div{touch-action:manipulation;-webkit-tap-highlight-color:transpa
             <rect x="225" y="183" width="140" height="14" rx="2" fill="#4f2d91"/>
             <text x="295" y="193" fill="#fff" font-size="8" text-anchor="middle" font-weight="600">ORDER #0042</text>
             <rect x="228" y="201" width="134" height="8" rx="2" fill="#2a2a4a"/>
-            <label class="fl" style="margin-top:10px; display:block;">Business Category <sup>*</sup></label>
-<select class="fi" id="businessCategory" required style="margin-bottom:15px; height:45.6px; border:1px solid #e0e0e0; border-radius:12px; padding:0 14px; width:100%; font-family:inherit; background:#fff; cursor:pointer;">
-  <option value="" disabled selected>Select Your Business Type</option>
-  <option value="grocery">🛒 Grocery & Supermarket</option>
-  <option value="restaurant">🍔 Restaurant & Cafe</option>
-  <option value="electronics">🔌 Electronics & Mobile</option>
-  <option value="clothing">👕 Clothing & Fashion</option>
-  <option value="pharmacy">💊 Pharmacy</option>
-  <option value="hotel">🏨 Hotel & Hospitality</option>
-  <option value="other">💼 Other Business</option>
-</select>
             <rect x="228" y="213" width="100" height="8" rx="2" fill="#2a2a4a"/>
             <rect x="228" y="225" width="120" height="8" rx="2" fill="#2a2a4a"/>
             <rect x="228" y="237" width="80" height="8" rx="2" fill="#2a2a4a"/>
@@ -766,6 +849,50 @@ nav button,nav div{touch-action:manipulation;-webkit-tap-highlight-color:transpa
       <div class="tp-item">🍎 App Store <strong>4.8★</strong></div>
       <div class="tp-item">🤖 Google Play <strong>4.9★</strong></div>
       <div class="tp-item">🌐 Trustpilot <strong>4.7★</strong></div>
+    </div>
+  </div>
+</section>
+
+<!-- NEW: LANGUAGE COMPARISON TABLE SECTION -->
+<section class="lang-compare-section">
+  <div class="lang-compare-inner">
+    <div class="lang-compare-header">
+      <div class="lang-badge">
+        <span>🇬🇧 English</span>
+        <span>🇸🇦 العربية</span>
+      </div>
+      <h2>🌐 Fully Bilingual Experience</h2>
+      <p>BillZest POS supports both English and Arabic – switch instantly with one click.</p>
+    </div>
+    <div class="comp-table-wrapper">
+      <table class="comp-table">
+        <thead>
+          <tr><th>Element</th><th>English</th><th>العربية</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Welcome Banner</td><td>Welcome to BillZest POS — The Smartest Restaurant Management System in the Middle East</td><td>مرحباً بك في بيلزيست – أذكى نظام مطاعم في الشرق الأوسط</td></tr>
+          <tr><td>Navbar Login</td><td>Login</td><td>دخول</td></tr>
+          <tr><td>Navbar Free Trial</td><td>✨ Free Trial</td><td>✨ تجربة مجانية</td></tr>
+          <tr><td>Hero Badge</td><td>EID AL ADHA SPECIAL</td><td>عرض عيد الأضحى</td></tr>
+          <tr><td>Hero Title</td><td>Eid Just Got Better with our systems</td><td>العيد أصبح أفضل مع أنظمتنا</td></tr>
+          <tr><td>Form Label: First Name</td><td>First name *</td><td>الاسم الأول *</td></tr>
+          <tr><td>Form Label: Email</td><td>Email *</td><td>البريد الإلكتروني *</td></tr>
+          <tr><td>Form Label: Password</td><td>Password *</td><td>كلمة المرور *</td></tr>
+          <tr><td>Plan: Basic</td><td>BASIC ﷼1,888/mo</td><td>أساسي ١٨٨٨ ريال/شهر</td></tr>
+          <tr><td>Plan: Pro</td><td>PRO ⭐ ﷼2,888/mo</td><td>برو ⭐ ٢٨٨٨ ريال/شهر</td></tr>
+          <tr><td>Submit Button</td><td>🚀 Start Free Trial</td><td>🚀 ابدأ النسخة التجريبية المجانية</td></tr>
+          <tr><td>Pricing Toggle</td><td>Monthly / Yearly / Save Big</td><td>شهري / سنوي / وفر كثيراً</td></tr>
+          <tr><td>Features Header</td><td>Get to Know the Product in Our Packages</td><td>تعرف على المنتج في باقاتنا</td></tr>
+          <tr><td>Video Button</td><td>📅 Book a Free Demo</td><td>📅 احجز عرضاً توضيحياً مجاناً</td></tr>
+          <tr><td>Counter Labels</td><td>Restaurants / Countries / Transactions / Customer Satisfaction</td><td>المطاعم / الدول / المعاملات / رضا العملاء</td></tr>
+          <tr><td>Subscribe Button</td><td>Subscribe Now</td><td>اشترك الآن</td></tr>
+          <tr><td>AI Chat Default</td><td>Hello! I am BillZest AI. How can I help?</td><td>مرحباً! أنا بيلزيست AI. كيف يمكنني مساعدتك؟</td></tr>
+          <tr><td>AI Quick Replies</td><td>Pricing / Features / Free Trial / Contact</td><td>الأسعار / المميزات / تجربة مجانية / تواصل</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="text-align: center; margin-top: 28px; font-size: 14px; color: #4f2d91;">
+      ⚡ Click the <strong>عربي / English</strong> button in the navbar to switch instantly!
     </div>
   </div>
 </section>
@@ -1002,7 +1129,10 @@ window.BZ=(function(){
         else{document.getElementById("lb-err").style.display="block";}
       }
     },
-    togLang:function(){isAr=!isAr;document.documentElement.setAttribute("dir",isAr?"rtl":"ltr");document.body.style.fontFamily=isAr?"'Tajawal',sans-serif":"'Poppins',sans-serif";var lb=document.getElementById("langNavBtn");if(lb)lb.textContent=isAr?"English":"\uD83C\uDDF8\uD83C\uDDE6 \u0639\u0631\u0628\u064A";var ln=document.getElementById("loginNavBtn");if(ln)ln.textContent=isAr?"\u062F\u062E\u0648\u0644":"Login";var rg=document.querySelector(".reg-btn");if(rg)rg.textContent=isAr?"\u062A\u062C\u0631\u0628\u0629 \u0645\u062C\u0627\u0646\u064A\u0629":"\u2728 Free Trial";var keys=["lb-sub","lb-el","lb-pl","lb-fg","lb-btn"],ar=["\u0633\u062C\u0651\u0644 \u062F\u062E\u0648\u0644\u0643","\u0627\u0644\u0628\u0631\u064A\u062F","\u0643\u0644\u0645\u0629 \u0627\u0644\u0645\u0631\u0648\u0631","\u0646\u0633\u064A\u062A\u061F","\u062F\u062E\u0648\u0644"],en=["Sign in","Email","Password","Forgot?","Sign In"];keys.forEach(function(k,i){var el=document.getElementById(k);if(el)el.textContent=isAr?ar[i]:en[i];});var wb=document.querySelector(".wb-text");if(wb)wb.innerHTML=isAr?"<strong>\u0639\u0631\u0636 \u0639\u064A\u062F \u0627\u0644\u0623\u0636\u062D\u0649</strong> \u2014 \u062E\u0635\u0645 20%!":"Welcome to <strong>BillZest POS</strong> \u2014 The Smartest Restaurant Management System in the Middle East";toast(isAr?"\u062A\u0645 \u0627\u0644\u062A\u063A\u064A\u064A\u0631 \u0644\u0644\u0639\u0631\u0628\u064A\u0629":"Changed to English");},
+    togLang:function(){isAr=!isAr;document.documentElement.setAttribute("dir",isAr?"rtl":"ltr");document.body.style.fontFamily=isAr?"'Tajawal',sans-serif":"'Poppins',sans-serif";var lb=document.getElementById("langNavBtn");if(lb)lb.textContent=isAr?"English":"\uD83C\uDDF8\uD83C\uDDE6 \u0639\u0631\u0628\u064A";var ln=document.getElementById("loginNavBtn");if(ln)ln.textContent=isAr?"\u062F\u062E\u0648\u0644":"Login";var rg=document.querySelector(".reg-btn");if(rg)rg.textContent=isAr?"\u062A\u062C\u0631\u0628\u0629 \u0645\u062C\u0627\u0646\u064A\u0629":"\u2728 Free Trial";var keys=["lb-sub","lb-el","lb-pl","lb-fg","lb-btn"],ar=["\u0633\u062C\u0651\u0644 \u062F\u062E\u0648\u0644\u0643","\u0627\u0644\u0628\u0631\u064A\u062F","\u0643\u0644\u0645\u0629 \u0627\u0644\u0645\u0631\u0648\u0631","\u0646\u0633\u064A\u062A\u061F","\u062F\u062E\u0648\u0644"],en=["Sign in","Email","Password","Forgot?","Sign In"];keys.forEach(function(k,i){var el=document.getElementById(k);if(el)el.textContent=isAr?ar[i]:en[i];});var wb=document.querySelector(".wb-text");if(wb)wb.innerHTML=isAr?"<strong>\u0639\u0631\u0636 \u0639\u064A\u062F \u0627\u0644\u0623\u0636\u062D\u0649</strong> \u2014 \u062E\u0635\u0645 20%!":"Welcome to <strong>BillZest POS</strong> \u2014 The Smartest Restaurant Management System in the Middle East";toast(isAr?"\u062A\u0645 \u0627\u0644\u062A\u063A\u064A\u064A\u0631 \u0644\u0644\u0639\u0631\u0628\u064A\u0629":"Changed to English");
+      // Sync AI chat language
+      if(window.bzToggleLang) window.bzToggleLang();
+    },
     toast:toast,
     showAdminNav:function(email){
       var loginBtn=document.getElementById('loginNavBtn');
@@ -1468,4 +1598,29 @@ window.bzProc=function bzProc(m){bzAddMsg("user",m);bzTyp(true);document.getElem
 window.bzAuto=function bzAuto(m){var a=bzAr;if(/price|pricing|سعر/.test(m))return a?"الأسعار من 1888 ريال/شهر":"Plans from SAR 1,888/mo";if(/free|trial|تجربة/.test(m))return a?"تجربة مجانية 14 يوم":"14-day FREE trial!";if(/contact|تواصل/.test(m))return "info@billzestpos.com";return a?"شكراً! info@billzestpos.com":"Thanks! info@billzestpos.com";}
 function bzAddMsg(from,text){var el=document.getElementById("bzM");var d=document.createElement("div");d.style.cssText="display:flex;flex-direction:column;"+(from==="user"?"align-items:flex-end;":"align-items:flex-start;");var bubble=document.createElement("div");var tEl=document.createElement("div");var t=new Date();tEl.style.cssText="font-size:10px;color:#aaa;margin-top:2px;";tEl.textContent=t.getHours()+":"+String(t.getMinutes()).padStart(2,"0");if(from==="bot"){var row=document.createElement("div");row.style.cssText="display:flex;gap:5px;align-items:flex-end;";var av=document.createElement("div");av.style.cssText="width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#4f2d91,#00b5a3);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;flex-shrink:0;";av.textContent="AI";bubble.style.cssText="background:#fff;border-radius:4px 12px 12px 12px;padding:8px 12px;font-size:12px;color:#1a1a1a;line-height:1.5;box-shadow:0 2px 6px rgba(0,0,0,.06);max-width:85%;";bubble.innerHTML=text;tEl.style.paddingLeft="27px";row.appendChild(av);row.appendChild(bubble);d.appendChild(row);}else{bubble.style.cssText="background:linear-gradient(135deg,#4f2d91,#3b1f6e);border-radius:12px 12px 4px 12px;padding:8px 12px;font-size:12px;color:#fff;line-height:1.5;max-width:85%;";bubble.textContent=text;d.appendChild(bubble);}d.appendChild(tEl);el.appendChild(d);el.scrollTop=el.scrollHeight;}
 function bzTyp(show){var el=document.getElementById("bzM");var ex=document.getElementById("bzT");if(ex)ex.remove();if(!show)return;var d=document.createElement("div");d.id="bzT";d.style.cssText="display:flex;gap:5px;align-items:flex-end;";var av=document.createElement("div");av.style.cssText="width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#4f2d91,#00b5a3);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;";av.textContent="AI";var bub=document.createElement("div");bub.style.cssText="background:#fff;border-radius:4px 12px 12px 12px;padding:9px 13px;display:flex;gap:3px;";for(var i=0;i<3;i++){var s=document.createElement("span");s.style.cssText="width:5px;height:5px;background:#ccc;border-radius:50%;animation:bzD .9s "+(i*0.2)+"s ease infinite;display:block;";bub.appendChild(s);}d.appendChild(av);d.appendChild(bub);el.appendChild(d);el.scrollTop=el.scrollHeight;}
-window.bzClear
+
+// NEW: AI Chat Clear function
+window.bzClear = function() {
+  bzHist = [];
+  document.getElementById("bzM").innerHTML = "";
+  bzAddMsg("bot", bzAr ? "چیٹ صاف ہو گئی۔ میں آپ کی کس طرح مدد کر سکتا ہوں؟" : "Chat cleared. How can I help?");
+  bzRQ();
+};
+
+// NEW: AI Chat Language Toggle (sync with main page)
+window.bzToggleLang = function() {
+  bzAr = !bzAr;
+  var btn = document.getElementById("bzLB");
+  if (btn) btn.textContent = bzAr ? "🇸🇦" : "🌐";
+  bzClear();
+};
+
+// Ensure AI chat language matches main page initially
+if (window.BZ && window.BZ.isAr !== undefined) {
+  bzAr = window.BZ.isAr;
+  var lbBtn = document.getElementById("bzLB");
+  if (lbBtn) lbBtn.textContent = bzAr ? "🇸🇦" : "🌐";
+}
+</script>
+</body>
+</html>
