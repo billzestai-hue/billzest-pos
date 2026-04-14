@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>BillZest All-in-One Dashboard with Branding</title>
+<title>BillZest All-in-One Dashboard | Brand Your Business</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
@@ -97,7 +97,7 @@ body{font-family:'Poppins',sans-serif;background:#f4f4f8;color:#1a1a1a;}
 .add-product-form{display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:16px;}
 .add-product-form input{padding:10px;border:1px solid var(--bdr);border-radius:8px;}
 
-/* Branding / Company Profile */
+/* Branding Preview */
 .branding-preview{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding:16px;background:#f8f8f8;border-radius:12px;}
 .brand-logo-preview{width:60px;height:60px;border-radius:12px;background:#fff;display:flex;align-items:center;justify-content:center;border:1px solid var(--bdr);overflow:hidden;}
 .brand-logo-preview img{max-width:100%;max-height:100%;object-fit:contain;}
@@ -140,38 +140,38 @@ canvas{max-height:200px;width:100%;}
   <div style="font-size:13px;color:#888;">Loading your dashboard...</div>
 </div>
 
-<!-- LOGIN PAGE (simplified but functional) -->
+<!-- LOGIN PAGE -->
 <div class="login-page" id="loginPage" style="display:none;">
   <div class="login-card">
     <div class="lc-logo">Bill<span>Zest</span></div>
     <div class="lc-sub">All-in-One POS with Branding</div>
     <div class="lc-tabs">
-      <button class="lc-tab on" id="tabLogin" onclick="switchTab('login')">Sign In</button>
-      <button class="lc-tab" id="tabRegister" onclick="switchTab('register')">Register Free</button>
+      <button class="lc-tab on" id="tabLogin" onclick="window.switchTab('login')">Sign In</button>
+      <button class="lc-tab" id="tabRegister" onclick="window.switchTab('register')">Register Free</button>
     </div>
     <div id="loginForm">
       <div class="auth-err" id="loginErr"></div>
       <div class="auth-ok" id="loginOk"></div>
       <div class="lf"><label>Email</label><input type="email" id="loginEmail" placeholder="your@email.com"></div>
-      <div class="lf"><label>Password</label><div class="eye-wrap"><input type="password" id="loginPass" placeholder="Your password"><button class="eye-btn" onclick="toggleEye('loginPass',this)" type="button">👁</button></div></div>
-      <div style="text-align:right;margin-bottom:12px;"><span onclick="doForgotPassword()" style="font-size:12px;color:var(--p);cursor:pointer;">Forgot password?</span></div>
-      <button class="btn-auth" onclick="doSignIn()">🔐 Sign In</button>
+      <div class="lf"><label>Password</label><div class="eye-wrap"><input type="password" id="loginPass" placeholder="Your password"><button class="eye-btn" onclick="window.toggleEye('loginPass',this)" type="button">👁</button></div></div>
+      <div style="text-align:right;margin-bottom:12px;"><span onclick="window.doForgotPassword()" style="font-size:12px;color:var(--p);cursor:pointer;">Forgot password?</span></div>
+      <button class="btn-auth" onclick="window.doSignIn()">🔐 Sign In</button>
       <div class="divider">or</div>
-      <button class="btn-google" onclick="doGoogleSignIn()">Continue with Google</button>
+      <button class="btn-google" onclick="window.doGoogleSignIn()">Continue with Google</button>
     </div>
     <div id="registerForm" style="display:none;">
       <div class="auth-err" id="registerErr"></div>
       <div class="auth-ok" id="registerOk"></div>
       <div class="lf-row"><div class="lf"><label>First Name</label><input type="text" id="regFirst"></div><div class="lf"><label>Last Name</label><input type="text" id="regLast"></div></div>
       <div class="lf"><label>Email</label><input type="email" id="regEmail"></div>
-      <div class="lf"><label>Password</label><div class="eye-wrap"><input type="password" id="regPass"><button class="eye-btn" onclick="toggleEye('regPass',this)" type="button">👁</button></div></div>
+      <div class="lf"><label>Password</label><div class="eye-wrap"><input type="password" id="regPass"><button class="eye-btn" onclick="window.toggleEye('regPass',this)" type="button">👁</button></div></div>
       <div class="lf"><label>Business Name</label><input type="text" id="regBiz"></div>
       <div class="lf"><label>Business Type</label><select id="regBizType"><option value="restaurant">Restaurant</option><option value="cafe">Cafe</option><option value="grocery">Grocery</option><option value="retail">Retail</option><option value="electronics">Electronics</option><option value="hotel">Hotel</option></select></div>
       <div class="lf"><label>Phone</label><input type="tel" id="regPhone"></div>
       <div class="lf-row"><div class="lf"><label>Country</label><select id="regCountry"><option value="Saudi Arabia">Saudi Arabia</option><option value="UAE">UAE</option><option value="Kuwait">Kuwait</option></select></div><div class="lf"><label>Plan</label><select id="regPlan"><option value="Basic">Basic</option><option value="Pro">Pro</option><option value="Enterprise">Enterprise</option></select></div></div>
-      <button class="btn-auth" onclick="doRegister()">✨ Start Free Trial</button>
+      <button class="btn-auth" onclick="window.doRegister()">✨ Start Free Trial</button>
       <div class="divider">or</div>
-      <button class="btn-google" onclick="doGoogleSignIn()">Continue with Google</button>
+      <button class="btn-google" onclick="window.doGoogleSignIn()">Continue with Google</button>
     </div>
   </div>
 </div>
@@ -180,10 +180,9 @@ canvas{max-height:200px;width:100%;}
 <div class="app" id="mainApp">
   <div class="app-header">
     <div class="ah-logo" id="brandHeader">
-      <!-- Dynamic logo and company name will appear here -->
       <div class="ah-logo-text">Bill<span>Zest</span></div>
     </div>
-    <div class="ah-user"><div class="ah-avatar" id="userAvatar">👤</div><div class="ah-name" id="userName">User</div><button class="btn-logout" onclick="doLogout()">Logout</button></div>
+    <div class="ah-user"><div class="ah-avatar" id="userAvatar">👤</div><div class="ah-name" id="userName">User</div><button class="btn-logout" onclick="window.doLogout()">Logout</button></div>
   </div>
 
   <div class="content">
@@ -191,7 +190,7 @@ canvas{max-height:200px;width:100%;}
     <div class="page on" id="pageHome">
       <div class="welcome-card"><div class="wc-bg">🏪</div><div class="wc-greeting">Welcome back!</div><div class="wc-name" id="wcName">Loading...</div><div><span class="wc-plan" id="wcPlan">Basic Plan</span></div><div class="wc-trial">🎁 14-day free trial active</div></div>
       <div class="stats-grid"><div class="stat-card"><div class="stat-icon">📊</div><div class="stat-val" id="statOrders">0</div><div class="stat-lbl">Total Orders</div></div><div class="stat-card"><div class="stat-icon">💰</div><div class="stat-val" id="statRevenue">﷼0</div><div class="stat-lbl">Revenue</div></div><div class="stat-card"><div class="stat-icon">🏪</div><div class="stat-val" id="statProducts">0</div><div class="stat-lbl">Products</div></div><div class="stat-card"><div class="stat-icon">⭐</div><div class="stat-val">4.9</div><div class="stat-lbl">Rating</div></div></div>
-      <div class="section"><div class="section-hdr"><div class="section-title">⚡ Quick Actions</div></div><div class="section-body"><div class="actions-grid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;"><button class="action-btn" onclick="switchPage('pagePOS')"><div class="ab-icon">🛒</div><div class="ab-label">Open POS</div></button><button class="action-btn" onclick="switchPage('pageProducts')"><div class="ab-icon">📦</div><div class="ab-label">Products</div></button><button class="action-btn" onclick="switchPage('pageReports')"><div class="ab-icon">📊</div><div class="ab-label">Reports</div></button><button class="action-btn" onclick="switchPage('pageBranding')"><div class="ab-icon">🏷️</div><div class="ab-label">Branding</div></button></div></div></div>
+      <div class="section"><div class="section-hdr"><div class="section-title">⚡ Quick Actions</div></div><div class="section-body"><div class="actions-grid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;"><button class="action-btn" onclick="window.switchPage('pagePOS')"><div class="ab-icon">🛒</div><div class="ab-label">Open POS</div></button><button class="action-btn" onclick="window.switchPage('pageProducts')"><div class="ab-icon">📦</div><div class="ab-label">Products</div></button><button class="action-btn" onclick="window.switchPage('pageReports')"><div class="ab-icon">📊</div><div class="ab-label">Reports</div></button><button class="action-btn" onclick="window.switchPage('pageBranding')"><div class="ab-icon">🏷️</div><div class="ab-label">Branding</div></button></div></div></div>
       <div class="section"><div class="section-hdr"><div class="section-title">📋 Recent Activity</div></div><div class="section-body"><div style="text-align:center;padding:20px;color:#aaa;">✨ Start taking orders from POS!</div></div></div>
     </div>
 
@@ -202,7 +201,7 @@ canvas{max-height:200px;width:100%;}
           <div class="pos-items" id="posItemsList"></div>
           <div class="cart-items" id="cartItems"><div style="text-align:center;color:#aaa;">Cart empty</div></div>
           <div class="cart-total" id="cartTotal">Total: ﷼0</div>
-          <button class="btn-checkout" onclick="checkout()">✅ Complete Order</button>
+          <button class="btn-checkout" onclick="window.checkout()">✅ Complete Order</button>
         </div>
       </div></div>
     </div>
@@ -210,7 +209,7 @@ canvas{max-height:200px;width:100%;}
     <!-- PRODUCTS PAGE -->
     <div class="page" id="pageProducts">
       <div class="section"><div class="section-hdr"><div class="section-title">📦 Manage Products</div></div><div class="section-body">
-        <div class="add-product-form"><input type="text" id="newProductName" placeholder="Product name"><input type="number" id="newProductPrice" placeholder="Price (SAR)"><button onclick="addProduct()">➕ Add</button></div>
+        <div class="add-product-form"><input type="text" id="newProductName" placeholder="Product name"><input type="number" id="newProductPrice" placeholder="Price (SAR)"><button onclick="window.addProduct()">➕ Add</button></div>
         <div id="productsList" class="product-list"></div>
       </div></div>
     </div>
@@ -223,7 +222,7 @@ canvas{max-height:200px;width:100%;}
       </div></div>
     </div>
 
-    <!-- BRANDING / COMPANY PROFILE PAGE (NEW) -->
+    <!-- BRANDING / COMPANY PROFILE PAGE -->
     <div class="page" id="pageBranding">
       <div class="section"><div class="section-hdr"><div class="section-title">🏷️ Your Brand & Company</div></div><div class="section-body">
         <div class="branding-preview" id="brandPreview">
@@ -240,13 +239,13 @@ canvas{max-height:200px;width:100%;}
           <input type="file" id="logoUpload" accept="image/*">
           <small>Recommended size: 200x200px, PNG/JPG</small>
         </div>
-        <button class="btn-brand-save" onclick="saveBranding()">💾 Save Brand Settings</button>
+        <button class="btn-brand-save" id="saveBrandBtn">💾 Save Brand Settings</button>
       </div></div>
     </div>
 
     <!-- PROFILE PAGE -->
     <div class="page" id="pageProfile">
-      <div class="section"><div class="section-hdr"><div class="section-title">👤 My Profile</div></div><div class="section-body"><div id="profileInfo"></div><button onclick="doLogout()" style="margin-top:16px;width:100%;background:var(--red);color:#fff;border:none;padding:10px;border-radius:8px;">Logout</button></div></div>
+      <div class="section"><div class="section-hdr"><div class="section-title">👤 My Profile</div></div><div class="section-body"><div id="profileInfo"></div><button onclick="window.doLogout()" style="margin-top:16px;width:100%;background:var(--red);color:#fff;border:none;padding:10px;border-radius:8px;">Logout</button></div></div>
     </div>
 
     <!-- SUPPORT PAGE -->
@@ -259,86 +258,164 @@ canvas{max-height:200px;width:100%;}
   </div>
 
   <div class="bottom-nav">
-    <button class="bn-item on" id="bnHome" onclick="switchPage('pageHome');setNav('bnHome')"><div class="bn-icon">🏠</div>Home</button>
-    <button class="bn-item" id="bnPOS" onclick="switchPage('pagePOS');setNav('bnPOS')"><div class="bn-icon">🛒</div>POS</button>
-    <button class="bn-item" id="bnProducts" onclick="switchPage('pageProducts');setNav('bnProducts')"><div class="bn-icon">📦</div>Products</button>
-    <button class="bn-item" id="bnReports" onclick="switchPage('pageReports');setNav('bnReports')"><div class="bn-icon">📊</div>Reports</button>
-    <button class="bn-item" id="bnBranding" onclick="switchPage('pageBranding');setNav('bnBranding')"><div class="bn-icon">🏷️</div>Brand</button>
-    <button class="bn-item" id="bnProfile" onclick="switchPage('pageProfile');setNav('bnProfile')"><div class="bn-icon">👤</div>Profile</button>
+    <button class="bn-item on" id="bnHome" onclick="window.switchPage('pageHome');window.setNav('bnHome')"><div class="bn-icon">🏠</div>Home</button>
+    <button class="bn-item" id="bnPOS" onclick="window.switchPage('pagePOS');window.setNav('bnPOS')"><div class="bn-icon">🛒</div>POS</button>
+    <button class="bn-item" id="bnProducts" onclick="window.switchPage('pageProducts');window.setNav('bnProducts')"><div class="bn-icon">📦</div>Products</button>
+    <button class="bn-item" id="bnReports" onclick="window.switchPage('pageReports');window.setNav('bnReports')"><div class="bn-icon">📊</div>Reports</button>
+    <button class="bn-item" id="bnBranding" onclick="window.switchPage('pageBranding');window.setNav('bnBranding')"><div class="bn-icon">🏷️</div>Brand</button>
+    <button class="bn-item" id="bnProfile" onclick="window.switchPage('pageProfile');window.setNav('bnProfile')"><div class="bn-icon">👤</div>Profile</button>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
-<!-- Firebase + All-in-One Scripts with Storage -->
+<!-- Firebase + All-in-One Scripts (MODULE) -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, sendEmailVerification, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 import { getFirestore, doc, setDoc, getDoc, collection, getDocs, addDoc, query, where, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-storage.js";
 
-const firebaseConfig = { apiKey: "AIzaSyCN0akvFXOHM6WPHv9ve9noqqmauO3TJRY", authDomain: "billzest-pos.firebaseapp.com", projectId: "billzest-pos", storageBucket: "billzest-pos.firebasestorage.app", messagingSenderId: "946546876429", appId: "1:946546876429:web:9b4a7aa3cecbf3aea83544" };
+const firebaseConfig = {
+  apiKey: "AIzaSyCN0akvFXOHM6WPHv9ve9noqqmauO3TJRY",
+  authDomain: "billzest-pos.firebaseapp.com",
+  projectId: "billzest-pos",
+  storageBucket: "billzest-pos.firebasestorage.app",
+  messagingSenderId: "946546876429",
+  appId: "1:946546876429:web:9b4a7aa3cecbf3aea83544"
+};
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
 const googleProvider = new GoogleAuthProvider();
 
-window.fbSignIn = async (email, pass) => { try { const cred = await signInWithEmailAndPassword(auth, email, pass); if (!cred.user.emailVerified) { await signOut(auth); return {ok:false, code:'auth/email-not-verified'}; } return {ok:true}; } catch(e) { return {ok:false, code:e.code}; } };
-window.fbRegister = async (email, pass, data) => { try { const cred = await createUserWithEmailAndPassword(auth, email, pass); await setDoc(doc(db, "users", cred.user.uid), {...data, email, uid:cred.user.uid, createdAt:new Date().toISOString()}); await sendEmailVerification(cred.user); await signOut(auth); return {ok:true}; } catch(e) { return {ok:false, code:e.code}; } };
-window.fbGoogleSignIn = async () => { try { const result = await signInWithPopup(auth, googleProvider); const snap = await getDoc(doc(db, "users", result.user.uid)); if(!snap.exists()) await setDoc(doc(db, "users", result.user.uid), { firstName: result.user.displayName?.split(' ')[0] || 'User', email: result.user.email, uid: result.user.uid, plan:'Basic', createdAt: new Date().toISOString() }); return {ok:true}; } catch(e) { return {ok:false}; } };
-window.fbForgotPassword = async (email) => { try { await sendPasswordResetEmail(auth, email); return {ok:true}; } catch(e) { return {ok:false}; } };
-window.fbLogout = async () => { await signOut(auth); };
+// Expose critical functions to global window for inline onclick
+window.switchTab = (tab) => {
+  document.getElementById('loginForm').style.display = tab === 'login' ? 'block' : 'none';
+  document.getElementById('registerForm').style.display = tab === 'register' ? 'block' : 'none';
+  document.getElementById('tabLogin').classList.toggle('on', tab === 'login');
+  document.getElementById('tabRegister').classList.toggle('on', tab === 'register');
+  document.getElementById('loginErr').style.display = 'none';
+  document.getElementById('registerErr').style.display = 'none';
+};
+window.toggleEye = (id, btn) => { const inp = document.getElementById(id); inp.type = inp.type === 'password' ? 'text' : 'password'; btn.textContent = inp.type === 'password' ? '👁' : '🙈'; };
+window.doSignIn = async () => {
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass = document.getElementById('loginPass').value;
+  const err = document.getElementById('loginErr');
+  err.style.display = 'none';
+  if (!email || !pass) { err.innerText = 'Fill all fields'; err.style.display = 'block'; return; }
+  try {
+    const cred = await signInWithEmailAndPassword(auth, email, pass);
+    if (!cred.user.emailVerified) {
+      await signOut(auth);
+      err.innerHTML = '⚠️ Email not verified! Check your inbox.';
+      err.style.display = 'block';
+    }
+  } catch(e) {
+    err.innerText = e.code === 'auth/invalid-credential' ? 'Invalid email or password' : e.message;
+    err.style.display = 'block';
+  }
+};
+window.doRegister = async () => {
+  const first = document.getElementById('regFirst').value.trim();
+  const last = document.getElementById('regLast').value.trim();
+  const email = document.getElementById('regEmail').value.trim();
+  const pass = document.getElementById('regPass').value;
+  const biz = document.getElementById('regBiz').value.trim();
+  const phone = document.getElementById('regPhone').value.trim();
+  const country = document.getElementById('regCountry').value;
+  const plan = document.getElementById('regPlan').value;
+  const bizType = document.getElementById('regBizType').value;
+  const err = document.getElementById('registerErr');
+  const ok = document.getElementById('registerOk');
+  err.style.display = 'none'; ok.style.display = 'none';
+  if (!first || !last || !email || !pass || !biz) { err.innerText = 'Fill all required fields'; err.style.display = 'block'; return; }
+  if (pass.length < 8) { err.innerText = 'Password must be at least 8 characters'; err.style.display = 'block'; return; }
+  try {
+    const cred = await createUserWithEmailAndPassword(auth, email, pass);
+    await setDoc(doc(db, "users", cred.user.uid), { firstName: first, lastName: last, business: biz, phone, country, plan, bizType, email, uid: cred.user.uid, createdAt: new Date().toISOString() });
+    await sendEmailVerification(cred.user);
+    await signOut(auth);
+    ok.innerHTML = 'Account created! Please verify your email.';
+    ok.style.display = 'block';
+    setTimeout(() => window.switchTab('login'), 3000);
+  } catch(e) {
+    err.innerText = e.code === 'auth/email-already-in-use' ? 'Email already registered' : e.message;
+    err.style.display = 'block';
+  }
+};
+window.doGoogleSignIn = async () => {
+  try {
+    const result = await signInWithPopup(auth, googleProvider);
+    const snap = await getDoc(doc(db, "users", result.user.uid));
+    if (!snap.exists()) {
+      await setDoc(doc(db, "users", result.user.uid), {
+        firstName: result.user.displayName?.split(' ')[0] || 'User',
+        email: result.user.email,
+        uid: result.user.uid,
+        plan: 'Basic',
+        createdAt: new Date().toISOString()
+      });
+    }
+  } catch(e) { alert('Google sign-in failed: ' + e.message); }
+};
+window.doForgotPassword = async () => {
+  const email = document.getElementById('loginEmail').value.trim();
+  const err = document.getElementById('loginErr');
+  const ok = document.getElementById('loginOk');
+  if (!email) { err.innerText = 'Enter your email'; err.style.display = 'block'; return; }
+  try {
+    await sendPasswordResetEmail(auth, email);
+    ok.innerHTML = 'Password reset email sent!';
+    ok.style.display = 'block';
+  } catch(e) { err.innerText = e.message; err.style.display = 'block'; }
+};
+window.doLogout = async () => { await signOut(auth); showToast('Logged out'); setTimeout(() => location.reload(), 800); };
+window.switchPage = (pageId) => { document.querySelectorAll('.page').forEach(p => p.classList.remove('on')); document.getElementById(pageId).classList.add('on'); window.scrollTo(0,0); };
+window.setNav = (id) => { document.querySelectorAll('.bn-item').forEach(b => b.classList.remove('on')); document.getElementById(id).classList.add('on'); };
 
 let currentUser = null;
 let userData = null;
 let products = [];
 let cart = [];
 let brandData = { companyName: '', logoURL: '', bizType: 'restaurant' };
+let chart = null;
 
-function showToast(msg) { let t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3000); }
+function showToast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3000); }
 
-// Load brand data from Firestore
 async function loadBrandData() {
-  if(!currentUser) return;
+  if (!currentUser) return;
   const brandRef = doc(db, "brands", currentUser.uid);
   const snap = await getDoc(brandRef);
-  if(snap.exists()) {
-    brandData = snap.data();
-  } else {
+  if (snap.exists()) brandData = snap.data();
+  else {
     brandData = { companyName: userData?.business || 'My Business', logoURL: '', bizType: userData?.bizType || 'restaurant' };
     await setDoc(brandRef, brandData);
   }
   updateBrandUI();
 }
 function updateBrandUI() {
-  // Update header
-  const headerLogo = document.getElementById('brandHeader');
-  if(headerLogo) {
-    if(brandData.logoURL) {
-      headerLogo.innerHTML = `<img src="${brandData.logoURL}" class="ah-logo-img" alt="logo"><div class="ah-logo-text"><span>${brandData.companyName.substring(0,15)}</span></div>`;
-    } else {
-      headerLogo.innerHTML = `<div class="ah-logo-text">Bill<span>Zest</span> <span style="font-size:12px;">| ${brandData.companyName.substring(0,15)}</span></div>`;
-    }
+  const header = document.getElementById('brandHeader');
+  if (header) {
+    if (brandData.logoURL) header.innerHTML = `<img src="${brandData.logoURL}" class="ah-logo-img" alt="logo"><div class="ah-logo-text"><span>${brandData.companyName.substring(0,15)}</span></div>`;
+    else header.innerHTML = `<div class="ah-logo-text">Bill<span>Zest</span> <span style="font-size:12px;">| ${brandData.companyName.substring(0,15)}</span></div>`;
   }
-  // Update preview in branding page
   const previewLogo = document.getElementById('logoPreview');
-  if(previewLogo) {
-    if(brandData.logoURL) previewLogo.innerHTML = `<img src="${brandData.logoURL}" style="max-width:100%;max-height:100%;">`;
-    else previewLogo.innerHTML = '<span>🏪</span>';
-  }
+  if (previewLogo) previewLogo.innerHTML = brandData.logoURL ? `<img src="${brandData.logoURL}" style="max-width:100%;max-height:100%;">` : '<span>🏪</span>';
   document.getElementById('previewCompanyName').innerText = brandData.companyName || 'Your Company';
   document.getElementById('previewBusinessType').innerText = (brandData.bizType || 'restaurant').toUpperCase();
   document.getElementById('companyNameInput').value = brandData.companyName || '';
   document.getElementById('companyBizTypeSelect').value = brandData.bizType || 'restaurant';
 }
-async function saveBranding() {
+window.saveBranding = async function() {
   const newCompanyName = document.getElementById('companyNameInput').value.trim();
   const newBizType = document.getElementById('companyBizTypeSelect').value;
-  if(!newCompanyName) { showToast('Please enter company name'); return; }
-  const fileInput = document.getElementById('logoUpload');
+  if (!newCompanyName) { showToast('Please enter company name'); return; }
   let logoURL = brandData.logoURL;
-  if(fileInput.files.length > 0) {
+  const fileInput = document.getElementById('logoUpload');
+  if (fileInput.files.length > 0) {
     const file = fileInput.files[0];
     const storageRef = ref(storage, `logos/${currentUser.uid}/logo_${Date.now()}.${file.name.split('.').pop()}`);
     await uploadBytes(storageRef, file);
@@ -349,43 +426,42 @@ async function saveBranding() {
   brandData = { companyName: newCompanyName, logoURL, bizType: newBizType };
   updateBrandUI();
   showToast('Brand settings saved!');
-}
+};
+document.getElementById('saveBrandBtn')?.addEventListener('click', window.saveBranding);
 
-// POS & Products (same as before)
+// POS & Products
 async function renderPOSItems() {
   const container = document.getElementById('posItemsList');
-  if(!container) return;
-  if(products.length===0) await loadProducts();
-  container.innerHTML = products.map(p => `<div class="pos-item-card" onclick="addToCart('${p.id}','${p.name.replace(/'/g,"\\'")}',${p.price})"><div class="pos-item-name">${p.name}</div><div class="pos-item-price">﷼${p.price}</div></div>`).join('');
+  if (!container) return;
+  if (products.length === 0) await loadProducts();
+  container.innerHTML = products.map(p => `<div class="pos-item-card" onclick="window.addToCart('${p.id}','${p.name.replace(/'/g,"\\'")}',${p.price})"><div class="pos-item-name">${p.name}</div><div class="pos-item-price">﷼${p.price}</div></div>`).join('');
 }
-window.addToCart = function(id, name, price) {
-  let existing = cart.find(i=>i.id===id);
-  if(existing) existing.qty++;
-  else cart.push({id,name,price,qty:1});
+window.addToCart = (id, name, price) => {
+  const existing = cart.find(i => i.id === id);
+  if (existing) existing.qty++;
+  else cart.push({ id, name, price, qty: 1 });
   renderCart();
 };
 function renderCart() {
   const container = document.getElementById('cartItems');
-  if(cart.length===0) { container.innerHTML='<div style="text-align:center;color:#aaa;">Cart empty</div>'; document.getElementById('cartTotal').innerText='Total: ﷼0'; return; }
-  let html = '';
-  let total=0;
-  cart.forEach((item,idx)=>{
-    total += item.price*item.qty;
-    html += `<div class="cart-item"><div class="cart-item-details"><div class="cart-item-name">${item.name}</div><div class="cart-item-qty"><button class="qty-btn" onclick="updateQty(${idx},-1)">-</button><span>${item.qty}</span><button class="qty-btn" onclick="updateQty(${idx},1)">+</button></div></div><div>﷼${item.price*item.qty}</div></div>`;
+  if (cart.length === 0) { container.innerHTML = '<div style="text-align:center;color:#aaa;">Cart empty</div>'; document.getElementById('cartTotal').innerText = 'Total: ﷼0'; return; }
+  let html = '', total = 0;
+  cart.forEach((item, idx) => {
+    total += item.price * item.qty;
+    html += `<div class="cart-item"><div class="cart-item-details"><div class="cart-item-name">${item.name}</div><div class="cart-item-qty"><button class="qty-btn" onclick="window.updateQty(${idx},-1)">-</button><span>${item.qty}</span><button class="qty-btn" onclick="window.updateQty(${idx},1)">+</button></div></div><div>﷼${item.price * item.qty}</div></div>`;
   });
   container.innerHTML = html;
   document.getElementById('cartTotal').innerText = `Total: ﷼${total}`;
 }
-window.updateQty = function(idx, delta) {
-  let newQty = cart[idx].qty + delta;
-  if(newQty<=0) cart.splice(idx,1);
+window.updateQty = (idx, delta) => {
+  const newQty = cart[idx].qty + delta;
+  if (newQty <= 0) cart.splice(idx, 1);
   else cart[idx].qty = newQty;
   renderCart();
 };
-window.checkout = async function() {
-  if(cart.length===0) { showToast('Cart is empty'); return; }
-  if(!currentUser) return;
-  let total = cart.reduce((s,i)=>s+(i.price*i.qty),0);
+window.checkout = async () => {
+  if (cart.length === 0) { showToast('Cart is empty'); return; }
+  const total = cart.reduce((s, i) => s + (i.price * i.qty), 0);
   await addDoc(collection(db, "orders"), { userId: currentUser.uid, items: cart, total, date: new Date().toISOString(), status: 'completed' });
   showToast(`Order placed! Total: ﷼${total}`);
   cart = [];
@@ -394,77 +470,75 @@ window.checkout = async function() {
   loadReportChart();
 };
 async function loadProducts() {
-  if(!currentUser) return;
-  const q = query(collection(db, "products"), where("userId","==",currentUser.uid));
+  if (!currentUser) return;
+  const q = query(collection(db, "products"), where("userId", "==", currentUser.uid));
   const snap = await getDocs(q);
-  products = snap.docs.map(d=>({id:d.id, ...d.data()}));
+  products = snap.docs.map(d => ({ id: d.id, ...d.data() }));
   renderProductsList();
   renderPOSItems();
   document.getElementById('statProducts').innerText = products.length;
-  return products;
 }
-window.addProduct = async function() {
-  let name = document.getElementById('newProductName').value.trim();
-  let price = parseFloat(document.getElementById('newProductPrice').value);
-  if(!name || isNaN(price)) { showToast('Enter name and price'); return; }
+function renderProductsList() {
+  const container = document.getElementById('productsList');
+  if (!container) return;
+  container.innerHTML = products.map(p => `<div class="product-row"><span><strong>${p.name}</strong> - ﷼${p.price}</span><div class="product-actions"><button onclick="window.editProduct('${p.id}','${p.name}',${p.price})">✏️</button><button onclick="window.deleteProduct('${p.id}')">🗑️</button></div></div>`).join('');
+}
+window.addProduct = async () => {
+  const name = document.getElementById('newProductName').value.trim();
+  const price = parseFloat(document.getElementById('newProductPrice').value);
+  if (!name || isNaN(price)) { showToast('Enter name and price'); return; }
   const docRef = await addDoc(collection(db, "products"), { userId: currentUser.uid, name, price, stock: 100 });
-  products.push({id:docRef.id, name, price, stock:100});
+  products.push({ id: docRef.id, name, price, stock: 100 });
   renderProductsList();
   renderPOSItems();
-  document.getElementById('newProductName').value='';
-  document.getElementById('newProductPrice').value='';
+  document.getElementById('newProductName').value = '';
+  document.getElementById('newProductPrice').value = '';
   showToast('Product added');
   loadStats();
 };
-function renderProductsList() {
-  const container = document.getElementById('productsList');
-  if(!container) return;
-  container.innerHTML = products.map(p => `<div class="product-row"><span><strong>${p.name}</strong> - ﷼${p.price}</span><div class="product-actions"><button onclick="editProduct('${p.id}','${p.name}',${p.price})">✏️</button><button onclick="deleteProduct('${p.id}')">🗑️</button></div></div>`).join('');
-}
-window.editProduct = async function(id, oldName, oldPrice) {
-  let newName = prompt('New name', oldName);
-  let newPrice = prompt('New price', oldPrice);
-  if(!newName || !newPrice) return;
+window.editProduct = async (id, oldName, oldPrice) => {
+  const newName = prompt('New name', oldName);
+  const newPrice = prompt('New price', oldPrice);
+  if (!newName || !newPrice) return;
   await updateDoc(doc(db, "products", id), { name: newName, price: parseFloat(newPrice) });
   await loadProducts();
 };
-window.deleteProduct = async function(id) {
-  if(confirm('Delete product?')) { await deleteDoc(doc(db, "products", id)); await loadProducts(); }
+window.deleteProduct = async (id) => {
+  if (confirm('Delete product?')) { await deleteDoc(doc(db, "products", id)); await loadProducts(); }
 };
 async function loadStats() {
-  if(!currentUser) return;
-  const ordersSnap = await getDocs(query(collection(db, "orders"), where("userId","==",currentUser.uid)));
+  if (!currentUser) return;
+  const ordersSnap = await getDocs(query(collection(db, "orders"), where("userId", "==", currentUser.uid)));
   let totalOrders = ordersSnap.size;
   let revenue = 0;
-  ordersSnap.forEach(d=>revenue += d.data().total || 0);
+  ordersSnap.forEach(d => revenue += d.data().total || 0);
   document.getElementById('statOrders').innerText = totalOrders;
   document.getElementById('statRevenue').innerHTML = `﷼${revenue}`;
 }
-let chart;
 async function loadReportChart() {
-  if(!currentUser) return;
-  const ordersSnap = await getDocs(query(collection(db, "orders"), where("userId","==",currentUser.uid)));
+  if (!currentUser) return;
+  const ordersSnap = await getDocs(query(collection(db, "orders"), where("userId", "==", currentUser.uid)));
   const daily = {};
-  ordersSnap.forEach(d=>{ let date = d.data().date.split('T')[0]; daily[date] = (daily[date]||0)+d.data().total; });
+  ordersSnap.forEach(d => { const date = d.data().date.split('T')[0]; daily[date] = (daily[date] || 0) + d.data().total; });
   const labels = Object.keys(daily).slice(-7);
-  const data = labels.map(l=>daily[l]);
+  const data = labels.map(l => daily[l]);
   const ctx = document.getElementById('salesChart')?.getContext('2d');
-  if(ctx) {
-    if(chart) chart.destroy();
+  if (ctx) {
+    if (chart) chart.destroy();
     chart = new Chart(ctx, { type: 'line', data: { labels, datasets: [{ label: 'Sales (SAR)', data, borderColor: '#4f2d91', tension: 0.3 }] } });
   }
-  let total = Object.values(daily).reduce((a,b)=>a+b,0);
+  const total = Object.values(daily).reduce((a, b) => a + b, 0);
   document.getElementById('reportTotal').innerHTML = `﷼${total}`;
 }
 async function loadProfile() {
-  if(!currentUser) return;
+  if (!currentUser) return;
   const snap = await getDoc(doc(db, "users", currentUser.uid));
   const data = snap.data() || {};
   document.getElementById('profileInfo').innerHTML = `
-    <div class="profile-field"><label>Name</label><div>${data.firstName||''} ${data.lastName||''}</div></div>
+    <div class="profile-field"><label>Name</label><div>${data.firstName || ''} ${data.lastName || ''}</div></div>
     <div class="profile-field"><label>Email</label><div>${currentUser.email}</div></div>
-    <div class="profile-field"><label>Business</label><div>${data.business||''}</div></div>
-    <div class="profile-field"><label>Plan</label><div>${data.plan||'Basic'}</div></div>
+    <div class="profile-field"><label>Business</label><div>${data.business || ''}</div></div>
+    <div class="profile-field"><label>Plan</label><div>${data.plan || 'Basic'}</div></div>
   `;
 }
 async function loadDashboard(user) {
@@ -473,7 +547,7 @@ async function loadDashboard(user) {
   document.getElementById('userName').innerText = userData.firstName || user.email.split('@')[0];
   document.getElementById('userAvatar').innerText = (userData.firstName?.charAt(0) || user.email.charAt(0)).toUpperCase();
   document.getElementById('wcName').innerHTML = `Hello, ${userData.firstName || 'Customer'}! 👋`;
-  document.getElementById('wcPlan').innerText = `${userData.plan||'Basic'} Plan`;
+  document.getElementById('wcPlan').innerText = `${userData.plan || 'Basic'} Plan`;
   await loadBrandData();
   await loadProducts();
   await loadStats();
@@ -483,11 +557,11 @@ async function loadDashboard(user) {
 }
 
 // Auth state
-let authTimeout = setTimeout(()=>{ document.getElementById('loadingScreen').style.display='none'; document.getElementById('loginPage').style.display='flex'; }, 5000);
+let authTimeout = setTimeout(() => { document.getElementById('loadingScreen').style.display = 'none'; document.getElementById('loginPage').style.display = 'flex'; }, 5000);
 onAuthStateChanged(auth, async (user) => {
   clearTimeout(authTimeout);
   document.getElementById('loadingScreen').style.display = 'none';
-  if(user) {
+  if (user) {
     document.getElementById('loginPage').style.display = 'none';
     document.getElementById('mainApp').style.display = 'block';
     await loadDashboard(user);
@@ -496,37 +570,6 @@ onAuthStateChanged(auth, async (user) => {
     document.getElementById('mainApp').style.display = 'none';
   }
 });
-
-// Helper functions for login UI (global)
-window.switchTab = function(tab) {
-  document.getElementById('loginForm').style.display = tab==='login'?'block':'none';
-  document.getElementById('registerForm').style.display = tab==='register'?'block':'none';
-  document.getElementById('tabLogin').classList.toggle('on', tab==='login');
-  document.getElementById('tabRegister').classList.toggle('on', tab==='register');
-};
-window.toggleEye = function(id, btn) { let inp = document.getElementById(id); inp.type = inp.type==='password'?'text':'password'; btn.textContent = inp.type==='password'?'👁':'🙈'; };
-window.doSignIn = async function() {
-  let email = document.getElementById('loginEmail').value.trim();
-  let pass = document.getElementById('loginPass').value;
-  let err = document.getElementById('loginErr');
-  if(!email||!pass) { err.innerText='Fill all fields'; err.style.display='block'; return; }
-  let res = await window.fbSignIn(email, pass);
-  if(!res.ok) { err.innerText = res.code==='auth/email-not-verified'?'Email not verified! Check inbox.':'Invalid credentials'; err.style.display='block'; }
-};
-window.doRegister = async function() {
-  let first=document.getElementById('regFirst').value.trim(), last=document.getElementById('regLast').value.trim(), email=document.getElementById('regEmail').value.trim(), pass=document.getElementById('regPass').value, biz=document.getElementById('regBiz').value.trim(), phone=document.getElementById('regPhone').value.trim(), country=document.getElementById('regCountry').value, plan=document.getElementById('regPlan').value, bizType=document.getElementById('regBizType').value;
-  let err=document.getElementById('registerErr');
-  if(!first||!last||!email||!pass||!biz) { err.innerText='Fill all required'; err.style.display='block'; return; }
-  if(pass.length<8) { err.innerText='Password min 8 chars'; err.style.display='block'; return; }
-  let res = await window.fbRegister(email, pass, {firstName:first, lastName:last, business:biz, phone, country, plan, bizType});
-  if(res.ok) { document.getElementById('registerOk').innerHTML='Account created! Verify email.'; document.getElementById('registerOk').style.display='block'; setTimeout(()=>switchTab('login'),3000); }
-  else { err.innerText=res.code==='auth/email-already-in-use'?'Email already used':'Registration failed'; err.style.display='block'; }
-};
-window.doGoogleSignIn = async () => { await window.fbGoogleSignIn(); };
-window.doForgotPassword = async () => { let email=document.getElementById('loginEmail').value.trim(); if(!email){document.getElementById('loginErr').innerText='Enter email'; document.getElementById('loginErr').style.display='block'; return;} let res=await window.fbForgotPassword(email); if(res.ok) document.getElementById('loginOk').innerHTML='Reset email sent'; else document.getElementById('loginErr').innerHTML='Error'; };
-window.doLogout = async () => { await window.fbLogout(); showToast('Logged out'); setTimeout(()=>location.reload(),800); };
-window.switchPage = function(pageId) { document.querySelectorAll('.page').forEach(p=>p.classList.remove('on')); document.getElementById(pageId).classList.add('on'); window.scrollTo(0,0); };
-window.setNav = function(id) { document.querySelectorAll('.bn-item').forEach(b=>b.classList.remove('on')); document.getElementById(id).classList.add('on'); };
 </script>
 </body>
 </html>
