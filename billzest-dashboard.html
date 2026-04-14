@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>BillZest All-in-One Dashboard</title>
+<title>BillZest All-in-One Dashboard with Branding</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
@@ -11,7 +11,7 @@
 body{font-family:'Poppins',sans-serif;background:#f4f4f8;color:#1a1a1a;}
 :root{--p:#4f2d91;--pd:#3b1f6e;--pl:#f0ebff;--org:#f5a623;--grn:#10b981;--red:#ef4444;--teal:#00b5a3;--bdr:#e0e0e0;}
 
-/* Login Page (same as before) */
+/* Login Page */
 .login-page{min-height:100vh;background:linear-gradient(135deg,#0d1b4b,#4f2d91);display:flex;align-items:center;justify-content:center;padding:20px;}
 .login-card{background:#fff;border-radius:20px;padding:36px;width:100%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,.3);}
 .lc-logo{font-size:28px;font-weight:800;text-align:center;margin-bottom:4px;}
@@ -39,8 +39,10 @@ body{font-family:'Poppins',sans-serif;background:#f4f4f8;color:#1a1a1a;}
 /* Main App */
 .app{display:none;}
 .app-header{background:linear-gradient(135deg,var(--p),var(--pd));padding:0 20px;height:58px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
-.ah-logo{font-size:18px;font-weight:800;color:#fff;}
-.ah-logo span{color:var(--org);}
+.ah-logo{display:flex;align-items:center;gap:8px;}
+.ah-logo-img{height:32px;width:auto;max-width:100px;object-fit:contain;background:#fff;border-radius:6px;padding:2px;}
+.ah-logo-text{font-size:18px;font-weight:800;color:#fff;}
+.ah-logo-text span{color:var(--org);}
 .ah-user{display:flex;align-items:center;gap:8px;}
 .ah-avatar{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#fff;border:2px solid rgba(255,255,255,.3);}
 .ah-name{font-size:13px;font-weight:600;color:#fff;max-width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
@@ -95,6 +97,17 @@ body{font-family:'Poppins',sans-serif;background:#f4f4f8;color:#1a1a1a;}
 .add-product-form{display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:16px;}
 .add-product-form input{padding:10px;border:1px solid var(--bdr);border-radius:8px;}
 
+/* Branding / Company Profile */
+.branding-preview{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding:16px;background:#f8f8f8;border-radius:12px;}
+.brand-logo-preview{width:60px;height:60px;border-radius:12px;background:#fff;display:flex;align-items:center;justify-content:center;border:1px solid var(--bdr);overflow:hidden;}
+.brand-logo-preview img{max-width:100%;max-height:100%;object-fit:contain;}
+.brand-info-preview{flex:1;}
+.brand-info-preview h3{font-size:16px;margin-bottom:4px;}
+.brand-info-preview p{font-size:12px;color:#666;}
+.logo-upload-area{margin:12px 0;display:flex;flex-direction:column;gap:8px;}
+.logo-upload-area input{margin-bottom:8px;}
+.btn-brand-save{background:var(--p);color:#fff;border:none;padding:10px;border-radius:8px;cursor:pointer;width:100%;font-weight:600;}
+
 /* Report Chart */
 canvas{max-height:200px;width:100%;}
 
@@ -114,6 +127,7 @@ canvas{max-height:200px;width:100%;}
 @media(max-width:480px){
   .login-card{padding:24px 18px;}
   .pos-items{grid-template-columns:repeat(2,1fr);}
+  .branding-preview{flex-direction:column;text-align:center;}
 }
 </style>
 </head>
@@ -126,11 +140,11 @@ canvas{max-height:200px;width:100%;}
   <div style="font-size:13px;color:#888;">Loading your dashboard...</div>
 </div>
 
-<!-- LOGIN PAGE (same as before, simplified) -->
+<!-- LOGIN PAGE (simplified but functional) -->
 <div class="login-page" id="loginPage" style="display:none;">
   <div class="login-card">
     <div class="lc-logo">Bill<span>Zest</span></div>
-    <div class="lc-sub">All-in-One POS</div>
+    <div class="lc-sub">All-in-One POS with Branding</div>
     <div class="lc-tabs">
       <button class="lc-tab on" id="tabLogin" onclick="switchTab('login')">Sign In</button>
       <button class="lc-tab" id="tabRegister" onclick="switchTab('register')">Register Free</button>
@@ -165,7 +179,10 @@ canvas{max-height:200px;width:100%;}
 <!-- MAIN APP -->
 <div class="app" id="mainApp">
   <div class="app-header">
-    <div class="ah-logo">Bill<span>Zest</span></div>
+    <div class="ah-logo" id="brandHeader">
+      <!-- Dynamic logo and company name will appear here -->
+      <div class="ah-logo-text">Bill<span>Zest</span></div>
+    </div>
     <div class="ah-user"><div class="ah-avatar" id="userAvatar">👤</div><div class="ah-name" id="userName">User</div><button class="btn-logout" onclick="doLogout()">Logout</button></div>
   </div>
 
@@ -174,7 +191,7 @@ canvas{max-height:200px;width:100%;}
     <div class="page on" id="pageHome">
       <div class="welcome-card"><div class="wc-bg">🏪</div><div class="wc-greeting">Welcome back!</div><div class="wc-name" id="wcName">Loading...</div><div><span class="wc-plan" id="wcPlan">Basic Plan</span></div><div class="wc-trial">🎁 14-day free trial active</div></div>
       <div class="stats-grid"><div class="stat-card"><div class="stat-icon">📊</div><div class="stat-val" id="statOrders">0</div><div class="stat-lbl">Total Orders</div></div><div class="stat-card"><div class="stat-icon">💰</div><div class="stat-val" id="statRevenue">﷼0</div><div class="stat-lbl">Revenue</div></div><div class="stat-card"><div class="stat-icon">🏪</div><div class="stat-val" id="statProducts">0</div><div class="stat-lbl">Products</div></div><div class="stat-card"><div class="stat-icon">⭐</div><div class="stat-val">4.9</div><div class="stat-lbl">Rating</div></div></div>
-      <div class="section"><div class="section-hdr"><div class="section-title">⚡ Quick Actions</div></div><div class="section-body"><div class="actions-grid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;"><button class="action-btn" onclick="switchPage('pagePOS')"><div class="ab-icon">🛒</div><div class="ab-label">Open POS</div></button><button class="action-btn" onclick="switchPage('pageProducts')"><div class="ab-icon">📦</div><div class="ab-label">Products</div></button><button class="action-btn" onclick="switchPage('pageReports')"><div class="ab-icon">📊</div><div class="ab-label">Reports</div></button><button class="action-btn" onclick="switchPage('pageInventory')"><div class="ab-icon">📦</div><div class="ab-label">Inventory</div></button></div></div></div>
+      <div class="section"><div class="section-hdr"><div class="section-title">⚡ Quick Actions</div></div><div class="section-body"><div class="actions-grid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;"><button class="action-btn" onclick="switchPage('pagePOS')"><div class="ab-icon">🛒</div><div class="ab-label">Open POS</div></button><button class="action-btn" onclick="switchPage('pageProducts')"><div class="ab-icon">📦</div><div class="ab-label">Products</div></button><button class="action-btn" onclick="switchPage('pageReports')"><div class="ab-icon">📊</div><div class="ab-label">Reports</div></button><button class="action-btn" onclick="switchPage('pageBranding')"><div class="ab-icon">🏷️</div><div class="ab-label">Branding</div></button></div></div></div>
       <div class="section"><div class="section-hdr"><div class="section-title">📋 Recent Activity</div></div><div class="section-body"><div style="text-align:center;padding:20px;color:#aaa;">✨ Start taking orders from POS!</div></div></div>
     </div>
 
@@ -206,14 +223,28 @@ canvas{max-height:200px;width:100%;}
       </div></div>
     </div>
 
-    <!-- INVENTORY PAGE -->
-    <div class="page" id="pageInventory">
-      <div class="section"><div class="section-hdr"><div class="section-title">📦 Inventory Stock</div></div><div class="section-body">
-        <div id="inventoryList" class="product-list"></div>
+    <!-- BRANDING / COMPANY PROFILE PAGE (NEW) -->
+    <div class="page" id="pageBranding">
+      <div class="section"><div class="section-hdr"><div class="section-title">🏷️ Your Brand & Company</div></div><div class="section-body">
+        <div class="branding-preview" id="brandPreview">
+          <div class="brand-logo-preview" id="logoPreview"><span>🏪</span></div>
+          <div class="brand-info-preview">
+            <h3 id="previewCompanyName">Your Company Name</h3>
+            <p id="previewBusinessType">Business Type</p>
+          </div>
+        </div>
+        <div class="lf"><label>Company Name</label><input type="text" id="companyNameInput" placeholder="Enter your company name"></div>
+        <div class="lf"><label>Business Type</label><select id="companyBizTypeSelect"><option value="restaurant">Restaurant</option><option value="cafe">Cafe</option><option value="grocery">Grocery</option><option value="retail">Retail</option><option value="electronics">Electronics</option><option value="hotel">Hotel</option></select></div>
+        <div class="logo-upload-area">
+          <label>Company Logo (Image)</label>
+          <input type="file" id="logoUpload" accept="image/*">
+          <small>Recommended size: 200x200px, PNG/JPG</small>
+        </div>
+        <button class="btn-brand-save" onclick="saveBranding()">💾 Save Brand Settings</button>
       </div></div>
     </div>
 
-    <!-- PROFILE PAGE (simplified) -->
+    <!-- PROFILE PAGE -->
     <div class="page" id="pageProfile">
       <div class="section"><div class="section-hdr"><div class="section-title">👤 My Profile</div></div><div class="section-body"><div id="profileInfo"></div><button onclick="doLogout()" style="margin-top:16px;width:100%;background:var(--red);color:#fff;border:none;padding:10px;border-radius:8px;">Logout</button></div></div>
     </div>
@@ -232,22 +263,25 @@ canvas{max-height:200px;width:100%;}
     <button class="bn-item" id="bnPOS" onclick="switchPage('pagePOS');setNav('bnPOS')"><div class="bn-icon">🛒</div>POS</button>
     <button class="bn-item" id="bnProducts" onclick="switchPage('pageProducts');setNav('bnProducts')"><div class="bn-icon">📦</div>Products</button>
     <button class="bn-item" id="bnReports" onclick="switchPage('pageReports');setNav('bnReports')"><div class="bn-icon">📊</div>Reports</button>
+    <button class="bn-item" id="bnBranding" onclick="switchPage('pageBranding');setNav('bnBranding')"><div class="bn-icon">🏷️</div>Brand</button>
     <button class="bn-item" id="bnProfile" onclick="switchPage('pageProfile');setNav('bnProfile')"><div class="bn-icon">👤</div>Profile</button>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
-<!-- Firebase + All-in-One Scripts -->
+<!-- Firebase + All-in-One Scripts with Storage -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, sendEmailVerification, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, sendEmailVerification, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 import { getFirestore, doc, setDoc, getDoc, collection, getDocs, addDoc, query, where, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-storage.js";
 
 const firebaseConfig = { apiKey: "AIzaSyCN0akvFXOHM6WPHv9ve9noqqmauO3TJRY", authDomain: "billzest-pos.firebaseapp.com", projectId: "billzest-pos", storageBucket: "billzest-pos.firebasestorage.app", messagingSenderId: "946546876429", appId: "1:946546876429:web:9b4a7aa3cecbf3aea83544" };
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+const storage = getStorage(app);
 const googleProvider = new GoogleAuthProvider();
 
 window.fbSignIn = async (email, pass) => { try { const cred = await signInWithEmailAndPassword(auth, email, pass); if (!cred.user.emailVerified) { await signOut(auth); return {ok:false, code:'auth/email-not-verified'}; } return {ok:true}; } catch(e) { return {ok:false, code:e.code}; } };
@@ -258,13 +292,66 @@ window.fbLogout = async () => { await signOut(auth); };
 
 let currentUser = null;
 let userData = null;
-let products = []; // local cache
+let products = [];
 let cart = [];
+let brandData = { companyName: '', logoURL: '', bizType: 'restaurant' };
 
-// Helper to show toast
 function showToast(msg) { let t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3000); }
 
-// Render POS items
+// Load brand data from Firestore
+async function loadBrandData() {
+  if(!currentUser) return;
+  const brandRef = doc(db, "brands", currentUser.uid);
+  const snap = await getDoc(brandRef);
+  if(snap.exists()) {
+    brandData = snap.data();
+  } else {
+    brandData = { companyName: userData?.business || 'My Business', logoURL: '', bizType: userData?.bizType || 'restaurant' };
+    await setDoc(brandRef, brandData);
+  }
+  updateBrandUI();
+}
+function updateBrandUI() {
+  // Update header
+  const headerLogo = document.getElementById('brandHeader');
+  if(headerLogo) {
+    if(brandData.logoURL) {
+      headerLogo.innerHTML = `<img src="${brandData.logoURL}" class="ah-logo-img" alt="logo"><div class="ah-logo-text"><span>${brandData.companyName.substring(0,15)}</span></div>`;
+    } else {
+      headerLogo.innerHTML = `<div class="ah-logo-text">Bill<span>Zest</span> <span style="font-size:12px;">| ${brandData.companyName.substring(0,15)}</span></div>`;
+    }
+  }
+  // Update preview in branding page
+  const previewLogo = document.getElementById('logoPreview');
+  if(previewLogo) {
+    if(brandData.logoURL) previewLogo.innerHTML = `<img src="${brandData.logoURL}" style="max-width:100%;max-height:100%;">`;
+    else previewLogo.innerHTML = '<span>🏪</span>';
+  }
+  document.getElementById('previewCompanyName').innerText = brandData.companyName || 'Your Company';
+  document.getElementById('previewBusinessType').innerText = (brandData.bizType || 'restaurant').toUpperCase();
+  document.getElementById('companyNameInput').value = brandData.companyName || '';
+  document.getElementById('companyBizTypeSelect').value = brandData.bizType || 'restaurant';
+}
+async function saveBranding() {
+  const newCompanyName = document.getElementById('companyNameInput').value.trim();
+  const newBizType = document.getElementById('companyBizTypeSelect').value;
+  if(!newCompanyName) { showToast('Please enter company name'); return; }
+  const fileInput = document.getElementById('logoUpload');
+  let logoURL = brandData.logoURL;
+  if(fileInput.files.length > 0) {
+    const file = fileInput.files[0];
+    const storageRef = ref(storage, `logos/${currentUser.uid}/logo_${Date.now()}.${file.name.split('.').pop()}`);
+    await uploadBytes(storageRef, file);
+    logoURL = await getDownloadURL(storageRef);
+  }
+  const brandRef = doc(db, "brands", currentUser.uid);
+  await setDoc(brandRef, { companyName: newCompanyName, logoURL, bizType: newBizType }, { merge: true });
+  brandData = { companyName: newCompanyName, logoURL, bizType: newBizType };
+  updateBrandUI();
+  showToast('Brand settings saved!');
+}
+
+// POS & Products (same as before)
 async function renderPOSItems() {
   const container = document.getElementById('posItemsList');
   if(!container) return;
@@ -299,7 +386,6 @@ window.checkout = async function() {
   if(cart.length===0) { showToast('Cart is empty'); return; }
   if(!currentUser) return;
   let total = cart.reduce((s,i)=>s+(i.price*i.qty),0);
-  // Save order to Firestore
   await addDoc(collection(db, "orders"), { userId: currentUser.uid, items: cart, total, date: new Date().toISOString(), status: 'completed' });
   showToast(`Order placed! Total: ﷼${total}`);
   cart = [];
@@ -307,8 +393,6 @@ window.checkout = async function() {
   loadStats();
   loadReportChart();
 };
-
-// Product management
 async function loadProducts() {
   if(!currentUser) return;
   const q = query(collection(db, "products"), where("userId","==",currentUser.uid));
@@ -336,8 +420,6 @@ function renderProductsList() {
   const container = document.getElementById('productsList');
   if(!container) return;
   container.innerHTML = products.map(p => `<div class="product-row"><span><strong>${p.name}</strong> - ﷼${p.price}</span><div class="product-actions"><button onclick="editProduct('${p.id}','${p.name}',${p.price})">✏️</button><button onclick="deleteProduct('${p.id}')">🗑️</button></div></div>`).join('');
-  const invContainer = document.getElementById('inventoryList');
-  if(invContainer) invContainer.innerHTML = products.map(p => `<div class="product-row"><span>${p.name}</span><span>Stock: ${p.stock||0}</span><button onclick="updateStock('${p.id}',1)">+</button><button onclick="updateStock('${p.id}',-1)">-</button></div>`).join('');
 }
 window.editProduct = async function(id, oldName, oldPrice) {
   let newName = prompt('New name', oldName);
@@ -349,12 +431,6 @@ window.editProduct = async function(id, oldName, oldPrice) {
 window.deleteProduct = async function(id) {
   if(confirm('Delete product?')) { await deleteDoc(doc(db, "products", id)); await loadProducts(); }
 };
-window.updateStock = async function(id, delta) {
-  let prod = products.find(p=>p.id===id);
-  if(prod) { let newStock = (prod.stock||0)+delta; if(newStock<0) newStock=0; await updateDoc(doc(db, "products", id), { stock: newStock }); await loadProducts(); }
-};
-
-// Stats and Reports
 async function loadStats() {
   if(!currentUser) return;
   const ordersSnap = await getDocs(query(collection(db, "orders"), where("userId","==",currentUser.uid)));
@@ -380,8 +456,6 @@ async function loadReportChart() {
   let total = Object.values(daily).reduce((a,b)=>a+b,0);
   document.getElementById('reportTotal').innerHTML = `﷼${total}`;
 }
-
-// Profile
 async function loadProfile() {
   if(!currentUser) return;
   const snap = await getDoc(doc(db, "users", currentUser.uid));
@@ -393,8 +467,6 @@ async function loadProfile() {
     <div class="profile-field"><label>Plan</label><div>${data.plan||'Basic'}</div></div>
   `;
 }
-
-// Dashboard load
 async function loadDashboard(user) {
   currentUser = user;
   userData = (await getDoc(doc(db, "users", user.uid))).data() || {};
@@ -402,11 +474,12 @@ async function loadDashboard(user) {
   document.getElementById('userAvatar').innerText = (userData.firstName?.charAt(0) || user.email.charAt(0)).toUpperCase();
   document.getElementById('wcName').innerHTML = `Hello, ${userData.firstName || 'Customer'}! 👋`;
   document.getElementById('wcPlan').innerText = `${userData.plan||'Basic'} Plan`;
+  await loadBrandData();
   await loadProducts();
   await loadStats();
   await loadReportChart();
   loadProfile();
-  showToast('Welcome to All-in-One Dashboard!');
+  showToast('Welcome to All-in-One Dashboard with Branding!');
 }
 
 // Auth state
