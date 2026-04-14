@@ -2,568 +2,686 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BillZest AI Support</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>BillZest All-in-One Dashboard | Brand + Full Sales Display</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Poppins',sans-serif;background:#f4f4f8;}
+body{font-family:'Poppins',sans-serif;background:#f4f4f8;color:#1a1a1a;}
 :root{--p:#4f2d91;--pd:#3b1f6e;--pl:#f0ebff;--org:#f5a623;--grn:#10b981;--red:#ef4444;--teal:#00b5a3;--bdr:#e0e0e0;}
 
-/* ══ CHAT BUBBLE (Fixed bottom right) ══ */
-.chat-bubble{position:fixed;bottom:24px;right:24px;z-index:9999;}
+/* Login Page (same as before) */
+.login-page{min-height:100vh;background:linear-gradient(135deg,#0d1b4b,#4f2d91);display:flex;align-items:center;justify-content:center;padding:20px;}
+.login-card{background:#fff;border-radius:20px;padding:36px;width:100%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,.3);}
+.lc-logo{font-size:28px;font-weight:800;text-align:center;margin-bottom:4px;}
+.lc-logo span{color:var(--org);}
+.lc-sub{font-size:13px;color:#888;text-align:center;margin-bottom:24px;}
+.lc-tabs{display:flex;margin-bottom:24px;border-radius:8px;overflow:hidden;border:1.5px solid var(--bdr);}
+.lc-tab{flex:1;padding:10px;text-align:center;font-size:13px;font-weight:600;cursor:pointer;background:#fff;color:#888;transition:all .2s;border:none;font-family:'Poppins',sans-serif;}
+.lc-tab.on{background:var(--p);color:#fff;}
+.lf{margin-bottom:13px;}
+.lf label{display:block;font-size:11px;font-weight:700;color:#555;margin-bottom:4px;text-transform:uppercase;}
+.lf input,.lf select{width:100%;padding:11px 14px;border:1.5px solid var(--bdr);border-radius:8px;font-size:14px;font-family:'Poppins',sans-serif;outline:none;color:#333;transition:border .2s;}
+.lf input:focus,.lf select:focus{border-color:var(--p);}
+.lf-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.btn-auth{width:100%;background:var(--p);color:#fff;border:none;padding:13px;border-radius:8px;font-size:15px;font-weight:700;font-family:'Poppins',sans-serif;cursor:pointer;transition:all .2s;margin-top:4px;}
+.btn-auth:hover{background:var(--pd);}
+.auth-err{color:var(--red);font-size:12px;text-align:center;margin-bottom:8px;display:none;padding:9px;border-radius:6px;background:#fff5f5;border:1px solid #fed7d7;line-height:1.6;}
+.auth-ok{color:#276749;font-size:12px;text-align:center;margin-bottom:8px;background:#f0fff4;padding:9px;border-radius:6px;border:1px solid #9ae6b4;display:none;line-height:1.6;}
+.divider{display:flex;align-items:center;gap:10px;margin:16px 0;color:#aaa;font-size:12px;}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--bdr);}
+.btn-google{width:100%;background:#fff;color:#333;border:1.5px solid var(--bdr);padding:11px;border-radius:8px;font-size:14px;font-weight:600;font-family:'Poppins',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s;}
+.btn-google:hover{background:#f5f5f5;}
+.eye-wrap{position:relative;}
+.eye-btn{position:absolute;right:12px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:16px;background:none;border:none;padding:0;}
 
-/* Pulse ring */
-.cb-ring{position:absolute;inset:-6px;border-radius:50%;background:rgba(79,45,145,.2);animation:ring 2s ease-out infinite;}
-@keyframes ring{0%{transform:scale(1);opacity:.8;}100%{transform:scale(1.5);opacity:0;}}
+/* Main App */
+.app{display:none;}
+.app-header{background:linear-gradient(135deg,var(--p),var(--pd));padding:0 20px;height:58px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.ah-logo{display:flex;align-items:center;gap:8px;}
+.ah-logo-img{height:32px;width:auto;max-width:100px;object-fit:contain;background:#fff;border-radius:6px;padding:2px;}
+.ah-logo-text{font-size:18px;font-weight:800;color:#fff;}
+.ah-logo-text span{color:var(--org);}
+.ah-user{display:flex;align-items:center;gap:8px;}
+.ah-avatar{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#fff;border:2px solid rgba(255,255,255,.3);}
+.ah-name{font-size:13px;font-weight:600;color:#fff;max-width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.btn-logout{background:rgba(255,255,255,.15);border:none;color:#fff;padding:6px 12px;border-radius:6px;font-size:12px;cursor:pointer;font-family:'Poppins',sans-serif;}
 
-/* Main button */
-.cb-btn{width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,var(--p),var(--teal));border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:26px;box-shadow:0 6px 24px rgba(79,45,145,.4);transition:transform .2s;position:relative;z-index:1;}
-.cb-btn:hover{transform:scale(1.1);}
-.cb-notif{position:absolute;top:-3px;right:-3px;width:18px;height:18px;background:var(--red);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;border:2px solid #fff;}
-.cb-online{position:absolute;bottom:2px;right:2px;width:12px;height:12px;background:var(--grn);border-radius:50%;border:2px solid #fff;animation:blink 2s infinite;}
-@keyframes blink{0%,100%{opacity:1;}50%{opacity:.4;}}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--bdr);display:flex;z-index:100;height:60px;}
+.bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;font-size:10px;font-weight:600;color:#aaa;transition:all .2s;border:none;background:none;font-family:'Poppins',sans-serif;}
+.bn-item.on{color:var(--p);}
+.bn-item .bn-icon{font-size:20px;}
 
-/* ══ CHAT WINDOW ══ */
-.chat-window{position:fixed;bottom:100px;right:24px;width:370px;height:580px;background:#fff;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,.2);display:none;flex-direction:column;z-index:9998;overflow:hidden;animation:slideUp .3s ease;}
-.chat-window.open{display:flex;}
-@keyframes slideUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+.content{padding:20px;padding-bottom:80px;max-width:800px;margin:0 auto;}
 
-/* Header */
-.cw-hdr{background:linear-gradient(135deg,var(--p),var(--pd));padding:16px 18px;display:flex;align-items:center;gap:12px;position:relative;}
-.cw-av{width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;border:2px solid rgba(255,255,255,.3);}
-.cw-info{flex:1;}
-.cw-name{font-size:14px;font-weight:700;color:#fff;}
-.cw-status{font-size:11px;color:rgba(255,255,255,.8);display:flex;align-items:center;gap:4px;margin-top:1px;}
-.cw-status::before{content:'';width:6px;height:6px;background:var(--grn);border-radius:50%;display:block;animation:blink 1.5s infinite;}
-.cw-actions{display:flex;gap:6px;}
-.cw-act-btn{background:rgba(255,255,255,.15);border:none;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;color:#fff;transition:background .2s;}
-.cw-act-btn:hover{background:rgba(255,255,255,.25);}
-.cw-close{background:rgba(255,255,255,.15);border:none;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:16px;color:#fff;display:flex;align-items:center;justify-content:center;}
-.cw-close:hover{background:rgba(255,255,255,.25);}
+/* Welcome Card */
+.welcome-card{background:linear-gradient(135deg,var(--p),var(--teal));border-radius:16px;padding:24px;margin-bottom:20px;position:relative;overflow:hidden;}
+.wc-bg{position:absolute;right:-20px;top:-20px;font-size:120px;opacity:.1;pointer-events:none;}
+.wc-greeting{font-size:13px;color:rgba(255,255,255,.8);margin-bottom:4px;}
+.wc-name{font-size:22px;font-weight:800;color:#fff;margin-bottom:8px;}
+.wc-plan{display:inline-block;background:rgba(255,255,255,.2);color:#fff;padding:4px 14px;border-radius:20px;font-size:12px;font-weight:600;}
+.wc-trial{font-size:12px;color:rgba(255,255,255,.8);margin-top:8px;}
 
-/* Powered by */
-.cw-powered{background:rgba(0,0,0,.06);padding:4px 18px;font-size:10px;color:rgba(255,255,255,.7);text-align:center;}
+.stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:20px;}
+.stat-card{background:#fff;border-radius:12px;padding:16px;border:1px solid var(--bdr);}
+.stat-icon{font-size:24px;margin-bottom:8px;}
+.stat-val{font-size:22px;font-weight:800;color:#1a1a1a;}
+.stat-lbl{font-size:11px;color:#888;margin-top:2px;}
 
-/* Messages */
-.cw-msgs{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;background:#f8f8fc;}
-.cw-msgs::-webkit-scrollbar{width:4px;}
-.cw-msgs::-webkit-scrollbar-thumb{background:#ddd;border-radius:2px;}
+.section{background:#fff;border-radius:14px;border:1px solid var(--bdr);margin-bottom:16px;overflow:hidden;}
+.section-hdr{padding:16px 18px;border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between;}
+.section-title{font-size:15px;font-weight:700;}
+.section-body{padding:16px 18px;}
 
-/* Message bubbles */
-.msg{max-width:82%;display:flex;flex-direction:column;}
-.msg.bot{align-self:flex-start;}
-.msg.user{align-self:flex-end;}
-.msg-bubble{padding:10px 14px;border-radius:16px;font-size:13px;line-height:1.55;}
-.msg.bot .msg-bubble{background:#fff;color:#1a1a1a;border-radius:4px 16px 16px 16px;box-shadow:0 2px 8px rgba(0,0,0,.06);}
-.msg.user .msg-bubble{background:linear-gradient(135deg,var(--p),var(--pd));color:#fff;border-radius:16px 16px 4px 16px;}
-.msg-time{font-size:10px;color:#aaa;margin-top:3px;padding:0 4px;}
-.msg.user .msg-time{text-align:right;}
+/* POS Interface */
+.pos-grid{display:flex;flex-direction:column;gap:16px;}
+.pos-items{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:10px;}
+.pos-item-card{background:#f9f9ff;border:1px solid var(--bdr);border-radius:12px;padding:12px;text-align:center;cursor:pointer;transition:all .2s;}
+.pos-item-card:hover{background:var(--pl);border-color:var(--p);}
+.pos-item-name{font-size:13px;font-weight:700;}
+.pos-item-price{font-size:12px;color:var(--p);font-weight:600;margin-top:4px;}
+.cart-items{background:#f8f8f8;border-radius:12px;padding:12px;max-height:300px;overflow-y:auto;}
+.cart-item{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #eee;}
+.cart-item-details{flex:1;}
+.cart-item-name{font-size:13px;font-weight:600;}
+.cart-item-qty{display:flex;align-items:center;gap:8px;margin-top:4px;}
+.qty-btn{background:#eee;border:none;width:26px;height:26px;border-radius:6px;cursor:pointer;font-weight:700;}
+.cart-total{font-size:18px;font-weight:800;margin:12px 0;text-align:right;}
+.btn-checkout{background:var(--grn);color:#fff;border:none;padding:12px;border-radius:10px;font-weight:700;width:100%;cursor:pointer;}
 
-/* Bot avatar */
-.bot-av{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--p),var(--teal));display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;margin-bottom:2px;}
+/* Product Manager */
+.product-list{display:grid;gap:10px;}
+.product-row{display:flex;justify-content:space-between;align-items:center;padding:10px;border-bottom:1px solid #eee;}
+.product-actions button{margin-left:8px;background:none;border:none;cursor:pointer;font-size:16px;}
+.add-product-form{display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:16px;}
+.add-product-form input,.add-product-form select{padding:10px;border:1px solid var(--bdr);border-radius:8px;}
 
-/* Typing indicator */
-.typing-wrap{display:flex;align-items:flex-end;gap:6px;align-self:flex-start;}
-.typing-bubble{background:#fff;border-radius:4px 16px 16px 16px;padding:12px 16px;display:flex;gap:4px;align-items:center;box-shadow:0 2px 8px rgba(0,0,0,.06);}
-.typing-dot{width:7px;height:7px;background:#ccc;border-radius:50%;animation:typ .9s ease-in-out infinite;}
-.typing-dot:nth-child(2){animation-delay:.2s;}
-.typing-dot:nth-child(3){animation-delay:.4s;}
-@keyframes typ{0%,60%,100%{transform:translateY(0);}30%{transform:translateY(-8px);}}
+/* Branding Preview */
+.branding-preview{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding:16px;background:#f8f8f8;border-radius:12px;}
+.brand-logo-preview{width:60px;height:60px;border-radius:12px;background:#fff;display:flex;align-items:center;justify-content:center;border:1px solid var(--bdr);overflow:hidden;}
+.brand-logo-preview img{max-width:100%;max-height:100%;object-fit:contain;}
+.brand-info-preview{flex:1;}
+.brand-info-preview h3{font-size:16px;margin-bottom:4px;}
+.brand-info-preview p{font-size:12px;color:#666;}
+.logo-upload-area{margin:12px 0;display:flex;flex-direction:column;gap:8px;}
+.logo-upload-area input{margin-bottom:8px;}
+.btn-brand-save{background:var(--p);color:#fff;border:none;padding:10px;border-radius:8px;cursor:pointer;width:100%;font-weight:600;}
 
-/* Quick replies */
-.quick-replies{padding:8px 14px;display:flex;gap:6px;flex-wrap:wrap;background:#f8f8fc;border-top:1px solid #eee;}
-.qr-chip{padding:6px 13px;border:1.5px solid var(--bdr);border-radius:20px;font-size:11px;cursor:pointer;font-family:'Poppins',sans-serif;color:#555;background:#fff;transition:all .2s;white-space:nowrap;}
-.qr-chip:hover{border-color:var(--p);color:var(--p);background:var(--pl);}
+/* Full Menu Display (Sales Display) */
+.category-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;border-bottom:1px solid var(--bdr);padding-bottom:12px;}
+.cat-tab{background:#fff;border:1px solid var(--bdr);border-radius:30px;padding:6px 16px;font-size:12px;cursor:pointer;transition:all .2s;}
+.cat-tab.active{background:var(--p);color:#fff;border-color:var(--p);}
+.menu-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;}
+.menu-item{background:#fff;border:1px solid var(--bdr);border-radius:12px;padding:12px;text-align:center;transition:all .2s;}
+.menu-item:hover{transform:translateY(-2px);box-shadow:0 6px 12px rgba(0,0,0,.08);}
+.menu-item-name{font-size:14px;font-weight:700;margin-bottom:4px;}
+.menu-item-price{font-size:13px;color:var(--p);font-weight:600;}
+.menu-item-category{font-size:10px;color:#aaa;margin-top:4px;}
+.btn-add-menu{background:var(--teal);color:#fff;border:none;padding:6px 12px;border-radius:20px;margin-top:8px;cursor:pointer;font-size:11px;font-weight:600;width:100%;}
 
-/* Input */
-.cw-inp{padding:12px 14px;border-top:1px solid #eee;display:flex;gap:8px;align-items:flex-end;background:#fff;}
-.cw-inp textarea{flex:1;border:1.5px solid var(--bdr);border-radius:12px;padding:9px 13px;font-size:13px;font-family:'Poppins',sans-serif;outline:none;resize:none;max-height:80px;min-height:38px;overflow-y:auto;transition:border .2s;line-height:1.4;}
-.cw-inp textarea:focus{border-color:var(--p);}
-.send-btn{width:38px;height:38px;border-radius:12px;background:var(--p);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;}
-.send-btn:hover{background:var(--pd);transform:scale(1.05);}
-.send-btn svg{width:16px;height:16px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
-.attach-btn{width:34px;height:34px;border-radius:10px;background:var(--pl);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px;transition:all .2s;}
-.attach-btn:hover{background:var(--bdr);}
-
-/* Rating */
-.rating-wrap{background:#fff;border-radius:12px;padding:12px 14px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.06);}
-.rating-stars{display:flex;justify-content:center;gap:6px;margin-top:8px;}
-.star-btn{background:none;border:none;font-size:22px;cursor:pointer;transition:transform .2s;color:#ddd;}
-.star-btn:hover,.star-btn.on{color:var(--org);transform:scale(1.2);}
-
-/* API Config Panel */
-.config-panel{position:fixed;bottom:100px;right:24px;width:370px;background:#fff;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,.2);display:none;z-index:9997;padding:24px;animation:slideUp .3s ease;}
-.config-panel.open{display:block;}
-.cp-title{font-size:16px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px;}
-.cp-close{background:none;border:none;font-size:20px;cursor:pointer;color:#aaa;margin-left:auto;}
-.cf{margin-bottom:12px;}
-.cf label{display:block;font-size:11px;font-weight:700;color:#666;margin-bottom:4px;text-transform:uppercase;}
-.cf input,.cf textarea{width:100%;padding:10px 12px;border:1.5px solid var(--bdr);border-radius:8px;font-size:13px;font-family:'Poppins',sans-serif;outline:none;transition:border .2s;}
-.cf input:focus,.cf textarea:focus{border-color:var(--p);}
-.cf textarea{resize:vertical;min-height:80px;font-size:12px;}
-.btn-save-cfg{width:100%;background:var(--p);color:#fff;border:none;padding:11px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Poppins',sans-serif;}
-
-/* DEMO PAGE */
-.demo-page{max-width:900px;margin:0 auto;padding:40px 20px;}
-.dp-hero{background:linear-gradient(135deg,#0d1b4b,var(--p));border-radius:20px;padding:40px;text-align:center;color:#fff;margin-bottom:32px;}
-.dp-logo{font-size:32px;font-weight:800;margin-bottom:8px;}
-.dp-logo span{color:var(--org);}
-.dp-sub{font-size:15px;opacity:.8;margin-bottom:20px;}
-.dp-features{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:24px;}
-.dp-feat{background:rgba(255,255,255,.1);border-radius:12px;padding:16px;text-align:center;}
-.dp-feat-ic{font-size:28px;margin-bottom:8px;}
-.dp-feat-title{font-size:13px;font-weight:700;}
-.dp-feat-desc{font-size:11px;opacity:.7;margin-top:4px;}
-.install-card{background:#fff;border-radius:16px;border:1px solid var(--bdr);padding:24px;margin-bottom:20px;}
-.ic-title{font-size:16px;font-weight:700;margin-bottom:16px;}
-.code-block{background:#1a1a2e;border-radius:10px;padding:16px;font-family:'Courier New',monospace;font-size:12px;color:#a78bfa;overflow-x:auto;margin-bottom:12px;position:relative;}
-.copy-btn{position:absolute;top:10px;right:10px;background:var(--p);color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;font-family:'Poppins',sans-serif;}
-.install-steps{list-style:none;}
-.install-steps li{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid #f5f5f5;font-size:13px;color:#555;}
-.is-num{width:24px;height:24px;background:var(--p);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px;}
+/* Report Chart */
+canvas{max-height:200px;width:100%;}
 
 /* Toast */
-.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(60px);background:#1a1a1a;color:#fff;padding:11px 22px;border-radius:28px;font-size:12px;font-weight:600;z-index:99999;transition:transform .3s;white-space:nowrap;}
+.toast{position:fixed;bottom:70px;left:50%;transform:translateX(-50%) translateY(80px);background:#1a1a1a;color:#fff;padding:11px 22px;border-radius:28px;font-size:12px;font-weight:600;z-index:9999;transition:transform .3s;white-space:nowrap;pointer-events:none;}
 .toast.show{transform:translateX(-50%) translateY(0);}
 
-@media(max-width:420px){
-  .chat-window,.config-panel{width:calc(100vw - 16px);right:8px;}
-  .dp-features{grid-template-columns:1fr 1fr;}
+.loading{position:fixed;inset:0;background:rgba(255,255,255,.95);display:flex;align-items:center;justify-content:center;z-index:9999;flex-direction:column;gap:12px;}
+.loading-logo{font-size:32px;font-weight:800;color:var(--p);}
+.loading-logo span{color:var(--org);}
+.loading-spinner{width:40px;height:40px;border:3px solid var(--pl);border-top-color:var(--p);border-radius:50%;animation:spin .8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+.page{display:none;}
+.page.on{display:block;}
+
+@media(max-width:480px){
+  .login-card{padding:24px 18px;}
+  .menu-grid{grid-template-columns:repeat(2,1fr);}
+  .category-tabs{overflow-x:auto;flex-wrap:nowrap;}
 }
 </style>
 </head>
 <body>
 
-<!-- DEMO PAGE -->
-<div class="demo-page">
-  <div class="dp-hero">
-    <div class="dp-logo">Bill<span>Zest</span> AI Support</div>
-    <div class="dp-sub">24/7 AI Customer Support — Powered by Claude</div>
-    <div style="background:rgba(255,255,255,.15);border-radius:10px;padding:10px 16px;display:inline-flex;align-items:center;gap:8px;font-size:13px;">
-      <span style="width:8px;height:8px;background:var(--grn);border-radius:50%;display:inline-block;animation:blink 1.5s infinite;"></span>
-      AI is online and ready
-    </div>
-    <div class="dp-features">
-      <div class="dp-feat"><div class="dp-feat-ic">🤖</div><div class="dp-feat-title">Claude AI</div><div class="dp-feat-desc">Powered by Anthropic</div></div>
-      <div class="dp-feat"><div class="dp-feat-ic">🌍</div><div class="dp-feat-title">Arabic + English</div><div class="dp-feat-desc">Bilingual support</div></div>
-      <div class="dp-feat"><div class="dp-feat-ic">⚡</div><div class="dp-feat-title">Instant Reply</div><div class="dp-feat-desc">No waiting time</div></div>
-      <div class="dp-feat"><div class="dp-feat-ic">🎯</div><div class="dp-feat-title">Smart Routing</div><div class="dp-feat-desc">Complex → Human</div></div>
-      <div class="dp-feat"><div class="dp-feat-ic">📊</div><div class="dp-feat-title">Chat History</div><div class="dp-feat-desc">All saved</div></div>
-      <div class="dp-feat"><div class="dp-feat-ic">🔒</div><div class="dp-feat-title">Secure</div><div class="dp-feat-desc">End-to-end</div></div>
-    </div>
-  </div>
+<!-- LOADING -->
+<div class="loading" id="loadingScreen">
+  <div class="loading-logo">Bill<span>Zest</span></div>
+  <div class="loading-spinner"></div>
+  <div style="font-size:13px;color:#888;">Loading your dashboard...</div>
+</div>
 
-  <!-- INSTALL CARD -->
-  <div class="install-card">
-    <div class="ic-title">📋 How to Add to Your Website</div>
-    <ul class="install-steps">
-      <li><div class="is-num">1</div><div>Copy the code below</div></li>
-      <li><div class="is-num">2</div><div>Open your <strong>index.html</strong> on GitHub</div></li>
-      <li><div class="is-num">3</div><div>Paste just before <code style="background:#f5f5f5;padding:2px 6px;border-radius:4px;">&lt;/body&gt;</code></div></li>
-      <li><div class="is-num">4</div><div>Commit changes — Done! ✅</div></li>
-    </ul>
-    <div style="margin-top:16px;font-size:13px;font-weight:700;margin-bottom:8px;color:#1a1a1a;">📋 Paste this code in index.html:</div>
-    <div class="code-block" id="embedCode">
-      <button class="copy-btn" onclick="copyCode()">📋 Copy</button>
-      &lt;!-- BillZest AI Support --&gt;<br>
-      &lt;script src="https://www.billzestpos.com/billzest-ai-widget.js"&gt;&lt;/script&gt;
+<!-- LOGIN PAGE (same as before) -->
+<div class="login-page" id="loginPage" style="display:none;">
+  <div class="login-card">
+    <div class="lc-logo">Bill<span>Zest</span></div>
+    <div class="lc-sub">All-in-One POS with Branding</div>
+    <div class="lc-tabs">
+      <button class="lc-tab on" id="tabLogin" onclick="window.switchTab('login')">Sign In</button>
+      <button class="lc-tab" id="tabRegister" onclick="window.switchTab('register')">Register Free</button>
     </div>
-    <div style="font-size:12px;color:#888;">Or use the full widget file below ↓</div>
-  </div>
-
-  <div class="install-card">
-    <div class="ic-title">⚙️ AI Configuration</div>
-    <div class="cf">
-      <label>Anthropic API Key (Optional — for real AI)</label>
-      <input type="password" id="apiKeyInput" placeholder="sk-ant-api03-xxxxxxxxxx" oninput="saveAPIKey()">
+    <div id="loginForm">
+      <div class="auth-err" id="loginErr"></div>
+      <div class="auth-ok" id="loginOk"></div>
+      <div class="lf"><label>Email</label><input type="email" id="loginEmail" placeholder="your@email.com"></div>
+      <div class="lf"><label>Password</label><div class="eye-wrap"><input type="password" id="loginPass" placeholder="Your password"><button class="eye-btn" onclick="window.toggleEye('loginPass',this)" type="button">👁</button></div></div>
+      <div style="text-align:right;margin-bottom:12px;"><span onclick="window.doForgotPassword()" style="font-size:12px;color:var(--p);cursor:pointer;">Forgot password?</span></div>
+      <button class="btn-auth" onclick="window.doSignIn()">🔐 Sign In</button>
+      <div class="divider">or</div>
+      <button class="btn-google" onclick="window.doGoogleSignIn()">Continue with Google</button>
     </div>
-    <div style="font-size:12px;color:#888;margin-top:-8px;margin-bottom:12px;">Without API key: Smart pre-programmed responses. With key: Full Claude AI! 🤖</div>
-    <div class="cf">
-      <label>Business Name</label>
-      <input type="text" id="bizName" placeholder="BillZest POS" value="BillZest POS" oninput="updateConfig()">
+    <div id="registerForm" style="display:none;">
+      <div class="auth-err" id="registerErr"></div>
+      <div class="auth-ok" id="registerOk"></div>
+      <div class="lf-row"><div class="lf"><label>First Name</label><input type="text" id="regFirst"></div><div class="lf"><label>Last Name</label><input type="text" id="regLast"></div></div>
+      <div class="lf"><label>Email</label><input type="email" id="regEmail"></div>
+      <div class="lf"><label>Password</label><div class="eye-wrap"><input type="password" id="regPass"><button class="eye-btn" onclick="window.toggleEye('regPass',this)" type="button">👁</button></div></div>
+      <div class="lf"><label>Business Name</label><input type="text" id="regBiz"></div>
+      <div class="lf"><label>Business Type</label><select id="regBizType"><option value="restaurant">Restaurant</option><option value="cafe">Cafe</option><option value="grocery">Grocery</option><option value="retail">Retail</option><option value="electronics">Electronics</option><option value="hotel">Hotel</option></select></div>
+      <div class="lf"><label>Phone</label><input type="tel" id="regPhone"></div>
+      <div class="lf-row"><div class="lf"><label>Country</label><select id="regCountry"><option value="Saudi Arabia">Saudi Arabia</option><option value="UAE">UAE</option><option value="Kuwait">Kuwait</option></select></div><div class="lf"><label>Plan</label><select id="regPlan"><option value="Basic">Basic</option><option value="Pro">Pro</option><option value="Enterprise">Enterprise</option></select></div></div>
+      <button class="btn-auth" onclick="window.doRegister()">✨ Start Free Trial</button>
+      <div class="divider">or</div>
+      <button class="btn-google" onclick="window.doGoogleSignIn()">Continue with Google</button>
     </div>
-    <div class="cf">
-      <label>Support Email</label>
-      <input type="email" id="supportEmail" placeholder="info@billzestpos.com" value="info@billzestpos.com" oninput="updateConfig()">
-    </div>
-    <div class="cf">
-      <label>WhatsApp Number</label>
-      <input type="text" id="waNumber" placeholder="+966 50 000 0000" value="+966 50 000 0000" oninput="updateConfig()">
-    </div>
-    <div class="cf">
-      <label>Custom AI Instructions (Optional)</label>
-      <textarea id="customPrompt" placeholder="e.g. Always be friendly. Offer free demo. Speak both Arabic and English.">You are a helpful customer support AI for BillZest POS. Help customers with their questions about our restaurant management system. Be friendly, professional, and helpful. Offer free demo when relevant. Support both Arabic and English.</textarea>
-    </div>
-    <button class="btn-save-cfg" onclick="saveConfig()">💾 Save Configuration</button>
-  </div>
-
-  <div style="text-align:center;color:#aaa;font-size:13px;padding:20px;">
-    💬 Chat widget is active → Bottom right corner ↘️
   </div>
 </div>
 
-<!-- ══ CHAT BUBBLE ══ -->
-<div class="chat-bubble" id="chatBubble">
-  <div class="cb-ring"></div>
-  <button class="cb-btn" onclick="toggleChat()" id="chatToggleBtn">
-    <span id="chatIcon">💬</span>
-    <div class="cb-notif" id="chatNotif" style="display:none;">1</div>
-    <div class="cb-online"></div>
-  </button>
+<!-- MAIN APP -->
+<div class="app" id="mainApp">
+  <div class="app-header">
+    <div class="ah-logo" id="brandHeader">
+      <div class="ah-logo-text">Bill<span>Zest</span></div>
+    </div>
+    <div class="ah-user"><div class="ah-avatar" id="userAvatar">👤</div><div class="ah-name" id="userName">User</div><button class="btn-logout" onclick="window.doLogout()">Logout</button></div>
+  </div>
+
+  <div class="content">
+    <!-- HOME PAGE -->
+    <div class="page on" id="pageHome">
+      <div class="welcome-card"><div class="wc-bg">🏪</div><div class="wc-greeting">Welcome back!</div><div class="wc-name" id="wcName">Loading...</div><div><span class="wc-plan" id="wcPlan">Basic Plan</span></div><div class="wc-trial">🎁 14-day free trial active</div></div>
+      <div class="stats-grid"><div class="stat-card"><div class="stat-icon">📊</div><div class="stat-val" id="statOrders">0</div><div class="stat-lbl">Total Orders</div></div><div class="stat-card"><div class="stat-icon">💰</div><div class="stat-val" id="statRevenue">﷼0</div><div class="stat-lbl">Revenue</div></div><div class="stat-card"><div class="stat-icon">🏪</div><div class="stat-val" id="statProducts">0</div><div class="stat-lbl">Products</div></div><div class="stat-card"><div class="stat-icon">⭐</div><div class="stat-val">4.9</div><div class="stat-lbl">Rating</div></div></div>
+      <div class="section"><div class="section-hdr"><div class="section-title">⚡ Quick Actions</div></div><div class="section-body"><div class="actions-grid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;"><button class="action-btn" onclick="window.switchPage('pagePOS')"><div class="ab-icon">🛒</div><div class="ab-label">Open POS</div></button><button class="action-btn" onclick="window.switchPage('pageProducts')"><div class="ab-icon">📦</div><div class="ab-label">Products</div></button><button class="action-btn" onclick="window.switchPage('pageReports')"><div class="ab-icon">📊</div><div class="ab-label">Reports</div></button><button class="action-btn" onclick="window.switchPage('pageBranding')"><div class="ab-icon">🏷️</div><div class="ab-label">Branding</div></button></div></div></div>
+      <div class="section"><div class="section-hdr"><div class="section-title">📋 Recent Activity</div></div><div class="section-body"><div style="text-align:center;padding:20px;color:#aaa;">✨ Start taking orders from POS or Menu!</div></div></div>
+    </div>
+
+    <!-- POS PAGE -->
+    <div class="page" id="pagePOS">
+      <div class="section"><div class="section-hdr"><div class="section-title">🛒 Point of Sale (Quick Add)</div></div><div class="section-body">
+        <div class="pos-grid">
+          <div class="pos-items" id="posItemsList"></div>
+          <div class="cart-items" id="cartItems"><div style="text-align:center;color:#aaa;">Cart empty</div></div>
+          <div class="cart-total" id="cartTotal">Total: ﷼0</div>
+          <button class="btn-checkout" onclick="window.checkout()">✅ Complete Order</button>
+        </div>
+      </div></div>
+    </div>
+
+    <!-- FULL MENU / SALES DISPLAY PAGE (NEW) -->
+    <div class="page" id="pageMenuDisplay">
+      <div class="section"><div class="section-hdr"><div class="section-title">📋 Full Menu & Sales Display</div></div><div class="section-body">
+        <div class="category-tabs" id="categoryTabs"></div>
+        <div class="menu-grid" id="menuGrid"></div>
+      </div></div>
+    </div>
+
+    <!-- PRODUCTS PAGE (Admin) -->
+    <div class="page" id="pageProducts">
+      <div class="section"><div class="section-hdr"><div class="section-title">📦 Manage Products (Admin)</div></div><div class="section-body">
+        <div class="add-product-form">
+          <input type="text" id="newProductName" placeholder="Product name">
+          <input type="number" id="newProductPrice" placeholder="Price (SAR)">
+          <select id="newProductCategory">
+            <option value="Coffee">☕ Coffee</option>
+            <option value="Cold Drinks">🥤 Cold Drinks</option>
+            <option value="Water">💧 Water</option>
+            <option value="Snacks">🍿 Snacks</option>
+            <option value="Other">📦 Other</option>
+          </select>
+          <button onclick="window.addProduct()">➕ Add</button>
+        </div>
+        <div id="productsList" class="product-list"></div>
+      </div></div>
+    </div>
+
+    <!-- REPORTS PAGE -->
+    <div class="page" id="pageReports">
+      <div class="section"><div class="section-hdr"><div class="section-title">📊 Sales Report</div></div><div class="section-body">
+        <canvas id="salesChart" width="400" height="200"></canvas>
+        <div style="margin-top:16px;"><strong>Total Sales (30 days):</strong> <span id="reportTotal">﷼0</span></div>
+      </div></div>
+    </div>
+
+    <!-- BRANDING PAGE -->
+    <div class="page" id="pageBranding">
+      <div class="section"><div class="section-hdr"><div class="section-title">🏷️ Your Brand & Company</div></div><div class="section-body">
+        <div class="branding-preview" id="brandPreview">
+          <div class="brand-logo-preview" id="logoPreview"><span>🏪</span></div>
+          <div class="brand-info-preview">
+            <h3 id="previewCompanyName">Your Company Name</h3>
+            <p id="previewBusinessType">Business Type</p>
+          </div>
+        </div>
+        <div class="lf"><label>Company Name</label><input type="text" id="companyNameInput" placeholder="Enter your company name"></div>
+        <div class="lf"><label>Business Type</label><select id="companyBizTypeSelect"><option value="restaurant">Restaurant</option><option value="cafe">Cafe</option><option value="grocery">Grocery</option><option value="retail">Retail</option><option value="electronics">Electronics</option><option value="hotel">Hotel</option></select></div>
+        <div class="logo-upload-area">
+          <label>Company Logo (Image)</label>
+          <input type="file" id="logoUpload" accept="image/*">
+          <small>Recommended size: 200x200px, PNG/JPG (base64 stored)</small>
+        </div>
+        <button class="btn-brand-save" onclick="window.saveBranding()">💾 Save Brand Settings</button>
+      </div></div>
+    </div>
+
+    <!-- PROFILE PAGE -->
+    <div class="page" id="pageProfile">
+      <div class="section"><div class="section-hdr"><div class="section-title">👤 My Profile</div></div><div class="section-body"><div id="profileInfo"></div><button onclick="window.doLogout()" style="margin-top:16px;width:100%;background:var(--red);color:#fff;border:none;padding:10px;border-radius:8px;">Logout</button></div></div>
+    </div>
+
+    <!-- SUPPORT PAGE -->
+    <div class="page" id="pageSupport">
+      <div class="section"><div class="section-hdr"><div class="section-title">💬 Support</div></div><div class="section-body">
+        <div class="support-item" onclick="window.open('https://wa.me/966550898978')"><div class="si-icon">💬</div><div>WhatsApp: +966 550 898 978</div></div>
+        <div class="support-item" onclick="location.href='mailto:info@billzestpos.com'"><div class="si-icon">📧</div><div>info@billzestpos.com</div></div>
+      </div></div>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <button class="bn-item on" id="bnHome" onclick="window.switchPage('pageHome');window.setNav('bnHome')"><div class="bn-icon">🏠</div>Home</button>
+    <button class="bn-item" id="bnPOS" onclick="window.switchPage('pagePOS');window.setNav('bnPOS')"><div class="bn-icon">🛒</div>POS</button>
+    <button class="bn-item" id="bnMenu" onclick="window.switchPage('pageMenuDisplay');window.setNav('bnMenu')"><div class="bn-icon">📋</div>Menu</button>
+    <button class="bn-item" id="bnProducts" onclick="window.switchPage('pageProducts');window.setNav('bnProducts')"><div class="bn-icon">📦</div>Products</button>
+    <button class="bn-item" id="bnReports" onclick="window.switchPage('pageReports');window.setNav('bnReports')"><div class="bn-icon">📊</div>Reports</button>
+    <button class="bn-item" id="bnBranding" onclick="window.switchPage('pageBranding');window.setNav('bnBranding')"><div class="bn-icon">🏷️</div>Brand</button>
+    <button class="bn-item" id="bnProfile" onclick="window.switchPage('pageProfile');window.setNav('bnProfile')"><div class="bn-icon">👤</div>Profile</button>
+  </div>
 </div>
 
-<!-- ══ CHAT WINDOW ══ -->
-<div class="chat-window" id="chatWindow">
-  <!-- Header -->
-  <div class="cw-hdr">
-    <div class="cw-av">🤖</div>
-    <div class="cw-info">
-      <div class="cw-name" id="cwBotName">BillZest AI Support</div>
-      <div class="cw-status">Online — Typically replies instantly</div>
-    </div>
-    <div class="cw-actions">
-      <button class="cw-act-btn" onclick="clearChat()" title="Clear chat">🗑️</button>
-      <button class="cw-act-btn" onclick="toggleLang()" title="Toggle Arabic/English" id="langToggleBtn">🌍</button>
-    </div>
-    <button class="cw-close" onclick="toggleChat()">✕</button>
-  </div>
-  <div class="cw-powered">🤖 Powered by Claude AI · BillZest Support</div>
-
-  <!-- Messages -->
-  <div class="cw-msgs" id="cwMsgs"></div>
-
-  <!-- Quick Replies -->
-  <div class="quick-replies" id="quickReplies"></div>
-
-  <!-- Input -->
-  <div class="cw-inp">
-    <button class="attach-btn" onclick="showToast('📎 File upload coming soon!')">📎</button>
-    <textarea id="cwInput" placeholder="Type your message..." rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
-    <button class="send-btn" onclick="sendMsg()">
-      <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-    </button>
-  </div>
-</div>
-
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
 
-<script>
-// ══ CONFIG ══
-var CONFIG = {
-  apiKey: localStorage.getItem('bz_ai_key') || '',
-  bizName: 'BillZest POS',
-  supportEmail: 'info@billzestpos.com',
-  waNumber: '+966 50 000 0000',
-  prompt: 'You are a helpful customer support AI for BillZest POS restaurant management system. Be friendly, professional, and concise. Help with: pricing, features, technical issues, orders, login problems. Offer free demo. Support Arabic and English. Keep replies short (2-3 sentences max). End with a helpful follow-up question.'
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, sendEmailVerification, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+import { getFirestore, doc, setDoc, getDoc, collection, getDocs, addDoc, query, where, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCN0akvFXOHM6WPHv9ve9noqqmauO3TJRY",
+  authDomain: "billzest-pos.firebaseapp.com",
+  projectId: "billzest-pos",
+  storageBucket: "billzest-pos.firebasestorage.app",
+  messagingSenderId: "946546876429",
+  appId: "1:946546876429:web:9b4a7aa3cecbf3aea83544"
 };
-var chatHistory = [];
-var isArabic = false;
-var chatOpen = false;
-var notifShown = false;
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const googleProvider = new GoogleAuthProvider();
 
-// ══ SAVE API KEY ══
-function saveAPIKey(){
-  CONFIG.apiKey = document.getElementById('apiKeyInput').value.trim();
-  localStorage.setItem('bz_ai_key', CONFIG.apiKey);
-}
-function updateConfig(){
-  CONFIG.bizName = document.getElementById('bizName').value || 'BillZest POS';
-  CONFIG.supportEmail = document.getElementById('supportEmail').value;
-  CONFIG.waNumber = document.getElementById('waNumber').value;
-  document.getElementById('cwBotName').textContent = CONFIG.bizName + ' AI';
-}
-function saveConfig(){
-  CONFIG.prompt = document.getElementById('customPrompt').value || CONFIG.prompt;
-  updateConfig();
-  showToast('✅ Configuration saved!');
-}
-
-// ══ CHAT TOGGLE ══
-function toggleChat(){
-  chatOpen = !chatOpen;
-  var cw = document.getElementById('chatWindow');
-  cw.classList.toggle('open', chatOpen);
-  document.getElementById('chatIcon').textContent = chatOpen ? '✕' : '💬';
-  document.getElementById('chatNotif').style.display = 'none';
-  if(chatOpen && chatHistory.length === 0) initChat();
-  if(chatOpen) setTimeout(function(){ document.getElementById('cwInput').focus(); }, 300);
-}
-
-// ══ INIT CHAT ══
-function initChat(){
-  chatHistory = [];
-  document.getElementById('cwMsgs').innerHTML = '';
-  var welcome = isArabic ?
-    'مرحباً! أنا مساعد بيل زست الذكي 🤖\n\nكيف يمكنني مساعدتك اليوم؟' :
-    'Hello! I\'m BillZest AI Support 🤖\n\nI can help you with:\n• Pricing & Plans\n• Technical Issues\n• Orders & Billing\n• Features & Setup\n\nHow can I help you today?';
-  addMsg('bot', welcome);
-  renderQuickReplies();
-}
-
-// ══ QUICK REPLIES ══
-var QRS_EN = ['💰 Pricing', '🛒 POS Features', '❓ Login Problem', '📞 Talk to Human', '🆓 Free Demo', '🌙 عربي'];
-var QRS_AR = ['💰 الأسعار', '🛒 مميزات النظام', '❓ مشكلة تسجيل', '📞 تحدث مع موظف', '🆓 تجربة مجانية', '🌐 English'];
-
-function renderQuickReplies(){
-  var qrs = isArabic ? QRS_AR : QRS_EN;
-  document.getElementById('quickReplies').innerHTML = qrs.map(function(q){
-    return '<button class="qr-chip" onclick="sendQuick(\''+q+'\')">'+q+'</button>';
-  }).join('');
-}
-
-function sendQuick(q){
-  if(q === '🌙 عربي' || q === '🌐 English'){toggleLang();return;}
-  sendMsgText(q);
-}
-
-// ══ SEND MESSAGE ══
-function handleKey(e){
-  if(e.key === 'Enter' && !e.shiftKey){e.preventDefault();sendMsg();}
-}
-function autoResize(el){
-  el.style.height = 'auto';
-  el.style.height = Math.min(el.scrollHeight, 80) + 'px';
-}
-function sendMsg(){
-  var inp = document.getElementById('cwInput');
-  var msg = inp.value.trim();
-  if(!msg) return;
-  inp.value = '';
-  inp.style.height = 'auto';
-  sendMsgText(msg);
-}
-function sendMsgText(msg){
-  addMsg('user', msg);
-  chatHistory.push({role:'user', content:msg});
-  showTyping();
-  document.getElementById('quickReplies').innerHTML = '';
-
-  var key = CONFIG.apiKey || localStorage.getItem('bz_ai_key') || '';
-  if(key && key.startsWith('sk-ant')){
-    callClaudeAPI(msg, key);
-  } else {
-    var delay = 600 + Math.random() * 800;
-    setTimeout(function(){
-      hideTyping();
-      var reply = getSmartReply(msg.toLowerCase());
-      addMsg('bot', reply);
-      chatHistory.push({role:'assistant', content:reply});
-      renderQuickReplies();
-    }, delay);
+// Expose global functions
+window.switchTab = (tab) => {
+  document.getElementById('loginForm').style.display = tab === 'login' ? 'block' : 'none';
+  document.getElementById('registerForm').style.display = tab === 'register' ? 'block' : 'none';
+  document.getElementById('tabLogin').classList.toggle('on', tab === 'login');
+  document.getElementById('tabRegister').classList.toggle('on', tab === 'register');
+};
+window.toggleEye = (id, btn) => { const inp = document.getElementById(id); inp.type = inp.type === 'password' ? 'text' : 'password'; btn.textContent = inp.type === 'password' ? '👁' : '🙈'; };
+window.doSignIn = async () => {
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass = document.getElementById('loginPass').value;
+  const err = document.getElementById('loginErr');
+  err.style.display = 'none';
+  if (!email || !pass) { err.innerText = 'Fill all fields'; err.style.display = 'block'; return; }
+  try {
+    const cred = await signInWithEmailAndPassword(auth, email, pass);
+    if (!cred.user.emailVerified) {
+      await signOut(auth);
+      err.innerHTML = '⚠️ Email not verified! Check your inbox.';
+      err.style.display = 'block';
+    }
+  } catch(e) {
+    err.innerText = e.code === 'auth/invalid-credential' ? 'Invalid email or password' : e.message;
+    err.style.display = 'block';
   }
-}
+};
+window.doRegister = async () => {
+  const first = document.getElementById('regFirst').value.trim();
+  const last = document.getElementById('regLast').value.trim();
+  const email = document.getElementById('regEmail').value.trim();
+  const pass = document.getElementById('regPass').value;
+  const biz = document.getElementById('regBiz').value.trim();
+  const phone = document.getElementById('regPhone').value.trim();
+  const country = document.getElementById('regCountry').value;
+  const plan = document.getElementById('regPlan').value;
+  const bizType = document.getElementById('regBizType').value;
+  const err = document.getElementById('registerErr');
+  const ok = document.getElementById('registerOk');
+  err.style.display = 'none'; ok.style.display = 'none';
+  if (!first || !last || !email || !pass || !biz) { err.innerText = 'Fill all required fields'; err.style.display = 'block'; return; }
+  if (pass.length < 8) { err.innerText = 'Password must be at least 8 characters'; err.style.display = 'block'; return; }
+  try {
+    const cred = await createUserWithEmailAndPassword(auth, email, pass);
+    await setDoc(doc(db, "users", cred.user.uid), { firstName: first, lastName: last, business: biz, phone, country, plan, bizType, email, uid: cred.user.uid, createdAt: new Date().toISOString() });
+    await sendEmailVerification(cred.user);
+    await signOut(auth);
+    ok.innerHTML = 'Account created! Please verify your email.';
+    ok.style.display = 'block';
+    setTimeout(() => window.switchTab('login'), 3000);
+  } catch(e) {
+    err.innerText = e.code === 'auth/email-already-in-use' ? 'Email already registered' : e.message;
+    err.style.display = 'block';
+  }
+};
+window.doGoogleSignIn = async () => {
+  try {
+    const result = await signInWithPopup(auth, googleProvider);
+    const snap = await getDoc(doc(db, "users", result.user.uid));
+    if (!snap.exists()) {
+      await setDoc(doc(db, "users", result.user.uid), {
+        firstName: result.user.displayName?.split(' ')[0] || 'User',
+        email: result.user.email,
+        uid: result.user.uid,
+        plan: 'Basic',
+        createdAt: new Date().toISOString()
+      });
+    }
+  } catch(e) { alert('Google sign-in failed: ' + e.message); }
+};
+window.doForgotPassword = async () => {
+  const email = document.getElementById('loginEmail').value.trim();
+  const err = document.getElementById('loginErr');
+  const ok = document.getElementById('loginOk');
+  if (!email) { err.innerText = 'Enter your email'; err.style.display = 'block'; return; }
+  try {
+    await sendPasswordResetEmail(auth, email);
+    ok.innerHTML = 'Password reset email sent!';
+    ok.style.display = 'block';
+  } catch(e) { err.innerText = e.message; err.style.display = 'block'; }
+};
+window.doLogout = async () => { await signOut(auth); showToast('Logged out'); setTimeout(() => location.reload(), 800); };
+window.switchPage = (pageId) => { document.querySelectorAll('.page').forEach(p => p.classList.remove('on')); document.getElementById(pageId).classList.add('on'); window.scrollTo(0,0); };
+window.setNav = (id) => { document.querySelectorAll('.bn-item').forEach(b => b.classList.remove('on')); document.getElementById(id).classList.add('on'); };
 
-// ══ CLAUDE API ══
-function callClaudeAPI(msg, key){
-  var messages = chatHistory.slice(-10).map(function(m){
-    return {role: m.role, content: m.content};
-  });
-  fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 400,
-      system: CONFIG.prompt,
-      messages: messages
-    })
-  })
-  .then(function(r){return r.json();})
-  .then(function(d){
-    hideTyping();
-    var reply = d.content && d.content[0] ? d.content[0].text : getSmartReply(msg.toLowerCase());
-    addMsg('bot', reply);
-    chatHistory.push({role:'assistant', content:reply});
-    renderQuickReplies();
-  })
-  .catch(function(){
-    hideTyping();
-    var reply = getSmartReply(msg.toLowerCase());
-    addMsg('bot', reply);
-    renderQuickReplies();
+let currentUser = null;
+let userData = null;
+let products = [];
+let cart = [];
+let brandData = { companyName: '', logoBase64: '', bizType: 'restaurant' };
+let chart = null;
+
+function showToast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3000); }
+
+// Helper: file to base64
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
   });
 }
 
-// ══ SMART REPLIES (No API) ══
-function getSmartReply(msg){
-  var ar = isArabic;
-
-  // Greeting
-  if(/hello|hi|hey|مرحبا|السلام|اهلا/.test(msg))
-    return ar ? 'مرحباً! كيف يمكنني مساعدتك اليوم؟ 😊' : 'Hello! Welcome to BillZest Support 😊 How can I help you today?';
-
-  // Pricing
-  if(/price|pricing|cost|كم|سعر|تكلف|اسعار|how much/.test(msg))
-    return ar ? 'أسعارنا تبدأ من ﷼1,888/شهر للباقة الأساسية!\n\n🥉 أساسية: ﷼1,888/شهر\n🥈 متقدمة: ﷼2,888/شهر\n🥇 مؤسسات: حسب الطلب\n\nهل تريد تجربة مجانية 14 يوم؟' :
-      'Our plans start from ﷼1,888/month!\n\n🥉 Basic: ﷼1,888/mo\n🥈 Pro: ﷼2,888/mo\n🥇 Enterprise: Custom\n\nAll plans include 14-day FREE trial! Want to start?';
-
-  // Free trial / demo
-  if(/free|trial|demo|تجربة|مجان|demo/.test(msg))
-    return ar ? '🎁 نعم! تجربة مجانية 14 يوم بدون بطاقة ائتمان!\n\nللبدء: www.billzestpos.com\nأو تواصل معنا: info@billzestpos.com' :
-      '🎁 Yes! 14-day FREE trial, no credit card needed!\n\nStart at: www.billzestpos.com\nOr email: info@billzestpos.com\n\nShall I schedule a live demo for you?';
-
-  // Login problem
-  if(/login|password|sign in|cant|كلمة مرور|تسجيل|دخول|لا استطيع/.test(msg))
-    return ar ? '🔐 مشكلة في تسجيل الدخول؟\n\n1. تأكد من البريد الإلكتروني\n2. استخدم "نسيت كلمة المرور"\n3. تواصل: info@billzestpos.com\n\nهل تحتاج مساعدة أخرى؟' :
-      '🔐 Login issues? Here\'s what to try:\n\n1. Check your email address\n2. Click "Forgot Password"\n3. Clear browser cache\n4. Try different browser\n\nStill having issues? Email: info@billzestpos.com';
-
-  // Technical / error
-  if(/error|problem|issue|not working|crash|bug|خطأ|مشكل|لا يعمل/.test(msg))
-    return ar ? '⚠️ نأسف لهذه المشكلة!\n\nيرجى:\n1. تحديث الصفحة\n2. مسح الكاش\n3. إرسال صورة للخطأ على: info@billzestpos.com\n\nسيتواصل معك فريقنا خلال ساعة! ⚡' :
-      '⚠️ Sorry for the trouble!\n\nPlease try:\n1. Refresh the page\n2. Clear browser cache\n3. Try incognito mode\n\nIf still broken, send screenshot to: info@billzestpos.com\nWe\'ll fix it within 1 hour! ⚡';
-
-  // Features / POS
-  if(/feature|pos|system|kitchen|order|inventory|report|مميزات|نظام|مطعم/.test(msg))
-    return ar ? '🚀 مميزات بيل زست:\n\n🛒 نقطة بيع متكاملة\n📊 تقارير فورية\n👨‍🍳 شاشة المطبخ\n📱 طلبات أونلاين\n⭐ نقاط الولاء\n🏪 إدارة الفروع\n🌍 عربي + إنجليزي\n\nهل تريد عرضاً توضيحياً؟' :
-      '🚀 BillZest Features:\n\n🛒 Complete POS System\n📊 Real-time Analytics\n👨‍🍳 Kitchen Display (KDS)\n📱 Online Ordering\n⭐ Loyalty Program\n🏪 Multi-Branch\n🌍 Arabic + English\n\nWant a live demo?';
-
-  // Human / escalate
-  if(/human|agent|talk|speak|person|موظف|انسان|تحدث/.test(msg))
-    return ar ? '👤 سيتواصل معك أحد موظفينا قريباً!\n\n📞 هاتف: 800 1000 119\n💬 واتساب: '+CONFIG.waNumber+'\n📧 إيميل: '+CONFIG.supportEmail+'\n\nأوقات العمل: 24/7 🕐' :
-      '👤 Connecting you to our team!\n\n📞 Phone: 800 1000 119\n💬 WhatsApp: '+CONFIG.waNumber+'\n📧 Email: '+CONFIG.supportEmail+'\n\nAvailable: 24/7 🕐';
-
-  // WhatsApp
-  if(/whatsapp|واتساب/.test(msg)){
-    window.open('https://wa.me/'+CONFIG.waNumber.replace(/[^0-9]/g,'')+'?text=Hello BillZest Support!', '_blank');
-    return ar ? '✅ تم فتح واتساب! سيرد عليك فريقنا قريباً 💬' : '✅ Opening WhatsApp! Our team will reply shortly 💬';
+// Brand functions
+async function loadBrandData() {
+  if (!currentUser) return;
+  const brandRef = doc(db, "brands", currentUser.uid);
+  const snap = await getDoc(brandRef);
+  if (snap.exists()) brandData = snap.data();
+  else {
+    brandData = { companyName: userData?.business || 'My Business', logoBase64: '', bizType: userData?.bizType || 'restaurant' };
+    await setDoc(brandRef, brandData);
   }
-
-  // Payment / billing
-  if(/payment|bill|invoice|pay|invoice|دفع|فاتور/.test(msg))
-    return ar ? '💳 للمدفوعات والفواتير:\n\n📧 billing@billzestpos.com\nأو من خلال لوحة التحكم → الفواتير\n\nهل تحتاج فاتورة محددة؟' :
-      '💳 For payments & billing:\n\n📧 billing@billzestpos.com\nOr: Dashboard → Billing\n\nNeed a specific invoice?';
-
-  // Arabic question
-  if(/arabic|عربي|language|لغة/.test(msg)){
-    toggleLang();
-    return ar ? '✅ تم التحويل للإنجليزية!' : '✅ تم التحويل للعربية! كيف يمكنني مساعدتك؟';
-  }
-
-  // Default
-  return ar ?
-    'شكراً على تواصلك مع بيل زست! 🙏\n\nلم أفهم سؤالك بشكل كامل. هل يمكنك التوضيح أكثر؟\nأو تواصل مباشرة: '+CONFIG.supportEmail :
-    'Thanks for reaching out to BillZest! 🙏\n\nI didn\'t fully understand your question. Could you please clarify?\n\nOr contact us directly:\n📧 '+CONFIG.supportEmail+'\n💬 WhatsApp: '+CONFIG.waNumber;
+  updateBrandUI();
 }
+function updateBrandUI() {
+  const header = document.getElementById('brandHeader');
+  if (header) {
+    if (brandData.logoBase64 && brandData.logoBase64.startsWith('data:image')) {
+      header.innerHTML = `<img src="${brandData.logoBase64}" class="ah-logo-img" alt="logo"><div class="ah-logo-text"><span>${brandData.companyName.substring(0,15)}</span></div>`;
+    } else {
+      header.innerHTML = `<div class="ah-logo-text">Bill<span>Zest</span> <span style="font-size:12px;">| ${brandData.companyName.substring(0,15)}</span></div>`;
+    }
+  }
+  const previewLogo = document.getElementById('logoPreview');
+  if (previewLogo) {
+    if (brandData.logoBase64 && brandData.logoBase64.startsWith('data:image')) {
+      previewLogo.innerHTML = `<img src="${brandData.logoBase64}" style="max-width:100%;max-height:100%;">`;
+    } else {
+      previewLogo.innerHTML = '<span>🏪</span>';
+    }
+  }
+  document.getElementById('previewCompanyName').innerText = brandData.companyName || 'Your Company';
+  document.getElementById('previewBusinessType').innerText = (brandData.bizType || 'restaurant').toUpperCase();
+  document.getElementById('companyNameInput').value = brandData.companyName || '';
+  document.getElementById('companyBizTypeSelect').value = brandData.bizType || 'restaurant';
+}
+window.saveBranding = async function() {
+  showToast("Saving brand...");
+  try {
+    const newCompanyName = document.getElementById('companyNameInput').value.trim();
+    const newBizType = document.getElementById('companyBizTypeSelect').value;
+    if (!newCompanyName) { showToast('Please enter company name'); return; }
+    let logoBase64 = brandData.logoBase64;
+    const fileInput = document.getElementById('logoUpload');
+    if (fileInput.files.length > 0) {
+      logoBase64 = await fileToBase64(fileInput.files[0]);
+    }
+    const brandRef = doc(db, "brands", currentUser.uid);
+    await setDoc(brandRef, { companyName: newCompanyName, logoBase64, bizType: newBizType }, { merge: true });
+    brandData = { companyName: newCompanyName, logoBase64, bizType: newBizType };
+    updateBrandUI();
+    showToast('Brand settings saved! Now view your full sales display in Menu section.');
+    // Optionally switch to menu page? We'll just toast.
+  } catch (err) {
+    console.error(err);
+    showToast('Error: ' + err.message);
+  }
+};
 
-// ══ ADD MESSAGE ══
-function addMsg(from, text){
-  var el = document.getElementById('cwMsgs');
-  var now = new Date();
-  var time = now.getHours()+':'+String(now.getMinutes()).padStart(2,'0');
-  var div = document.createElement('div');
-  div.className = 'msg '+from;
+// Product functions with category
+async function loadProducts() {
+  if (!currentUser) return;
+  const q = query(collection(db, "products"), where("userId", "==", currentUser.uid));
+  const snap = await getDocs(q);
+  products = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  // If no products, create sample items
+  if (products.length === 0) {
+    await createSampleProducts();
+    await loadProducts(); // reload
+  }
+  renderProductsList();
+  renderPOSItems();
+  renderMenuDisplay();
+  document.getElementById('statProducts').innerText = products.length;
+}
+async function createSampleProducts() {
+  const samples = [
+    { name: "Arabic Coffee", price: 12, category: "Coffee" },
+    { name: "American Coffee", price: 10, category: "Coffee" },
+    { name: "Latte", price: 14, category: "Coffee" },
+    { name: "Cappuccino", price: 14, category: "Coffee" },
+    { name: "Coca Cola", price: 5, category: "Cold Drinks" },
+    { name: "Sprite", price: 5, category: "Cold Drinks" },
+    { name: "Fanta", price: 5, category: "Cold Drinks" },
+    { name: "Mineral Water (Small)", price: 3, category: "Water" },
+    { name: "Mineral Water (Large)", price: 5, category: "Water" },
+    { name: "Chicken Sandwich", price: 18, category: "Snacks" },
+    { name: "Cheese Pastry", price: 12, category: "Snacks" }
+  ];
+  for (let item of samples) {
+    await addDoc(collection(db, "products"), { ...item, userId: currentUser.uid, stock: 100 });
+  }
+  showToast("Sample products added! (Coffee, Cola, Water, etc.)");
+}
+function renderProductsList() {
+  const container = document.getElementById('productsList');
+  if (!container) return;
+  container.innerHTML = products.map(p => `<div class="product-row"><span><strong>${p.name}</strong> (${p.category || 'Other'}) - ﷼${p.price}</span><div class="product-actions"><button onclick="window.editProduct('${p.id}','${p.name}',${p.price})">✏️</button><button onclick="window.deleteProduct('${p.id}')">🗑️</button></div></div>`).join('');
+}
+window.addProduct = async () => {
+  const name = document.getElementById('newProductName').value.trim();
+  const price = parseFloat(document.getElementById('newProductPrice').value);
+  const category = document.getElementById('newProductCategory').value;
+  if (!name || isNaN(price)) { showToast('Enter name and price'); return; }
+  const docRef = await addDoc(collection(db, "products"), { userId: currentUser.uid, name, price, category, stock: 100 });
+  products.push({ id: docRef.id, name, price, category, stock: 100 });
+  renderProductsList();
+  renderPOSItems();
+  renderMenuDisplay();
+  document.getElementById('newProductName').value = '';
+  document.getElementById('newProductPrice').value = '';
+  showToast('Product added');
+  loadStats();
+};
+window.editProduct = async (id, oldName, oldPrice) => {
+  const newName = prompt('New name', oldName);
+  const newPrice = prompt('New price', oldPrice);
+  if (!newName || !newPrice) return;
+  await updateDoc(doc(db, "products", id), { name: newName, price: parseFloat(newPrice) });
+  await loadProducts();
+};
+window.deleteProduct = async (id) => {
+  if (confirm('Delete product?')) { await deleteDoc(doc(db, "products", id)); await loadProducts(); }
+};
 
-  if(from === 'bot'){
-    div.innerHTML =
-      '<div style="display:flex;gap:6px;align-items:flex-end;">'+
-        '<div class="bot-av">🤖</div>'+
-        '<div class="msg-bubble">'+text.replace(/\n/g,'<br>')+'</div>'+
-      '</div>'+
-      '<div class="msg-time">'+time+'</div>';
+// POS functions
+async function renderPOSItems() {
+  const container = document.getElementById('posItemsList');
+  if (!container) return;
+  if (products.length === 0) await loadProducts();
+  container.innerHTML = products.map(p => `<div class="pos-item-card" onclick="window.addToCart('${p.id}','${p.name.replace(/'/g,"\\'")}',${p.price})"><div class="pos-item-name">${p.name}</div><div class="pos-item-price">﷼${p.price}</div></div>`).join('');
+}
+window.addToCart = (id, name, price) => {
+  const existing = cart.find(i => i.id === id);
+  if (existing) existing.qty++;
+  else cart.push({ id, name, price, qty: 1 });
+  renderCart();
+};
+function renderCart() {
+  const container = document.getElementById('cartItems');
+  if (cart.length === 0) { container.innerHTML = '<div style="text-align:center;color:#aaa;">Cart empty</div>'; document.getElementById('cartTotal').innerText = 'Total: ﷼0'; return; }
+  let html = '', total = 0;
+  cart.forEach((item, idx) => {
+    total += item.price * item.qty;
+    html += `<div class="cart-item"><div class="cart-item-details"><div class="cart-item-name">${item.name}</div><div class="cart-item-qty"><button class="qty-btn" onclick="window.updateQty(${idx},-1)">-</button><span>${item.qty}</span><button class="qty-btn" onclick="window.updateQty(${idx},1)">+</button></div></div><div>﷼${item.price * item.qty}</div></div>`;
+  });
+  container.innerHTML = html;
+  document.getElementById('cartTotal').innerText = `Total: ﷼${total}`;
+}
+window.updateQty = (idx, delta) => {
+  const newQty = cart[idx].qty + delta;
+  if (newQty <= 0) cart.splice(idx, 1);
+  else cart[idx].qty = newQty;
+  renderCart();
+};
+window.checkout = async () => {
+  if (cart.length === 0) { showToast('Cart is empty'); return; }
+  const total = cart.reduce((s, i) => s + (i.price * i.qty), 0);
+  await addDoc(collection(db, "orders"), { userId: currentUser.uid, items: cart, total, date: new Date().toISOString(), status: 'completed' });
+  showToast(`Order placed! Total: ﷼${total}`);
+  cart = [];
+  renderCart();
+  loadStats();
+  loadReportChart();
+};
+
+// Full Menu Display (Sales Display) with category filter
+let currentCategory = 'All';
+function renderMenuDisplay() {
+  const container = document.getElementById('menuGrid');
+  if (!container) return;
+  let filtered = products;
+  if (currentCategory !== 'All') {
+    filtered = products.filter(p => p.category === currentCategory);
+  }
+  if (filtered.length === 0) {
+    container.innerHTML = '<div style="text-align:center;padding:20px;color:#aaa;">No products in this category. Add from Products page.</div>';
   } else {
-    div.innerHTML =
-      '<div class="msg-bubble">'+text+'</div>'+
-      '<div class="msg-time">'+time+'</div>';
+    container.innerHTML = filtered.map(p => `
+      <div class="menu-item">
+        <div class="menu-item-name">${p.name}</div>
+        <div class="menu-item-price">﷼${p.price}</div>
+        <div class="menu-item-category">${p.category || 'General'}</div>
+        <button class="btn-add-menu" onclick="window.addToCart('${p.id}','${p.name.replace(/'/g,"\\'")}',${p.price})">➕ Add to Cart</button>
+      </div>
+    `).join('');
   }
-  el.appendChild(div);
-  el.scrollTop = el.scrollHeight;
+  // Render category tabs
+  const cats = ['All', ...new Set(products.map(p => p.category).filter(c => c))];
+  const tabsHtml = cats.map(cat => `<button class="cat-tab ${currentCategory === cat ? 'active' : ''}" onclick="window.filterMenu('${cat}')">${cat}</button>`).join('');
+  document.getElementById('categoryTabs').innerHTML = tabsHtml;
+}
+window.filterMenu = (cat) => {
+  currentCategory = cat;
+  renderMenuDisplay();
+};
 
-  // Show rating after 3 bot messages
-  var botMsgs = el.querySelectorAll('.msg.bot').length;
-  if(from === 'bot' && botMsgs === 3){
-    setTimeout(showRating, 1000);
+// Stats & Reports
+async function loadStats() {
+  if (!currentUser) return;
+  const ordersSnap = await getDocs(query(collection(db, "orders"), where("userId", "==", currentUser.uid)));
+  let totalOrders = ordersSnap.size;
+  let revenue = 0;
+  ordersSnap.forEach(d => revenue += d.data().total || 0);
+  document.getElementById('statOrders').innerText = totalOrders;
+  document.getElementById('statRevenue').innerHTML = `﷼${revenue}`;
+}
+async function loadReportChart() {
+  if (!currentUser) return;
+  const ordersSnap = await getDocs(query(collection(db, "orders"), where("userId", "==", currentUser.uid)));
+  const daily = {};
+  ordersSnap.forEach(d => { const date = d.data().date.split('T')[0]; daily[date] = (daily[date] || 0) + d.data().total; });
+  const labels = Object.keys(daily).slice(-7);
+  const data = labels.map(l => daily[l]);
+  const ctx = document.getElementById('salesChart')?.getContext('2d');
+  if (ctx) {
+    if (chart) chart.destroy();
+    chart = new Chart(ctx, { type: 'line', data: { labels, datasets: [{ label: 'Sales (SAR)', data, borderColor: '#4f2d91', tension: 0.3 }] } });
   }
+  const total = Object.values(daily).reduce((a, b) => a + b, 0);
+  document.getElementById('reportTotal').innerHTML = `﷼${total}`;
+}
+async function loadProfile() {
+  if (!currentUser) return;
+  const snap = await getDoc(doc(db, "users", currentUser.uid));
+  const data = snap.data() || {};
+  document.getElementById('profileInfo').innerHTML = `
+    <div class="profile-field"><label>Name</label><div>${data.firstName || ''} ${data.lastName || ''}</div></div>
+    <div class="profile-field"><label>Email</label><div>${currentUser.email}</div></div>
+    <div class="profile-field"><label>Business</label><div>${data.business || ''}</div></div>
+    <div class="profile-field"><label>Plan</label><div>${data.plan || 'Basic'}</div></div>
+  `;
+}
+async function loadDashboard(user) {
+  currentUser = user;
+  userData = (await getDoc(doc(db, "users", user.uid))).data() || {};
+  document.getElementById('userName').innerText = userData.firstName || user.email.split('@')[0];
+  document.getElementById('userAvatar').innerText = (userData.firstName?.charAt(0) || user.email.charAt(0)).toUpperCase();
+  document.getElementById('wcName').innerHTML = `Hello, ${userData.firstName || 'Customer'}! 👋`;
+  document.getElementById('wcPlan').innerText = `${userData.plan || 'Basic'} Plan`;
+  await loadBrandData();
+  await loadProducts();
+  await loadStats();
+  await loadReportChart();
+  loadProfile();
+  showToast('Welcome to All-in-One Dashboard! Check out the new Full Menu Display.');
 }
 
-// ══ TYPING ══
-function showTyping(){
-  var el = document.getElementById('cwMsgs');
-  var div = document.createElement('div');
-  div.id = 'typingWrap';
-  div.className = 'typing-wrap';
-  div.innerHTML = '<div class="bot-av">🤖</div><div class="typing-bubble"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>';
-  el.appendChild(div);
-  el.scrollTop = el.scrollHeight;
-}
-function hideTyping(){
-  var t = document.getElementById('typingWrap');
-  if(t) t.remove();
-}
-
-// ══ RATING ══
-function showRating(){
-  var el = document.getElementById('cwMsgs');
-  var div = document.createElement('div');
-  div.className = 'msg bot';
-  div.innerHTML =
-    '<div style="display:flex;gap:6px;align-items:flex-end;">'+
-      '<div class="bot-av">🤖</div>'+
-      '<div class="rating-wrap">'+
-        '<div style="font-size:12px;font-weight:600;color:#555;">'+(isArabic?'كيف كانت تجربتك؟':'How was my help?')+'</div>'+
-        '<div class="rating-stars">'+
-          [1,2,3,4,5].map(function(n){
-            return '<button class="star-btn" onclick="rateChat('+n+',this)">★</button>';
-          }).join('')+
-        '</div>'+
-      '</div>'+
-    '</div>';
-  el.appendChild(div);
-  el.scrollTop = el.scrollHeight;
-}
-function rateChat(n, btn){
-  document.querySelectorAll('.star-btn').forEach(function(b,i){b.classList.toggle('on',i<n);});
-  setTimeout(function(){
-    addMsg('bot', n>=4 ?
-      (isArabic?'شكراً جزيلاً! يسعدنا خدمتك 🌟':'Thank you! Glad I could help! 🌟') :
-      (isArabic?'نأسف لعدم رضاك! سنتواصل معك قريباً 🙏':'Sorry I didn\'t help more! A human agent will follow up 🙏'));
-  },500);
-}
-
-// ══ TOGGLE LANG ══
-function toggleLang(){
-  isArabic = !isArabic;
-  document.getElementById('langToggleBtn').textContent = isArabic ? '🌐' : '🌍';
-  document.getElementById('cwInput').placeholder = isArabic ? 'اكتب رسالتك...' : 'Type your message...';
-  renderQuickReplies();
-  addMsg('bot', isArabic ? '✅ تم التحويل للعربية! كيف يمكنني مساعدتك؟' : '✅ Switched to English! How can I help?');
-}
-
-// ══ CLEAR CHAT ══
-function clearChat(){
-  chatHistory = [];
-  document.getElementById('cwMsgs').innerHTML = '';
-  initChat();
-  showToast(isArabic?'تم مسح المحادثة':'Chat cleared!');
-}
-
-// ══ COPY CODE ══
-function copyCode(){
-  var code = '<script src="https://www.billzestpos.com/billzest-ai-widget.js"><\/script>';
-  navigator.clipboard && navigator.clipboard.writeText(code);
-  showToast('📋 Code copied!');
-}
-
-// ══ TOAST ══
-function showToast(msg){
-  var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
-  setTimeout(function(){t.classList.remove('show');},2500);
-}
-
-// ══ AUTO SHOW NOTIFICATION ══
-setTimeout(function(){
-  if(!notifShown && !chatOpen){
-    notifShown=true;
-    document.getElementById('chatNotif').style.display='flex';
+// Auth state
+let authTimeout = setTimeout(() => { document.getElementById('loadingScreen').style.display = 'none'; document.getElementById('loginPage').style.display = 'flex'; }, 5000);
+onAuthStateChanged(auth, async (user) => {
+  clearTimeout(authTimeout);
+  document.getElementById('loadingScreen').style.display = 'none';
+  if (user) {
+    document.getElementById('loginPage').style.display = 'none';
+    document.getElementById('mainApp').style.display = 'block';
+    await loadDashboard(user);
+  } else {
+    document.getElementById('loginPage').style.display = 'flex';
+    document.getElementById('mainApp').style.display = 'none';
   }
-},3000);
-
-// Load saved API key
-if(localStorage.getItem('bz_ai_key')){
-  document.getElementById('apiKeyInput').value = localStorage.getItem('bz_ai_key');
-  CONFIG.apiKey = localStorage.getItem('bz_ai_key');
-}
+});
 </script>
 </body>
 </html>
