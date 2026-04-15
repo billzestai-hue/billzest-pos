@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>BillZest POS | Professional Dashboard</title>
-<!-- Only Google Fonts and Chart.js - no broken external stylesheets -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
@@ -72,8 +71,8 @@ body{font-family:'Inter',sans-serif;background:#f8fafc;color:#1e293b;}
 .brand-logo-preview{width:80px;height:80px;border-radius:20px;background:white;display:flex;align-items:center;justify-content:center;border:1px solid var(--bdr);overflow:hidden;}
 .btn-brand-save{background:var(--p);color:white;border:none;padding:14px;border-radius:40px;cursor:pointer;width:100%;font-weight:600;margin-top:16px;}
 canvas{max-height:220px;width:100%;}
-.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(80px);background:#1e293b;color:white;padding:12px 24px;border-radius:40px;font-size:13px;z-index:9999;transition:transform 0.3s;white-space:nowrap;}
-.toast.show{transform:translateX(-50%) translateY(0);}
+/* Toast removed completely */
+.toast{display:none;}
 .page{display:none;}
 .page.on{display:block;}
 @media(max-width:768px){
@@ -163,7 +162,8 @@ let cart = [];
 let brandData = { companyName: 'My Coffee Shop', logoBase64: '', bizType: 'coffee shop' };
 let salesChart = null, reportChart = null;
 
-function showToast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3000); }
+// Toast function disabled (no popups)
+function showToast(msg) { /* intentionally empty - no popups */ }
 function fileToBase64(file) { return new Promise((resolve, reject) => { const reader = new FileReader(); reader.readAsDataURL(file); reader.onload = () => resolve(reader.result); reader.onerror = reject; }); }
 
 window.switchPage = (pageId) => { document.querySelectorAll('.page').forEach(p => p.classList.remove('on')); document.getElementById(pageId).classList.add('on'); window.scrollTo(0,0); };
@@ -189,35 +189,33 @@ function updateBrandUI() {
   document.getElementById('companyBizTypeSelect').value = brandData.bizType;
 }
 document.getElementById('saveBrandBtn').addEventListener('click', async () => {
-  showToast("Saving...");
   try {
     const newName = document.getElementById('companyNameInput').value.trim();
     const newType = document.getElementById('companyBizTypeSelect').value;
-    if (!newName) { showToast('Enter company name'); return; }
+    if (!newName) { alert('Enter company name'); return; }
     let logo = brandData.logoBase64;
     const file = document.getElementById('logoUpload').files[0];
     if (file) logo = await fileToBase64(file);
     await setDoc(doc(db, "brands", currentUser.uid), { companyName: newName, logoBase64: logo, bizType: newType }, { merge: true });
     brandData = { companyName: newName, logoBase64: logo, bizType: newType };
     updateBrandUI();
-    showToast('Brand settings saved!');
-  } catch(e) { showToast('Error: '+e.message); }
+    alert('Brand settings saved!');
+  } catch(e) { alert('Error: '+e.message); }
 });
 
-// Generate 100+ realistic coffee shop items
+// Generate sample products (simplified but enough)
 function generateSampleProducts() {
   const categories = {
-    Coffee: ["Espresso","Americano","Latte","Cappuccino","Flat White","Mocha","Caramel Macchiato","Iced Latte","Cold Brew"],
-    Tea: ["English Breakfast","Green Tea","Matcha Latte","Chai Latte","Peppermint Tea"],
-    "Cold Drinks": ["Lemonade","Iced Tea","Fresh Orange Juice","Smoothie","Coca Cola"],
-    Food: ["Croissant","Chicken Sandwich","Avocado Toast","Muffin","Brownie"],
-    Pastry: ["Scone","Danish","Cinnamon Roll","Macaron","Cheesecake"],
-    "Add-ons": ["Extra Shot","Vanilla Syrup","Caramel Syrup","Oat Milk","Whipped Cream"]
+    Coffee: ["Espresso","Americano","Latte","Cappuccino","Flat White","Mocha"],
+    Tea: ["Green Tea","Matcha Latte","Chai Latte"],
+    "Cold Drinks": ["Lemonade","Iced Tea","Fresh Juice"],
+    Food: ["Croissant","Sandwich","Muffin"],
+    Pastry: ["Scone","Danish","Brownie"]
   };
   const items = [];
   for (const [cat, names] of Object.entries(categories)) {
     for (const name of names) {
-      let price = (cat === "Coffee") ? 12 : (cat === "Food") ? 18 : (cat === "Pastry") ? 10 : 8;
+      let price = (cat === "Coffee") ? 12 : (cat === "Food") ? 18 : 10;
       items.push({ name, price, category: cat, stock: 50 });
     }
   }
@@ -230,7 +228,6 @@ async function loadProducts() {
   const snap = await getDocs(q);
   products = snap.docs.map(d => ({ id: d.id, ...d.data() }));
   if (products.length === 0) {
-    showToast("Generating 100+ menu items...");
     const sampleItems = generateSampleProducts();
     for (let p of sampleItems) await addDoc(collection(db, "products"), { ...p, userId: currentUser.uid });
     await loadProducts();
@@ -257,13 +254,12 @@ document.getElementById('addProductBtn').addEventListener('click', async () => {
   const price = parseFloat(document.getElementById('newProductPrice').value);
   const category = document.getElementById('newProductCategory').value;
   const stock = parseInt(document.getElementById('newProductStock').value) || 0;
-  if (!name || isNaN(price)) { showToast('Enter name and price'); return; }
+  if (!name || isNaN(price)) { alert('Enter name and price'); return; }
   await addDoc(collection(db, "products"), { userId: currentUser.uid, name, price, category, stock });
   await loadProducts();
   document.getElementById('newProductName').value = '';
   document.getElementById('newProductPrice').value = '';
   document.getElementById('newProductStock').value = '50';
-  showToast('Item added');
 });
 
 // POS
@@ -296,21 +292,21 @@ window.updateQty = (idx, delta) => {
   renderCart();
 };
 document.getElementById('checkoutBtn').addEventListener('click', async () => {
-  if (cart.length === 0) { showToast('Cart is empty'); return; }
+  if (cart.length === 0) { alert('Cart is empty'); return; }
   const total = cart.reduce((s,i)=>s+(i.price*i.qty),0);
   await addDoc(collection(db, "orders"), { userId: currentUser.uid, items: cart, total, date: new Date().toISOString(), status: 'completed' });
   for (let item of cart) {
     const prod = products.find(p=>p.id===item.id);
     if (prod) await updateDoc(doc(db, "products", item.id), { stock: (prod.stock||0) - item.qty });
   }
-  showToast(`✅ Order placed! Total: ﷼${total}`);
+  alert(`✅ Order placed! Total: ﷼${total}`);
   cart = [];
   renderCart();
   await loadProducts();
   await updateDashboard();
 });
 
-// Dashboard stats (client-side sorting, no index needed)
+// Dashboard stats
 async function updateDashboard() {
   if (!currentUser) return;
   const today = new Date().toISOString().split('T')[0];
@@ -373,7 +369,7 @@ async function loadDashboard(user) {
   await loadBrandData();
   await loadProducts();
   await loadProfile();
-  showToast('Dashboard ready! Enjoy your premium coffee shop POS.');
+  // No toast message
 }
 
 // Auth state
