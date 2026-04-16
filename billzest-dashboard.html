@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BillZest POS | Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;0,800;1,700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--purple:#4f2d91;--purple-dark:#3b1f6e;--teal:#00b5a3;--orange:#f5a623;--gray:#f5f5f5;--bdr:#e0e0e0;--dark:#1a1a1a;--white:#fff;}
+body{font-family:'Poppins',sans-serif;background:#f8f9fc;color:var(--dark);}
+.dash-container{display:flex;min-height:100vh;}
+.sidebar{width:260px;background:linear-gradient(180deg,#0c1940 0%,#0d1b4b 100%);color:#fff;padding:24px 16px;flex-shrink:0;}
+.logo{font-size:26px;font-weight:800;letter-spacing:-1px;margin-bottom:32px;padding-left:8px;}
+.logo span{color:var(--orange);}
+.nav-item{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:10px;margin-bottom:8px;cursor:pointer;transition:all 0.2s;color:rgba(255,255,255,0.7);}
+.nav-item.active{background:rgba(255,255,255,0.15);color:#fff;font-weight:600;}
+.nav-item:hover{background:rgba(255,255,255,0.1);color:#fff;}
+.main-content{flex:1;padding:24px 32px;overflow-y:auto;}
+.top-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:32px;}
+.welcome h2{font-size:24px;font-weight:700;color:#1a1a1a;}
+.welcome p{color:#666;font-size:14px;margin-top:4px;}
+.user-info{display:flex;align-items:center;gap:12px;background:#fff;padding:8px 16px;border-radius:40px;box-shadow:0 2px 8px rgba(0,0,0,0.05);}
+.user-avatar{width:40px;height:40px;border-radius:50%;background:var(--purple);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;}
+.user-name{font-weight:600;font-size:14px;}
+.logout-btn{background:none;border:none;color:#ef4444;cursor:pointer;font-size:13px;font-weight:600;}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-bottom:40px;}
+.stat-card{background:#fff;border-radius:16px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,0.04);border:1px solid #edf2f7;}
+.stat-title{font-size:13px;color:#888;margin-bottom:8px;}
+.stat-value{font-size:32px;font-weight:800;color:#1a1a1a;}
+.stat-change{font-size:12px;color:var(--teal);margin-top:8px;}
+.chart-section{background:#fff;border-radius:20px;padding:24px;margin-bottom:32px;border:1px solid #edf2f7;}
+.chart-title{font-size:18px;font-weight:700;margin-bottom:16px;}
+canvas{max-height:300px;width:100%;}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:32px;}
+.recent-orders,.inventory-alerts{background:#fff;border-radius:20px;padding:20px;border:1px solid #edf2f7;}
+.section-title{font-size:16px;font-weight:700;margin-bottom:16px;display:flex;justify-content:space-between;}
+.order-item{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid #f0f0f0;}
+.order-id{font-weight:600;font-size:13px;}
+.order-amount{font-weight:700;color:var(--purple);}
+.order-status{font-size:12px;background:#e6f7e6;color:#2e7d32;padding:2px 8px;border-radius:20px;}
+.alert-item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #f0f0f0;}
+.alert-icon{width:32px;height:32px;background:#fff3e0;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--orange);}
+.alert-text{flex:1;font-size:13px;}
+.alert-qty{font-weight:700;color:#e53e3e;}
+.bottom-links{display:flex;gap:16px;justify-content:flex-end;margin-top:24px;}
+.btn{background:var(--purple);color:#fff;border:none;padding:10px 20px;border-radius:8px;font-weight:600;cursor:pointer;}
+.btn-outline{background:transparent;border:1px solid var(--purple);color:var(--purple);}
+@media(max-width:768px){
+  .sidebar{display:none;}
+  .stats-grid{grid-template-columns:1fr 1fr;}
+  .two-col{grid-template-columns:1fr;}
+  .main-content{padding:16px;}
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<div class="dash-container">
+  <div class="sidebar">
+    <div class="logo">Bill<span>Zest</span></div>
+    <div class="nav-item active">📊 Dashboard</div>
+    <div class="nav-item">🛒 POS</div>
+    <div class="nav-item">📦 Inventory</div>
+    <div class="nav-item">👥 Customers</div>
+    <div class="nav-item">📈 Reports</div>
+    <div class="nav-item">⚙️ Settings</div>
+  </div>
+  <div class="main-content">
+    <div class="top-bar">
+      <div class="welcome">
+        <h2>Welcome back, <span id="userNameDisplay">Business Owner</span>!</h2>
+        <p>Here's what's happening with your business today.</p>
+      </div>
+      <div class="user-info">
+        <div class="user-avatar" id="userAvatar">U</div>
+        <div class="user-name" id="userEmailDisplay">user@example.com</div>
+        <button class="logout-btn" onclick="handleLogout()">Logout</button>
+      </div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-title">Today's Sales</div><div class="stat-value" id="todaySales">﷼ 0</div><div class="stat-change">↑ 12% from yesterday</div></div>
+      <div class="stat-card"><div class="stat-title">Total Orders</div><div class="stat-value" id="totalOrders">0</div><div class="stat-change">This month</div></div>
+      <div class="stat-card"><div class="stat-title">Inventory Alerts</div><div class="stat-value" id="alertCount">0</div><div class="stat-change">Items low in stock</div></div>
+      <div class="stat-card"><div class="stat-title">Revenue (MTD)</div><div class="stat-value" id="revenueMTD">﷼ 0</div><div class="stat-change">+8% vs last month</div></div>
+    </div>
+
+    <div class="chart-section">
+      <div class="chart-title">Sales Overview (Last 7 Days)</div>
+      <canvas id="salesChart" width="400" height="200"></canvas>
+    </div>
+
+    <div class="two-col">
+      <div class="recent-orders">
+        <div class="section-title">Recent Orders <span style="font-size:12px;color:var(--purple);">View all →</span></div>
+        <div id="ordersList">
+          <div class="order-item"><span class="order-id">#ORD-001</span><span class="order-amount">﷼ 248.00</span><span class="order-status">Completed</span></div>
+          <div class="order-item"><span class="order-id">#ORD-002</span><span class="order-amount">﷼ 1,250.00</span><span class="order-status">Processing</span></div>
+          <div class="order-item"><span class="order-id">#ORD-003</span><span class="order-amount">﷼ 89.50</span><span class="order-status">Completed</span></div>
+        </div>
+      </div>
+      <div class="inventory-alerts">
+        <div class="section-title">Low Stock Alerts <span style="font-size:12px;color:var(--purple);">Manage →</span></div>
+        <div id="alertsList">
+          <div class="alert-item"><div class="alert-icon">⚠️</div><div class="alert-text">Arabic Coffee Beans</div><div class="alert-qty">5 left</div></div>
+          <div class="alert-item"><div class="alert-icon">⚠️</div><div class="alert-text">Paper Cups (12oz)</div><div class="alert-qty">23 left</div></div>
+          <div class="alert-item"><div class="alert-icon">⚠️</div><div class="alert-text">Loyalty Cards</div><div class="alert-qty">8 left</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-links">
+      <button class="btn" onclick="window.location.href='index.html'">🏠 Back to Home</button>
+      <button class="btn btn-outline" onclick="openPOS()">🛒 Open POS (Demo)</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Firebase and localStorage integration (same as index)
+  let currentUser = null;
+  let salesChart = null;
+
+  async function loadDashboard() {
+    // Try Firebase first
+    if (window.fbAuth && window.fbAuth.currentUser) {
+      currentUser = window.fbAuth.currentUser;
+      document.getElementById('userNameDisplay').innerText = currentUser.displayName ? currentUser.displayName.split(' ')[0] : (currentUser.email.split('@')[0]);
+      document.getElementById('userEmailDisplay').innerText = currentUser.email;
+      const avatarLetter = (currentUser.displayName ? currentUser.displayName.charAt(0) : currentUser.email.charAt(0)).toUpperCase();
+      document.getElementById('userAvatar').innerText = avatarLetter;
+      
+      // Fetch user data from Firestore (optional)
+      if (window.db) {
+        const docRef = window.db.collection ? window.db.collection('users').doc(currentUser.uid) : null;
+        if (docRef) {
+          const docSnap = await docRef.get();
+          if (docSnap.exists) {
+            const data = docSnap.data();
+            // Update stats with real data if available
+          }
+        }
+      }
+    } 
+    // Fallback to localStorage
+    else {
+      const storedUser = localStorage.getItem('bz_current_user');
+      if (storedUser) {
+        currentUser = JSON.parse(storedUser);
+        document.getElementById('userNameDisplay').innerText = currentUser.firstName || 'User';
+        document.getElementById('userEmailDisplay').innerText = currentUser.email || '';
+        document.getElementById('userAvatar').innerText = (currentUser.firstName || 'U').charAt(0);
+      } else {
+        // try to get from customers list? but better to redirect
+        window.location.href = 'index.html';
+        return;
+      }
+    }
+
+    // Generate demo data for dashboard
+    const todaySales = Math.floor(Math.random() * 5000) + 1000;
+    const totalOrders = Math.floor(Math.random() * 200) + 45;
+    const alertCount = Math.floor(Math.random() * 8) + 1;
+    const revenueMTD = Math.floor(Math.random() * 50000) + 15000;
+    document.getElementById('todaySales').innerHTML = `﷼ ${todaySales.toLocaleString()}`;
+    document.getElementById('totalOrders').innerText = totalOrders;
+    document.getElementById('alertCount').innerText = alertCount;
+    document.getElementById('revenueMTD').innerHTML = `﷼ ${revenueMTD.toLocaleString()}`;
+
+    // Sample recent orders (dynamic)
+    const orders = [
+      { id: '#ORD-1024', amount: 348, status: 'Completed' },
+      { id: '#ORD-1025', amount: 1290, status: 'Processing' },
+      { id: '#ORD-1026', amount: 76, status: 'Completed' },
+      { id: '#ORD-1027', amount: 445, status: 'Pending' }
+    ];
+    const ordersHtml = orders.map(o => `<div class="order-item"><span class="order-id">${o.id}</span><span class="order-amount">﷼ ${o.amount.toLocaleString()}</span><span class="order-status">${o.status}</span></div>`).join('');
+    document.getElementById('ordersList').innerHTML = ordersHtml;
+
+    // Inventory alerts
+    const alerts = [
+      { name: 'Arabic Coffee Beans', qty: 5 },
+      { name: 'Paper Cups (12oz)', qty: 23 },
+      { name: 'Loyalty Cards', qty: 8 },
+      { name: 'Napkins (pack)', qty: 2 }
+    ];
+    const alertsHtml = alerts.map(a => `<div class="alert-item"><div class="alert-icon">⚠️</div><div class="alert-text">${a.name}</div><div class="alert-qty">${a.qty} left</div></div>`).join('');
+    document.getElementById('alertsList').innerHTML = alertsHtml;
+
+    // Chart data (last 7 days)
+    const ctx = document.getElementById('salesChart').getContext('2d');
+    if (salesChart) salesChart.destroy();
+    salesChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        datasets: [{
+          label: 'Sales (SAR)',
+          data: [1250, 1890, 2100, 1780, 2450, 3200, 2980],
+          borderColor: '#4f2d91',
+          backgroundColor: 'rgba(79,45,145,0.05)',
+          tension: 0.3,
+          fill: true,
+          pointBackgroundColor: '#f5a623'
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: { legend: { position: 'top' } }
+      }
+    });
+  }
+
+  function handleLogout() {
+    if (window.fbAuth && window.fbAuth.signOut) {
+      window.fbAuth.signOut().then(() => {
+        localStorage.removeItem('bz_current_user');
+        window.location.href = 'index.html';
+      }).catch(() => {
+        localStorage.removeItem('bz_current_user');
+        window.location.href = 'index.html';
+      });
+    } else {
+      localStorage.removeItem('bz_current_user');
+      window.location.href = 'index.html';
+    }
+  }
+
+  function openPOS() {
+    alert('POS Demo: This will open the full Point of Sale interface. Coming soon!');
+  }
+
+  // Wait for Firebase to be ready if using module
+  window.addEventListener('load', () => {
+    // If Firebase is already loaded (from index.html's module), we can use it
+    if (typeof window.fbAuth !== 'undefined' && window.fbAuth) {
+      // Wait for auth state
+      const unsubscribe = window.fbAuth.onAuthStateChanged(user => {
+        if (user) {
+          currentUser = user;
+          loadDashboard();
+        } else {
+          // Not logged in, redirect
+          window.location.href = 'index.html';
+        }
+        unsubscribe();
+      });
+    } else {
+      // No Firebase, use localStorage fallback
+      loadDashboard();
+    }
+  });
+</script>
+
+<!-- Firebase SDK (same config as index) - needed for auth persistence -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+  import { getFirestore } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+  const firebaseConfig = { apiKey: "AIzaSyCN0akvFXOHM6WPHv9ve9noqqmauO3TJRY", authDomain: "billzest-pos.firebaseapp.com", projectId: "billzest-pos", storageBucket: "billzest-pos.firebasestorage.app", messagingSenderId: "946546876429", appId: "1:946546876429:web:9b4a7aa3cecbf3aea83544", measurementId: "G-69WEHH9X5D" };
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+  window.fbAuth = auth;
+  window.db = db;
+  // Re-trigger dashboard load after auth state known
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      if (window.loadDashboard) window.loadDashboard();
+    } else {
+      // optional: redirect if not logged in, but we already handle in loadDashboard fallback
+    }
+  });
+</script>
+</body>
+</html>
