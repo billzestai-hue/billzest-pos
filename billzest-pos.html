@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>BillZest POS | Multi-Branch System</title>
+    <title>BillZest POS | Multi-Currency System</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
@@ -35,13 +35,10 @@
             padding: 12px; border-radius: 40px; width: 100%;
             font-weight: bold; cursor: pointer; margin-top: 8px;
         }
-        .reset-btn {
-            background: #ef4444; margin-top: 8px;
-        }
+        .reset-btn { background: #ef4444; margin-top: 8px; }
         .login-status { margin-top: 12px; font-size: 12px; color: red; }
-        /* Dashboard Layout with Sidebar */
+        /* Dashboard Layout */
         .dashboard-container { display: flex; min-height: 100vh; }
-        /* Sidebar */
         .sidebar {
             width: 280px; background: linear-gradient(180deg, #0c1940 0%, #0d1b4b 100%);
             color: white; padding: 24px 16px; display: flex; flex-direction: column;
@@ -59,15 +56,18 @@
         }
         .user-name { font-weight: 700; margin-bottom: 4px; }
         .user-role { font-size: 12px; opacity: 0.7; }
-        .branch-selector-sidebar {
+        .branch-selector-sidebar, .currency-selector {
             background: rgba(255,255,255,0.08); border-radius: 12px; padding: 12px;
-            margin-bottom: 24px;
+            margin-bottom: 16px;
         }
-        .branch-selector-sidebar label { font-size: 12px; opacity: 0.7; display: block; margin-bottom: 6px; }
-        .branch-selector-sidebar select {
+        .branch-selector-sidebar label, .currency-selector label {
+            font-size: 12px; opacity: 0.7; display: block; margin-bottom: 6px;
+        }
+        .branch-selector-sidebar select, .currency-selector select, .currency-selector input {
             width: 100%; padding: 8px; border-radius: 8px; background: rgba(255,255,255,0.15);
             color: white; border: none; font-weight: 500;
         }
+        .currency-selector input { background: rgba(255,255,255,0.2); margin-top: 5px; }
         .nav-item {
             display: flex; align-items: center; gap: 12px; padding: 12px 16px;
             border-radius: 12px; margin-bottom: 8px; cursor: pointer;
@@ -79,13 +79,11 @@
             color: white; padding: 12px; border-radius: 12px; cursor: pointer;
             display: flex; align-items: center; gap: 10px; justify-content: center;
         }
-        /* Main Content */
         .main-content { flex: 1; padding: 24px 32px; overflow-y: auto; }
         .stats-cards { display: grid; grid-template-columns: repeat(4,1fr); gap: 20px; margin-bottom: 30px; }
         .stat-card { background: var(--surface); border-radius: 20px; padding: 20px; box-shadow: var(--card-shadow); border: 1px solid var(--border); }
         .stat-title { font-size: 13px; color: var(--text-secondary); }
         .stat-value { font-size: 28px; font-weight: 800; color: var(--primary); }
-        /* POS Grid */
         .pos-grid { display: grid; grid-template-columns: 1fr 360px; gap: 24px; margin-bottom: 30px; }
         .products-section { background: var(--surface); border-radius: 24px; border: 1px solid var(--border); overflow: hidden; }
         .search-bar { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; gap: 12px; flex-wrap: wrap; }
@@ -101,7 +99,6 @@
         .product-icon { font-size: 32px; }
         .product-name { font-weight: 600; font-size: 14px; margin-top: 6px; }
         .product-price { font-weight: 700; color: var(--primary); margin-top: 4px; }
-        /* Cart Section */
         .cart-section { background: var(--surface); border-radius: 24px; border: 1px solid var(--border); padding: 20px; position: sticky; top: 20px; height: fit-content; }
         .cart-header { display: flex; justify-content: space-between; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 2px solid var(--border); }
         .cart-items { max-height: 350px; overflow-y: auto; margin-bottom: 16px; }
@@ -119,12 +116,10 @@
         .share-buttons { display: flex; gap: 10px; margin-top: 10px; }
         .share-btn { flex: 1; padding: 8px; border-radius: 30px; text-align: center; cursor: pointer; background: var(--bg); }
         .share-btn.whatsapp { background: #25D366; color: white; }
-        /* Analytics */
         .analytics-section { background: var(--surface); border-radius: 24px; padding: 20px; margin-top: 20px; border: 1px solid var(--border); }
         .analytics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 16px; }
         .chart-container { background: var(--bg); padding: 12px; border-radius: 16px; }
         canvas { max-height: 200px; width: 100%; }
-        /* User Management (Admin only) */
         .user-management { background: var(--surface); border-radius: 20px; padding: 20px; margin-top: 20px; border: 1px solid var(--border); }
         .user-form { display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end; margin-bottom: 20px; }
         .user-form input, .user-form select { padding: 10px; border-radius: 30px; border: 1px solid var(--border); flex: 1; }
@@ -156,7 +151,6 @@
 <!-- Main Dashboard -->
 <div id="dashboardMain" style="display: none;">
     <div class="dashboard-container">
-        <!-- Sidebar -->
         <div class="sidebar">
             <div class="sidebar-logo">Bill<span>Zest</span> POS</div>
             <div class="user-profile">
@@ -168,29 +162,33 @@
                 <label><i class="fas fa-store"></i> Select Branch</label>
                 <select id="branchSelectSidebar"></select>
             </div>
-            <div class="nav-item active" data-page="pos">
-                <i class="fas fa-shopping-cart"></i> Point of Sale
+            <div class="currency-selector">
+                <label><i class="fas fa-coins"></i> Currency Symbol</label>
+                <select id="currencySelect">
+                    <option value="$">USD ($)</option>
+                    <option value="﷼">SAR (﷼)</option>
+                    <option value="₹">INR (₹)</option>
+                    <option value="€">EUR (€)</option>
+                    <option value="£">GBP (£)</option>
+                    <option value="AED">AED (د.إ)</option>
+                    <option value="custom">Custom</option>
+                </select>
+                <input type="text" id="customCurrency" placeholder="Custom symbol" style="display: none; margin-top: 8px;">
             </div>
-            <div class="nav-item" data-page="analytics">
-                <i class="fas fa-chart-line"></i> Analytics
-            </div>
-            <div class="nav-item" data-page="workers" id="workersNavItem" style="display: none;">
-                <i class="fas fa-users"></i> Manage Workers
-            </div>
-            <button id="logoutSidebarBtn" class="logout-btn-sidebar">
-                <i class="fas fa-sign-out-alt"></i> Logout
-            </button>
+            <div class="nav-item active" data-page="pos"><i class="fas fa-shopping-cart"></i> Point of Sale</div>
+            <div class="nav-item" data-page="analytics"><i class="fas fa-chart-line"></i> Analytics</div>
+            <div class="nav-item" data-page="workers" id="workersNavItem" style="display: none;"><i class="fas fa-users"></i> Manage Workers</div>
+            <button id="logoutSidebarBtn" class="logout-btn-sidebar"><i class="fas fa-sign-out-alt"></i> Logout</button>
         </div>
 
-        <!-- Main Content -->
         <div class="main-content">
             <!-- POS Page -->
             <div id="posPage" class="page-content">
                 <div class="stats-cards">
-                    <div class="stat-card"><div class="stat-title">Today's Sales</div><div class="stat-value" id="todaySales">$0</div></div>
+                    <div class="stat-card"><div class="stat-title">Today's Sales</div><div class="stat-value" id="todaySales">0</div></div>
                     <div class="stat-card"><div class="stat-title">Transactions</div><div class="stat-value" id="transactionsCount">0</div></div>
                     <div class="stat-card"><div class="stat-title">Items Sold</div><div class="stat-value" id="itemsSold">0</div></div>
-                    <div class="stat-card"><div class="stat-title">Cart Value</div><div class="stat-value" id="cartTotalValue">$0</div></div>
+                    <div class="stat-card"><div class="stat-title">Cart Value</div><div class="stat-value" id="cartTotalValue">0</div></div>
                 </div>
                 <div class="pos-grid">
                     <div class="products-section">
@@ -217,8 +215,7 @@
                                 <option value="mobile">📱 Mobile Payment</option>
                             </select>
                             <div id="cashChangeSection" style="display: none;" class="cash-change">
-                                <label>Cash Received: $</label>
-                                <input type="number" id="cashReceived" step="0.01" placeholder="0.00">
+                                <label>Cash Received: </label><input type="number" id="cashReceived" step="0.01" placeholder="0.00">
                                 <div id="changeDue" style="margin-top: 6px;"></div>
                             </div>
                         </div>
@@ -234,32 +231,22 @@
             <!-- Analytics Page -->
             <div id="analyticsPage" class="page-content" style="display: none;">
                 <div class="stats-cards">
-                    <div class="stat-card"><div class="stat-title">Today's Sales</div><div class="stat-value" id="analyticsTodaySales">$0</div></div>
+                    <div class="stat-card"><div class="stat-title">Today's Sales</div><div class="stat-value" id="analyticsTodaySales">0</div></div>
                     <div class="stat-card"><div class="stat-title">Total Orders</div><div class="stat-value" id="analyticsTotalOrders">0</div></div>
-                    <div class="stat-card"><div class="stat-title">Revenue (MTD)</div><div class="stat-value" id="analyticsRevenue">$0</div></div>
-                    <div class="stat-card"><div class="stat-title">Avg Order Value</div><div class="stat-value" id="analyticsAvgOrder">$0</div></div>
+                    <div class="stat-card"><div class="stat-title">Revenue (MTD)</div><div class="stat-value" id="analyticsRevenue">0</div></div>
+                    <div class="stat-card"><div class="stat-title">Avg Order Value</div><div class="stat-value" id="analyticsAvgOrder">0</div></div>
                 </div>
-                <div class="analytics-section">
-                    <h3>Sales Overview</h3>
-                    <div class="analytics-grid">
-                        <div class="chart-container"><canvas id="weeklyChart"></canvas></div>
-                        <div class="chart-container"><canvas id="categoryChart"></canvas></div>
-                    </div>
-                </div>
+                <div class="analytics-section"><h3>Sales Overview</h3><div class="analytics-grid"><div class="chart-container"><canvas id="weeklyChart"></canvas></div><div class="chart-container"><canvas id="categoryChart"></canvas></div></div></div>
             </div>
 
-            <!-- Manage Workers Page (Admin only) -->
+            <!-- Manage Workers Page -->
             <div id="workersPage" class="page-content" style="display: none;">
                 <div class="user-management">
                     <h3><i class="fas fa-user-plus"></i> Add New Worker</h3>
                     <div class="user-form">
                         <input type="email" id="newWorkerEmail" placeholder="Worker Email">
                         <input type="password" id="newWorkerPassword" placeholder="Password">
-                        <select id="newWorkerBranch">
-                            <option value="branch1">City Mall Branch</option>
-                            <option value="branch2">Downtown Branch</option>
-                            <option value="branch3">Airport Branch</option>
-                        </select>
+                        <select id="newWorkerBranch"><option value="branch1">City Mall Branch</option><option value="branch2">Downtown Branch</option><option value="branch3">Airport Branch</option></select>
                         <button id="createWorkerBtn" class="btn-primary" style="width: auto; padding: 10px 20px;">Add Worker</button>
                     </div>
                     <h3>Existing Workers</h3>
@@ -270,25 +257,13 @@
     </div>
 </div>
 
-<!-- Receipt Print Template -->
+<!-- Receipt Template -->
 <div id="receipt-print" style="display: none; font-family: monospace; padding: 20px; max-width: 300px; background: white;">
-    <div style="text-align:center;">
-        <h2>BillZest POS</h2>
-        <p>Thank you for your purchase!</p>
-        <hr>
-        <div id="receiptItems"></div>
-        <hr>
-        <div id="receiptTotals"></div>
-        <p>Date: <span id="receiptDate"></span></p>
-        <p>Branch: <span id="receiptBranch"></span></p>
-        <p>Payment: <span id="receiptPayment"></span></p>
-        <hr>
-        <p>Have a great day!</p>
-    </div>
+    <div style="text-align:center;"><h2>BillZest POS</h2><p>Thank you!</p><hr><div id="receiptItems"></div><hr><div id="receiptTotals"></div><p>Date: <span id="receiptDate"></span></p><p>Branch: <span id="receiptBranch"></span></p><p>Payment: <span id="receiptPayment"></span></p><hr><p>Have a great day!</p></div>
 </div>
 
 <script>
-    // ---------- Hardcoded demo users (always available) ----------
+    // ---------- Data Models ----------
     const DEMO_USERS = [
         { email: "admin@billzest.com", password: "admin123", role: "super_admin", branchId: null },
         { email: "manager1@billzest.com", password: "manager123", role: "branch_manager", branchId: "branch1" },
@@ -316,23 +291,71 @@
         { id: 12, name: "Americano", category: "Coffee", price: 3.20, icon: "☕" }
     ];
 
-    // Load data from localStorage, but ensure demo users are always present
+    let currentUser = null;
+    let currentBranchId = null;
+    let cart = [];
+    let lastSaleData = null;
+    let weeklyChart, categoryChart;
+    let currentPage = "pos";
+    let currencySymbol = "$";
+
+    // Load currency from localStorage
+    function loadCurrency() {
+        const saved = localStorage.getItem("billzest_currency");
+        if (saved) {
+            currencySymbol = saved;
+            document.getElementById('currencySelect').value = saved === "custom" ? "custom" : (saved === "﷼" ? "﷼" : saved);
+            if (saved !== "custom") document.getElementById('customCurrency').style.display = 'none';
+            else {
+                document.getElementById('customCurrency').style.display = 'block';
+                document.getElementById('customCurrency').value = localStorage.getItem("billzest_custom_currency") || "﷼";
+                currencySymbol = document.getElementById('customCurrency').value;
+            }
+        } else {
+            currencySymbol = "$";
+            document.getElementById('currencySelect').value = "$";
+        }
+        updateAllCurrencyDisplays();
+    }
+    function saveCurrency(symbol, isCustom = false) {
+        currencySymbol = symbol;
+        if (isCustom) {
+            localStorage.setItem("billzest_currency", "custom");
+            localStorage.setItem("billzest_custom_currency", symbol);
+        } else {
+            localStorage.setItem("billzest_currency", symbol);
+            localStorage.removeItem("billzest_custom_currency");
+        }
+        updateAllCurrencyDisplays();
+    }
+    function updateAllCurrencyDisplays() {
+        // Update product prices
+        document.querySelectorAll('.product-price').forEach(el => {
+            const price = parseFloat(el.getAttribute('data-price'));
+            if (!isNaN(price)) el.innerText = `${currencySymbol} ${price.toFixed(2)}`;
+        });
+        // Update cart totals, stats, etc. will be handled by refreshUI
+        if (currentUser) {
+            updateCartUI();
+            updateStatsAndCharts();
+        }
+    }
+    // Helper to format price with currency
+    function formatPrice(amount) { return `${currencySymbol} ${amount.toFixed(2)}`; }
+
+    // Data persistence
     function loadData() {
         const storedUsers = localStorage.getItem("billzest_users");
         if (storedUsers) {
             const parsed = JSON.parse(storedUsers);
-            // Merge: start with demo users, then add any additional users from storage (avoid duplicates)
             const emailMap = new Map();
             DEMO_USERS.forEach(u => emailMap.set(u.email, u));
             parsed.forEach(u => { if (!emailMap.has(u.email)) emailMap.set(u.email, u); });
             users = Array.from(emailMap.values());
-        } else {
-            users = [...DEMO_USERS];
-        }
+        } else users = [...DEMO_USERS];
         const storedSales = localStorage.getItem("billzest_sales");
         if (storedSales) allSales = JSON.parse(storedSales);
         else {
-            // add some demo sales
             allSales = [
                 { branchId: "branch1", date: new Date().toISOString(), total: 158.40, itemsCount: 5, items: [], subtotal: 144, tax: 14.4, paymentMethod: "card" },
                 { branchId: "branch2", date: new Date(Date.now()-86400000).toISOString(), total: 210.20, itemsCount: 8, items: [], subtotal: 191.09, tax: 19.11, paymentMethod: "cash" }
@@ -343,122 +366,58 @@
     function saveUsers() { localStorage.setItem("billzest_users", JSON.stringify(users)); }
     function saveSales() { localStorage.setItem("billzest_sales", JSON.stringify(allSales)); }
     function resetDemoData() {
-        localStorage.removeItem("billzest_users");
-        localStorage.removeItem("billzest_sales");
-        loadData(); // reload with defaults
-        alert("Demo data reset! Please login again.");
+        localStorage.clear();
         location.reload();
     }
 
-    let currentUser = null;
-    let currentBranchId = null;
-    let cart = [];
-    let lastSaleData = null;
-    let weeklyChart, categoryChart;
-    let currentPage = "pos";
-
-    // DOM Elements
-    const loginOverlay = document.getElementById('loginOverlay');
-    const dashboardMain = document.getElementById('dashboardMain');
-    const loginStatus = document.getElementById('loginStatus');
-    const loginEmail = document.getElementById('loginEmail');
-    const loginPassword = document.getElementById('loginPassword');
-    const loginBtn = document.getElementById('loginBtn');
-    const resetDataBtn = document.getElementById('resetDataBtn');
-    const logoutSidebarBtn = document.getElementById('logoutSidebarBtn');
-    const sidebarName = document.getElementById('sidebarName');
-    const sidebarRole = document.getElementById('sidebarRole');
-    const sidebarAvatar = document.getElementById('sidebarAvatar');
-    const branchSelectSidebar = document.getElementById('branchSelectSidebar');
-    const workersNavItem = document.getElementById('workersNavItem');
-    const posPage = document.getElementById('posPage');
-    const analyticsPage = document.getElementById('analyticsPage');
-    const workersPage = document.getElementById('workersPage');
-    const productGrid = document.getElementById('productGrid');
-    const searchInput = document.getElementById('searchInput');
-    const cartItemsList = document.getElementById('cartItemsList');
-    const clearCartBtn = document.getElementById('clearCartBtn');
-    const completeSaleBtn = document.getElementById('completeSaleBtn');
-    const paymentMethod = document.getElementById('paymentMethod');
-    const cashReceived = document.getElementById('cashReceived');
-    const changeDue = document.getElementById('changeDue');
-    const cashChangeSection = document.getElementById('cashChangeSection');
-    const shareButtons = document.getElementById('shareButtons');
-    const printReceiptBtn = document.getElementById('printReceiptBtn');
-    const whatsappShareBtn = document.getElementById('whatsappShareBtn');
-    const todaySalesSpan = document.getElementById('todaySales');
-    const transactionsCountSpan = document.getElementById('transactionsCount');
-    const itemsSoldSpan = document.getElementById('itemsSold');
-    const cartTotalValueSpan = document.getElementById('cartTotalValue');
-    const analyticsTodaySales = document.getElementById('analyticsTodaySales');
-    const analyticsTotalOrders = document.getElementById('analyticsTotalOrders');
-    const analyticsRevenue = document.getElementById('analyticsRevenue');
-    const analyticsAvgOrder = document.getElementById('analyticsAvgOrder');
-
+    // UI Helpers
     function getBranchName(branchId) { return branches.find(b => b.id === branchId)?.name || branchId; }
-
     function updateSidebar() {
         if (!currentUser) return;
         sidebarName.innerText = currentUser.email.split('@')[0];
         sidebarRole.innerText = currentUser.role === 'super_admin' ? 'Super Admin' : 'Branch Manager';
         sidebarAvatar.innerText = currentUser.email.charAt(0).toUpperCase();
-        if (currentUser.role === 'super_admin') workersNavItem.style.display = 'flex';
-        else workersNavItem.style.display = 'none';
+        workersNavItem.style.display = currentUser.role === 'super_admin' ? 'flex' : 'none';
         branchSelectSidebar.innerHTML = '';
-        let availableBranches = branches;
-        if (currentUser.role === 'branch_manager') availableBranches = branches.filter(b => b.id === currentUser.branchId);
-        availableBranches.forEach(b => {
-            let opt = document.createElement('option');
-            opt.value = b.id;
-            opt.textContent = b.name;
-            branchSelectSidebar.appendChild(opt);
-        });
+        let availableBranches = currentUser.role === 'branch_manager' ? branches.filter(b => b.id === currentUser.branchId) : branches;
+        availableBranches.forEach(b => { let opt = document.createElement('option'); opt.value = b.id; opt.textContent = b.name; branchSelectSidebar.appendChild(opt); });
         if (currentUser.role === 'branch_manager') branchSelectSidebar.value = currentUser.branchId;
         branchSelectSidebar.disabled = (currentUser.role !== 'super_admin');
         currentBranchId = branchSelectSidebar.value;
         updateStatsAndCharts();
     }
-
     function getBranchSales(branchId) { return allSales.filter(s => s.branchId === branchId); }
     function updateStatsAndCharts() {
         const branchId = branchSelectSidebar.value;
         const branchSales = getBranchSales(branchId);
         const today = new Date().toDateString();
         const todayTotal = branchSales.filter(s => new Date(s.date).toDateString() === today).reduce((sum, s) => sum + s.total, 0);
-        todaySalesSpan.innerText = `$${todayTotal.toFixed(2)}`;
+        todaySalesSpan.innerText = formatPrice(todayTotal);
         transactionsCountSpan.innerText = branchSales.length;
         const totalItems = branchSales.reduce((sum, s) => sum + s.itemsCount, 0);
         itemsSoldSpan.innerText = totalItems;
-        cartTotalValueSpan.innerText = `$${cart.reduce((sum,i)=>sum+(i.price*i.quantity),0).toFixed(2)}`;
-        analyticsTodaySales.innerText = `$${todayTotal.toFixed(2)}`;
+        const cartTotal = cart.reduce((sum,i)=>sum+(i.price*i.quantity),0);
+        cartTotalValueSpan.innerText = formatPrice(cartTotal);
+        analyticsTodaySales.innerText = formatPrice(todayTotal);
         analyticsTotalOrders.innerText = branchSales.length;
         const totalRevenue = branchSales.reduce((sum, s) => sum + s.total, 0);
         const avgOrder = branchSales.length ? totalRevenue / branchSales.length : 0;
-        analyticsRevenue.innerText = `$${totalRevenue.toFixed(2)}`;
-        analyticsAvgOrder.innerText = `$${avgOrder.toFixed(2)}`;
+        analyticsRevenue.innerText = formatPrice(totalRevenue);
+        analyticsAvgOrder.innerText = formatPrice(avgOrder);
         const weeklyData = [0,0,0,0,0,0,0];
-        branchSales.forEach(sale => {
-            const day = new Date(sale.date).getDay();
-            let idx = (day === 0 ? 6 : day-1);
-            weeklyData[idx] += sale.total;
-        });
+        branchSales.forEach(sale => { const day = new Date(sale.date).getDay(); let idx = (day === 0 ? 6 : day-1); weeklyData[idx] += sale.total; });
         if (weeklyChart) { weeklyChart.data.datasets[0].data = weeklyData; weeklyChart.update(); }
         const catSales = { Coffee:0, Bakery:0, Sandwiches:0, Beverages:0 };
-        branchSales.forEach(sale => {
-            sale.items.forEach(item => {
-                const prod = products.find(p => p.id === item.id);
-                if (prod) catSales[prod.category] += (item.price * item.qty);
-            });
-        });
+        branchSales.forEach(sale => { sale.items.forEach(item => { const prod = products.find(p => p.id === item.id); if (prod) catSales[prod.category] += (item.price * item.qty); }); });
         if (categoryChart) { categoryChart.data.datasets[0].data = [catSales.Coffee, catSales.Bakery, catSales.Sandwiches, catSales.Beverages]; categoryChart.update(); }
     }
     branchSelectSidebar.addEventListener('change', () => { currentBranchId = branchSelectSidebar.value; updateStatsAndCharts(); updateCartUI(); });
 
+    // Cart functions
     function updateCartUI() {
         if (cart.length === 0) {
             cartItemsList.innerHTML = '<p style="text-align:center;">Cart is empty</p>';
-            document.getElementById('cartTotals').innerHTML = `<div class="total-row"><span>Subtotal:</span><span>$0.00</span></div><div class="total-row"><span>Tax (10%):</span><span>$0.00</span></div><div class="grand-total">Total: $0.00</div>`;
-            cartTotalValueSpan.innerText = "$0.00";
+            document.getElementById('cartTotals').innerHTML = `<div class="total-row"><span>Subtotal:</span><span>${formatPrice(0)}</span></div><div class="total-row"><span>Tax (10%):</span><span>${formatPrice(0)}</span></div><div class="grand-total">Total: ${formatPrice(0)}</div>`;
             shareButtons.style.display = 'none';
             return;
         }
@@ -468,7 +427,7 @@
             subtotal += itemTotal;
             itemsHtml += `
                 <div class="cart-item">
-                    <div class="item-info"><h4>${item.name}</h4><p>$${item.price.toFixed(2)} each</p></div>
+                    <div class="item-info"><h4>${item.name}</h4><p>${formatPrice(item.price)} each</p></div>
                     <div class="item-actions">
                         <div class="item-qty">
                             <button class="qty-btn" data-id="${item.id}" data-delta="-1">-</button>
@@ -484,11 +443,10 @@
         const tax = subtotal * 0.10;
         const total = subtotal + tax;
         document.getElementById('cartTotals').innerHTML = `
-            <div class="total-row"><span>Subtotal:</span><span>$${subtotal.toFixed(2)}</span></div>
-            <div class="total-row"><span>Tax (10%):</span><span>$${tax.toFixed(2)}</span></div>
-            <div class="grand-total">Total: $${total.toFixed(2)}</div>
+            <div class="total-row"><span>Subtotal:</span><span>${formatPrice(subtotal)}</span></div>
+            <div class="total-row"><span>Tax (10%):</span><span>${formatPrice(tax)}</span></div>
+            <div class="grand-total">Total: ${formatPrice(total)}</div>
         `;
-        cartTotalValueSpan.innerText = `$${total.toFixed(2)}`;
         shareButtons.style.display = 'none';
         document.querySelectorAll('.qty-btn').forEach(btn => {
             btn.onclick = () => { const id = parseInt(btn.dataset.id); const delta = parseInt(btn.dataset.delta); updateQuantity(id, delta); };
@@ -520,9 +478,9 @@
         let method = paymentMethod.value;
         if (method === 'cash') {
             let received = parseFloat(cashReceived.value);
-            if (isNaN(received) || received < total) { alert(`Insufficient cash. Need $${total.toFixed(2)}`); return; }
-            alert(`Payment successful! Change: $${(received-total).toFixed(2)}`);
-        } else alert(`Payment via ${method} successful! Total: $${total.toFixed(2)}`);
+            if (isNaN(received) || received < total) { alert(`Insufficient cash. Need ${formatPrice(total)}`); return; }
+            alert(`Payment successful! Change: ${formatPrice(received-total)}`);
+        } else alert(`Payment via ${method} successful! Total: ${formatPrice(total)}`);
         const saleRecord = {
             branchId: branchSelectSidebar.value, date: new Date().toISOString(), total, itemsCount: cart.reduce((s,i)=>s+i.quantity,0),
             subtotal, tax, paymentMethod: method, items: cart.map(i=>({ id:i.id, name:i.name, qty:i.quantity, price:i.price }))
@@ -536,13 +494,13 @@
     function generateReceiptData() {
         if (!lastSaleData) return null;
         let itemsHtml = '';
-        lastSaleData.items.forEach(item => { itemsHtml += `<div>${item.name} x ${item.qty} = $${(item.price*item.qty).toFixed(2)}</div>`; });
+        lastSaleData.items.forEach(item => { itemsHtml += `<div>${item.name} x ${item.qty} = ${formatPrice(item.price * item.qty)}</div>`; });
         return { itemsHtml, subtotal: lastSaleData.subtotal, tax: lastSaleData.tax, total: lastSaleData.total, paymentMethod: lastSaleData.paymentMethod, date: new Date(lastSaleData.date).toLocaleString(), branchName: getBranchName(lastSaleData.branchId) };
     }
     function showPrintReceipt() {
         const data = generateReceiptData(); if (!data) return;
         document.getElementById('receiptItems').innerHTML = data.itemsHtml;
-        document.getElementById('receiptTotals').innerHTML = `<div>Subtotal: $${data.subtotal.toFixed(2)}</div><div>Tax: $${data.tax.toFixed(2)}</div><div><strong>Total: $${data.total.toFixed(2)}</strong></div>`;
+        document.getElementById('receiptTotals').innerHTML = `<div>Subtotal: ${formatPrice(data.subtotal)}</div><div>Tax: ${formatPrice(data.tax)}</div><div><strong>Total: ${formatPrice(data.total)}</strong></div>`;
         document.getElementById('receiptDate').innerText = data.date;
         document.getElementById('receiptBranch').innerText = data.branchName;
         document.getElementById('receiptPayment').innerText = data.paymentMethod;
@@ -553,15 +511,16 @@
     function shareWhatsApp() {
         const data = generateReceiptData(); if (!data) return;
         let msg = `BillZest POS Receipt\nBranch: ${data.branchName}\nDate: ${data.date}\n\nItems:\n`;
-        lastSaleData.items.forEach(i => { msg += `${i.name} x${i.qty} = $${(i.price*i.qty).toFixed(2)}\n`; });
-        msg += `\nSubtotal: $${data.subtotal.toFixed(2)}\nTax: $${data.tax.toFixed(2)}\nTotal: $${data.total.toFixed(2)}\nPayment: ${data.paymentMethod}\n\nThank you!`;
+        lastSaleData.items.forEach(i => { msg += `${i.name} x${i.qty} = ${formatPrice(i.price*i.qty)}\n`; });
+        msg += `\nSubtotal: ${formatPrice(data.subtotal)}\nTax: ${formatPrice(data.tax)}\nTotal: ${formatPrice(data.total)}\nPayment: ${data.paymentMethod}\n\nThank you!`;
         window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
     }
 
+    // Product rendering
     let currentCategory = 'all', searchTerm = '';
     function renderProducts() {
         let filtered = products.filter(p => (currentCategory === 'all' || p.category === currentCategory) && p.name.toLowerCase().includes(searchTerm.toLowerCase()));
-        productGrid.innerHTML = filtered.map(p => `<div class="product-card" data-id="${p.id}"><div class="product-icon">${p.icon}</div><div class="product-name">${p.name}</div><div class="product-price">$${p.price.toFixed(2)}</div></div>`).join('');
+        productGrid.innerHTML = filtered.map(p => `<div class="product-card" data-id="${p.id}"><div class="product-icon">${p.icon}</div><div class="product-name">${p.name}</div><div class="product-price" data-price="${p.price}">${formatPrice(p.price)}</div></div>`).join('');
         document.querySelectorAll('.product-card').forEach(card => {
             card.onclick = () => { const id = parseInt(card.dataset.id); const prod = products.find(p => p.id === id); if(prod) addToCart(prod); };
         });
@@ -583,14 +542,14 @@
             let subtotal = cart.reduce((sum,i)=>sum+(i.price*i.quantity),0);
             let total = subtotal * 1.10;
             let rec = parseFloat(cashReceived.value);
-            if (!isNaN(rec)) changeDue.innerText = rec >= total ? `Change: $${(rec-total).toFixed(2)}` : `Remaining: $${(total-rec).toFixed(2)}`;
+            if (!isNaN(rec)) changeDue.innerText = rec >= total ? `Change: ${formatPrice(rec-total)}` : `Remaining: ${formatPrice(total-rec)}`;
             else changeDue.innerText = '';
         };
     }
     function initCharts() {
         const weeklyCtx = document.getElementById('weeklyChart').getContext('2d');
         const categoryCtx = document.getElementById('categoryChart').getContext('2d');
-        weeklyChart = new Chart(weeklyCtx, { type: 'line', data: { labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'], datasets: [{ label: 'Sales ($)', data: [0,0,0,0,0,0,0], borderColor: '#1e2a5e', tension: 0.3, fill: false }] }, options: { responsive: true } });
+        weeklyChart = new Chart(weeklyCtx, { type: 'line', data: { labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'], datasets: [{ label: 'Sales', data: [0,0,0,0,0,0,0], borderColor: '#1e2a5e', tension: 0.3, fill: false }] }, options: { responsive: true } });
         categoryChart = new Chart(categoryCtx, { type: 'doughnut', data: { labels: ['Coffee','Bakery','Sandwiches','Beverages'], datasets: [{ data: [0,0,0,0], backgroundColor: ['#1e2a5e','#f59e0b','#10b981','#3b82f6'] }] }, options: { responsive: true } });
     }
 
@@ -606,18 +565,11 @@
         if (page === 'analytics') updateStatsAndCharts();
         if (page === 'workers' && currentUser?.role === 'super_admin') loadWorkersList();
     }
-    document.querySelectorAll('.nav-item').forEach(nav => {
-        nav.onclick = () => { showPage(nav.dataset.page); };
-    });
+    document.querySelectorAll('.nav-item').forEach(nav => { nav.onclick = () => { showPage(nav.dataset.page); }; });
 
     function loadWorkersList() {
         const workers = users.filter(u => u.role === 'branch_manager');
-        workersListDiv.innerHTML = workers.map(w => `
-            <div class="worker-item">
-                <span><strong>${w.email}</strong> - ${getBranchName(w.branchId)}</span>
-                <button class="btn-secondary" style="width:auto; padding:4px 12px;" onclick="deleteWorker('${w.email}')">Delete</button>
-            </div>
-        `).join('');
+        workersListDiv.innerHTML = workers.map(w => `<div class="worker-item"><span><strong>${w.email}</strong> - ${getBranchName(w.branchId)}</span><button class="btn-secondary" style="width:auto; padding:4px 12px;" onclick="deleteWorker('${w.email}')">Delete</button></div>`).join('');
     }
     window.deleteWorker = function(email) {
         users = users.filter(u => u.email !== email);
@@ -641,14 +593,35 @@
     }
     document.getElementById('createWorkerBtn')?.addEventListener('click', createWorker);
 
+    // Currency selector logic
+    const currencySelect = document.getElementById('currencySelect');
+    const customCurrencyInput = document.getElementById('customCurrency');
+    currencySelect.addEventListener('change', () => {
+        if (currencySelect.value === 'custom') {
+            customCurrencyInput.style.display = 'block';
+            let customVal = customCurrencyInput.value.trim();
+            if (customVal) saveCurrency(customVal, true);
+            else saveCurrency('﷼', true);
+        } else {
+            customCurrencyInput.style.display = 'none';
+            saveCurrency(currencySelect.value, false);
+        }
+    });
+    customCurrencyInput.addEventListener('input', () => {
+        let val = customCurrencyInput.value.trim();
+        if (val) saveCurrency(val, true);
+    });
+
+    // Login
     function login() {
         const email = loginEmail.value.trim();
         const pwd = loginPassword.value;
         const user = users.find(u => u.email === email && u.password === pwd);
-        if (!user) { loginStatus.innerText = "Invalid email or password. Try admin@billzest.com / admin123"; return; }
+        if (!user) { loginStatus.innerText = "Invalid credentials. Try admin@billzest.com / admin123"; return; }
         currentUser = { ...user };
         loginOverlay.style.display = 'none';
         dashboardMain.style.display = 'block';
+        loadCurrency();
         initCharts();
         renderProducts();
         initFilters();
@@ -659,6 +632,7 @@
         showPage('pos');
     }
 
+    // Event listeners
     loginBtn.onclick = login;
     resetDataBtn.onclick = resetDemoData;
     logoutSidebarBtn.onclick = () => { currentUser = null; dashboardMain.style.display = 'none'; loginOverlay.style.display = 'flex'; cart = []; };
@@ -671,7 +645,6 @@
 
     // Initialize
     loadData();
-    // Pre-fill login fields for convenience
     loginEmail.value = "admin@billzest.com";
     loginPassword.value = "admin123";
 </script>
