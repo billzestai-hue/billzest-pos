@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>BillZest POS | Complete Business Solution</title>
+    <title>BillZest POS | Custom Branches & Workers</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
@@ -265,8 +265,9 @@
                 </div>
                 <div class="settings-panel" id="branchManagementPanel" style="display: none;">
                     <h3><i class="fas fa-store-alt"></i> Manage Branches (Super Admin)</h3>
-                    <div class="user-form"><input type="text" id="newBranchName" placeholder="New Branch Name"><button id="addBranchBtn" class="btn-primary" style="width: auto; padding: 10px 20px;">Add Branch</button></div>
+                    <div class="user-form"><input type="text" id="newBranchName" placeholder="New Branch Name (e.g., Riyadh Branch)"><button id="addBranchBtn" class="btn-primary" style="width: auto; padding: 10px 20px;">Add Branch</button></div>
                     <div id="branchesList"></div>
+                    <p style="font-size:12px; margin-top:10px; color: var(--text-secondary);">💡 Tip: Add any branch/city name. It will appear in branch selector and worker creation.</p>
                 </div>
             </div>
         </div>
@@ -499,6 +500,7 @@
         document.getElementById('newBranchName').value = '';
         updateSidebar();
         loadBranchesList();
+        alert(`Branch "${newName}" added successfully!`);
     }
     document.getElementById('addBranchBtn')?.addEventListener('click', addBranch);
     document.getElementById('saveBusinessSettingsBtn')?.addEventListener('click', () => {
