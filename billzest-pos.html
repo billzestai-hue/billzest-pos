@@ -16,7 +16,6 @@
             --success: #10b981; --danger: #ef4444; --warning: #f59e0b; --info: #3b82f6;
         }
         body { background: var(--bg); color: var(--text-primary); }
-        /* Login Overlay */
         .login-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.85); z-index: 10000;
@@ -37,7 +36,6 @@
         }
         .reset-btn { background: #ef4444; margin-top: 8px; }
         .login-status { margin-top: 12px; font-size: 12px; color: red; }
-        /* Dashboard Layout */
         .dashboard-container { display: flex; min-height: 100vh; }
         .sidebar {
             width: 280px; background: linear-gradient(180deg, #0c1940 0%, #0d1b4b 100%);
@@ -90,7 +88,7 @@
         .search-wrapper { flex: 1; position: relative; }
         .search-wrapper i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); }
         #searchInput { width: 100%; padding: 10px 12px 10px 38px; border-radius: 40px; border: 1px solid var(--border); background: var(--bg); }
-        .category-filter { display: flex; gap: 8px; flex-wrap: wrap; }
+        .category-filter { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
         .cat-btn { background: var(--bg); border: 1px solid var(--border); padding: 6px 16px; border-radius: 40px; cursor: pointer; font-size: 12px; }
         .cat-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
         .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px,1fr)); gap: 16px; padding: 20px; max-height: 55vh; overflow-y: auto; }
@@ -199,13 +197,13 @@
                     <div class="products-section">
                         <div class="search-bar">
                             <div class="search-wrapper"><i class="fas fa-search"></i><input type="text" id="searchInput" placeholder="Search products..."></div>
-                            <div class="category-filter" id="categoryFilter">
-                                <button class="cat-btn active" data-cat="all">All</button>
-                                <button class="cat-btn" data-cat="Coffee">Coffee</button>
-                                <button class="cat-btn" data-cat="Bakery">Bakery</button>
-                                <button class="cat-btn" data-cat="Sandwiches">Sandwiches</button>
-                                <button class="cat-btn" data-cat="Beverages">Beverages</button>
-                            </div>
+                        </div>
+                        <div class="category-filter" id="categoryFilter">
+                            <button class="cat-btn active" data-cat="all">All</button>
+                            <button class="cat-btn" data-cat="Coffee">Coffee</button>
+                            <button class="cat-btn" data-cat="Bakery">Bakery</button>
+                            <button class="cat-btn" data-cat="Sandwiches">Sandwiches</button>
+                            <button class="cat-btn" data-cat="Beverages">Beverages</button>
                         </div>
                         <div class="product-grid" id="productGrid"></div>
                     </div>
@@ -294,7 +292,7 @@
 </div>
 
 <script>
-    // ---------- Default Data ----------
+    // ---------- Data ----------
     const DEMO_USERS = [
         { email: "admin@billzest.com", password: "admin123", role: "super_admin", branchId: null },
         { email: "manager1@billzest.com", password: "manager123", role: "branch_manager", branchId: "branch1" },
@@ -329,13 +327,53 @@
     ];
 
     let currentUser = null;
-    let currentBranchId = null;
     let cart = [];
     let lastSaleData = null;
     let weeklyChart, categoryChart;
     let currencySymbol = "$";
+    let currentCategory = "all";
+    let searchTerm = "";
 
-    // Load/Save functions
+    // DOM elements
+    let sidebarAvatar, sidebarName, sidebarRole, branchSelectSidebar, workersNavItem;
+    let todaySalesSpan, transactionsCountSpan, itemsSoldSpan, cartTotalValueSpan;
+    let analyticsTodaySales, analyticsTotalOrders, analyticsRevenue, analyticsAvgOrder;
+    let productGrid, searchInput, cartItemsList, cartTotalsDiv, shareButtons;
+    let paymentMethod, cashReceived, changeDue, cashChangeSection;
+    let posPage, analyticsPage, workersPage, settingsPage;
+    let workersListDiv;
+
+    function initDOM() {
+        sidebarAvatar = document.getElementById('sidebarAvatar');
+        sidebarName = document.getElementById('sidebarName');
+        sidebarRole = document.getElementById('sidebarRole');
+        branchSelectSidebar = document.getElementById('branchSelectSidebar');
+        workersNavItem = document.getElementById('workersNavItem');
+        todaySalesSpan = document.getElementById('todaySales');
+        transactionsCountSpan = document.getElementById('transactionsCount');
+        itemsSoldSpan = document.getElementById('itemsSold');
+        cartTotalValueSpan = document.getElementById('cartTotalValue');
+        analyticsTodaySales = document.getElementById('analyticsTodaySales');
+        analyticsTotalOrders = document.getElementById('analyticsTotalOrders');
+        analyticsRevenue = document.getElementById('analyticsRevenue');
+        analyticsAvgOrder = document.getElementById('analyticsAvgOrder');
+        productGrid = document.getElementById('productGrid');
+        searchInput = document.getElementById('searchInput');
+        cartItemsList = document.getElementById('cartItemsList');
+        cartTotalsDiv = document.getElementById('cartTotals');
+        shareButtons = document.getElementById('shareButtons');
+        paymentMethod = document.getElementById('paymentMethod');
+        cashReceived = document.getElementById('cashReceived');
+        changeDue = document.getElementById('changeDue');
+        cashChangeSection = document.getElementById('cashChangeSection');
+        posPage = document.getElementById('posPage');
+        analyticsPage = document.getElementById('analyticsPage');
+        workersPage = document.getElementById('workersPage');
+        settingsPage = document.getElementById('settingsPage');
+        workersListDiv = document.getElementById('workersList');
+    }
+
+    // Load/Save
     function loadData() {
         const storedUsers = localStorage.getItem("billzest_users");
         if (storedUsers) {
@@ -358,7 +396,12 @@
             ];
             saveSales();
         }
-        updateBusinessSettingsUI();
+        if (document.getElementById('businessName')) {
+            document.getElementById('businessName').value = businessSettings.name || '';
+            document.getElementById('gstNumber').value = businessSettings.gst || '';
+            document.getElementById('businessAddress').value = businessSettings.address || '';
+            document.getElementById('businessPhone').value = businessSettings.phone || '';
+        }
     }
     function saveUsers() { localStorage.setItem("billzest_users", JSON.stringify(users)); }
     function saveBranches() { localStorage.setItem("billzest_branches", JSON.stringify(branches)); }
@@ -366,26 +409,21 @@
     function saveSales() { localStorage.setItem("billzest_sales", JSON.stringify(allSales)); }
     function resetDemoData() { localStorage.clear(); location.reload(); }
 
-    function updateBusinessSettingsUI() {
-        document.getElementById('businessName').value = businessSettings.name || '';
-        document.getElementById('gstNumber').value = businessSettings.gst || '';
-        document.getElementById('businessAddress').value = businessSettings.address || '';
-        document.getElementById('businessPhone').value = businessSettings.phone || '';
-    }
-
-    // Currency handling
+    // Currency
     function loadCurrency() {
         const saved = localStorage.getItem("billzest_currency");
+        const currencySelect = document.getElementById('currencySelect');
+        const customCurrencyInput = document.getElementById('customCurrency');
         if (saved) {
             currencySymbol = saved;
-            document.getElementById('currencySelect').value = saved === "custom" ? "custom" : saved;
-            if (saved !== "custom") document.getElementById('customCurrency').style.display = 'none';
+            currencySelect.value = saved === "custom" ? "custom" : saved;
+            if (saved !== "custom") customCurrencyInput.style.display = 'none';
             else {
-                document.getElementById('customCurrency').style.display = 'block';
-                document.getElementById('customCurrency').value = localStorage.getItem("billzest_custom_currency") || "﷼";
-                currencySymbol = document.getElementById('customCurrency').value;
+                customCurrencyInput.style.display = 'block';
+                customCurrencyInput.value = localStorage.getItem("billzest_custom_currency") || "﷼";
+                currencySymbol = customCurrencyInput.value;
             }
-        } else { currencySymbol = "$"; document.getElementById('currencySelect').value = "$"; }
+        } else { currencySymbol = "$"; currencySelect.value = "$"; }
         updateAllCurrencyDisplays();
     }
     function saveCurrency(symbol, isCustom = false) {
@@ -405,23 +443,21 @@
         if (currentUser) { updateCartUI(); updateStatsAndCharts(); }
     }
 
-    // Sidebar & navigation
+    // Sidebar & Branch
     function updateSidebar() {
         if (!currentUser) return;
         sidebarName.innerText = currentUser.email.split('@')[0];
         sidebarRole.innerText = currentUser.role === 'super_admin' ? 'Super Admin' : 'Branch Manager';
         sidebarAvatar.innerText = currentUser.email.charAt(0).toUpperCase();
         workersNavItem.style.display = currentUser.role === 'super_admin' ? 'flex' : 'none';
-        document.getElementById('branchManagementPanel').style.display = currentUser.role === 'super_admin' ? 'block' : 'none';
-        // Populate branch dropdown
+        const branchMgmtPanel = document.getElementById('branchManagementPanel');
+        if (branchMgmtPanel) branchMgmtPanel.style.display = currentUser.role === 'super_admin' ? 'block' : 'none';
         branchSelectSidebar.innerHTML = '';
         let availableBranches = currentUser.role === 'branch_manager' ? branches.filter(b => b.id === currentUser.branchId) : branches;
         availableBranches.forEach(b => { let opt = document.createElement('option'); opt.value = b.id; opt.textContent = b.name; branchSelectSidebar.appendChild(opt); });
         if (currentUser.role === 'branch_manager') branchSelectSidebar.value = currentUser.branchId;
         branchSelectSidebar.disabled = (currentUser.role !== 'super_admin');
-        currentBranchId = branchSelectSidebar.value;
         updateStatsAndCharts();
-        // Update new worker branch dropdown
         const newWorkerBranchSelect = document.getElementById('newWorkerBranch');
         if (newWorkerBranchSelect) {
             newWorkerBranchSelect.innerHTML = '';
@@ -476,6 +512,7 @@
 
     function getBranchSales(branchId) { return allSales.filter(s => s.branchId === branchId); }
     function updateStatsAndCharts() {
+        if (!todaySalesSpan) return;
         const branchId = branchSelectSidebar.value;
         const branchSales = getBranchSales(branchId);
         const today = new Date().toDateString();
@@ -486,12 +523,12 @@
         itemsSoldSpan.innerText = totalItems;
         const cartTotal = cart.reduce((sum,i)=>sum+(i.price*i.quantity),0);
         cartTotalValueSpan.innerText = formatPrice(cartTotal);
-        analyticsTodaySales.innerText = formatPrice(todayTotal);
-        analyticsTotalOrders.innerText = branchSales.length;
+        if (analyticsTodaySales) analyticsTodaySales.innerText = formatPrice(todayTotal);
+        if (analyticsTotalOrders) analyticsTotalOrders.innerText = branchSales.length;
         const totalRevenue = branchSales.reduce((sum, s) => sum + s.total, 0);
         const avgOrder = branchSales.length ? totalRevenue / branchSales.length : 0;
-        analyticsRevenue.innerText = formatPrice(totalRevenue);
-        analyticsAvgOrder.innerText = formatPrice(avgOrder);
+        if (analyticsRevenue) analyticsRevenue.innerText = formatPrice(totalRevenue);
+        if (analyticsAvgOrder) analyticsAvgOrder.innerText = formatPrice(avgOrder);
         const weeklyData = [0,0,0,0,0,0,0];
         branchSales.forEach(sale => { const day = new Date(sale.date).getDay(); let idx = (day === 0 ? 6 : day-1); weeklyData[idx] += sale.total; });
         if (weeklyChart) { weeklyChart.data.datasets[0].data = weeklyData; weeklyChart.update(); }
@@ -499,13 +536,14 @@
         branchSales.forEach(sale => { sale.items.forEach(item => { const prod = products.find(p => p.id === item.id); if (prod) catSales[prod.category] += (item.price * item.qty); }); });
         if (categoryChart) { categoryChart.data.datasets[0].data = [catSales.Coffee, catSales.Bakery, catSales.Sandwiches, catSales.Beverages]; categoryChart.update(); }
     }
-    branchSelectSidebar.addEventListener('change', () => { currentBranchId = branchSelectSidebar.value; updateStatsAndCharts(); updateCartUI(); });
+    branchSelectSidebar?.addEventListener('change', () => { updateStatsAndCharts(); updateCartUI(); });
 
     // Cart functions
     function updateCartUI() {
+        if (!cartItemsList) return;
         if (cart.length === 0) {
             cartItemsList.innerHTML = '<p style="text-align:center;">Cart is empty</p>';
-            document.getElementById('cartTotals').innerHTML = `<div class="total-row"><span>Subtotal:</span><span>${formatPrice(0)}</span></div><div class="total-row"><span>Tax (10%):</span><span>${formatPrice(0)}</span></div><div class="grand-total">Total: ${formatPrice(0)}</div>`;
+            cartTotalsDiv.innerHTML = `<div class="total-row"><span>Subtotal:</span><span>${formatPrice(0)}</span></div><div class="total-row"><span>Tax (10%):</span><span>${formatPrice(0)}</span></div><div class="grand-total">Total: ${formatPrice(0)}</div>`;
             shareButtons.style.display = 'none';
             return;
         }
@@ -518,7 +556,7 @@
         cartItemsList.innerHTML = itemsHtml;
         const tax = subtotal * 0.10;
         const total = subtotal + tax;
-        document.getElementById('cartTotals').innerHTML = `<div class="total-row"><span>Subtotal:</span><span>${formatPrice(subtotal)}</span></div><div class="total-row"><span>Tax (10%):</span><span>${formatPrice(tax)}</span></div><div class="grand-total">Total: ${formatPrice(total)}</div>`;
+        cartTotalsDiv.innerHTML = `<div class="total-row"><span>Subtotal:</span><span>${formatPrice(subtotal)}</span></div><div class="total-row"><span>Tax (10%):</span><span>${formatPrice(tax)}</span></div><div class="grand-total">Total: ${formatPrice(total)}</div>`;
         shareButtons.style.display = 'none';
         document.querySelectorAll('.qty-btn').forEach(btn => {
             btn.onclick = () => { const id = parseInt(btn.dataset.id); const delta = parseInt(btn.dataset.delta); updateQuantity(id, delta); };
@@ -591,8 +629,7 @@
         window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
     }
 
-    // Product rendering
-    let currentCategory = 'all', searchTerm = '';
+    // Product rendering and filters
     function renderProducts() {
         let filtered = products.filter(p => (currentCategory === 'all' || p.category === currentCategory) && p.name.toLowerCase().includes(searchTerm.toLowerCase()));
         productGrid.innerHTML = filtered.map(p => `<div class="product-card" data-id="${p.id}"><div class="product-icon">${p.icon}</div><div class="product-name">${p.name}</div><div class="product-price" data-price="${p.price}">${formatPrice(p.price)}</div></div>`).join('');
@@ -638,7 +675,15 @@
         document.querySelector(`.nav-item[data-page="${page}"]`).classList.add('active');
         if (page === 'analytics') updateStatsAndCharts();
         if (page === 'workers' && currentUser?.role === 'super_admin') loadWorkersList();
-        if (page === 'settings') { updateBusinessSettingsUI(); loadBranchesList(); }
+        if (page === 'settings') {
+            if (document.getElementById('businessName')) {
+                document.getElementById('businessName').value = businessSettings.name || '';
+                document.getElementById('gstNumber').value = businessSettings.gst || '';
+                document.getElementById('businessAddress').value = businessSettings.address || '';
+                document.getElementById('businessPhone').value = businessSettings.phone || '';
+            }
+            loadBranchesList();
+        }
     }
     document.querySelectorAll('.nav-item').forEach(nav => {
         nav.onclick = () => { showPage(nav.dataset.page); };
@@ -689,13 +734,14 @@
 
     // Login
     function login() {
-        const email = loginEmail.value.trim();
-        const pwd = loginPassword.value;
+        const email = document.getElementById('loginEmail').value.trim();
+        const pwd = document.getElementById('loginPassword').value;
         const user = users.find(u => u.email === email && u.password === pwd);
-        if (!user) { loginStatus.innerText = "Invalid credentials. Try admin@billzest.com / admin123"; return; }
+        if (!user) { document.getElementById('loginStatus').innerText = "Invalid credentials. Try admin@billzest.com / admin123"; return; }
         currentUser = { ...user };
-        loginOverlay.style.display = 'none';
-        dashboardMain.style.display = 'block';
+        document.getElementById('loginOverlay').style.display = 'none';
+        document.getElementById('dashboardMain').style.display = 'block';
+        initDOM();
         loadCurrency();
         initCharts();
         renderProducts();
@@ -708,15 +754,15 @@
     }
 
     // Event listeners
-    loginBtn.onclick = login;
-    resetDataBtn.onclick = resetDemoData;
-    logoutSidebarBtn.onclick = () => { currentUser = null; dashboardMain.style.display = 'none'; loginOverlay.style.display = 'flex'; cart = []; };
-    clearCartBtn.onclick = clearCart;
-    completeSaleBtn.onclick = completeSale;
-    printReceiptBtn.onclick = showPrintReceipt;
-    whatsappShareBtn.onclick = shareWhatsApp;
-    loginPassword.addEventListener('keypress', (e) => { if(e.key === 'Enter') login(); });
-    loginEmail.addEventListener('keypress', (e) => { if(e.key === 'Enter') login(); });
+    document.getElementById('loginBtn').onclick = login;
+    document.getElementById('resetDataBtn').onclick = resetDemoData;
+    document.getElementById('logoutSidebarBtn').onclick = () => { currentUser = null; document.getElementById('dashboardMain').style.display = 'none'; document.getElementById('loginOverlay').style.display = 'flex'; cart = []; };
+    document.getElementById('clearCartBtn').onclick = clearCart;
+    document.getElementById('completeSaleBtn').onclick = completeSale;
+    document.getElementById('printReceiptBtn').onclick = showPrintReceipt;
+    document.getElementById('whatsappShareBtn').onclick = shareWhatsApp;
+    document.getElementById('loginPassword').addEventListener('keypress', (e) => { if(e.key === 'Enter') login(); });
+    document.getElementById('loginEmail').addEventListener('keypress', (e) => { if(e.key === 'Enter') login(); });
 
     loadData();
 </script>
