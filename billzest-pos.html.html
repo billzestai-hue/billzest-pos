@@ -391,7 +391,7 @@
         { id: 11, name: "Blueberry Muffin", category: "Bakery", price: 3.50, image: "", stock: 100 },
         { id: 12, name: "Americano", category: "Coffee", price: 3.20, image: "", stock: 100 }
     ];
-    let customers = []; // { id, name, phone, email, points }
+    let customers = [];
     let currentUser = null;
     let cart = [];
     let lastSaleData = null;
@@ -403,7 +403,7 @@
     let selectedCustomerId = null;
     let redeemPoints = 0;
 
-    // DOM elements (initialized after login)
+    // DOM elements
     let sidebarAvatar, sidebarName, sidebarRole, branchSelectSidebar, workersNavItem;
     let todaySalesSpan, transactionsCountSpan, itemsSoldSpan, cartTotalValueSpan;
     let analyticsTodaySales, analyticsTotalOrders, analyticsRevenue, analyticsAvgOrder;
@@ -449,7 +449,7 @@
         discountDisplay = document.getElementById('discountDisplay');
     }
 
-    // Helper functions for data persistence
+    // Data persistence
     function loadData() {
         const storedUsers = localStorage.getItem("billzest_users");
         if (storedUsers) { const parsed = JSON.parse(storedUsers); const emailMap = new Map(); DEMO_USERS.forEach(u => emailMap.set(u.email, u)); parsed.forEach(u => { if (!emailMap.has(u.email)) emailMap.set(u.email, u); }); users = Array.from(emailMap.values()); }
@@ -511,12 +511,553 @@
     function formatPrice(amount) { return `${currencySymbol} ${amount.toFixed(2)}`; }
     function updateAllCurrencyDisplays() { if (currentUser) { updateCartUI(); updateStatsAndCharts(); renderProducts(); } }
 
-    // Sidebar, branches, products UI (abbreviated for brevity, but full in final code)
-    // (Full functions for updateSidebar, loadBranchesList, addBranch, product management, etc. are included in the final output)
-    // To keep the response within limits, I'm providing the final file as a complete block.
-    // The remaining functions (editProduct, deleteProduct, addProduct, renderProducts, updateCategoryFilter,
-    // updateCartUI, completeSale with points and stock, refund logic, export CSV, dark mode, etc.) are all present.
-    // I'll now output the entire file content.
+    // Branch & Sidebar
+    function updateSidebar() {
+        if (!currentUser) return;
+        sidebarName.innerText = currentUser.email.split('@')[0];
+        sidebarRole.innerText = currentUser.role === 'super_admin' ? 'Super Admin' : 'Branch Manager';
+        sidebarAvatar.innerText = currentUser.email.charAt(0).toUpperCase();
+        workersNavItem.style.display = currentUser.role === 'super_admin' ? 'flex' : 'none';
+        const branchMgmtPanel = document.getElementById('branchManagementPanel');
+        const productMgmtPanel = document.getElementById('productManagementPanel');
+        if (branchMgmtPanel) branchMgmtPanel.style.display = currentUser.role === 'super_admin' ? 'block' : 'none';
+        if (productMgmtPanel) productMgmtPanel.style.display = currentUser.role === 'super_admin' ? 'block' : 'none';
+        branchSelectSidebar.innerHTML = '';
+        let availableBranches = currentUser.role === 'branch_manager' ? branches.filter(b => b.id === currentUser.branchId) : branches;
+        availableBranches.forEach(b => { let opt = document.createElement('option'); opt.value = b.id; opt.textContent = b.name; branchSelectSidebar.appendChild(opt); });
+        if (currentUser.role === 'branch_manager') branchSelectSidebar.value = currentUser.branchId;
+        branchSelectSidebar.disabled = (currentUser.role !== 'super_admin');
+        updateStatsAndCharts();
+        const newWorkerBranchSelect = document.getElementById('newWorkerBranch');
+        if (newWorkerBranchSelect) {
+            newWorkerBranchSelect.innerHTML = '';
+            branches.forEach(b => { let opt = document.createElement('option'); opt.value = b.id; opt.textContent = b.name; newWorkerBranchSelect.appendChild(opt); });
+        }
+        loadBranchesList();
+        loadProductsList();
+        loadCustomersList();
+        loadSalesList();
+        updateCategoryFilter();
+        updateCustomerSelect();
+    }
+    function loadBranchesList() {
+        const container = document.getElementById('branchesList');
+        if (!container) return;
+        container.innerHTML = branches.map(b => `<div class="branch-item"><span><strong>${b.name}</strong></span><div class="branch-actions"><button onclick="editBranch('${b.id}')"><i class="fas fa-edit"></i></button><button onclick="deleteBranch('${b.id}')"><i class="fas fa-trash"></i></button></div></div>`).join('');
+    }
+    window.editBranch = function(id) {
+        const newName = prompt("Enter new branch name:", branches.find(b=>b.id===id).name);
+        if (newName) { branches.find(b=>b.id===id).name = newName; saveBranches(); updateSidebar(); loadBranchesList(); }
+    };
+    window.deleteBranch = function(id) {
+        if (confirm("Delete branch? This will affect workers assigned to it.")) {
+            branches = branches.filter(b=>b.id !== id);
+            saveBranches();
+            updateSidebar();
+            loadBranchesList();
+        }
+    };
+    function addBranch() {
+        const newName = document.getElementById('newBranchName').value.trim();
+        if (!newName) return alert("Enter branch name");
+        const newId = "branch_" + Date.now();
+        branches.push({ id: newId, name: newName });
+        saveBranches();
+        document.getElementById('newBranchName').value = '';
+        updateSidebar();
+        loadBranchesList();
+        alert(`Branch "${newName}" added successfully!`);
+    }
+    document.getElementById('addBranchBtn')?.addEventListener('click', addBranch);
+    document.getElementById('saveBusinessSettingsBtn')?.addEventListener('click', () => {
+        businessSettings.name = document.getElementById('businessName').value;
+        businessSettings.gst = document.getElementById('gstNumber').value;
+        businessSettings.address = document.getElementById('businessAddress').value;
+        businessSettings.phone = document.getElementById('businessPhone').value;
+        saveBusinessSettings();
+        alert("Business details saved!");
+    });
+
+    // Product management
+    function loadProductsList() {
+        const container = document.getElementById('productsList');
+        if (!container) return;
+        container.innerHTML = products.map(p => `<div class="product-item"><div style="flex:2"><strong>${p.name}</strong> (${p.category}) - ${formatPrice(p.price)} | Stock: ${p.stock}</div><div class="product-actions"><button onclick="editProduct(${p.id})"><i class="fas fa-edit"></i></button><button onclick="deleteProduct(${p.id})"><i class="fas fa-trash"></i></button></div></div>`).join('');
+        const catSelect = document.getElementById('productCategory');
+        if (catSelect) { const cats = extractCategories(); catSelect.innerHTML = cats.map(c => `<option value="${c}">${c}</option>`).join(''); }
+    }
+    window.editProduct = function(id) {
+        const product = products.find(p => p.id === id);
+        if (!product) return;
+        const newName = prompt("Product name:", product.name); if (!newName) return;
+        const newCategory = prompt("Category:", product.category); if (!newCategory) return;
+        const newPrice = parseFloat(prompt("Price:", product.price)); if (isNaN(newPrice)) return;
+        const newStock = parseInt(prompt("Stock quantity:", product.stock)); if (isNaN(newStock)) return;
+        const newImage = prompt("Image URL (optional):", product.image);
+        product.name = newName; product.category = newCategory; product.price = newPrice; product.stock = newStock; product.image = newImage || "";
+        saveProducts(); loadProductsList(); renderProducts(); updateCategoryFilter(); updateStatsAndCharts();
+        alert("Product updated!");
+    };
+    window.deleteProduct = function(id) {
+        if (confirm("Delete product?")) { products = products.filter(p => p.id !== id); saveProducts(); loadProductsList(); renderProducts(); updateCategoryFilter(); updateStatsAndCharts(); }
+    };
+    function addProduct() {
+        const name = document.getElementById('productName').value.trim();
+        const category = document.getElementById('productCategory').value;
+        const price = parseFloat(document.getElementById('productPrice').value);
+        const stock = parseInt(document.getElementById('productStock').value);
+        const image = document.getElementById('productImage').value.trim();
+        if (!name || isNaN(price)) { alert("Please fill name and valid price"); return; }
+        const newId = Date.now();
+        products.push({ id: newId, name, category, price, image, stock: isNaN(stock) ? 100 : stock });
+        saveProducts();
+        document.getElementById('productName').value = ''; document.getElementById('productPrice').value = ''; document.getElementById('productStock').value = '100'; document.getElementById('productImage').value = '';
+        loadProductsList(); renderProducts(); updateCategoryFilter(); updateStatsAndCharts();
+        alert("Product added!");
+    }
+    document.getElementById('addProductBtn')?.addEventListener('click', addProduct);
+    document.getElementById('addNewCategoryBtn')?.addEventListener('click', () => {
+        const newCat = prompt("Enter new category name:");
+        if (newCat && newCat.trim()) {
+            const catSelect = document.getElementById('productCategory');
+            const option = document.createElement('option');
+            option.value = newCat.trim(); option.textContent = newCat.trim();
+            catSelect.appendChild(option); catSelect.value = newCat.trim();
+        }
+    });
+
+    function updateCategoryFilter() {
+        const cats = extractCategories();
+        const filterDiv = document.getElementById('categoryFilter');
+        if (!filterDiv) return;
+        filterDiv.innerHTML = `<button class="cat-btn active" data-cat="all">All</button>` + cats.map(c => `<button class="cat-btn" data-cat="${c}">${c}</button>`).join('');
+        document.querySelectorAll('.cat-btn').forEach(btn => {
+            btn.onclick = () => { document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); currentCategory = btn.dataset.cat; renderProducts(); };
+        });
+    }
+
+    // Customer management
+    function loadCustomersList() {
+        const container = document.getElementById('customersList');
+        if (!container) return;
+        container.innerHTML = customers.map(c => `<div class="customer-item"><span><strong>${c.name}</strong> (${c.phone}) - Points: ${c.points}</span><div class="customer-actions"><button onclick="editCustomer(${c.id})"><i class="fas fa-edit"></i></button><button onclick="deleteCustomer(${c.id})"><i class="fas fa-trash"></i></button></div></div>`).join('');
+        updateCustomerSelect();
+    }
+    window.editCustomer = function(id) {
+        const cust = customers.find(c => c.id === id);
+        if (!cust) return;
+        const newName = prompt("Customer name:", cust.name); if (!newName) return;
+        const newPhone = prompt("Phone:", cust.phone); if (!newPhone) return;
+        const newEmail = prompt("Email:", cust.email);
+        cust.name = newName; cust.phone = newPhone; cust.email = newEmail || "";
+        saveCustomers(); loadCustomersList();
+    };
+    window.deleteCustomer = function(id) {
+        if (confirm("Delete customer?")) { customers = customers.filter(c => c.id !== id); saveCustomers(); loadCustomersList(); updateCustomerSelect(); }
+    };
+    function addCustomer() {
+        const name = document.getElementById('customerName').value.trim();
+        const phone = document.getElementById('customerPhone').value.trim();
+        const email = document.getElementById('customerEmail').value.trim();
+        if (!name || !phone) { alert("Name and phone required"); return; }
+        const newId = Date.now();
+        customers.push({ id: newId, name, phone, email, points: 0 });
+        saveCustomers();
+        document.getElementById('customerName').value = ''; document.getElementById('customerPhone').value = ''; document.getElementById('customerEmail').value = '';
+        loadCustomersList();
+        alert("Customer added!");
+    }
+    document.getElementById('addCustomerBtn')?.addEventListener('click', addCustomer);
+    function updateCustomerSelect() {
+        if (!customerSelect) return;
+        customerSelect.innerHTML = '<option value="">Walk-in Customer (No points)</option>' + customers.map(c => `<option value="${c.id}">${c.name} (${c.points} pts)</option>`).join('');
+        customerSelect.onchange = () => {
+            selectedCustomerId = customerSelect.value ? parseInt(customerSelect.value) : null;
+            if (selectedCustomerId) {
+                const cust = customers.find(c => c.id === selectedCustomerId);
+                pointsDisplay.innerText = `Points: ${cust.points} (10 pts = 1 SAR discount)`;
+            } else pointsDisplay.innerText = '';
+            redeemPoints = 0; if(redeemPointsInput) redeemPointsInput.value = ''; updateDiscountDisplay();
+        };
+    }
+    function updateDiscountDisplay() {
+        if (!selectedCustomerId) { discountDisplay.innerText = ''; return; }
+        const cust = customers.find(c => c.id === selectedCustomerId);
+        if (!cust) { discountDisplay.innerText = ''; return; }
+        let points = parseInt(redeemPointsInput?.value) || 0;
+        if (points > cust.points) points = cust.points;
+        const discount = points / 10;
+        discountDisplay.innerText = `Discount: ${formatPrice(discount)} (using ${points} points)`;
+    }
+    redeemPointsInput?.addEventListener('input', updateDiscountDisplay);
+
+    // Sales & Refunds
+    function loadSalesList() {
+        if (!salesListDiv) return;
+        const branchId = branchSelectSidebar?.value;
+        const branchSales = allSales.filter(s => s.branchId === branchId);
+        salesListDiv.innerHTML = branchSales.map((s, idx) => `
+            <div class="sale-item ${s.refunded ? 'refunded' : ''}">
+                <div><strong>#${idx+1}</strong> ${new Date(s.date).toLocaleString()}<br>Total: ${formatPrice(s.total)}</div>
+                <div>${s.refunded ? 'REFUNDED' : `<button class="refund-btn" onclick="refundSale(${idx})">Refund</button>`}</div>
+            </div>
+        `).join('');
+    }
+    window.refundSale = function(saleIndex) {
+        const branchId = branchSelectSidebar.value;
+        const branchSales = allSales.filter(s => s.branchId === branchId);
+        const sale = branchSales[saleIndex];
+        if (!sale || sale.refunded) { alert("Already refunded"); return; }
+        if (!confirm(`Refund sale of ${formatPrice(sale.total)}? Stock will be restored and loyalty points deducted.`)) return;
+        sale.refunded = true;
+        // Restore stock
+        sale.items.forEach(item => {
+            const prod = products.find(p => p.id === item.id);
+            if (prod) prod.stock += item.qty;
+        });
+        // Deduct points from customer
+        if (sale.customerId) {
+            const cust = customers.find(c => c.id === sale.customerId);
+            if (cust) cust.points = Math.max(0, cust.points - (sale.pointsEarned || 0));
+        }
+        saveProducts(); saveCustomers(); saveSales();
+        updateStatsAndCharts(); renderProducts(); loadSalesList(); loadCustomersList();
+        alert("Sale refunded!");
+    };
+    function exportToCSV() {
+        const branchId = branchSelectSidebar.value;
+        const branchSales = allSales.filter(s => s.branchId === branchId && !s.refunded);
+        if (branchSales.length === 0) { alert("No sales to export"); return; }
+        let csv = "Date,Total,Items,Payment,Customer\n";
+        branchSales.forEach(s => {
+            const customerName = s.customerId ? (customers.find(c=>c.id===s.customerId)?.name || '') : 'Walk-in';
+            csv += `"${new Date(s.date).toLocaleString()}",${s.total},${s.itemsCount},${s.paymentMethod},"${customerName}"\n`;
+        });
+        const blob = new Blob([csv], {type: "text/csv"}); const url = URL.createObjectURL(blob);
+        const a = document.createElement('a'); a.href = url; a.download = `sales_${branchId}_${new Date().toISOString().slice(0,19)}.csv`; a.click(); URL.revokeObjectURL(url);
+    }
+    document.getElementById('exportSalesBtn')?.addEventListener('click', exportToCSV);
+
+    // Stats & Charts
+    function getBranchSales(branchId) { return allSales.filter(s => s.branchId === branchId); }
+    function updateStatsAndCharts() {
+        if (!todaySalesSpan) return;
+        const branchId = branchSelectSidebar.value;
+        const branchSales = getBranchSales(branchId).filter(s => !s.refunded);
+        const today = new Date().toDateString();
+        const todayTotal = branchSales.filter(s => new Date(s.date).toDateString() === today).reduce((sum, s) => sum + s.total, 0);
+        todaySalesSpan.innerText = formatPrice(todayTotal);
+        transactionsCountSpan.innerText = branchSales.length;
+        const totalItems = branchSales.reduce((sum, s) => sum + s.itemsCount, 0);
+        itemsSoldSpan.innerText = totalItems;
+        const cartTotal = cart.reduce((sum,i)=>sum+(i.price*i.quantity),0);
+        cartTotalValueSpan.innerText = formatPrice(cartTotal);
+        if (analyticsTodaySales) analyticsTodaySales.innerText = formatPrice(todayTotal);
+        if (analyticsTotalOrders) analyticsTotalOrders.innerText = branchSales.length;
+        const totalRevenue = branchSales.reduce((sum, s) => sum + s.total, 0);
+        const avgOrder = branchSales.length ? totalRevenue / branchSales.length : 0;
+        if (analyticsRevenue) analyticsRevenue.innerText = formatPrice(totalRevenue);
+        if (analyticsAvgOrder) analyticsAvgOrder.innerText = formatPrice(avgOrder);
+        const weeklyData = [0,0,0,0,0,0,0];
+        branchSales.forEach(sale => { const day = new Date(sale.date).getDay(); let idx = (day === 0 ? 6 : day-1); weeklyData[idx] += sale.total; });
+        if (weeklyChart) { weeklyChart.data.datasets[0].data = weeklyData; weeklyChart.update(); }
+        const catSales = {}; extractCategories().forEach(c => catSales[c] = 0);
+        branchSales.forEach(sale => { sale.items.forEach(item => { const prod = products.find(p => p.id === item.id); if (prod) catSales[prod.category] += (item.price * item.qty); }); });
+        if (categoryChart) { categoryChart.data.datasets[0].data = extractCategories().map(c => catSales[c] || 0); categoryChart.data.labels = extractCategories(); categoryChart.update(); }
+        loadSalesList();
+    }
+    branchSelectSidebar?.addEventListener('change', () => { updateStatsAndCharts(); updateCartUI(); });
+
+    // Cart functions with stock check and points
+    function updateCartUI() {
+        if (!cartItemsList) return;
+        if (cart.length === 0) {
+            cartItemsList.innerHTML = '<p style="text-align:center;">Cart is empty</p>';
+            cartTotalsDiv.innerHTML = `<div class="total-row"><span>Subtotal:</span><span>${formatPrice(0)}</span></div><div class="total-row"><span>Tax (10%):</span><span>${formatPrice(0)}</span></div><div class="grand-total">Total: ${formatPrice(0)}</div>`;
+            shareButtons.style.display = 'none';
+            return;
+        }
+        let itemsHtml = '', subtotal = 0;
+        cart.forEach(item => {
+            const itemTotal = item.price * item.quantity;
+            subtotal += itemTotal;
+            itemsHtml += `<div class="cart-item"><div class="item-info"><h4>${item.name}</h4><p>${formatPrice(item.price)} each</p></div><div class="item-actions"><div class="item-qty"><button class="qty-btn" data-id="${item.id}" data-delta="-1">-</button><span>${item.quantity}</span><button class="qty-btn" data-id="${item.id}" data-delta="1">+</button></div><i class="fas fa-trash-alt" data-id="${item.id}" style="color: var(--danger); cursor:pointer;"></i></div></div>`;
+        });
+        cartItemsList.innerHTML = itemsHtml;
+        const tax = subtotal * 0.10;
+        let total = subtotal + tax;
+        let discount = 0;
+        if (selectedCustomerId && redeemPointsInput) {
+            let points = parseInt(redeemPointsInput.value) || 0;
+            const cust = customers.find(c => c.id === selectedCustomerId);
+            if (cust && points > 0) {
+                if (points > cust.points) points = cust.points;
+                discount = points / 10;
+                if (discount > total) discount = total;
+            }
+        }
+        const finalTotal = total - discount;
+        cartTotalsDiv.innerHTML = `<div class="total-row"><span>Subtotal:</span><span>${formatPrice(subtotal)}</span></div><div class="total-row"><span>Tax (10%):</span><span>${formatPrice(tax)}</span></div>${discount>0?`<div class="total-row"><span>Discount:</span><span>-${formatPrice(discount)}</span></div>`:''}<div class="grand-total">Total: ${formatPrice(finalTotal)}</div>`;
+        shareButtons.style.display = 'none';
+        document.querySelectorAll('.qty-btn').forEach(btn => {
+            btn.onclick = () => { const id = parseInt(btn.dataset.id); const delta = parseInt(btn.dataset.delta); updateQuantity(id, delta); };
+        });
+        document.querySelectorAll('.fa-trash-alt').forEach(icon => {
+            icon.onclick = () => { const id = parseInt(icon.dataset.id); removeItem(id); };
+        });
+    }
+    function updateQuantity(id, delta) {
+        const idx = cart.findIndex(i => i.id === id);
+        if (idx !== -1) {
+            const newQty = cart[idx].quantity + delta;
+            if (newQty <= 0) cart.splice(idx,1);
+            else cart[idx].quantity = newQty;
+            updateCartUI();
+        }
+    }
+    function removeItem(id) { cart = cart.filter(i => i.id !== id); updateCartUI(); }
+    function addToCart(product) {
+        if (product.stock <= 0) { alert("Out of stock!"); return; }
+        const existing = cart.find(i => i.id === product.id);
+        if (existing) {
+            if (existing.quantity + 1 > product.stock) { alert("Not enough stock"); return; }
+            existing.quantity++;
+        } else {
+            if (1 > product.stock) { alert("Not enough stock"); return; }
+            cart.push({ ...product, quantity: 1 });
+        }
+        updateCartUI();
+    }
+    function clearCart() { cart = []; updateCartUI(); cashChangeSection.style.display = 'none'; if(cashReceived) cashReceived.value = ''; redeemPointsInput.value = ''; updateDiscountDisplay(); }
+    function completeSale() {
+        if (cart.length === 0) { alert("Cart is empty"); return; }
+        let subtotal = cart.reduce((sum,i) => sum + (i.price*i.quantity),0);
+        let tax = subtotal*0.10, total = subtotal+tax;
+        let discount = 0;
+        let pointsUsed = 0;
+        if (selectedCustomerId && redeemPointsInput) {
+            let points = parseInt(redeemPointsInput.value) || 0;
+            const cust = customers.find(c => c.id === selectedCustomerId);
+            if (cust && points > 0) {
+                if (points > cust.points) points = cust.points;
+                discount = points / 10;
+                if (discount > total) discount = total;
+                pointsUsed = discount * 10;
+            }
+        }
+        const finalTotal = total - discount;
+        let method = paymentMethod.value;
+        if (method === 'cash') {
+            let received = parseFloat(cashReceived.value);
+            if (isNaN(received) || received < finalTotal) { alert(`Insufficient cash. Need ${formatPrice(finalTotal)}`); return; }
+            alert(`Payment successful! Change: ${formatPrice(received-finalTotal)}`);
+        } else alert(`Payment via ${method} successful! Total: ${formatPrice(finalTotal)}`);
+        // Deduct stock
+        cart.forEach(item => {
+            const prod = products.find(p => p.id === item.id);
+            if (prod) prod.stock -= item.quantity;
+        });
+        // Award points (1 point per 10 SAR spent on final total after discount)
+        const pointsEarned = Math.floor(finalTotal / 10);
+        let customerId = selectedCustomerId;
+        if (customerId) {
+            const cust = customers.find(c => c.id === customerId);
+            if (cust) {
+                cust.points += pointsEarned;
+                if (pointsUsed > 0) cust.points -= pointsUsed;
+            }
+        }
+        const saleRecord = {
+            branchId: branchSelectSidebar.value, date: new Date().toISOString(), total: finalTotal, itemsCount: cart.reduce((s,i)=>s+i.quantity,0),
+            subtotal, tax, discount, pointsUsed, pointsEarned, customerId, paymentMethod: method, items: cart.map(i=>({ id:i.id, name:i.name, qty:i.quantity, price:i.price })), refunded: false
+        };
+        allSales.push(saleRecord); saveSales(); saveProducts(); saveCustomers();
+        lastSaleData = saleRecord;
+        updateStatsAndCharts(); renderProducts(); loadCustomersList(); loadSalesList();
+        clearCart();
+        shareButtons.style.display = 'flex';
+        selectedCustomerId = null; if(customerSelect) customerSelect.value = ''; updateCustomerSelect();
+    }
+    function generateReceiptData() {
+        if (!lastSaleData) return null;
+        let itemsHtml = '';
+        lastSaleData.items.forEach(item => { itemsHtml += `<div>${item.name} x ${item.qty} = ${formatPrice(item.price * item.qty)}</div>`; });
+        return { itemsHtml, subtotal: lastSaleData.subtotal, tax: lastSaleData.tax, total: lastSaleData.total, discount: lastSaleData.discount || 0, pointsUsed: lastSaleData.pointsUsed || 0, pointsEarned: lastSaleData.pointsEarned || 0, paymentMethod: lastSaleData.paymentMethod, date: new Date(lastSaleData.date).toLocaleString(), branchName: branches.find(b=>b.id===lastSaleData.branchId)?.name, customerName: lastSaleData.customerId ? customers.find(c=>c.id===lastSaleData.customerId)?.name : 'Walk-in' };
+    }
+    function showPrintReceipt() {
+        const data = generateReceiptData(); if (!data) return;
+        document.getElementById('receiptItems').innerHTML = data.itemsHtml;
+        document.getElementById('receiptTotals').innerHTML = `<div>Subtotal: ${formatPrice(data.subtotal)}</div><div>Tax: ${formatPrice(data.tax)}</div>${data.discount>0?`<div>Discount: -${formatPrice(data.discount)}</div>`:''}<div><strong>Total: ${formatPrice(data.total)}</strong></div>`;
+        document.getElementById('receiptDate').innerText = data.date;
+        document.getElementById('receiptBranch').innerText = data.branchName;
+        document.getElementById('receiptCustomer').innerText = data.customerName;
+        document.getElementById('receiptPoints').innerText = `${data.pointsEarned} earned (used ${data.pointsUsed})`;
+        document.getElementById('receiptPayment').innerText = data.paymentMethod;
+        document.getElementById('receiptBusinessName').innerHTML = `<strong>${businessSettings.name || "BillZest POS"}</strong>`;
+        document.getElementById('receiptGST').innerHTML = `GST: ${businessSettings.gst || ""}`;
+        document.getElementById('receiptAddress').innerHTML = `${businessSettings.address || ""} ${businessSettings.phone || ""}`;
+        const win = window.open('', '_blank', 'width=400,height=600');
+        win.document.write(`<html><head><title>BillZest Receipt</title><style>body{font-family:monospace;padding:20px;}</style></head><body>${document.getElementById('receipt-print').innerHTML}</body></html>`);
+        win.document.close(); win.print();
+    }
+    function shareWhatsApp() {
+        const data = generateReceiptData(); if (!data) return;
+        let msg = `BillZest POS Receipt\n${businessSettings.name}\nGST: ${businessSettings.gst}\n${businessSettings.address}\n\nBranch: ${data.branchName}\nCustomer: ${data.customerName}\nDate: ${data.date}\n\nItems:\n`;
+        lastSaleData.items.forEach(i => { msg += `${i.name} x${i.qty} = ${formatPrice(i.price*i.qty)}\n`; });
+        msg += `\nSubtotal: ${formatPrice(data.subtotal)}\nTax: ${formatPrice(data.tax)}`;
+        if (data.discount>0) msg += `\nDiscount: -${formatPrice(data.discount)}`;
+        msg += `\nTotal: ${formatPrice(data.total)}\nPoints Earned: ${data.pointsEarned}\nPayment: ${data.paymentMethod}\n\nThank you!`;
+        window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+    }
+
+    // Product rendering with stock display
+    function renderProducts() {
+        let filtered = products.filter(p => (currentCategory === 'all' || p.category === currentCategory) && p.name.toLowerCase().includes(searchTerm.toLowerCase()));
+        productGrid.innerHTML = filtered.map(p => {
+            const stockClass = p.stock < 5 ? 'stock-badge' : '';
+            const stockText = p.stock < 5 ? `<div class="stock-badge">⚠️ Low Stock (${p.stock})</div>` : `<div class="stock-badge">In Stock: ${p.stock}</div>`;
+            const imageHtml = p.image ? `<img src="${p.image}" class="product-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">` : '';
+            const emojiHtml = !p.image ? `<div class="product-icon">${getEmojiForCategory(p.category)}</div>` : `<div class="product-icon" style="display:none;">${getEmojiForCategory(p.category)}</div>`;
+            return `<div class="product-card" data-id="${p.id}">
+                        ${imageHtml}
+                        ${emojiHtml}
+                        <div class="product-name">${p.name}</div>
+                        <div class="product-price" data-price="${p.price}">${formatPrice(p.price)}</div>
+                        ${stockText}
+                    </div>`;
+        }).join('');
+        document.querySelectorAll('.product-card').forEach(card => {
+            card.onclick = () => { const id = parseInt(card.dataset.id); const prod = products.find(p => p.id === id); if(prod) addToCart(prod); };
+        });
+    }
+    function getEmojiForCategory(cat) { const map = { "Coffee": "☕", "Bakery": "🥐", "Sandwiches": "🥪", "Beverages": "🧃" }; return map[cat] || "🍽️"; }
+
+    function initFilters() { searchInput.oninput = (e) => { searchTerm = e.target.value; renderProducts(); }; }
+    function initPaymentUI() {
+        paymentMethod.onchange = () => { cashChangeSection.style.display = paymentMethod.value === 'cash' ? 'block' : 'none'; };
+        cashReceived.oninput = () => {
+            let subtotal = cart.reduce((sum,i)=>sum+(i.price*i.quantity),0);
+            let total = subtotal * 1.10;
+            let discount = 0;
+            if (selectedCustomerId && redeemPointsInput) {
+                let points = parseInt(redeemPointsInput.value) || 0;
+                const cust = customers.find(c => c.id === selectedCustomerId);
+                if (cust && points > 0) { if (points > cust.points) points = cust.points; discount = points / 10; if (discount > total) discount = total; }
+            }
+            const finalTotal = total - discount;
+            let rec = parseFloat(cashReceived.value);
+            if (!isNaN(rec)) changeDue.innerText = rec >= finalTotal ? `Change: ${formatPrice(rec-finalTotal)}` : `Remaining: ${formatPrice(finalTotal-rec)}`;
+            else changeDue.innerText = '';
+        };
+    }
+    function initCharts() {
+        const weeklyCtx = document.getElementById('weeklyChart').getContext('2d');
+        const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+        weeklyChart = new Chart(weeklyCtx, { type: 'line', data: { labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'], datasets: [{ label: 'Sales', data: [0,0,0,0,0,0,0], borderColor: '#1e2a5e', tension: 0.3, fill: false }] }, options: { responsive: true } });
+        categoryChart = new Chart(categoryCtx, { type: 'doughnut', data: { labels: extractCategories(), datasets: [{ data: extractCategories().map(()=>0), backgroundColor: ['#1e2a5e','#f59e0b','#10b981','#3b82f6'] }] }, options: { responsive: true } });
+    }
+
+    function showPage(page) {
+        posPage.style.display = page === 'pos' ? 'block' : 'none';
+        analyticsPage.style.display = page === 'analytics' ? 'block' : 'none';
+        workersPage.style.display = page === 'workers' ? 'block' : 'none';
+        settingsPage.style.display = page === 'settings' ? 'block' : 'none';
+        document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+        document.querySelector(`.nav-item[data-page="${page}"]`).classList.add('active');
+        if (page === 'analytics') { updateStatsAndCharts(); loadSalesList(); }
+        if (page === 'workers' && currentUser?.role === 'super_admin') loadWorkersList();
+        if (page === 'settings') {
+            if (document.getElementById('businessName')) {
+                document.getElementById('businessName').value = businessSettings.name || '';
+                document.getElementById('gstNumber').value = businessSettings.gst || '';
+                document.getElementById('businessAddress').value = businessSettings.address || '';
+                document.getElementById('businessPhone').value = businessSettings.phone || '';
+            }
+            loadBranchesList(); loadProductsList(); loadCustomersList();
+        }
+    }
+    document.querySelectorAll('.nav-item').forEach(nav => { nav.onclick = () => { showPage(nav.dataset.page); }; });
+
+    // Worker management
+    function loadWorkersList() {
+        const workers = users.filter(u => u.role === 'branch_manager');
+        workersListDiv.innerHTML = workers.map(w => `<div class="worker-item"><span><strong>${w.email}</strong> - ${branches.find(b=>b.id===w.branchId)?.name || w.branchId}</span><button class="btn-secondary" style="width:auto; padding:4px 12px;" onclick="deleteWorker('${w.email}')">Delete</button></div>`).join('');
+    }
+    window.deleteWorker = function(email) { users = users.filter(u => u.email !== email); saveUsers(); loadWorkersList(); alert(`Worker ${email} deleted.`); };
+    function createWorker() {
+        if (currentUser?.role !== 'super_admin') return;
+        const email = document.getElementById('newWorkerEmail').value.trim();
+        const password = document.getElementById('newWorkerPassword').value;
+        const branchId = document.getElementById('newWorkerBranch').value;
+        if (!email || !password) { alert("Please fill email and password"); return; }
+        if (users.find(u => u.email === email)) { alert("User already exists"); return; }
+        users.push({ email, password, role: "branch_manager", branchId });
+        saveUsers(); alert(`Worker ${email} created!`);
+        document.getElementById('newWorkerEmail').value = ''; document.getElementById('newWorkerPassword').value = '';
+        loadWorkersList();
+    }
+    document.getElementById('createWorkerBtn')?.addEventListener('click', createWorker);
+
+    // Currency events
+    const currencySelect = document.getElementById('currencySelect');
+    const customCurrencyInput = document.getElementById('customCurrency');
+    currencySelect.addEventListener('change', () => {
+        if (currencySelect.value === 'custom') { customCurrencyInput.style.display = 'block'; let customVal = customCurrencyInput.value.trim(); if (customVal) saveCurrency(customVal, true); else saveCurrency('﷼', true); }
+        else { customCurrencyInput.style.display = 'none'; saveCurrency(currencySelect.value, false); }
+    });
+    customCurrencyInput.addEventListener('input', () => { let val = customCurrencyInput.value.trim(); if (val) saveCurrency(val, true); });
+
+    // Dark Mode
+    function toggleDarkMode() {
+        document.body.classList.toggle('dark');
+        localStorage.setItem('billzest_darkmode', document.body.classList.contains('dark'));
+    }
+    document.getElementById('darkModeBtn')?.addEventListener('click', toggleDarkMode);
+    if (localStorage.getItem('billzest_darkmode') === 'true') document.body.classList.add('dark');
+
+    // Cross-tab sync
+    window.addEventListener('storage', function(e) {
+        if (!currentUser) return;
+        if (e.key === 'billzest_products') { loadProducts(); renderProducts(); updateCategoryFilter(); updateStatsAndCharts(); }
+        if (e.key === 'billzest_branches') { const stored = localStorage.getItem('billzest_branches'); if (stored) branches = JSON.parse(stored); updateSidebar(); loadBranchesList(); }
+        if (e.key === 'billzest_users') { const stored = localStorage.getItem('billzest_users'); if (stored) users = JSON.parse(stored); if (currentUser?.role === 'super_admin') loadWorkersList(); }
+        if (e.key === 'billzest_currency' || e.key === 'billzest_custom_currency') { loadCurrency(); renderProducts(); updateCartUI(); updateStatsAndCharts(); }
+        if (e.key === 'billzest_business') { const stored = localStorage.getItem('billzest_business'); if (stored) businessSettings = JSON.parse(stored); if (document.getElementById('businessName')) { document.getElementById('businessName').value = businessSettings.name || ''; document.getElementById('gstNumber').value = businessSettings.gst || ''; document.getElementById('businessAddress').value = businessSettings.address || ''; document.getElementById('businessPhone').value = businessSettings.phone || ''; } }
+        if (e.key === 'billzest_customers') { const stored = localStorage.getItem('billzest_customers'); if (stored) customers = JSON.parse(stored); loadCustomersList(); updateCustomerSelect(); }
+        if (e.key === 'billzest_sales') { const stored = localStorage.getItem('billzest_sales'); if (stored) allSales = JSON.parse(stored); updateStatsAndCharts(); loadSalesList(); }
+    });
+
+    // Login
+    function login() {
+        const email = document.getElementById('loginEmail').value.trim();
+        const pwd = document.getElementById('loginPassword').value;
+        const user = users.find(u => u.email === email && u.password === pwd);
+        if (!user) { document.getElementById('loginStatus').innerText = "Invalid credentials. Try admin@billzest.com / admin123"; return; }
+        currentUser = { ...user };
+        document.getElementById('loginOverlay').style.display = 'none';
+        document.getElementById('dashboardMain').style.display = 'block';
+        initDOM();
+        loadCurrency();
+        initCharts();
+        initFilters();
+        initPaymentUI();
+        updateCartUI();
+        updateSidebar();
+        updateStatsAndCharts();
+        renderProducts();
+        showPage('pos');
+    }
+    document.getElementById('loginBtn').onclick = login;
+    document.getElementById('resetDataBtn').onclick = resetDemoData;
+    document.getElementById('logoutSidebarBtn').onclick = () => { currentUser = null; document.getElementById('dashboardMain').style.display = 'none'; document.getElementById('loginOverlay').style.display = 'flex'; cart = []; };
+    document.getElementById('clearCartBtn').onclick = clearCart;
+    document.getElementById('completeSaleBtn').onclick = completeSale;
+    document.getElementById('printReceiptBtn').onclick = showPrintReceipt;
+    document.getElementById('whatsappShareBtn').onclick = shareWhatsApp;
+    document.getElementById('loginPassword').addEventListener('keypress', (e) => { if(e.key === 'Enter') login(); });
+    document.getElementById('loginEmail').addEventListener('keypress', (e) => { if(e.key === 'Enter') login(); });
+
+    loadData();
 </script>
 </body>
 </html>
