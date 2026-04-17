@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>BillZest POS | Full Product Management</title>
+    <title>BillZest POS | Full Business Solution</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
@@ -324,7 +324,6 @@
         address: "Hafar Al Batin",
         phone: "+966550898978"
     };
-    // Default products with emoji fallback
     let products = [
         { id: 1, name: "Espresso", category: "Coffee", price: 3.50, image: "" },
         { id: 2, name: "Cappuccino", category: "Coffee", price: 4.50, image: "" },
@@ -580,7 +579,7 @@
         loadProductsList();
         renderProducts();
         updateCategoryFilter();
-        updateStatsAndCharts(); // for category chart update
+        updateStatsAndCharts();
         alert("Product updated!");
     };
     window.deleteProduct = function(id) {
@@ -873,6 +872,45 @@
         }
     });
     customCurrencyInput.addEventListener('input', () => { let val = customCurrencyInput.value.trim(); if (val) saveCurrency(val, true); });
+
+    // ========== CROSS-TAB SYNC ==========
+    window.addEventListener('storage', function(e) {
+        if (!currentUser) return;
+        if (e.key === 'billzest_products') {
+            loadProducts();
+            renderProducts();
+            updateCategoryFilter();
+            updateStatsAndCharts();
+        }
+        if (e.key === 'billzest_branches') {
+            const stored = localStorage.getItem('billzest_branches');
+            if (stored) branches = JSON.parse(stored);
+            updateSidebar();
+            loadBranchesList();
+        }
+        if (e.key === 'billzest_users') {
+            const stored = localStorage.getItem('billzest_users');
+            if (stored) users = JSON.parse(stored);
+            if (currentUser?.role === 'super_admin') loadWorkersList();
+        }
+        if (e.key === 'billzest_currency' || e.key === 'billzest_custom_currency') {
+            loadCurrency();
+            renderProducts();
+            updateCartUI();
+            updateStatsAndCharts();
+        }
+        if (e.key === 'billzest_business') {
+            const stored = localStorage.getItem('billzest_business');
+            if (stored) businessSettings = JSON.parse(stored);
+            if (document.getElementById('businessName')) {
+                document.getElementById('businessName').value = businessSettings.name || '';
+                document.getElementById('gstNumber').value = businessSettings.gst || '';
+                document.getElementById('businessAddress').value = businessSettings.address || '';
+                document.getElementById('businessPhone').value = businessSettings.phone || '';
+            }
+        }
+    });
+    // ====================================
 
     // Login
     function login() {
