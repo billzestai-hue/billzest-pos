@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>BillZest POS | Modern Point of Sale System</title>
+    <!-- Google Fonts & Font Awesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Chart.js for dashboard analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        :root {
+            --bg: #f4f6fb;
+            --surface: #ffffff;
+            --primary: #1e2a5e;
+            --primary-light: #2a3a7a;
+            --accent: #f59e0b;
+            --accent-hover: #d97706;
+            --text-primary: #1f2937;
+            --text-secondary: #4b5563;
+            --border: #e5e7eb;
+            --card-shadow: 0 8px 20px rgba(0,0,0,0.03), 0 2px 4px rgba(0,0,0,0.05);
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text-primary);
+            padding: 24px;
+        }
+
+        /* Dashboard Layout */
+        .pos-dashboard {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #1e2a5e, #2a3a7a);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .logo span {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            display: block;
+        }
+
+        .stats-cards {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            border-radius: 24px;
+            padding: 16px 24px;
+            min-width: 150px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--border);
+            transition: all 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.05);
+        }
+
+        .stat-title {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-top: 6px;
+        }
+
+        /* Main Grid: Products (Left) + Cart (Right) */
+        .pos-grid {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 28px;
+            margin-bottom: 40px;
+        }
+
+        /* Products Section */
+        .products-section {
+            background: var(--surface);
+            border-radius: 28px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+        }
+
+        .search-bar {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+            background: var(--surface);
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .search-wrapper {
+            flex: 1;
+            position: relative;
+        }
+
+        .search-wrapper i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+        }
+
+        #searchInput {
+            width: 100%;
+            padding: 12px 12px 12px 42px;
+            border: 1px solid var(--border);
+            border-radius: 40px;
+            font-size: 0.9rem;
+            background: var(--bg);
+            transition: all 0.2s;
+        }
+
+        #searchInput:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(30,42,94,0.1);
+        }
+
+        .category-filter {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .cat-btn {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            padding: 8px 18px;
+            border-radius: 40px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--text-secondary);
+        }
+
+        .cat-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 18px;
+            padding: 24px;
+            max-height: 65vh;
+            overflow-y: auto;
+        }
+
+        .product-card {
+            background: var(--bg);
+            border-radius: 20px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+            text-align: center;
+        }
+
+        .product-card:hover {
+            transform: translateY(-3px);
+            background: white;
+            border-color: var(--primary);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        .product-icon {
+            font-size: 2.2rem;
+            margin-bottom: 8px;
+        }
+
+        .product-name {
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .product-price {
+            font-weight: 600;
+            color: var(--primary);
+            margin-top: 6px;
+            font-size: 1rem;
+        }
+
+        /* Cart Section */
+        .cart-section {
+            background: var(--surface);
+            border-radius: 28px;
+            border: 1px solid var(--border);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .cart-items {
+            max-height: 380px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .item-info h4 {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .item-info p {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .item-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .item-qty {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--bg);
+            padding: 4px 8px;
+            border-radius: 30px;
+        }
+
+        .qty-btn {
+            background: none;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1rem;
+            width: 24px;
+            color: var(--primary);
+        }
+
+        .cart-total {
+            border-top: 2px dashed var(--border);
+            padding-top: 16px;
+            margin: 8px 0;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .grand-total {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-top: 8px;
+            border-top: 2px solid var(--border);
+            padding-top: 12px;
+        }
+
+        .payment-method {
+            margin: 16px 0;
+        }
+
+        .payment-method select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            font-weight: 500;
+        }
+
+        .cash-change {
+            background: #f0f9ff;
+            padding: 10px;
+            border-radius: 14px;
+            margin-top: 12px;
+            font-size: 0.85rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 40px;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.2s;
+        }
+
+        .btn-secondary {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            padding: 12px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-light);
+        }
+
+        /* Analytics Section */
+        .analytics-section {
+            background: var(--surface);
+            border-radius: 28px;
+            border: 1px solid var(--border);
+            padding: 24px;
+            margin-top: 20px;
+        }
+
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-top: 16px;
+        }
+
+        .chart-container {
+            background: var(--bg);
+            padding: 16px;
+            border-radius: 20px;
+        }
+
+        canvas {
+            max-height: 200px;
+            width: 100%;
+        }
+
+        /* Responsive */
+        @media (max-width: 1000px) {
+            .pos-grid {
+                grid-template-columns: 1fr;
+            }
+            .cart-section {
+                position: static;
+            }
+            body {
+                padding: 16px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .stats-cards {
+                width: 100%;
+                justify-content: space-between;
+            }
+            .stat-card {
+                flex: 1;
+                min-width: auto;
+                padding: 12px;
+            }
+            .stat-value {
+                font-size: 1.4rem;
+            }
+        }
+
+        /* Dark Mode Support (toggle) */
+        body.dark {
+            --bg: #0f172a;
+            --surface: #1e293b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --border: #334155;
+            --card-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+<div class="pos-dashboard">
+    <!-- Header & Stats -->
+    <div class="header">
+        <div class="logo">
+            <h1><i class="fas fa-cash-register"></i> Bill<span style="color:#f59e0b;">Zest</span> POS</h1>
+            <span>Modern Point of Sale System</span>
+        </div>
+        <div class="stats-cards">
+            <div class="stat-card"><div class="stat-title">Today's Sales</div><div class="stat-value" id="todaySales">$0</div></div>
+            <div class="stat-card"><div class="stat-title">Transactions</div><div class="stat-value" id="transactionsCount">0</div></div>
+            <div class="stat-card"><div class="stat-title">Items Sold</div><div class="stat-value" id="itemsSold">0</div></div>
+            <div class="stat-card"><div class="stat-title">Cart Value</div><div class="stat-value" id="cartTotalValue">$0</div></div>
+        </div>
+    </div>
+
+    <!-- Main POS Grid -->
+    <div class="pos-grid">
+        <!-- Left: Product Catalog -->
+        <div class="products-section">
+            <div class="search-bar">
+                <div class="search-wrapper">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Search products...">
+                </div>
+                <div class="category-filter" id="categoryFilter">
+                    <button class="cat-btn active" data-cat="all">All</button>
+                    <button class="cat-btn" data-cat="Coffee">Coffee</button>
+                    <button class="cat-btn" data-cat="Bakery">Bakery</button>
+                    <button class="cat-btn" data-cat="Sandwiches">Sandwiches</button>
+                    <button class="cat-btn" data-cat="Beverages">Beverages</button>
+                </div>
+            </div>
+            <div class="product-grid" id="productGrid">
+                <!-- Products loaded dynamically -->
+            </div>
+        </div>
+
+        <!-- Right: Shopping Cart -->
+        <div class="cart-section">
+            <div class="cart-header">
+                <h3><i class="fas fa-shopping-cart"></i> Current Order</h3>
+                <button class="btn-secondary" id="clearCartBtn" style="width: auto; padding: 6px 16px;">Clear</button>
+            </div>
+            <div class="cart-items" id="cartItemsList">
+                <p style="text-align:center; color: var(--text-secondary);">Cart is empty</p>
+            </div>
+            <div class="cart-total" id="cartTotals">
+                <div class="total-row"><span>Subtotal:</span><span>$0.00</span></div>
+                <div class="total-row"><span>Tax (10%):</span><span>$0.00</span></div>
+                <div class="grand-total">Total: $0.00</div>
+            </div>
+            <div class="payment-method">
+                <label>Payment Method</label>
+                <select id="paymentMethod">
+                    <option value="cash">💵 Cash</option>
+                    <option value="card">💳 Credit/Debit Card</option>
+                    <option value="mobile">📱 Mobile Payment</option>
+                </select>
+                <div id="cashChangeSection" style="display: none;" class="cash-change">
+                    <label>Cash Received: $</label>
+                    <input type="number" id="cashReceived" step="0.01" placeholder="0.00" style="width:100%; margin-top: 5px; padding:8px; border-radius:12px; border:1px solid var(--border); background: var(--surface);">
+                    <div id="changeDue" style="margin-top: 8px; font-weight: bold;"></div>
+                </div>
+            </div>
+            <div class="action-buttons">
+                <button class="btn-primary" id="completeSaleBtn"><i class="fas fa-check-circle"></i> Complete Sale</button>
+            </div>
+            <div style="margin-top: 12px; text-align: center; font-size: 0.7rem; color: var(--text-secondary);">
+                <i class="fas fa-shield-alt"></i> Secure Transaction
+            </div>
+        </div>
+    </div>
+
+    <!-- Analytics Dashboard Section -->
+    <div class="analytics-section">
+        <h3><i class="fas fa-chart-line"></i> Sales Analytics</h3>
+        <div class="analytics-grid">
+            <div class="chart-container">
+                <canvas id="weeklyChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <canvas id="categoryChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ---------- Product Database ----------
+    const products = [
+        { id: 1, name: "Espresso", category: "Coffee", price: 3.50, icon: "☕" },
+        { id: 2, name: "Cappuccino", category: "Coffee", price: 4.50, icon: "☕" },
+        { id: 3, name: "Latte", category: "Coffee", price: 4.80, icon: "☕" },
+        { id: 4, name: "Mocha", category: "Coffee", price: 5.00, icon: "☕" },
+        { id: 5, name: "Croissant", category: "Bakery", price: 3.00, icon: "🥐" },
+        { id: 6, name: "Chocolate Muffin", category: "Bakery", price: 3.20, icon: "🧁" },
+        { id: 7, name: "Club Sandwich", category: "Sandwiches", price: 7.50, icon: "🥪" },
+        { id: 8, name: "Grilled Cheese", category: "Sandwiches", price: 6.00, icon: "🥪" },
+        { id: 9, name: "Iced Tea", category: "Beverages", price: 3.00, icon: "🧃" },
+        { id: 10, name: "Fresh Orange Juice", category: "Beverages", price: 4.00, icon: "🍊" },
+        { id: 11, name: "Blueberry Muffin", category: "Bakery", price: 3.50, icon: "🧁" },
+        { id: 12, name: "Americano", category: "Coffee", price: 3.20, icon: "☕" }
+    ];
+
+    // Cart State
+    let cart = [];  // { id, name, price, quantity }
+    let salesHistory = []; // Store transactions to update stats
+    let weeklySalesData = [1250, 1420, 1680, 2100, 2450, 2780, 3100]; // demo, will update dynamically
+
+    // DOM Elements
+    const productGrid = document.getElementById('productGrid');
+    const searchInput = document.getElementById('searchInput');
+    const cartItemsContainer = document.getElementById('cartItemsList');
+    const clearCartBtn = document.getElementById('clearCartBtn');
+    const completeSaleBtn = document.getElementById('completeSaleBtn');
+    const paymentMethodSelect = document.getElementById('paymentMethod');
+    const cashReceivedInput = document.getElementById('cashReceived');
+    const changeDueSpan = document.getElementById('changeDue');
+    const cashChangeSection = document.getElementById('cashChangeSection');
+    
+    // Stats elements
+    const todaySalesSpan = document.getElementById('todaySales');
+    const transactionsCountSpan = document.getElementById('transactionsCount');
+    const itemsSoldSpan = document.getElementById('itemsSold');
+    const cartTotalValueSpan = document.getElementById('cartTotalValue');
+
+    // Chart instances
+    let weeklyChart, categoryChart;
+
+    // Helper Functions
+    function updateStats() {
+        // Calculate daily sales from salesHistory (today's date)
+        const today = new Date().toDateString();
+        const todaySales = salesHistory.filter(s => new Date(s.date).toDateString() === today).reduce((sum, s) => sum + s.total, 0);
+        todaySalesSpan.innerText = `$${todaySales.toFixed(2)}`;
+        transactionsCountSpan.innerText = salesHistory.length;
+        const totalItemsSold = salesHistory.reduce((sum, s) => sum + s.itemsCount, 0);
+        itemsSoldSpan.innerText = totalItemsSold;
+    }
+
+    function updateCartUI() {
+        if (cart.length === 0) {
+            cartItemsContainer.innerHTML = '<p style="text-align:center; color: var(--text-secondary);">Cart is empty</p>';
+            const subtotal = 0;
+            document.getElementById('cartTotals').innerHTML = `
+                <div class="total-row"><span>Subtotal:</span><span>$0.00</span></div>
+                <div class="total-row"><span>Tax (10%):</span><span>$0.00</span></div>
+                <div class="grand-total">Total: $0.00</div>
+            `;
+            cartTotalValueSpan.innerText = "$0.00";
+            return;
+        }
+        let itemsHtml = '';
+        let subtotal = 0;
+        cart.forEach(item => {
+            const itemTotal = item.price * item.quantity;
+            subtotal += itemTotal;
+            itemsHtml += `
+                <div class="cart-item">
+                    <div class="item-info">
+                        <h4>${item.name}</h4>
+                        <p>$${item.price.toFixed(2)} each</p>
+                    </div>
+                    <div class="item-actions">
+                        <div class="item-qty">
+                            <button class="qty-btn" data-id="${item.id}" data-delta="-1">-</button>
+                            <span>${item.quantity}</span>
+                            <button class="qty-btn" data-id="${item.id}" data-delta="1">+</button>
+                        </div>
+                        <i class="fas fa-trash-alt" data-id="${item.id}" style="color: var(--danger); cursor:pointer;"></i>
+                    </div>
+                </div>
+            `;
+        });
+        cartItemsContainer.innerHTML = itemsHtml;
+        const tax = subtotal * 0.10;
+        const total = subtotal + tax;
+        document.getElementById('cartTotals').innerHTML = `
+            <div class="total-row"><span>Subtotal:</span><span>$${subtotal.toFixed(2)}</span></div>
+            <div class="total-row"><span>Tax (10%):</span><span>$${tax.toFixed(2)}</span></div>
+            <div class="grand-total">Total: $${total.toFixed(2)}</div>
+        `;
+        cartTotalValueSpan.innerText = `$${total.toFixed(2)}`;
+        
+        // Re-attach event listeners for quantity/delete buttons
+        document.querySelectorAll('.qty-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const id = parseInt(btn.dataset.id);
+                const delta = parseInt(btn.dataset.delta);
+                updateQuantity(id, delta);
+            });
+        });
+        document.querySelectorAll('.fa-trash-alt').forEach(icon => {
+            icon.addEventListener('click', (e) => {
+                const id = parseInt(icon.dataset.id);
+                removeItem(id);
+            });
+        });
+    }
+
+    function updateQuantity(id, delta) {
+        const index = cart.findIndex(i => i.id === id);
+        if (index !== -1) {
+            const newQty = cart[index].quantity + delta;
+            if (newQty <= 0) {
+                cart.splice(index, 1);
+            } else {
+                cart[index].quantity = newQty;
+            }
+            updateCartUI();
+        }
+    }
+
+    function removeItem(id) {
+        cart = cart.filter(i => i.id !== id);
+        updateCartUI();
+    }
+
+    function addToCart(product) {
+        const existing = cart.find(i => i.id === product.id);
+        if (existing) {
+            existing.quantity += 1;
+        } else {
+            cart.push({ ...product, quantity: 1 });
+        }
+        updateCartUI();
+    }
+
+    function clearCart() {
+        cart = [];
+        updateCartUI();
+        if (cashChangeSection.style.display === 'block') {
+            cashChangeSection.style.display = 'none';
+            if(cashReceivedInput) cashReceivedInput.value = '';
+        }
+    }
+
+    function completeSale() {
+        if (cart.length === 0) {
+            alert("Cart is empty. Add items to complete sale.");
+            return;
+        }
+        let subtotal = cart.reduce((sum, i) => sum + (i.price * i.quantity), 0);
+        let tax = subtotal * 0.10;
+        let total = subtotal + tax;
+        let paymentMethod = paymentMethodSelect.value;
+        
+        // Cash payment validation
+        if (paymentMethod === 'cash') {
+            let cashReceived = parseFloat(cashReceivedInput.value);
+            if (isNaN(cashReceived) || cashReceived < total) {
+                alert(`Insufficient cash. Please enter at least $${total.toFixed(2)}.`);
+                return;
+            }
+            let change = cashReceived - total;
+            alert(`Payment successful! Change: $${change.toFixed(2)}`);
+        } else {
+            alert(`Payment via ${paymentMethod} processed successfully! Total: $${total.toFixed(2)}`);
+        }
+        
+        // Record transaction
+        const itemsCount = cart.reduce((sum, i) => sum + i.quantity, 0);
+        salesHistory.push({
+            date: new Date(),
+            total: total,
+            itemsCount: itemsCount,
+            cartCopy: [...cart]
+        });
+        updateStats();
+        updateAnalyticsCharts();
+        
+        // Clear cart
+        clearCart();
+        // Optional: refresh product list to reflect stock (demo)
+    }
+
+    // Render products with filtering
+    let currentCategory = 'all';
+    let searchTerm = '';
+
+    function renderProducts() {
+        let filtered = products.filter(p => {
+            const matchesCategory = currentCategory === 'all' || p.category === currentCategory;
+            const matchesSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase());
+            return matchesCategory && matchesSearch;
+        });
+        productGrid.innerHTML = filtered.map(p => `
+            <div class="product-card" data-id="${p.id}">
+                <div class="product-icon">${p.icon}</div>
+                <div class="product-name">${p.name}</div>
+                <div class="product-price">$${p.price.toFixed(2)}</div>
+            </div>
+        `).join('');
+        
+        // Attach click events to product cards
+        document.querySelectorAll('.product-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const id = parseInt(card.dataset.id);
+                const product = products.find(p => p.id === id);
+                if (product) addToCart(product);
+            });
+        });
+    }
+
+    // Category filter events
+    document.querySelectorAll('.cat-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentCategory = btn.dataset.cat;
+            renderProducts();
+        });
+    });
+    
+    searchInput.addEventListener('input', (e) => {
+        searchTerm = e.target.value;
+        renderProducts();
+    });
+
+    // Cash payment toggle
+    paymentMethodSelect.addEventListener('change', (e) => {
+        if (e.target.value === 'cash') {
+            cashChangeSection.style.display = 'block';
+        } else {
+            cashChangeSection.style.display = 'none';
+        }
+    });
+    
+    cashReceivedInput?.addEventListener('input', () => {
+        let subtotal = cart.reduce((sum, i) => sum + (i.price * i.quantity), 0);
+        let tax = subtotal * 0.10;
+        let total = subtotal + tax;
+        let received = parseFloat(cashReceivedInput.value);
+        if (!isNaN(received)) {
+            let change = received - total;
+            changeDueSpan.innerText = change >= 0 ? `Change: $${change.toFixed(2)}` : `Remaining: $${Math.abs(change).toFixed(2)}`;
+        } else {
+            changeDueSpan.innerText = '';
+        }
+    });
+
+    // Charts Initialization & Update
+    function initCharts() {
+        const weeklyCtx = document.getElementById('weeklyChart').getContext('2d');
+        const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+        weeklyChart = new Chart(weeklyCtx, {
+            type: 'line',
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                datasets: [{ label: 'Sales ($)', data: weeklySalesData, borderColor: '#1e2a5e', backgroundColor: 'rgba(30,42,94,0.05)', tension: 0.3, fill: true }]
+            },
+            options: { responsive: true, maintainAspectRatio: true }
+        });
+        categoryChart = new Chart(categoryCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Coffee', 'Bakery', 'Sandwiches', 'Beverages'],
+                datasets: [{ data: [42, 28, 18, 12], backgroundColor: ['#1e2a5e', '#f59e0b', '#10b981', '#3b82f6'] }]
+            },
+            options: { responsive: true }
+        });
+    }
+    
+    function updateAnalyticsCharts() {
+        // Generate dynamic data based on salesHistory for current week (simplified)
+        const weeklyData = [0,0,0,0,0,0,0];
+        salesHistory.forEach(sale => {
+            const day = new Date(sale.date).getDay(); // 0 sun -> adjust
+            let idx = (day === 0 ? 6 : day -1);
+            weeklyData[idx] += sale.total;
+        });
+        if (weeklyChart) {
+            weeklyChart.data.datasets[0].data = weeklyData;
+            weeklyChart.update();
+        }
+        // For category sales, compute from cart history
+        const categorySales = { Coffee:0, Bakery:0, Sandwiches:0, Beverages:0 };
+        salesHistory.forEach(sale => {
+            sale.cartCopy.forEach(item => {
+                const prod = products.find(p => p.id === item.id);
+                if (prod) categorySales[prod.category] += (item.price * item.quantity);
+            });
+        });
+        if (categoryChart) {
+            categoryChart.data.datasets[0].data = [categorySales.Coffee, categorySales.Bakery, categorySales.Sandwiches, categorySales.Beverages];
+            categoryChart.update();
+        }
+    }
+
+    // Event Listeners
+    clearCartBtn.addEventListener('click', clearCart);
+    completeSaleBtn.addEventListener('click', completeSale);
+
+    // Initial Load
+    function init() {
+        renderProducts();
+        updateCartUI();
+        updateStats();
+        initCharts();
+        // demo transaction to show sample data
+        setTimeout(() => {
+            if (salesHistory.length === 0) {
+                // add demo transaction
+                salesHistory.push({ date: new Date(), total: 158.40, itemsCount: 5, cartCopy: [] });
+                salesHistory.push({ date: new Date(Date.now() - 86400000), total: 210.20, itemsCount: 8, cartCopy: [] });
+                updateStats();
+                updateAnalyticsCharts();
+            }
+        }, 100);
+    }
+    
+    init();
+</script>
+</body>
+</html>
