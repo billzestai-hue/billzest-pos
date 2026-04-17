@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>BillZest POS | Full Business Management</title>
+    <title>BillZest POS | Complete Business Solution</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
@@ -16,6 +16,7 @@
             --success: #10b981; --danger: #ef4444; --warning: #f59e0b; --info: #3b82f6;
         }
         body { background: var(--bg); color: var(--text-primary); }
+        /* Login Overlay */
         .login-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.85); z-index: 10000;
@@ -36,6 +37,7 @@
         }
         .reset-btn { background: #ef4444; margin-top: 8px; }
         .login-status { margin-top: 12px; font-size: 12px; color: red; }
+        /* Dashboard Layout */
         .dashboard-container { display: flex; min-height: 100vh; }
         .sidebar {
             width: 280px; background: linear-gradient(180deg, #0c1940 0%, #0d1b4b 100%);
@@ -124,6 +126,10 @@
         .form-group input, .form-group textarea { width: 100%; padding: 10px; border-radius: 12px; border: 1px solid var(--border); background: var(--bg); }
         .branch-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); }
         .branch-actions button { margin-left: 8px; background: none; border: none; cursor: pointer; color: var(--primary); }
+        .user-management { background: var(--surface); border-radius: 20px; padding: 20px; margin-top: 20px; border: 1px solid var(--border); }
+        .user-form { display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end; margin-bottom: 20px; }
+        .user-form input, .user-form select { padding: 10px; border-radius: 30px; border: 1px solid var(--border); flex: 1; }
+        .workers-list .worker-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); }
         @media (max-width: 1000px) { .sidebar { display: none; } .pos-grid { grid-template-columns: 1fr; } .stats-cards { grid-template-columns: 1fr 1fr; } .main-content { padding: 16px; } }
         @media print { body * { visibility: hidden; } #receipt-print, #receipt-print * { visibility: visible; } #receipt-print { position: absolute; top: 0; left: 0; width: 100%; padding: 20px; background: white; } }
     </style>
@@ -304,8 +310,8 @@
     let businessSettings = {
         name: "BillZest Coffee Shop",
         gst: "22AAAAA0000A1Z",
-        address: "123 Main Street, Riyadh",
-        phone: "+966 50 000 0000"
+        address: "Hafar Al Batin",
+        phone: "+966550898978"
     };
     const products = [
         { id: 1, name: "Espresso", category: "Coffee", price: 3.50, icon: "☕" },
@@ -407,6 +413,7 @@
         sidebarAvatar.innerText = currentUser.email.charAt(0).toUpperCase();
         workersNavItem.style.display = currentUser.role === 'super_admin' ? 'flex' : 'none';
         document.getElementById('branchManagementPanel').style.display = currentUser.role === 'super_admin' ? 'block' : 'none';
+        // Populate branch dropdown
         branchSelectSidebar.innerHTML = '';
         let availableBranches = currentUser.role === 'branch_manager' ? branches.filter(b => b.id === currentUser.branchId) : branches;
         availableBranches.forEach(b => { let opt = document.createElement('option'); opt.value = b.id; opt.textContent = b.name; branchSelectSidebar.appendChild(opt); });
