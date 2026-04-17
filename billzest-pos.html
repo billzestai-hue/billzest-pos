@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>BillZest POS | Custom Branches & Workers</title>
+    <title>BillZest POS | Full Product Management</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
@@ -94,7 +94,8 @@
         .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px,1fr)); gap: 16px; padding: 20px; max-height: 55vh; overflow-y: auto; }
         .product-card { background: var(--bg); border-radius: 16px; padding: 12px; text-align: center; cursor: pointer; transition: 0.2s; border: 1px solid transparent; }
         .product-card:hover { background: white; border-color: var(--primary); transform: translateY(-2px); }
-        .product-icon { font-size: 32px; }
+        .product-image { width: 60px; height: 60px; object-fit: cover; border-radius: 12px; margin: 0 auto 8px; display: block; }
+        .product-icon { font-size: 32px; margin-bottom: 8px; }
         .product-name { font-weight: 600; font-size: 14px; margin-top: 6px; }
         .product-price { font-weight: 700; color: var(--primary); margin-top: 4px; }
         .cart-section { background: var(--surface); border-radius: 24px; border: 1px solid var(--border); padding: 20px; position: sticky; top: 20px; height: fit-content; }
@@ -121,9 +122,12 @@
         .settings-panel { background: var(--surface); border-radius: 24px; padding: 24px; margin-bottom: 24px; border: 1px solid var(--border); }
         .form-group { margin-bottom: 20px; }
         .form-group label { display: block; font-weight: 600; margin-bottom: 6px; }
-        .form-group input, .form-group textarea { width: 100%; padding: 10px; border-radius: 12px; border: 1px solid var(--border); background: var(--bg); }
-        .branch-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); }
-        .branch-actions button { margin-left: 8px; background: none; border: none; cursor: pointer; color: var(--primary); }
+        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 10px; border-radius: 12px; border: 1px solid var(--border); background: var(--bg); }
+        .branch-item, .product-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); }
+        .branch-actions button, .product-actions button { margin-left: 8px; background: none; border: none; cursor: pointer; color: var(--primary); }
+        .product-form { display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end; margin-bottom: 20px; }
+        .product-form input, .product-form select { padding: 10px; border-radius: 30px; border: 1px solid var(--border); flex: 1; }
+        .add-category-btn { background: var(--primary-light); color: white; border: none; border-radius: 30px; padding: 8px 12px; cursor: pointer; margin-left: 8px; }
         .user-management { background: var(--surface); border-radius: 20px; padding: 20px; margin-top: 20px; border: 1px solid var(--border); }
         .user-form { display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end; margin-bottom: 20px; }
         .user-form input, .user-form select { padding: 10px; border-radius: 30px; border: 1px solid var(--border); flex: 1; }
@@ -198,13 +202,7 @@
                         <div class="search-bar">
                             <div class="search-wrapper"><i class="fas fa-search"></i><input type="text" id="searchInput" placeholder="Search products..."></div>
                         </div>
-                        <div class="category-filter" id="categoryFilter">
-                            <button class="cat-btn active" data-cat="all">All</button>
-                            <button class="cat-btn" data-cat="Coffee">Coffee</button>
-                            <button class="cat-btn" data-cat="Bakery">Bakery</button>
-                            <button class="cat-btn" data-cat="Sandwiches">Sandwiches</button>
-                            <button class="cat-btn" data-cat="Beverages">Beverages</button>
-                        </div>
+                        <div class="category-filter" id="categoryFilter"></div>
                         <div class="product-grid" id="productGrid"></div>
                     </div>
                     <div class="cart-section">
@@ -238,7 +236,7 @@
                 <div class="analytics-section"><h3>Sales Overview</h3><div class="analytics-grid"><div class="chart-container"><canvas id="weeklyChart"></canvas></div><div class="chart-container"><canvas id="categoryChart"></canvas></div></div></div>
             </div>
 
-            <!-- Manage Workers Page (Super Admin only) -->
+            <!-- Manage Workers Page -->
             <div id="workersPage" class="page-content" style="display: none;">
                 <div class="user-management">
                     <h3><i class="fas fa-user-plus"></i> Add New Worker</h3>
@@ -265,9 +263,23 @@
                 </div>
                 <div class="settings-panel" id="branchManagementPanel" style="display: none;">
                     <h3><i class="fas fa-store-alt"></i> Manage Branches (Super Admin)</h3>
-                    <div class="user-form"><input type="text" id="newBranchName" placeholder="New Branch Name (e.g., Riyadh Branch)"><button id="addBranchBtn" class="btn-primary" style="width: auto; padding: 10px 20px;">Add Branch</button></div>
+                    <div class="user-form"><input type="text" id="newBranchName" placeholder="New Branch Name"><button id="addBranchBtn" class="btn-primary" style="width: auto; padding: 10px 20px;">Add Branch</button></div>
                     <div id="branchesList"></div>
-                    <p style="font-size:12px; margin-top:10px; color: var(--text-secondary);">💡 Tip: Add any branch/city name. It will appear in branch selector and worker creation.</p>
+                </div>
+                <div class="settings-panel" id="productManagementPanel" style="display: none;">
+                    <h3><i class="fas fa-utensils"></i> Manage Products (Super Admin)</h3>
+                    <div class="product-form">
+                        <input type="text" id="productName" placeholder="Product Name">
+                        <div style="display: flex; gap: 6px; flex:1;">
+                            <select id="productCategory"></select>
+                            <button id="addNewCategoryBtn" class="add-category-btn" title="Add new category">+ New</button>
+                        </div>
+                        <input type="number" id="productPrice" step="0.01" placeholder="Price">
+                        <input type="text" id="productImage" placeholder="Image URL (optional)">
+                        <button id="addProductBtn" class="btn-primary" style="width: auto; padding: 10px 20px;">Add Product</button>
+                    </div>
+                    <div id="productsList"></div>
+                    <p style="font-size:12px; margin-top:10px;">💡 Tip: Use image URLs from the web, or leave empty to use emoji.</p>
                 </div>
             </div>
         </div>
@@ -312,19 +324,20 @@
         address: "Hafar Al Batin",
         phone: "+966550898978"
     };
-    const products = [
-        { id: 1, name: "Espresso", category: "Coffee", price: 3.50, icon: "☕" },
-        { id: 2, name: "Cappuccino", category: "Coffee", price: 4.50, icon: "☕" },
-        { id: 3, name: "Latte", category: "Coffee", price: 4.80, icon: "☕" },
-        { id: 4, name: "Mocha", category: "Coffee", price: 5.00, icon: "☕" },
-        { id: 5, name: "Croissant", category: "Bakery", price: 3.00, icon: "🥐" },
-        { id: 6, name: "Chocolate Muffin", category: "Bakery", price: 3.20, icon: "🧁" },
-        { id: 7, name: "Club Sandwich", category: "Sandwiches", price: 7.50, icon: "🥪" },
-        { id: 8, name: "Grilled Cheese", category: "Sandwiches", price: 6.00, icon: "🥪" },
-        { id: 9, name: "Iced Tea", category: "Beverages", price: 3.00, icon: "🧃" },
-        { id: 10, name: "Fresh Orange Juice", category: "Beverages", price: 4.00, icon: "🍊" },
-        { id: 11, name: "Blueberry Muffin", category: "Bakery", price: 3.50, icon: "🧁" },
-        { id: 12, name: "Americano", category: "Coffee", price: 3.20, icon: "☕" }
+    // Default products with emoji fallback
+    let products = [
+        { id: 1, name: "Espresso", category: "Coffee", price: 3.50, image: "" },
+        { id: 2, name: "Cappuccino", category: "Coffee", price: 4.50, image: "" },
+        { id: 3, name: "Latte", category: "Coffee", price: 4.80, image: "" },
+        { id: 4, name: "Mocha", category: "Coffee", price: 5.00, image: "" },
+        { id: 5, name: "Croissant", category: "Bakery", price: 3.00, image: "" },
+        { id: 6, name: "Chocolate Muffin", category: "Bakery", price: 3.20, image: "" },
+        { id: 7, name: "Club Sandwich", category: "Sandwiches", price: 7.50, image: "" },
+        { id: 8, name: "Grilled Cheese", category: "Sandwiches", price: 6.00, image: "" },
+        { id: 9, name: "Iced Tea", category: "Beverages", price: 3.00, image: "" },
+        { id: 10, name: "Fresh Orange Juice", category: "Beverages", price: 4.00, image: "" },
+        { id: 11, name: "Blueberry Muffin", category: "Bakery", price: 3.50, image: "" },
+        { id: 12, name: "Americano", category: "Coffee", price: 3.20, image: "" }
     ];
 
     let currentUser = null;
@@ -334,6 +347,7 @@
     let currencySymbol = "$";
     let currentCategory = "all";
     let searchTerm = "";
+    let allCategories = [];
 
     // DOM elements
     let sidebarAvatar, sidebarName, sidebarRole, branchSelectSidebar, workersNavItem;
@@ -374,7 +388,22 @@
         workersListDiv = document.getElementById('workersList');
     }
 
-    // Load/Save
+    // Product helpers
+    function extractCategories() {
+        const cats = new Set();
+        products.forEach(p => cats.add(p.category));
+        allCategories = Array.from(cats).sort();
+        return allCategories;
+    }
+    function saveProducts() { localStorage.setItem("billzest_products", JSON.stringify(products)); }
+    function loadProducts() {
+        const stored = localStorage.getItem("billzest_products");
+        if (stored) products = JSON.parse(stored);
+        else saveProducts();
+        extractCategories();
+    }
+
+    // Load/Save others
     function loadData() {
         const storedUsers = localStorage.getItem("billzest_users");
         if (storedUsers) {
@@ -397,6 +426,7 @@
             ];
             saveSales();
         }
+        loadProducts();
         if (document.getElementById('businessName')) {
             document.getElementById('businessName').value = businessSettings.name || '';
             document.getElementById('gstNumber').value = businessSettings.gst || '';
@@ -437,11 +467,7 @@
     }
     function formatPrice(amount) { return `${currencySymbol} ${amount.toFixed(2)}`; }
     function updateAllCurrencyDisplays() {
-        document.querySelectorAll('.product-price[data-price]').forEach(el => {
-            const price = parseFloat(el.getAttribute('data-price'));
-            if (!isNaN(price)) el.innerText = formatPrice(price);
-        });
-        if (currentUser) { updateCartUI(); updateStatsAndCharts(); }
+        if (currentUser) { updateCartUI(); updateStatsAndCharts(); renderProducts(); }
     }
 
     // Sidebar & Branch
@@ -452,7 +478,9 @@
         sidebarAvatar.innerText = currentUser.email.charAt(0).toUpperCase();
         workersNavItem.style.display = currentUser.role === 'super_admin' ? 'flex' : 'none';
         const branchMgmtPanel = document.getElementById('branchManagementPanel');
+        const productMgmtPanel = document.getElementById('productManagementPanel');
         if (branchMgmtPanel) branchMgmtPanel.style.display = currentUser.role === 'super_admin' ? 'block' : 'none';
+        if (productMgmtPanel) productMgmtPanel.style.display = currentUser.role === 'super_admin' ? 'block' : 'none';
         branchSelectSidebar.innerHTML = '';
         let availableBranches = currentUser.role === 'branch_manager' ? branches.filter(b => b.id === currentUser.branchId) : branches;
         availableBranches.forEach(b => { let opt = document.createElement('option'); opt.value = b.id; opt.textContent = b.name; branchSelectSidebar.appendChild(opt); });
@@ -465,6 +493,8 @@
             branches.forEach(b => { let opt = document.createElement('option'); opt.value = b.id; opt.textContent = b.name; newWorkerBranchSelect.appendChild(opt); });
         }
         loadBranchesList();
+        loadProductsList();
+        updateCategoryFilter();
     }
     function loadBranchesList() {
         const container = document.getElementById('branchesList');
@@ -512,6 +542,104 @@
         alert("Business details saved!");
     });
 
+    // Product management UI
+    function loadProductsList() {
+        const container = document.getElementById('productsList');
+        if (!container) return;
+        container.innerHTML = products.map(p => `
+            <div class="product-item">
+                <div style="flex:2"><strong>${p.name}</strong> (${p.category}) - ${formatPrice(p.price)}</div>
+                <div class="product-actions">
+                    <button onclick="editProduct(${p.id})"><i class="fas fa-edit"></i></button>
+                    <button onclick="deleteProduct(${p.id})"><i class="fas fa-trash"></i></button>
+                </div>
+            </div>
+        `).join('');
+        // Update category dropdown in add product form
+        const catSelect = document.getElementById('productCategory');
+        if (catSelect) {
+            const cats = extractCategories();
+            catSelect.innerHTML = cats.map(c => `<option value="${c}">${c}</option>`).join('');
+        }
+    }
+    window.editProduct = function(id) {
+        const product = products.find(p => p.id === id);
+        if (!product) return;
+        const newName = prompt("Product name:", product.name);
+        if (!newName) return;
+        const newCategory = prompt("Category:", product.category);
+        if (!newCategory) return;
+        const newPrice = parseFloat(prompt("Price:", product.price));
+        if (isNaN(newPrice)) return;
+        const newImage = prompt("Image URL (optional):", product.image);
+        product.name = newName;
+        product.category = newCategory;
+        product.price = newPrice;
+        product.image = newImage || "";
+        saveProducts();
+        loadProductsList();
+        renderProducts();
+        updateCategoryFilter();
+        updateStatsAndCharts(); // for category chart update
+        alert("Product updated!");
+    };
+    window.deleteProduct = function(id) {
+        if (confirm("Delete product?")) {
+            products = products.filter(p => p.id !== id);
+            saveProducts();
+            loadProductsList();
+            renderProducts();
+            updateCategoryFilter();
+            updateStatsAndCharts();
+        }
+    };
+    function addProduct() {
+        const name = document.getElementById('productName').value.trim();
+        const category = document.getElementById('productCategory').value;
+        const price = parseFloat(document.getElementById('productPrice').value);
+        const image = document.getElementById('productImage').value.trim();
+        if (!name || isNaN(price)) { alert("Please fill name and valid price"); return; }
+        const newId = Date.now();
+        products.push({ id: newId, name, category, price, image });
+        saveProducts();
+        document.getElementById('productName').value = '';
+        document.getElementById('productPrice').value = '';
+        document.getElementById('productImage').value = '';
+        loadProductsList();
+        renderProducts();
+        updateCategoryFilter();
+        updateStatsAndCharts();
+        alert("Product added!");
+    }
+    document.getElementById('addProductBtn')?.addEventListener('click', addProduct);
+    document.getElementById('addNewCategoryBtn')?.addEventListener('click', () => {
+        const newCat = prompt("Enter new category name:");
+        if (newCat && newCat.trim()) {
+            const catSelect = document.getElementById('productCategory');
+            const option = document.createElement('option');
+            option.value = newCat.trim();
+            option.textContent = newCat.trim();
+            catSelect.appendChild(option);
+            catSelect.value = newCat.trim();
+        }
+    });
+
+    function updateCategoryFilter() {
+        const cats = extractCategories();
+        const filterDiv = document.getElementById('categoryFilter');
+        if (!filterDiv) return;
+        filterDiv.innerHTML = `<button class="cat-btn active" data-cat="all">All</button>` + cats.map(c => `<button class="cat-btn" data-cat="${c}">${c}</button>`).join('');
+        // Re-attach click handlers
+        document.querySelectorAll('.cat-btn').forEach(btn => {
+            btn.onclick = () => {
+                document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentCategory = btn.dataset.cat;
+                renderProducts();
+            };
+        });
+    }
+
     function getBranchSales(branchId) { return allSales.filter(s => s.branchId === branchId); }
     function updateStatsAndCharts() {
         if (!todaySalesSpan) return;
@@ -534,9 +662,15 @@
         const weeklyData = [0,0,0,0,0,0,0];
         branchSales.forEach(sale => { const day = new Date(sale.date).getDay(); let idx = (day === 0 ? 6 : day-1); weeklyData[idx] += sale.total; });
         if (weeklyChart) { weeklyChart.data.datasets[0].data = weeklyData; weeklyChart.update(); }
-        const catSales = { Coffee:0, Bakery:0, Sandwiches:0, Beverages:0 };
-        branchSales.forEach(sale => { sale.items.forEach(item => { const prod = products.find(p => p.id === item.id); if (prod) catSales[prod.category] += (item.price * item.qty); }); });
-        if (categoryChart) { categoryChart.data.datasets[0].data = [catSales.Coffee, catSales.Bakery, catSales.Sandwiches, catSales.Beverages]; categoryChart.update(); }
+        const catSales = {};
+        extractCategories().forEach(c => catSales[c] = 0);
+        branchSales.forEach(sale => {
+            sale.items.forEach(item => {
+                const prod = products.find(p => p.id === item.id);
+                if (prod) catSales[prod.category] += (item.price * item.qty);
+            });
+        });
+        if (categoryChart) { categoryChart.data.datasets[0].data = extractCategories().map(c => catSales[c] || 0); categoryChart.data.labels = extractCategories(); categoryChart.update(); }
     }
     branchSelectSidebar?.addEventListener('change', () => { updateStatsAndCharts(); updateCartUI(); });
 
@@ -631,23 +765,29 @@
         window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
     }
 
-    // Product rendering and filters
+    // Product rendering with image
     function renderProducts() {
         let filtered = products.filter(p => (currentCategory === 'all' || p.category === currentCategory) && p.name.toLowerCase().includes(searchTerm.toLowerCase()));
-        productGrid.innerHTML = filtered.map(p => `<div class="product-card" data-id="${p.id}"><div class="product-icon">${p.icon}</div><div class="product-name">${p.name}</div><div class="product-price" data-price="${p.price}">${formatPrice(p.price)}</div></div>`).join('');
+        productGrid.innerHTML = filtered.map(p => {
+            const imageHtml = p.image ? `<img src="${p.image}" class="product-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">` : '';
+            const emojiHtml = !p.image ? `<div class="product-icon">${getEmojiForCategory(p.category)}</div>` : `<div class="product-icon" style="display:none;">${getEmojiForCategory(p.category)}</div>`;
+            return `<div class="product-card" data-id="${p.id}">
+                        ${imageHtml}
+                        ${emojiHtml}
+                        <div class="product-name">${p.name}</div>
+                        <div class="product-price" data-price="${p.price}">${formatPrice(p.price)}</div>
+                    </div>`;
+        }).join('');
         document.querySelectorAll('.product-card').forEach(card => {
             card.onclick = () => { const id = parseInt(card.dataset.id); const prod = products.find(p => p.id === id); if(prod) addToCart(prod); };
         });
     }
+    function getEmojiForCategory(cat) {
+        const map = { "Coffee": "☕", "Bakery": "🥐", "Sandwiches": "🥪", "Beverages": "🧃" };
+        return map[cat] || "🍽️";
+    }
+
     function initFilters() {
-        document.querySelectorAll('.cat-btn').forEach(btn => {
-            btn.onclick = () => {
-                document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                currentCategory = btn.dataset.cat;
-                renderProducts();
-            };
-        });
         searchInput.oninput = (e) => { searchTerm = e.target.value; renderProducts(); };
     }
     function initPaymentUI() {
@@ -664,10 +804,9 @@
         const weeklyCtx = document.getElementById('weeklyChart').getContext('2d');
         const categoryCtx = document.getElementById('categoryChart').getContext('2d');
         weeklyChart = new Chart(weeklyCtx, { type: 'line', data: { labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'], datasets: [{ label: 'Sales', data: [0,0,0,0,0,0,0], borderColor: '#1e2a5e', tension: 0.3, fill: false }] }, options: { responsive: true } });
-        categoryChart = new Chart(categoryCtx, { type: 'doughnut', data: { labels: ['Coffee','Bakery','Sandwiches','Beverages'], datasets: [{ data: [0,0,0,0], backgroundColor: ['#1e2a5e','#f59e0b','#10b981','#3b82f6'] }] }, options: { responsive: true } });
+        categoryChart = new Chart(categoryCtx, { type: 'doughnut', data: { labels: extractCategories(), datasets: [{ data: extractCategories().map(()=>0), backgroundColor: ['#1e2a5e','#f59e0b','#10b981','#3b82f6'] }] }, options: { responsive: true } });
     }
 
-    // Page navigation
     function showPage(page) {
         posPage.style.display = page === 'pos' ? 'block' : 'none';
         analyticsPage.style.display = page === 'analytics' ? 'block' : 'none';
@@ -685,6 +824,7 @@
                 document.getElementById('businessPhone').value = businessSettings.phone || '';
             }
             loadBranchesList();
+            loadProductsList();
         }
     }
     document.querySelectorAll('.nav-item').forEach(nav => {
@@ -746,12 +886,12 @@
         initDOM();
         loadCurrency();
         initCharts();
-        renderProducts();
         initFilters();
         initPaymentUI();
         updateCartUI();
         updateSidebar();
         updateStatsAndCharts();
+        renderProducts();
         showPage('pos');
     }
 
