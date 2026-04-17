@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BillZest POS | Smart Dashboard</title>
+<title>BillZest POS | Smart Dashboard with Sales Display</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;0,800;1,700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -39,7 +39,20 @@ body{font-family:'Poppins',sans-serif;background:#f8f9fc;color:var(--dark);}
 .cat-btn{background:#f0f0f0;border:none;padding:10px 24px;border-radius:40px;font-weight:600;cursor:pointer;transition:all 0.2s;}
 .cat-btn:hover{background:var(--purple);color:#fff;}
 .cat-btn.selected{background:var(--purple);color:#fff;}
-/* New sections */
+/* New Sales Display Card */
+.sales-display-card{background:linear-gradient(135deg,#0c1940,#150f50);border-radius:28px;padding:28px 32px;margin-bottom:32px;color:#fff;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px;box-shadow:0 12px 30px rgba(0,0,0,0.2);}
+.sales-display-left{flex:2;}
+.sales-label{font-size:14px;text-transform:uppercase;letter-spacing:2px;opacity:0.8;margin-bottom:8px;}
+.sales-amount{font-size:64px;font-weight:800;line-height:1;margin-bottom:12px;}
+.sales-amount small{font-size:24px;font-weight:500;}
+.goal-progress{margin:12px 0;max-width:300px;}
+.progress-bar-bg{background:rgba(255,255,255,0.2);border-radius:30px;height:12px;overflow:hidden;}
+.progress-fill{background:var(--orange);width:0%;height:100%;border-radius:30px;transition:width 0.8s ease;}
+.goal-text{font-size:12px;margin-top:6px;opacity:0.8;}
+.sales-display-right{flex:1;text-align:center;background:rgba(255,255,255,0.08);border-radius:20px;padding:12px;}
+.sparkline-title{font-size:12px;margin-bottom:6px;opacity:0.7;}
+.sparkline-canvas{width:100%;height:60px;}
+/* Other sections */
 .section-card{background:#fff;border-radius:20px;padding:20px;margin-bottom:24px;border:1px solid #edf2f7;}
 .section-title{font-size:18px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px;}
 .two-col-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px;}
@@ -64,13 +77,14 @@ body{font-family:'Poppins',sans-serif;background:#f8f9fc;color:var(--dark);}
 .activity-icon{width:28px;height:28px;background:#f0f0ff;border-radius:50%;display:flex;align-items:center;justify-content:center;}
 .expense-card{background:#f8f9fc;border-radius:16px;padding:16px;text-align:center;}
 .expense-number{font-size:28px;font-weight:800;}
-/* Chart containers */
 canvas{max-height:200px;width:100%;}
-.chart-container{margin-bottom:20px;}
 @media(max-width:768px){
   .sidebar{display:none;}
   .stats-grid{grid-template-columns:1fr 1fr;}
   .two-col-grid{grid-template-columns:1fr;}
+  .sales-display-card{flex-direction:column;text-align:center;}
+  .sales-amount{font-size:48px;}
+  .goal-progress{margin-left:auto;margin-right:auto;}
   .main-content{padding:16px;}
 }
 </style>
@@ -103,7 +117,7 @@ canvas{max-height:200px;width:100%;}
       </div>
     </div>
 
-    <!-- DASHBOARD SECTION (enhanced) -->
+    <!-- DASHBOARD SECTION (enhanced with sales display) -->
     <div id="dashboardSection" class="page-section active-page">
       <div id="categorySelector" class="category-selector" style="display: none;">
         <div class="category-title">🏢 Select Your Business Category</div>
@@ -117,6 +131,23 @@ canvas{max-height:200px;width:100%;}
           <button class="cat-btn" data-cat="Restaurant">🍽️ Restaurant</button>
         </div>
       </div>
+
+      <!-- NEW: Sales Display Card (Bahtreen) -->
+      <div class="sales-display-card" id="salesDisplayCard">
+        <div class="sales-display-left">
+          <div class="sales-label">TODAY'S SALES</div>
+          <div class="sales-amount" id="bigSalesAmount">﷼ 0</div>
+          <div class="goal-progress">
+            <div class="progress-bar-bg"><div class="progress-fill" id="goalFill" style="width:0%"></div></div>
+            <div class="goal-text" id="goalText">Daily Goal: 0% achieved</div>
+          </div>
+        </div>
+        <div class="sales-display-right">
+          <div class="sparkline-title">Last 8 hours trend</div>
+          <canvas id="sparklineCanvas" width="200" height="60" class="sparkline-canvas"></canvas>
+        </div>
+      </div>
+
       <!-- Stats Row -->
       <div class="stats-grid" id="statsGrid">
         <div class="stat-card"><div class="stat-title">Today's Sales</div><div class="stat-value" id="todaySales">﷼ 0</div><div class="stat-change">↑ 12% from yesterday</div></div>
@@ -125,7 +156,7 @@ canvas{max-height:200px;width:100%;}
         <div class="stat-card"><div class="stat-title">Net Profit</div><div class="stat-value" id="netProfit">﷼ 0</div><div class="stat-change">Expenses deducted</div></div>
       </div>
 
-      <!-- Two Column: Sales Charts and Payment Breakdown -->
+      <!-- Two Column: Sales by Hour & Payment Methods -->
       <div class="two-col-grid">
         <div class="section-card">
           <div class="section-title">📈 Sales by Hour (Peak Times)</div>
@@ -195,7 +226,7 @@ canvas{max-height:200px;width:100%;}
       </div>
     </div>
 
-    <!-- POS, INVENTORY, CUSTOMERS, REPORTS, SETTINGS sections (same as before but kept for completeness) -->
+    <!-- Other sections (POS, Inventory, Customers, Reports, Settings) - kept minimal but functional -->
     <div id="posSection" class="page-section"><h2>Point of Sale</h2><div class="pos-grid" style="display:grid; grid-template-columns:repeat(4,1fr); gap:16px;"><div class="pos-item" onclick="alert('Add Coffee')">☕ Coffee<br>﷼12</div><div class="pos-item" onclick="alert('Add Sandwich')">🥪 Sandwich<br>﷼18</div><div class="pos-item" onclick="alert('Add Burger')">🍔 Burger<br>﷼25</div><div class="pos-item" onclick="alert('Add Pizza')">🍕 Pizza<br>﷼35</div></div></div>
     <div id="inventorySection" class="page-section"><h2>Inventory</h2><table class="inv-table" style="width:100%; border-collapse:collapse;"><tr><th>Product</th><th>Stock</th></tr><tr><td>Coffee Beans</td><td>5kg</td></tr></table></div>
     <div id="customersSection" class="page-section"><h2>Customers</h2><div>Customer list demo</div></div>
@@ -210,42 +241,70 @@ canvas{max-height:200px;width:100%;}
 
 <script>
   let currentUser = null;
-  let hourlyChart = null, paymentChart = null;
+  let hourlyChart = null, paymentChart = null, sparklineChart = null;
   let selectedCategory = null;
 
-  // Category data mapping
+  // Category data mapping (enhanced with daily goal)
   function getCategoryData(cat) {
     let data = {};
     switch(cat) {
       case 'Hotel':
-        data = { sales: 4250, orders: 58, alerts: 3, revenue: 128500, expenses: 32000, profit: 96500,
+        data = { sales: 4250, orders: 58, alerts: 3, revenue: 128500, expenses: 32000, profit: 96500, dailyGoal: 5000,
           topProducts: [{name:'Room Service',qty:45},{name:'Mini Bar',qty:32},{name:'Banquet',qty:28}],
           lowStock: [{name:'Towels',stock:12,threshold:20},{name:'Coffee sachets',stock:8,threshold:15},{name:'Shampoo',stock:5,threshold:10}],
           hourly: [12,18,22,35,48,62,55,40,30,25,20,18],
+          sparklineData: [1200,1450,1680,2100,2450,2780,3100,3450],
           payment: {card:55,cash:35,wallet:10},
           activity: ['New booking #1024','Order #998 completed','Mini bar restocked'] };
         break;
       case 'Coffee Shop':
-        data = { sales: 1890, orders: 142, alerts: 2, revenue: 45200, expenses: 12000, profit: 33200,
+        data = { sales: 1890, orders: 142, alerts: 2, revenue: 45200, expenses: 12000, profit: 33200, dailyGoal: 2500,
           topProducts: [{name:'Flat White',qty:89},{name:'Cappuccino',qty:76},{name:'Croissant',qty:54}],
           lowStock: [{name:'Coffee beans',stock:2,threshold:5},{name:'Paper cups',stock:150,threshold:200}],
           hourly: [8,12,25,40,65,85,78,62,45,30,18,10],
+          sparklineData: [450,680,890,1200,1550,1780,1950,1890],
           payment: {card:60,cash:30,wallet:10},
           activity: ['Loyalty points awarded to 12 customers','New coffee blend added'] };
         break;
+      case 'Grocery':
+        data = { sales: 5320, orders: 215, alerts: 6, revenue: 158200, expenses: 45000, profit: 113200, dailyGoal: 6000,
+          topProducts: [{name:'Rice',qty:120},{name:'Cooking Oil',qty:95},{name:'Flour',qty:78}],
+          lowStock: [{name:'Rice',stock:10,threshold:20},{name:'Oil',stock:30,threshold:50},{name:'Flour',stock:8,threshold:15}],
+          hourly: [15,25,40,60,85,110,130,145,120,90,55,30],
+          sparklineData: [1800,2200,2800,3400,4100,4700,5100,5320],
+          payment: {card:45,cash:45,wallet:10},
+          activity: ['Bulk order #G-201','New inventory received'] };
+        break;
       default:
-        data = { sales: 3450, orders: 176, alerts: 3, revenue: 98500, expenses: 25000, profit: 73500,
+        data = { sales: 3450, orders: 176, alerts: 3, revenue: 98500, expenses: 25000, profit: 73500, dailyGoal: 4000,
           topProducts: [{name:'Chicken Biryani',qty:67},{name:'Burger',qty:89},{name:'Pizza',qty:45}],
           lowStock: [{name:'Chicken',stock:5,threshold:10},{name:'Tomatoes',stock:8,threshold:15},{name:'Napkins',stock:200,threshold:300}],
           hourly: [10,15,28,42,70,95,110,85,60,40,25,15],
+          sparklineData: [800,1100,1550,2100,2600,2950,3250,3450],
           payment: {card:50,cash:40,wallet:10},
           activity: ['New order #1203','Inventory updated','Promo code used'] };
     }
     return data;
   }
 
+  // Animate number
+  function animateNumber(element, start, end, duration = 1000) {
+    let startTime = null;
+    const formatCurrency = (val) => `﷼ ${Math.floor(val).toLocaleString()}`;
+    function step(timestamp) {
+      if (!startTime) startTime = timestamp;
+      const progress = Math.min((timestamp - startTime) / duration, 1);
+      const current = start + (end - start) * progress;
+      element.textContent = formatCurrency(current);
+      if (progress < 1) requestAnimationFrame(step);
+      else element.textContent = formatCurrency(end);
+    }
+    requestAnimationFrame(step);
+  }
+
   function renderDashboard(cat) {
     const d = getCategoryData(cat);
+    // Update all stats
     document.getElementById('todaySales').innerHTML = `﷼ ${d.sales.toLocaleString()}`;
     document.getElementById('totalOrders').innerText = d.orders;
     document.getElementById('alertCount').innerText = d.alerts;
@@ -253,6 +312,25 @@ canvas{max-height:200px;width:100%;}
     document.getElementById('expRevenue').innerHTML = `﷼ ${d.revenue.toLocaleString()}`;
     document.getElementById('expExpenses').innerHTML = `﷼ ${d.expenses.toLocaleString()}`;
     document.getElementById('expNet').innerHTML = `﷼ ${(d.revenue - d.expenses).toLocaleString()}`;
+
+    // Big Sales Display with animation
+    const bigSalesElem = document.getElementById('bigSalesAmount');
+    const currentVal = parseInt(bigSalesElem.textContent.replace(/[^0-9]/g, '')) || 0;
+    animateNumber(bigSalesElem, currentVal, d.sales, 800);
+
+    // Goal progress
+    const percent = Math.min(100, Math.round((d.sales / d.dailyGoal) * 100));
+    document.getElementById('goalFill').style.width = `${percent}%`;
+    document.getElementById('goalText').innerHTML = `Daily Goal: ${percent}% achieved (﷼ ${d.sales.toLocaleString()} / ﷼ ${d.dailyGoal.toLocaleString()})`;
+
+    // Sparkline chart
+    const sparkCtx = document.getElementById('sparklineCanvas').getContext('2d');
+    if (sparklineChart) sparklineChart.destroy();
+    sparklineChart = new Chart(sparkCtx, {
+      type: 'line',
+      data: { labels: ['10am','12pm','2pm','4pm','6pm','8pm','10pm','Now'], datasets: [{ data: d.sparklineData, borderColor: '#f5a623', borderWidth: 2, fill: false, pointRadius: 2, pointBackgroundColor: '#f5a623' }] },
+      options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { display: false }, tooltip: { callbacks: { label: (ctx) => `﷼ ${ctx.raw}` } } }, scales: { x: { ticks: { font: { size: 8 } } }, y: { ticks: { callback: (val) => `﷼${val}` } } } }
+    });
 
     // Top products
     const prodList = document.getElementById('topProductsList');
@@ -264,7 +342,7 @@ canvas{max-height:200px;width:100%;}
       </li>
     `).join('');
 
-    // Low stock alerts with reorder
+    // Low stock
     const lowStockDiv = document.getElementById('lowStockList');
     lowStockDiv.innerHTML = d.lowStock.map(item => `
       <div class="stock-item">
@@ -301,7 +379,7 @@ canvas{max-height:200px;width:100%;}
     const activityDiv = document.getElementById('activityFeed');
     activityDiv.innerHTML = d.activity.map(act => `<div class="activity-item"><div class="activity-icon">📌</div><div>${act}</div></div>`).join('');
 
-    // Recent orders & alerts (original lists)
+    // Recent orders & alerts
     const sampleOrders = ['#ORD-1024 - ﷼348','#ORD-1025 - ﷼1290','#ORD-1026 - ﷼76'];
     document.getElementById('ordersList').innerHTML = sampleOrders.map(o => `<div class="order-item">${o}</div>`).join('');
     const sampleAlerts = ['Low stock: Coffee beans','Paper cups running out'];
@@ -309,7 +387,6 @@ canvas{max-height:200px;width:100%;}
   }
 
   async function loadDashboard() {
-    // Get user info (same as before)
     let user = { firstName: 'Demo', email: 'demo@billzest.com', businessName: 'Demo Store' };
     if (window.fbAuth && window.fbAuth.currentUser) {
       const u = window.fbAuth.currentUser;
@@ -331,8 +408,8 @@ canvas{max-height:200px;width:100%;}
       renderDashboard(savedCat);
     } else {
       document.getElementById('categorySelector').style.display = 'block';
-      // dummy placeholder
       document.getElementById('todaySales').innerHTML = '﷼ 0';
+      document.getElementById('bigSalesAmount').innerHTML = '﷼ 0';
     }
 
     document.querySelectorAll('.cat-btn').forEach(btn => {
@@ -369,7 +446,7 @@ canvas{max-height:200px;width:100%;}
 
   window.addEventListener('load', () => {
     if (window.fbAuth && window.fbAuth.currentUser) loadDashboard();
-    else if (!window.fbAuth) loadDashboard(); // fallback
+    else if (!window.fbAuth) loadDashboard();
     else {
       const unsubscribe = window.fbAuth.onAuthStateChanged(user => { if (user) loadDashboard(); unsubscribe(); });
     }
