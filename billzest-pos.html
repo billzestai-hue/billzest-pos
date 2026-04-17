@@ -35,6 +35,9 @@
             padding: 12px; border-radius: 40px; width: 100%;
             font-weight: bold; cursor: pointer; margin-top: 8px;
         }
+        .reset-btn {
+            background: #ef4444; margin-top: 8px;
+        }
         .login-status { margin-top: 12px; font-size: 12px; color: red; }
         /* Dashboard Layout with Sidebar */
         .dashboard-container { display: flex; min-height: 100vh; }
@@ -136,9 +139,10 @@
     <div class="login-card">
         <h2><i class="fas fa-cash-register"></i> BillZest POS</h2>
         <p>Login to continue</p>
-        <input type="email" id="loginEmail" placeholder="Email">
-        <input type="password" id="loginPassword" placeholder="Password">
+        <input type="email" id="loginEmail" placeholder="Email" value="admin@billzest.com">
+        <input type="password" id="loginPassword" placeholder="Password" value="admin123">
         <button id="loginBtn">Login with Email</button>
+        <button id="resetDataBtn" class="reset-btn">Reset Demo Data</button>
         <div class="login-status" id="loginStatus"></div>
         <div style="margin-top: 16px; font-size: 12px; color: #888;">
             <strong>Demo Accounts:</strong><br>
@@ -284,12 +288,14 @@
 </div>
 
 <script>
-    // ---------- Data Models ----------
-    let users = [
+    // ---------- Hardcoded demo users (always available) ----------
+    const DEMO_USERS = [
         { email: "admin@billzest.com", password: "admin123", role: "super_admin", branchId: null },
         { email: "manager1@billzest.com", password: "manager123", role: "branch_manager", branchId: "branch1" },
         { email: "manager2@billzest.com", password: "manager123", role: "branch_manager", branchId: "branch2" }
     ];
+    let users = [];
+    let allSales = [];
     const branches = [
         { id: "branch1", name: "City Mall Branch" },
         { id: "branch2", name: "Downtown Branch" },
@@ -310,17 +316,40 @@
         { id: 12, name: "Americano", category: "Coffee", price: 3.20, icon: "☕" }
     ];
 
-    // Load data from localStorage
+    // Load data from localStorage, but ensure demo users are always present
     function loadData() {
         const storedUsers = localStorage.getItem("billzest_users");
-        if (storedUsers) users = JSON.parse(storedUsers);
+        if (storedUsers) {
+            const parsed = JSON.parse(storedUsers);
+            // Merge: start with demo users, then add any additional users from storage (avoid duplicates)
+            const emailMap = new Map();
+            DEMO_USERS.forEach(u => emailMap.set(u.email, u));
+            parsed.forEach(u => { if (!emailMap.has(u.email)) emailMap.set(u.email, u); });
+            users = Array.from(emailMap.values());
+        } else {
+            users = [...DEMO_USERS];
+        }
         const storedSales = localStorage.getItem("billzest_sales");
         if (storedSales) allSales = JSON.parse(storedSales);
+        else {
+            // add some demo sales
+            allSales = [
+                { branchId: "branch1", date: new Date().toISOString(), total: 158.40, itemsCount: 5, items: [], subtotal: 144, tax: 14.4, paymentMethod: "card" },
+                { branchId: "branch2", date: new Date(Date.now()-86400000).toISOString(), total: 210.20, itemsCount: 8, items: [], subtotal: 191.09, tax: 19.11, paymentMethod: "cash" }
+            ];
+            saveSales();
+        }
     }
     function saveUsers() { localStorage.setItem("billzest_users", JSON.stringify(users)); }
     function saveSales() { localStorage.setItem("billzest_sales", JSON.stringify(allSales)); }
+    function resetDemoData() {
+        localStorage.removeItem("billzest_users");
+        localStorage.removeItem("billzest_sales");
+        loadData(); // reload with defaults
+        alert("Demo data reset! Please login again.");
+        location.reload();
+    }
 
-    let allSales = [];
     let currentUser = null;
     let currentBranchId = null;
     let cart = [];
@@ -335,6 +364,7 @@
     const loginEmail = document.getElementById('loginEmail');
     const loginPassword = document.getElementById('loginPassword');
     const loginBtn = document.getElementById('loginBtn');
+    const resetDataBtn = document.getElementById('resetDataBtn');
     const logoutSidebarBtn = document.getElementById('logoutSidebarBtn');
     const sidebarName = document.getElementById('sidebarName');
     const sidebarRole = document.getElementById('sidebarRole');
@@ -365,10 +395,8 @@
     const analyticsRevenue = document.getElementById('analyticsRevenue');
     const analyticsAvgOrder = document.getElementById('analyticsAvgOrder');
 
-    // Helper: get branch name
     function getBranchName(branchId) { return branches.find(b => b.id === branchId)?.name || branchId; }
 
-    // Update sidebar UI
     function updateSidebar() {
         if (!currentUser) return;
         sidebarName.innerText = currentUser.email.split('@')[0];
@@ -376,7 +404,6 @@
         sidebarAvatar.innerText = currentUser.email.charAt(0).toUpperCase();
         if (currentUser.role === 'super_admin') workersNavItem.style.display = 'flex';
         else workersNavItem.style.display = 'none';
-        // Populate branch dropdown
         branchSelectSidebar.innerHTML = '';
         let availableBranches = branches;
         if (currentUser.role === 'branch_manager') availableBranches = branches.filter(b => b.id === currentUser.branchId);
@@ -392,7 +419,6 @@
         updateStatsAndCharts();
     }
 
-    // Sales data by branch
     function getBranchSales(branchId) { return allSales.filter(s => s.branchId === branchId); }
     function updateStatsAndCharts() {
         const branchId = branchSelectSidebar.value;
@@ -404,14 +430,12 @@
         const totalItems = branchSales.reduce((sum, s) => sum + s.itemsCount, 0);
         itemsSoldSpan.innerText = totalItems;
         cartTotalValueSpan.innerText = `$${cart.reduce((sum,i)=>sum+(i.price*i.quantity),0).toFixed(2)}`;
-        // Analytics page stats
-        const totalRevenue = branchSales.reduce((sum, s) => sum + s.total, 0);
-        const avgOrder = branchSales.length ? totalRevenue / branchSales.length : 0;
         analyticsTodaySales.innerText = `$${todayTotal.toFixed(2)}`;
         analyticsTotalOrders.innerText = branchSales.length;
+        const totalRevenue = branchSales.reduce((sum, s) => sum + s.total, 0);
+        const avgOrder = branchSales.length ? totalRevenue / branchSales.length : 0;
         analyticsRevenue.innerText = `$${totalRevenue.toFixed(2)}`;
         analyticsAvgOrder.innerText = `$${avgOrder.toFixed(2)}`;
-        // Weekly chart
         const weeklyData = [0,0,0,0,0,0,0];
         branchSales.forEach(sale => {
             const day = new Date(sale.date).getDay();
@@ -419,7 +443,6 @@
             weeklyData[idx] += sale.total;
         });
         if (weeklyChart) { weeklyChart.data.datasets[0].data = weeklyData; weeklyChart.update(); }
-        // Category chart
         const catSales = { Coffee:0, Bakery:0, Sandwiches:0, Beverages:0 };
         branchSales.forEach(sale => {
             sale.items.forEach(item => {
@@ -431,7 +454,6 @@
     }
     branchSelectSidebar.addEventListener('change', () => { currentBranchId = branchSelectSidebar.value; updateStatsAndCharts(); updateCartUI(); });
 
-    // Cart functions
     function updateCartUI() {
         if (cart.length === 0) {
             cartItemsList.innerHTML = '<p style="text-align:center;">Cart is empty</p>';
@@ -536,7 +558,6 @@
         window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
     }
 
-    // Product rendering
     let currentCategory = 'all', searchTerm = '';
     function renderProducts() {
         let filtered = products.filter(p => (currentCategory === 'all' || p.category === currentCategory) && p.name.toLowerCase().includes(searchTerm.toLowerCase()));
@@ -573,7 +594,6 @@
         categoryChart = new Chart(categoryCtx, { type: 'doughnut', data: { labels: ['Coffee','Bakery','Sandwiches','Beverages'], datasets: [{ data: [0,0,0,0], backgroundColor: ['#1e2a5e','#f59e0b','#10b981','#3b82f6'] }] }, options: { responsive: true } });
     }
 
-    // Page navigation
     function showPage(page) {
         currentPage = page;
         posPage.style.display = page === 'pos' ? 'block' : 'none';
@@ -583,14 +603,13 @@
         if (page === 'pos') document.querySelector('.nav-item[data-page="pos"]').classList.add('active');
         if (page === 'analytics') document.querySelector('.nav-item[data-page="analytics"]').classList.add('active');
         if (page === 'workers') document.querySelector('.nav-item[data-page="workers"]').classList.add('active');
-        if (page === 'analytics') { updateStatsAndCharts(); }
-        if (page === 'workers' && currentUser.role === 'super_admin') loadWorkersList();
+        if (page === 'analytics') updateStatsAndCharts();
+        if (page === 'workers' && currentUser?.role === 'super_admin') loadWorkersList();
     }
     document.querySelectorAll('.nav-item').forEach(nav => {
         nav.onclick = () => { showPage(nav.dataset.page); };
     });
 
-    // Worker management (Admin only)
     function loadWorkersList() {
         const workers = users.filter(u => u.role === 'branch_manager');
         workersListDiv.innerHTML = workers.map(w => `
@@ -622,12 +641,11 @@
     }
     document.getElementById('createWorkerBtn')?.addEventListener('click', createWorker);
 
-    // Login logic
     function login() {
         const email = loginEmail.value.trim();
         const pwd = loginPassword.value;
         const user = users.find(u => u.email === email && u.password === pwd);
-        if (!user) { loginStatus.innerText = "Invalid email or password."; return; }
+        if (!user) { loginStatus.innerText = "Invalid email or password. Try admin@billzest.com / admin123"; return; }
         currentUser = { ...user };
         loginOverlay.style.display = 'none';
         dashboardMain.style.display = 'block';
@@ -639,24 +657,23 @@
         updateSidebar();
         updateStatsAndCharts();
         showPage('pos');
-        // Load initial demo sales if empty
-        if (allSales.length === 0) {
-            allSales.push({ branchId: "branch1", date: new Date().toISOString(), total: 158.40, itemsCount: 5, items: [], subtotal: 144, tax: 14.4, paymentMethod: "card" });
-            allSales.push({ branchId: "branch2", date: new Date(Date.now()-86400000).toISOString(), total: 210.20, itemsCount: 8, items: [], subtotal: 191.09, tax: 19.11, paymentMethod: "cash" });
-            saveSales();
-        }
     }
+
     loginBtn.onclick = login;
+    resetDataBtn.onclick = resetDemoData;
     logoutSidebarBtn.onclick = () => { currentUser = null; dashboardMain.style.display = 'none'; loginOverlay.style.display = 'flex'; cart = []; };
     clearCartBtn.onclick = clearCart;
     completeSaleBtn.onclick = completeSale;
     printReceiptBtn.onclick = showPrintReceipt;
     whatsappShareBtn.onclick = shareWhatsApp;
-    // Enter key login
     loginPassword.addEventListener('keypress', (e) => { if(e.key === 'Enter') login(); });
     loginEmail.addEventListener('keypress', (e) => { if(e.key === 'Enter') login(); });
 
+    // Initialize
     loadData();
+    // Pre-fill login fields for convenience
+    loginEmail.value = "admin@billzest.com";
+    loginPassword.value = "admin123";
 </script>
 </body>
 </html>
