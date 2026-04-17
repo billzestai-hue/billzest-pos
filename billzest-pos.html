@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>BillZest POS | Multi-Branch with User Management</title>
+    <title>BillZest POS | Multi-Branch System (Demo)</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
@@ -86,19 +86,24 @@
 <div id="loginOverlay" class="login-overlay">
     <div class="login-card">
         <h2><i class="fas fa-cash-register"></i> BillZest POS</h2>
-        <p>Login to continue</p>
+        <p>Login to continue (Demo Mode)</p>
         <input type="email" id="loginEmail" placeholder="Email">
         <input type="password" id="loginPassword" placeholder="Password">
         <button id="emailLoginBtn">Login with Email</button>
-        <button id="googleLoginBtn" class="google-btn"><i class="fab fa-google"></i> Login with Google</button>
-        <div style="margin-top: 12px; font-size: 12px; color: #888;">Demo Super Admin: admin@billzest.com / admin123<br>After login, you can create workers.</div>
-        <div id="firebaseStatus" style="margin-top: 8px; font-size: 11px; color: red;"></div>
+        <button id="googleLoginBtn" class="google-btn"><i class="fab fa-google"></i> Login with Google (Demo)</button>
+        <div style="margin-top: 12px; font-size: 12px; color: #888;">
+            <strong>Demo Accounts:</strong><br>
+            Super Admin: admin@billzest.com / admin123<br>
+            Branch Manager (City Mall): manager1@billzest.com / manager123<br>
+            Branch Manager (Downtown): manager2@billzest.com / manager123
+        </div>
+        <div id="loginStatus" style="margin-top: 12px; font-size: 12px; color: red;"></div>
     </div>
 </div>
 
 <div class="pos-dashboard" id="dashboardMain" style="display: none;">
     <div class="header">
-        <div class="logo"><h1><i class="fas fa-cash-register"></i> Bill<span style="color:#f59e0b;">Zest</span> POS</h1><span>Multi-Branch with Worker Management</span></div>
+        <div class="logo"><h1><i class="fas fa-cash-register"></i> Bill<span style="color:#f59e0b;">Zest</span> POS</h1><span>Multi-Branch Management (Demo)</span></div>
         <div class="stats-cards">
             <div class="stat-card"><div class="stat-title">Today's Sales</div><div class="stat-value" id="todaySales">$0</div></div>
             <div class="stat-card"><div class="stat-title">Transactions</div><div class="stat-value" id="transactionsCount">0</div></div>
@@ -112,7 +117,7 @@
         <div class="user-info-bar" style="margin-bottom:0; padding:0; background:transparent;"><span id="userNameDisplay"></span> <span class="role-badge" id="roleBadge"></span> <button id="logoutBtn" class="btn-secondary" style="width: auto; padding: 4px 12px;">Logout</button></div>
     </div>
     <div id="userManagementPanel" class="user-management" style="display: none;">
-        <h3><i class="fas fa-users"></i> Manage Workers</h3>
+        <h3><i class="fas fa-users"></i> Manage Workers (Super Admin only)</h3>
         <div class="user-form">
             <input type="email" id="newWorkerEmail" placeholder="Worker Email">
             <input type="password" id="newWorkerPassword" placeholder="Password">
@@ -156,276 +161,223 @@
 <div id="receipt-print" style="display: none; font-family: monospace; padding: 20px; max-width: 300px; background: white;"><div style="text-align:center;"><h2>BillZest POS</h2><p>Thank you!</p><hr><div id="receiptItems"></div><hr><div id="receiptTotals"></div><p>Date: <span id="receiptDate"></span></p><p>Branch: <span id="receiptBranch"></span></p><p>Payment: <span id="receiptPayment"></span></p><hr><p>Have a great day!</p></div></div>
 
 <script>
-    (function() {
-        // Wait for Firebase to be ready (check every 100ms)
-        let firebaseReady = false;
-        let firebase = null;
-        let auth = null, db = null;
-        let currentUser = null;
-        let currentBranchId = null;
-        let allSales = JSON.parse(localStorage.getItem("billzest_sales")) || [];
-        function saveSales() { localStorage.setItem("billzest_sales", JSON.stringify(allSales)); }
-        const branches = [{ id: "branch1", name: "City Mall Branch" }, { id: "branch2", name: "Downtown Branch" }, { id: "branch3", name: "Airport Branch" }];
-        const products = [
-            { id: 1, name: "Espresso", category: "Coffee", price: 3.50, icon: "☕" },{ id: 2, name: "Cappuccino", category: "Coffee", price: 4.50, icon: "☕" },
-            { id: 3, name: "Latte", category: "Coffee", price: 4.80, icon: "☕" },{ id: 4, name: "Mocha", category: "Coffee", price: 5.00, icon: "☕" },
-            { id: 5, name: "Croissant", category: "Bakery", price: 3.00, icon: "🥐" },{ id: 6, name: "Chocolate Muffin", category: "Bakery", price: 3.20, icon: "🧁" },
-            { id: 7, name: "Club Sandwich", category: "Sandwiches", price: 7.50, icon: "🥪" },{ id: 8, name: "Grilled Cheese", category: "Sandwiches", price: 6.00, icon: "🥪" },
-            { id: 9, name: "Iced Tea", category: "Beverages", price: 3.00, icon: "🧃" },{ id: 10, name: "Fresh Orange Juice", category: "Beverages", price: 4.00, icon: "🍊" },
-            { id: 11, name: "Blueberry Muffin", category: "Bakery", price: 3.50, icon: "🧁" },{ id: 12, name: "Americano", category: "Coffee", price: 3.20, icon: "☕" }
-        ];
-        let cart = [];
-        let lastSaleData = null;
-        let weeklyChart, categoryChart;
+    // DEMO MODE - No Firebase required. All data stored in localStorage.
+    // Predefined users
+    let users = [
+        { email: "admin@billzest.com", password: "admin123", role: "super_admin", branchId: null },
+        { email: "manager1@billzest.com", password: "manager123", role: "branch_manager", branchId: "branch1" },
+        { email: "manager2@billzest.com", password: "manager123", role: "branch_manager", branchId: "branch2" }
+    ];
+    // Load users from localStorage if any
+    const storedUsers = localStorage.getItem("billzest_users");
+    if (storedUsers) {
+        try {
+            const parsed = JSON.parse(storedUsers);
+            // merge with existing, but keep predefined as fallback
+            users = parsed;
+        } catch(e) {}
+    }
+    function saveUsers() { localStorage.setItem("billzest_users", JSON.stringify(users)); }
 
-        // DOM elements
-        const productGrid = document.getElementById('productGrid');
-        const searchInput = document.getElementById('searchInput');
-        const cartItemsContainer = document.getElementById('cartItemsList');
-        const clearCartBtn = document.getElementById('clearCartBtn');
-        const completeSaleBtn = document.getElementById('completeSaleBtn');
-        const paymentMethodSelect = document.getElementById('paymentMethod');
-        const cashReceivedInput = document.getElementById('cashReceived');
-        const changeDueSpan = document.getElementById('changeDue');
-        const cashChangeSection = document.getElementById('cashChangeSection');
-        const shareButtonsDiv = document.getElementById('shareButtons');
-        const todaySalesSpan = document.getElementById('todaySales');
-        const transactionsCountSpan = document.getElementById('transactionsCount');
-        const itemsSoldSpan = document.getElementById('itemsSold');
-        const cartTotalValueSpan = document.getElementById('cartTotalValue');
-        const branchSelect = document.getElementById('branchSelect');
-        const userNameDisplay = document.getElementById('userNameDisplay');
-        const roleBadge = document.getElementById('roleBadge');
-        const logoutBtn = document.getElementById('logoutBtn');
-        const loginOverlay = document.getElementById('loginOverlay');
-        const dashboardMain = document.getElementById('dashboardMain');
-        const userManagementPanel = document.getElementById('userManagementPanel');
-        const createWorkerBtn = document.getElementById('createWorkerBtn');
-        const workersListDiv = document.getElementById('workersList');
-        const firebaseStatusDiv = document.getElementById('firebaseStatus');
+    let allSales = JSON.parse(localStorage.getItem("billzest_sales")) || [];
+    function saveSales() { localStorage.setItem("billzest_sales", JSON.stringify(allSales)); }
 
-        // Helper: update UI after login
-        async function handleUserLogin(user, userData) {
-            currentUser = { uid: user.uid, email: user.email, role: userData?.role || 'branch_manager', branchId: userData?.branchId || 'branch1' };
-            userNameDisplay.innerText = user.email.split('@')[0];
-            roleBadge.innerText = currentUser.role === 'super_admin' ? 'Super Admin' : 'Branch Manager';
-            if (currentUser.role === 'super_admin') userManagementPanel.style.display = 'block';
-            else userManagementPanel.style.display = 'none';
-            loginOverlay.style.display = 'none';
-            dashboardMain.style.display = 'block';
-            populateBranchSelect();
-            renderProducts();
-            updateCartUI();
-            initCharts();
-            updateStatsAndCharts();
-            if (currentUser.role === 'super_admin') loadWorkersList();
-        }
+    const branches = [
+        { id: "branch1", name: "City Mall Branch" },
+        { id: "branch2", name: "Downtown Branch" },
+        { id: "branch3", name: "Airport Branch" }
+    ];
+    const products = [
+        { id: 1, name: "Espresso", category: "Coffee", price: 3.50, icon: "☕" },{ id: 2, name: "Cappuccino", category: "Coffee", price: 4.50, icon: "☕" },
+        { id: 3, name: "Latte", category: "Coffee", price: 4.80, icon: "☕" },{ id: 4, name: "Mocha", category: "Coffee", price: 5.00, icon: "☕" },
+        { id: 5, name: "Croissant", category: "Bakery", price: 3.00, icon: "🥐" },{ id: 6, name: "Chocolate Muffin", category: "Bakery", price: 3.20, icon: "🧁" },
+        { id: 7, name: "Club Sandwich", category: "Sandwiches", price: 7.50, icon: "🥪" },{ id: 8, name: "Grilled Cheese", category: "Sandwiches", price: 6.00, icon: "🥪" },
+        { id: 9, name: "Iced Tea", category: "Beverages", price: 3.00, icon: "🧃" },{ id: 10, name: "Fresh Orange Juice", category: "Beverages", price: 4.00, icon: "🍊" },
+        { id: 11, name: "Blueberry Muffin", category: "Bakery", price: 3.50, icon: "🧁" },{ id: 12, name: "Americano", category: "Coffee", price: 3.20, icon: "☕" }
+    ];
+    let cart = [];
+    let lastSaleData = null;
+    let currentUser = null;
+    let currentBranchId = null;
+    let weeklyChart, categoryChart;
 
-        async function loadWorkersList() {
-            if (!db || currentUser?.role !== 'super_admin') return;
-            try {
-                const usersRef = db.collection("users");
-                const q = usersRef.where("role", "==", "branch_manager");
-                const querySnap = await q.get();
-                let html = '';
-                querySnap.forEach(doc => {
-                    const data = doc.data();
-                    const branchName = branches.find(b => b.id === data.branchId)?.name || data.branchId;
-                    html += `<div class="worker-item"><span>${data.email}</span><span>${branchName}</span><button class="btn-secondary" style="width:auto; padding:2px 8px;" onclick="alert('Delete feature coming soon')">Delete</button></div>`;
-                });
-                workersListDiv.innerHTML = html || '<p>No workers added yet.</p>';
-            } catch(e) { console.warn(e); workersListDiv.innerHTML = '<p>Error loading workers</p>'; }
-        }
+    // DOM elements
+    const productGrid = document.getElementById('productGrid');
+    const searchInput = document.getElementById('searchInput');
+    const cartItemsContainer = document.getElementById('cartItemsList');
+    const clearCartBtn = document.getElementById('clearCartBtn');
+    const completeSaleBtn = document.getElementById('completeSaleBtn');
+    const paymentMethodSelect = document.getElementById('paymentMethod');
+    const cashReceivedInput = document.getElementById('cashReceived');
+    const changeDueSpan = document.getElementById('changeDue');
+    const cashChangeSection = document.getElementById('cashChangeSection');
+    const shareButtonsDiv = document.getElementById('shareButtons');
+    const todaySalesSpan = document.getElementById('todaySales');
+    const transactionsCountSpan = document.getElementById('transactionsCount');
+    const itemsSoldSpan = document.getElementById('itemsSold');
+    const cartTotalValueSpan = document.getElementById('cartTotalValue');
+    const branchSelect = document.getElementById('branchSelect');
+    const userNameDisplay = document.getElementById('userNameDisplay');
+    const roleBadge = document.getElementById('roleBadge');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const loginOverlay = document.getElementById('loginOverlay');
+    const dashboardMain = document.getElementById('dashboardMain');
+    const userManagementPanel = document.getElementById('userManagementPanel');
+    const createWorkerBtn = document.getElementById('createWorkerBtn');
+    const workersListDiv = document.getElementById('workersList');
 
-        async function createWorker() {
-            if (!auth || currentUser?.role !== 'super_admin') return;
-            const email = document.getElementById('newWorkerEmail').value.trim();
-            const password = document.getElementById('newWorkerPassword').value;
-            const branchId = document.getElementById('newWorkerBranch').value;
-            if (!email || !password) { alert("Please fill email and password"); return; }
-            try {
-                const userCred = await auth.createUserWithEmailAndPassword(email, password);
-                await db.collection("users").doc(userCred.user.uid).set({
-                    email: email,
-                    role: "branch_manager",
-                    branchId: branchId,
-                    createdAt: new Date().toISOString()
-                });
-                alert(`Worker ${email} created successfully!`);
-                document.getElementById('newWorkerEmail').value = '';
-                document.getElementById('newWorkerPassword').value = '';
-                loadWorkersList();
-            } catch (err) { alert("Error: " + err.message); }
-        }
+    function updateUserUI() {
+        if (!currentUser) return;
+        userNameDisplay.innerText = currentUser.email.split('@')[0];
+        roleBadge.innerText = currentUser.role === 'super_admin' ? 'Super Admin' : 'Branch Manager';
+        if (currentUser.role === 'super_admin') userManagementPanel.style.display = 'block';
+        else userManagementPanel.style.display = 'none';
+        populateBranchSelect();
+        updateStatsAndCharts();
+        if (currentUser.role === 'super_admin') loadWorkersList();
+    }
 
-        function populateBranchSelect() {
-            branchSelect.innerHTML = '';
-            let availableBranches = branches;
-            if (currentUser.role === 'branch_manager') availableBranches = branches.filter(b => b.id === currentUser.branchId);
-            availableBranches.forEach(b => { let opt = document.createElement('option'); opt.value = b.id; opt.textContent = b.name; branchSelect.appendChild(opt); });
-            if (currentUser.role === 'branch_manager') branchSelect.value = currentUser.branchId;
-            currentBranchId = branchSelect.value;
-            branchSelect.disabled = (currentUser.role !== 'super_admin');
-            updateStatsAndCharts();
-        }
-        function getBranchSales(branchId) { return allSales.filter(s => s.branchId === branchId); }
-        function updateStatsAndCharts() {
-            const branchId = branchSelect.value;
-            const branchSales = getBranchSales(branchId);
-            const todaySales = branchSales.filter(s => new Date(s.date).toDateString() === new Date().toDateString()).reduce((sum, s) => sum + s.total, 0);
-            todaySalesSpan.innerText = `$${todaySales.toFixed(2)}`;
-            transactionsCountSpan.innerText = branchSales.length;
-            const totalItems = branchSales.reduce((sum, s) => sum + s.itemsCount, 0);
-            itemsSoldSpan.innerText = totalItems;
-            const weeklyData = [0,0,0,0,0,0,0];
-            branchSales.forEach(sale => { const day = new Date(sale.date).getDay(); let idx = (day === 0 ? 6 : day-1); weeklyData[idx] += sale.total; });
-            if (weeklyChart) { weeklyChart.data.datasets[0].data = weeklyData; weeklyChart.update(); }
-            const categorySales = { Coffee:0, Bakery:0, Sandwiches:0, Beverages:0 };
-            branchSales.forEach(sale => { sale.items.forEach(item => { const prod = products.find(p => p.id === item.id); if (prod) categorySales[prod.category] += (item.price * item.qty); }); });
-            if (categoryChart) { categoryChart.data.datasets[0].data = [categorySales.Coffee, categorySales.Bakery, categorySales.Sandwiches, categorySales.Beverages]; categoryChart.update(); }
-        }
-        branchSelect.addEventListener('change', () => { currentBranchId = branchSelect.value; updateStatsAndCharts(); updateCartUI(); });
+    function populateBranchSelect() {
+        branchSelect.innerHTML = '';
+        let availableBranches = branches;
+        if (currentUser.role === 'branch_manager') availableBranches = branches.filter(b => b.id === currentUser.branchId);
+        availableBranches.forEach(b => { let opt = document.createElement('option'); opt.value = b.id; opt.textContent = b.name; branchSelect.appendChild(opt); });
+        if (currentUser.role === 'branch_manager') branchSelect.value = currentUser.branchId;
+        currentBranchId = branchSelect.value;
+        branchSelect.disabled = (currentUser.role !== 'super_admin');
+        updateStatsAndCharts();
+    }
+    branchSelect.addEventListener('change', () => { currentBranchId = branchSelect.value; updateStatsAndCharts(); updateCartUI(); });
 
-        function updateCartUI() {
-            if (cart.length === 0) { cartItemsContainer.innerHTML = '<p style="text-align:center;">Cart is empty</p>'; document.getElementById('cartTotals').innerHTML = `<div class="total-row"><span>Subtotal:</span><span>$0.00</span></div><div class="total-row"><span>Tax (10%):</span><span>$0.00</span></div><div class="grand-total">Total: $0.00</div>`; cartTotalValueSpan.innerText = "$0.00"; shareButtonsDiv.style.display = 'none'; return; }
-            let itemsHtml = '', subtotal = 0;
-            cart.forEach(item => { const itemTotal = item.price * item.quantity; subtotal += itemTotal; itemsHtml += `<div class="cart-item"><div class="item-info"><h4>${item.name}</h4><p>$${item.price.toFixed(2)} each</p></div><div class="item-actions"><div class="item-qty"><button class="qty-btn" data-id="${item.id}" data-delta="-1">-</button><span>${item.quantity}</span><button class="qty-btn" data-id="${item.id}" data-delta="1">+</button></div><i class="fas fa-trash-alt" data-id="${item.id}" style="color: var(--danger); cursor:pointer;"></i></div></div>`; });
-            cartItemsContainer.innerHTML = itemsHtml;
-            const tax = subtotal * 0.10; const total = subtotal + tax;
-            document.getElementById('cartTotals').innerHTML = `<div class="total-row"><span>Subtotal:</span><span>$${subtotal.toFixed(2)}</span></div><div class="total-row"><span>Tax (10%):</span><span>$${tax.toFixed(2)}</span></div><div class="grand-total">Total: $${total.toFixed(2)}</div>`;
-            cartTotalValueSpan.innerText = `$${total.toFixed(2)}`;
-            shareButtonsDiv.style.display = 'none';
-            document.querySelectorAll('.qty-btn').forEach(btn => { btn.addEventListener('click', (e) => { const id = parseInt(btn.dataset.id); const delta = parseInt(btn.dataset.delta); updateQuantity(id, delta); }); });
-            document.querySelectorAll('.fa-trash-alt').forEach(icon => { icon.addEventListener('click', (e) => { const id = parseInt(icon.dataset.id); removeItem(id); }); });
-        }
-        function updateQuantity(id, delta) { const index = cart.findIndex(i => i.id === id); if (index !== -1) { const newQty = cart[index].quantity + delta; if (newQty <= 0) cart.splice(index,1); else cart[index].quantity = newQty; updateCartUI(); } }
-        function removeItem(id) { cart = cart.filter(i => i.id !== id); updateCartUI(); }
-        function addToCart(product) { const existing = cart.find(i => i.id === product.id); if (existing) existing.quantity += 1; else cart.push({ ...product, quantity: 1 }); updateCartUI(); }
-        function clearCart() { cart = []; updateCartUI(); if (cashChangeSection.style.display === 'block') { cashChangeSection.style.display = 'none'; if(cashReceivedInput) cashReceivedInput.value = ''; } }
-        function completeSale() {
-            if (cart.length === 0) { alert("Cart is empty"); return; }
-            let subtotal = cart.reduce((sum, i) => sum + (i.price * i.quantity), 0);
-            let tax = subtotal * 0.10; let total = subtotal + tax;
-            let paymentMethod = paymentMethodSelect.value;
-            if (paymentMethod === 'cash') { let cashReceived = parseFloat(cashReceivedInput.value); if (isNaN(cashReceived) || cashReceived < total) { alert(`Insufficient cash`); return; } alert(`Payment successful! Change: $${(cashReceived-total).toFixed(2)}`); }
-            else { alert(`Payment via ${paymentMethod} successful! Total: $${total.toFixed(2)}`); }
-            const itemsCount = cart.reduce((sum, i) => sum + i.quantity, 0);
-            const saleRecord = { branchId: branchSelect.value, date: new Date().toISOString(), total: total, itemsCount: itemsCount, subtotal: subtotal, tax: tax, paymentMethod: paymentMethod, items: cart.map(i => ({ id: i.id, name: i.name, qty: i.quantity, price: i.price })) };
-            allSales.push(saleRecord); saveSales();
-            lastSaleData = saleRecord;
-            updateStatsAndCharts();
-            clearCart();
-            shareButtonsDiv.style.display = 'flex';
-        }
-        function generateReceiptData() { if (!lastSaleData) return null; let itemsHtml = ''; lastSaleData.items.forEach(item => { itemsHtml += `<div>${item.name} x ${item.qty} = $${(item.price * item.qty).toFixed(2)}</div>`; }); return { itemsHtml, subtotal: lastSaleData.subtotal, tax: lastSaleData.tax, total: lastSaleData.total, paymentMethod: lastSaleData.paymentMethod, date: new Date(lastSaleData.date).toLocaleString(), branchName: branches.find(b=>b.id===lastSaleData.branchId)?.name }; }
-        function showPrintReceipt() { const data = generateReceiptData(); if (!data) return; document.getElementById('receiptItems').innerHTML = data.itemsHtml; document.getElementById('receiptTotals').innerHTML = `<div>Subtotal: $${data.subtotal.toFixed(2)}</div><div>Tax: $${data.tax.toFixed(2)}</div><div><strong>Total: $${data.total.toFixed(2)}</strong></div>`; document.getElementById('receiptDate').innerText = data.date; document.getElementById('receiptBranch').innerText = data.branchName; document.getElementById('receiptPayment').innerText = data.paymentMethod; const printWindow = window.open('', '_blank', 'width=400,height=600'); printWindow.document.write(`<html><head><title>BillZest Receipt</title><style>body{font-family:monospace;padding:20px;}</style></head><body>${document.getElementById('receipt-print').innerHTML}</body></html>`); printWindow.document.close(); printWindow.print(); }
-        function shareWhatsApp() { const data = generateReceiptData(); if (!data) return; let message = `BillZest POS Receipt\nBranch: ${data.branchName}\nDate: ${data.date}\n\nItems:\n`; lastSaleData.items.forEach(item => { message += `${item.name} x${item.qty} = $${(item.price * item.qty).toFixed(2)}\n`; }); message += `\nSubtotal: $${data.subtotal.toFixed(2)}\nTax: $${data.tax.toFixed(2)}\nTotal: $${data.total.toFixed(2)}\nPayment: ${data.paymentMethod}\n\nThank you!`; window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank'); }
+    function getBranchSales(branchId) { return allSales.filter(s => s.branchId === branchId); }
+    function updateStatsAndCharts() {
+        const branchId = branchSelect.value;
+        const branchSales = getBranchSales(branchId);
+        const todaySales = branchSales.filter(s => new Date(s.date).toDateString() === new Date().toDateString()).reduce((sum, s) => sum + s.total, 0);
+        todaySalesSpan.innerText = `$${todaySales.toFixed(2)}`;
+        transactionsCountSpan.innerText = branchSales.length;
+        const totalItems = branchSales.reduce((sum, s) => sum + s.itemsCount, 0);
+        itemsSoldSpan.innerText = totalItems;
+        const weeklyData = [0,0,0,0,0,0,0];
+        branchSales.forEach(sale => { const day = new Date(sale.date).getDay(); let idx = (day === 0 ? 6 : day-1); weeklyData[idx] += sale.total; });
+        if (weeklyChart) { weeklyChart.data.datasets[0].data = weeklyData; weeklyChart.update(); }
+        const categorySales = { Coffee:0, Bakery:0, Sandwiches:0, Beverages:0 };
+        branchSales.forEach(sale => { sale.items.forEach(item => { const prod = products.find(p => p.id === item.id); if (prod) categorySales[prod.category] += (item.price * item.qty); }); });
+        if (categoryChart) { categoryChart.data.datasets[0].data = [categorySales.Coffee, categorySales.Bakery, categorySales.Sandwiches, categorySales.Beverages]; categoryChart.update(); }
+    }
 
-        let currentCategory = 'all', searchTerm = '';
-        function renderProducts() { let filtered = products.filter(p => (currentCategory === 'all' || p.category === currentCategory) && p.name.toLowerCase().includes(searchTerm.toLowerCase())); productGrid.innerHTML = filtered.map(p => `<div class="product-card" data-id="${p.id}"><div class="product-icon">${p.icon}</div><div class="product-name">${p.name}</div><div class="product-price">$${p.price.toFixed(2)}</div></div>`).join(''); document.querySelectorAll('.product-card').forEach(card => { card.addEventListener('click', () => { const id = parseInt(card.dataset.id); const product = products.find(p => p.id === id); if (product) addToCart(product); }); }); }
-        function initCategoryFilters() { document.querySelectorAll('.cat-btn').forEach(btn => { btn.addEventListener('click', () => { document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); currentCategory = btn.dataset.cat; renderProducts(); }); }); }
-        function initSearch() { searchInput.addEventListener('input', (e) => { searchTerm = e.target.value; renderProducts(); }); }
-        function initPayment() { paymentMethodSelect.addEventListener('change', (e) => { cashChangeSection.style.display = e.target.value === 'cash' ? 'block' : 'none'; }); cashReceivedInput?.addEventListener('input', () => { let subtotal = cart.reduce((sum, i) => sum + (i.price * i.quantity), 0); let total = subtotal + (subtotal*0.10); let received = parseFloat(cashReceivedInput.value); if (!isNaN(received)) changeDueSpan.innerText = received >= total ? `Change: $${(received-total).toFixed(2)}` : `Remaining: $${(total-received).toFixed(2)}`; else changeDueSpan.innerText = ''; }); }
-        function initCharts() { const weeklyCtx = document.getElementById('weeklyChart').getContext('2d'); const categoryCtx = document.getElementById('categoryChart').getContext('2d'); weeklyChart = new Chart(weeklyCtx, { type: 'line', data: { labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'], datasets: [{ label: 'Sales ($)', data: [0,0,0,0,0,0,0], borderColor: '#1e2a5e', tension: 0.3, fill: false }] }, options: { responsive: true } }); categoryChart = new Chart(categoryCtx, { type: 'doughnut', data: { labels: ['Coffee','Bakery','Sandwiches','Beverages'], datasets: [{ data: [0,0,0,0], backgroundColor: ['#1e2a5e','#f59e0b','#10b981','#3b82f6'] }] }, options: { responsive: true } }); }
+    function updateCartUI() {
+        if (cart.length === 0) { cartItemsContainer.innerHTML = '<p style="text-align:center;">Cart is empty</p>'; document.getElementById('cartTotals').innerHTML = `<div class="total-row"><span>Subtotal:</span><span>$0.00</span></div><div class="total-row"><span>Tax (10%):</span><span>$0.00</span></div><div class="grand-total">Total: $0.00</div>`; cartTotalValueSpan.innerText = "$0.00"; shareButtonsDiv.style.display = 'none'; return; }
+        let itemsHtml = '', subtotal = 0;
+        cart.forEach(item => { const itemTotal = item.price * item.quantity; subtotal += itemTotal; itemsHtml += `<div class="cart-item"><div class="item-info"><h4>${item.name}</h4><p>$${item.price.toFixed(2)} each</p></div><div class="item-actions"><div class="item-qty"><button class="qty-btn" data-id="${item.id}" data-delta="-1">-</button><span>${item.quantity}</span><button class="qty-btn" data-id="${item.id}" data-delta="1">+</button></div><i class="fas fa-trash-alt" data-id="${item.id}" style="color: var(--danger); cursor:pointer;"></i></div></div>`; });
+        cartItemsContainer.innerHTML = itemsHtml;
+        const tax = subtotal * 0.10; const total = subtotal + tax;
+        document.getElementById('cartTotals').innerHTML = `<div class="total-row"><span>Subtotal:</span><span>$${subtotal.toFixed(2)}</span></div><div class="total-row"><span>Tax (10%):</span><span>$${tax.toFixed(2)}</span></div><div class="grand-total">Total: $${total.toFixed(2)}</div>`;
+        cartTotalValueSpan.innerText = `$${total.toFixed(2)}`;
+        shareButtonsDiv.style.display = 'none';
+        document.querySelectorAll('.qty-btn').forEach(btn => { btn.addEventListener('click', (e) => { const id = parseInt(btn.dataset.id); const delta = parseInt(btn.dataset.delta); updateQuantity(id, delta); }); });
+        document.querySelectorAll('.fa-trash-alt').forEach(icon => { icon.addEventListener('click', (e) => { const id = parseInt(icon.dataset.id); removeItem(id); }); });
+    }
+    function updateQuantity(id, delta) { const index = cart.findIndex(i => i.id === id); if (index !== -1) { const newQty = cart[index].quantity + delta; if (newQty <= 0) cart.splice(index,1); else cart[index].quantity = newQty; updateCartUI(); } }
+    function removeItem(id) { cart = cart.filter(i => i.id !== id); updateCartUI(); }
+    function addToCart(product) { const existing = cart.find(i => i.id === product.id); if (existing) existing.quantity += 1; else cart.push({ ...product, quantity: 1 }); updateCartUI(); }
+    function clearCart() { cart = []; updateCartUI(); if (cashChangeSection.style.display === 'block') { cashChangeSection.style.display = 'none'; if(cashReceivedInput) cashReceivedInput.value = ''; } }
+    function completeSale() {
+        if (cart.length === 0) { alert("Cart is empty"); return; }
+        let subtotal = cart.reduce((sum, i) => sum + (i.price * i.quantity), 0);
+        let tax = subtotal * 0.10; let total = subtotal + tax;
+        let paymentMethod = paymentMethodSelect.value;
+        if (paymentMethod === 'cash') { let cashReceived = parseFloat(cashReceivedInput.value); if (isNaN(cashReceived) || cashReceived < total) { alert(`Insufficient cash`); return; } alert(`Payment successful! Change: $${(cashReceived-total).toFixed(2)}`); }
+        else { alert(`Payment via ${paymentMethod} successful! Total: $${total.toFixed(2)}`); }
+        const itemsCount = cart.reduce((sum, i) => sum + i.quantity, 0);
+        const saleRecord = { branchId: branchSelect.value, date: new Date().toISOString(), total: total, itemsCount: itemsCount, subtotal: subtotal, tax: tax, paymentMethod: paymentMethod, items: cart.map(i => ({ id: i.id, name: i.name, qty: i.quantity, price: i.price })) };
+        allSales.push(saleRecord); saveSales();
+        lastSaleData = saleRecord;
+        updateStatsAndCharts();
+        clearCart();
+        shareButtonsDiv.style.display = 'flex';
+    }
+    function generateReceiptData() { if (!lastSaleData) return null; let itemsHtml = ''; lastSaleData.items.forEach(item => { itemsHtml += `<div>${item.name} x ${item.qty} = $${(item.price * item.qty).toFixed(2)}</div>`; }); return { itemsHtml, subtotal: lastSaleData.subtotal, tax: lastSaleData.tax, total: lastSaleData.total, paymentMethod: lastSaleData.paymentMethod, date: new Date(lastSaleData.date).toLocaleString(), branchName: branches.find(b=>b.id===lastSaleData.branchId)?.name }; }
+    function showPrintReceipt() { const data = generateReceiptData(); if (!data) return; document.getElementById('receiptItems').innerHTML = data.itemsHtml; document.getElementById('receiptTotals').innerHTML = `<div>Subtotal: $${data.subtotal.toFixed(2)}</div><div>Tax: $${data.tax.toFixed(2)}</div><div><strong>Total: $${data.total.toFixed(2)}</strong></div>`; document.getElementById('receiptDate').innerText = data.date; document.getElementById('receiptBranch').innerText = data.branchName; document.getElementById('receiptPayment').innerText = data.paymentMethod; const printWindow = window.open('', '_blank', 'width=400,height=600'); printWindow.document.write(`<html><head><title>BillZest Receipt</title><style>body{font-family:monospace;padding:20px;}</style></head><body>${document.getElementById('receipt-print').innerHTML}</body></html>`); printWindow.document.close(); printWindow.print(); }
+    function shareWhatsApp() { const data = generateReceiptData(); if (!data) return; let message = `BillZest POS Receipt\nBranch: ${data.branchName}\nDate: ${data.date}\n\nItems:\n`; lastSaleData.items.forEach(item => { message += `${item.name} x${item.qty} = $${(item.price * item.qty).toFixed(2)}\n`; }); message += `\nSubtotal: $${data.subtotal.toFixed(2)}\nTax: $${data.tax.toFixed(2)}\nTotal: $${data.total.toFixed(2)}\nPayment: ${data.paymentMethod}\n\nThank you!`; window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank'); }
 
-        // Firebase initialization and login handlers
-        async function initFirebaseAndLogin() {
-            // Wait for window.firebaseReady
-            let attempts = 0;
-            while (!window.firebaseReady || !window.firebaseReady.auth) {
-                await new Promise(r => setTimeout(r, 100));
-                attempts++;
-                if (attempts > 50) { // 5 seconds timeout
-                    firebaseStatusDiv.innerText = "Firebase failed to load. Check console.";
-                    console.error("Firebase not loaded after 5 seconds");
-                    return;
-                }
-            }
-            auth = window.firebaseReady.auth;
-            db = window.firebaseReady.db;
-            firebaseStatusDiv.innerText = "Firebase ready. You can login.";
-            console.log("Firebase ready", auth, db);
+    // Render products
+    let currentCategory = 'all', searchTerm = '';
+    function renderProducts() { let filtered = products.filter(p => (currentCategory === 'all' || p.category === currentCategory) && p.name.toLowerCase().includes(searchTerm.toLowerCase())); productGrid.innerHTML = filtered.map(p => `<div class="product-card" data-id="${p.id}"><div class="product-icon">${p.icon}</div><div class="product-name">${p.name}</div><div class="product-price">$${p.price.toFixed(2)}</div></div>`).join(''); document.querySelectorAll('.product-card').forEach(card => { card.addEventListener('click', () => { const id = parseInt(card.dataset.id); const product = products.find(p => p.id === id); if (product) addToCart(product); }); }); }
+    document.querySelectorAll('.cat-btn').forEach(btn => { btn.addEventListener('click', () => { document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); currentCategory = btn.dataset.cat; renderProducts(); }); });
+    searchInput.addEventListener('input', (e) => { searchTerm = e.target.value; renderProducts(); });
+    paymentMethodSelect.addEventListener('change', (e) => { cashChangeSection.style.display = e.target.value === 'cash' ? 'block' : 'none'; });
+    cashReceivedInput?.addEventListener('input', () => { let subtotal = cart.reduce((sum, i) => sum + (i.price * i.quantity), 0); let total = subtotal + (subtotal*0.10); let received = parseFloat(cashReceivedInput.value); if (!isNaN(received)) changeDueSpan.innerText = received >= total ? `Change: $${(received-total).toFixed(2)}` : `Remaining: $${(total-received).toFixed(2)}`; else changeDueSpan.innerText = ''; });
+    clearCartBtn.addEventListener('click', clearCart);
+    completeSaleBtn.addEventListener('click', completeSale);
+    document.getElementById('printReceiptBtn')?.addEventListener('click', showPrintReceipt);
+    document.getElementById('whatsappShareBtn')?.addEventListener('click', shareWhatsApp);
 
-            // Attach login events
-            document.getElementById('emailLoginBtn').onclick = async () => {
-                const email = document.getElementById('loginEmail').value;
-                const pwd = document.getElementById('loginPassword').value;
-                if (!email || !pwd) { alert("Enter email and password"); return; }
-                try {
-                    const cred = await auth.signInWithEmailAndPassword(email, pwd);
-                    const user = cred.user;
-                    let userData = null;
-                    const docRef = db.collection("users").doc(user.uid);
-                    const docSnap = await docRef.get();
-                    if (docSnap.exists) userData = docSnap.data();
-                    else {
-                        if (email === 'admin@billzest.com') {
-                            userData = { role: 'super_admin', branchId: null };
-                            await docRef.set({ email: user.email, role: 'super_admin', createdAt: new Date().toISOString() });
-                        } else {
-                            alert("No role assigned. Contact admin.");
-                            return;
-                        }
-                    }
-                    await handleUserLogin(user, userData);
-                } catch(err) { alert("Login failed: " + err.message); }
-            };
-            document.getElementById('googleLoginBtn').onclick = async () => {
-                try {
-                    const provider = new firebaseReady.GoogleAuthProvider();
-                    const result = await auth.signInWithPopup(provider);
-                    const user = result.user;
-                    let userData = null;
-                    const docRef = db.collection("users").doc(user.uid);
-                    const docSnap = await docRef.get();
-                    if (docSnap.exists) userData = docSnap.data();
-                    else {
-                        userData = { role: 'branch_manager', branchId: 'branch1' };
-                        await docRef.set({ email: user.email, role: 'branch_manager', branchId: 'branch1', createdAt: new Date().toISOString() });
-                    }
-                    await handleUserLogin(user, userData);
-                } catch(err) { alert("Google login failed: " + err.message); }
-            };
-        }
+    function initCharts() { const weeklyCtx = document.getElementById('weeklyChart').getContext('2d'); const categoryCtx = document.getElementById('categoryChart').getContext('2d'); weeklyChart = new Chart(weeklyCtx, { type: 'line', data: { labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'], datasets: [{ label: 'Sales ($)', data: [0,0,0,0,0,0,0], borderColor: '#1e2a5e', tension: 0.3, fill: false }] }, options: { responsive: true } }); categoryChart = new Chart(categoryCtx, { type: 'doughnut', data: { labels: ['Coffee','Bakery','Sandwiches','Beverages'], datasets: [{ data: [0,0,0,0], backgroundColor: ['#1e2a5e','#f59e0b','#10b981','#3b82f6'] }] }, options: { responsive: true } }); }
 
-        // Initialize UI elements that don't depend on Firebase
-        clearCartBtn.addEventListener('click', clearCart);
-        completeSaleBtn.addEventListener('click', completeSale);
-        document.getElementById('printReceiptBtn')?.addEventListener('click', showPrintReceipt);
-        document.getElementById('whatsappShareBtn')?.addEventListener('click', shareWhatsApp);
-        if (createWorkerBtn) createWorkerBtn.addEventListener('click', createWorker);
-        logoutBtn.addEventListener('click', async () => { if (auth) await auth.signOut(); currentUser = null; dashboardMain.style.display = 'none'; loginOverlay.style.display = 'flex'; cart = []; });
-        initCategoryFilters();
-        initSearch();
-        initPayment();
+    // Login handlers (demo mode)
+    function loginWithEmail() {
+        const email = document.getElementById('loginEmail').value.trim();
+        const pwd = document.getElementById('loginPassword').value;
+        const user = users.find(u => u.email === email && u.password === pwd);
+        if (!user) { document.getElementById('loginStatus').innerText = "Invalid email or password."; return; }
+        currentUser = { ...user };
+        loginOverlay.style.display = 'none';
+        dashboardMain.style.display = 'block';
+        initCharts();
+        renderProducts();
+        updateCartUI();
+        updateUserUI();
+    }
+    function loginWithGoogleDemo() {
+        // Demo: create a new branch manager with random email
+        const fakeEmail = "demo_" + Date.now() + "@gmail.com";
+        const newUser = { email: fakeEmail, password: "google", role: "branch_manager", branchId: "branch1" };
+        users.push(newUser);
+        saveUsers();
+        currentUser = { ...newUser };
+        loginOverlay.style.display = 'none';
+        dashboardMain.style.display = 'block';
+        initCharts();
+        renderProducts();
+        updateCartUI();
+        updateUserUI();
+        document.getElementById('loginStatus').innerText = "";
+        alert(`Logged in as ${fakeEmail} (Demo Google Login). You can create real workers using Super Admin.`);
+    }
+    document.getElementById('emailLoginBtn').addEventListener('click', loginWithEmail);
+    document.getElementById('googleLoginBtn').addEventListener('click', loginWithGoogleDemo);
+    logoutBtn.addEventListener('click', () => { currentUser = null; dashboardMain.style.display = 'none'; loginOverlay.style.display = 'flex'; cart = []; });
 
-        // demo initial sales
-        if (allSales.length === 0) { allSales.push({ branchId: "branch1", date: new Date().toISOString(), total: 158.40, itemsCount: 5, items: [], subtotal: 144, tax: 14.4, paymentMethod: "card" }); allSales.push({ branchId: "branch2", date: new Date(Date.now()-86400000).toISOString(), total: 210.20, itemsCount: 8, items: [], subtotal: 191.09, tax: 19.11, paymentMethod: "cash" }); saveSales(); }
-
-        initFirebaseAndLogin();
-    })();
-</script>
-
-<!-- Firebase SDK (module) -->
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-    import { getFirestore, doc, setDoc, getDoc, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
-    const firebaseConfig = { apiKey: "AIzaSyCN0akvFXOHM6WPHv9ve9noqqmauO3TJRY", authDomain: "billzest-pos.firebaseapp.com", projectId: "billzest-pos", storageBucket: "billzest-pos.firebasestorage.app", messagingSenderId: "946546876429", appId: "1:946546876429:web:9b4a7aa3cecbf3aea83544", measurementId: "G-69WEHH9X5D" };
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-    window.firebaseReady = {
-        auth: auth,
-        db: db,
-        signInWithEmailAndPassword: signInWithEmailAndPassword,
-        createUserWithEmailAndPassword: createUserWithEmailAndPassword,
-        signInWithPopup: signInWithPopup,
-        GoogleAuthProvider: GoogleAuthProvider,
-        signOut: signOut,
-        doc: doc, setDoc: setDoc, getDoc: getDoc, collection: collection, getDocs: getDocs, query: query, where: where
+    // Worker management for super admin
+    function loadWorkersList() {
+        const workers = users.filter(u => u.role === 'branch_manager');
+        workersListDiv.innerHTML = workers.map(w => `<div class="worker-item"><span>${w.email}</span><span>${branches.find(b=>b.id===w.branchId)?.name || w.branchId}</span><button class="btn-secondary" style="width:auto; padding:2px 8px;" onclick="deleteWorker('${w.email}')">Delete</button></div>`).join('');
+    }
+    window.deleteWorker = function(email) {
+        users = users.filter(u => u.email !== email);
+        saveUsers();
+        loadWorkersList();
+        alert(`Worker ${email} deleted.`);
     };
-    console.log("Firebase module loaded", window.firebaseReady);
+    function createWorker() {
+        if (currentUser?.role !== 'super_admin') return;
+        const email = document.getElementById('newWorkerEmail').value.trim();
+        const password = document.getElementById('newWorkerPassword').value;
+        const branchId = document.getElementById('newWorkerBranch').value;
+        if (!email || !password) { alert("Please fill email and password"); return; }
+        if (users.find(u => u.email === email)) { alert("User already exists"); return; }
+        users.push({ email, password, role: "branch_manager", branchId });
+        saveUsers();
+        alert(`Worker ${email} created!`);
+        document.getElementById('newWorkerEmail').value = '';
+        document.getElementById('newWorkerPassword').value = '';
+        loadWorkersList();
+    }
+    createWorkerBtn?.addEventListener('click', createWorker);
+
+    // initial demo sales if empty
+    if (allSales.length === 0) { allSales.push({ branchId: "branch1", date: new Date().toISOString(), total: 158.40, itemsCount: 5, items: [], subtotal: 144, tax: 14.4, paymentMethod: "card" }); allSales.push({ branchId: "branch2", date: new Date(Date.now()-86400000).toISOString(), total: 210.20, itemsCount: 8, items: [], subtotal: 191.09, tax: 19.11, paymentMethod: "cash" }); saveSales(); }
 </script>
 </body>
 </html>
