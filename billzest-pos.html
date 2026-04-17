@@ -471,7 +471,7 @@
         if (!container) return;
         container.innerHTML = branches.map(b => `
             <div class="branch-item">
-                <span><strong>${b.name}</strong> (${b.id})</span>
+                <span><strong>${b.name}</strong></span>
                 <div class="branch-actions">
                     <button onclick="editBranch('${b.id}')"><i class="fas fa-edit"></i></button>
                     <button onclick="deleteBranch('${b.id}')"><i class="fas fa-trash"></i></button>
