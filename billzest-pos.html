@@ -3,144 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>BillZest POS | Modern Point of Sale System</title>
+    <title>BillZest POS | Multi-Branch System</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         :root {
-            --bg: #f4f6fb;
-            --surface: #ffffff;
-            --primary: #1e2a5e;
-            --primary-light: #2a3a7a;
-            --accent: #f59e0b;
-            --accent-hover: #d97706;
-            --text-primary: #1f2937;
-            --text-secondary: #4b5563;
-            --border: #e5e7eb;
-            --card-shadow: 0 8px 20px rgba(0,0,0,0.03), 0 2px 4px rgba(0,0,0,0.05);
-            --success: #10b981;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-            --info: #3b82f6;
+            --bg: #f4f6fb; --surface: #ffffff; --primary: #1e2a5e; --primary-light: #2a3a7a;
+            --accent: #f59e0b; --accent-hover: #d97706; --text-primary: #1f2937;
+            --text-secondary: #4b5563; --border: #e5e7eb; --card-shadow: 0 8px 20px rgba(0,0,0,0.03), 0 2px 4px rgba(0,0,0,0.05);
+            --success: #10b981; --danger: #ef4444; --warning: #f59e0b; --info: #3b82f6;
         }
-        body {
-            background: var(--bg);
-            color: var(--text-primary);
-            padding: 24px;
-        }
+        body { background: var(--bg); color: var(--text-primary); padding: 24px; }
         .pos-dashboard { max-width: 1600px; margin: 0 auto; }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 28px;
-            flex-wrap: wrap;
-            gap: 16px;
-        }
-        .logo h1 {
-            font-size: 1.8rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #1e2a5e, #2a3a7a);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; flex-wrap: wrap; gap: 16px; }
+        .logo h1 { font-size: 1.8rem; font-weight: 700; background: linear-gradient(135deg, #1e2a5e, #2a3a7a); -webkit-background-clip: text; background-clip: text; color: transparent; }
         .logo span { font-size: 0.9rem; color: var(--text-secondary); display: block; }
         .stats-cards { display: flex; gap: 20px; flex-wrap: wrap; }
-        .stat-card {
-            background: var(--surface);
-            border-radius: 24px;
-            padding: 16px 24px;
-            min-width: 150px;
-            box-shadow: var(--card-shadow);
-            border: 1px solid var(--border);
-            transition: all 0.2s;
-        }
+        .stat-card { background: var(--surface); border-radius: 24px; padding: 16px 24px; min-width: 150px; box-shadow: var(--card-shadow); border: 1px solid var(--border); transition: all 0.2s; }
         .stat-card:hover { transform: translateY(-2px); box-shadow: 0 12px 24px rgba(0,0,0,0.05); }
         .stat-title { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary); font-weight: 600; }
         .stat-value { font-size: 1.8rem; font-weight: 800; color: var(--primary); margin-top: 6px; }
         .pos-grid { display: grid; grid-template-columns: 1fr 380px; gap: 28px; margin-bottom: 40px; }
-        .products-section {
-            background: var(--surface);
-            border-radius: 28px;
-            border: 1px solid var(--border);
-            overflow: hidden;
-            box-shadow: var(--card-shadow);
-        }
-        .search-bar {
-            padding: 20px 24px;
-            border-bottom: 1px solid var(--border);
-            background: var(--surface);
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: space-between;
-        }
+        .products-section { background: var(--surface); border-radius: 28px; border: 1px solid var(--border); overflow: hidden; box-shadow: var(--card-shadow); }
+        .search-bar { padding: 20px 24px; border-bottom: 1px solid var(--border); background: var(--surface); display: flex; gap: 12px; flex-wrap: wrap; align-items: center; justify-content: space-between; }
         .search-wrapper { flex: 1; position: relative; }
         .search-wrapper i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); }
-        #searchInput {
-            width: 100%;
-            padding: 12px 12px 12px 42px;
-            border: 1px solid var(--border);
-            border-radius: 40px;
-            font-size: 0.9rem;
-            background: var(--bg);
-            transition: all 0.2s;
-        }
+        #searchInput { width: 100%; padding: 12px 12px 12px 42px; border: 1px solid var(--border); border-radius: 40px; font-size: 0.9rem; background: var(--bg); transition: all 0.2s; }
         #searchInput:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 2px rgba(30,42,94,0.1); }
         .category-filter { display: flex; gap: 10px; flex-wrap: wrap; }
-        .cat-btn {
-            background: var(--bg);
-            border: 1px solid var(--border);
-            padding: 8px 18px;
-            border-radius: 40px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s;
-            color: var(--text-secondary);
-        }
+        .cat-btn { background: var(--bg); border: 1px solid var(--border); padding: 8px 18px; border-radius: 40px; font-weight: 500; cursor: pointer; transition: all 0.2s; color: var(--text-secondary); }
         .cat-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
-        .product-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-            gap: 18px;
-            padding: 24px;
-            max-height: 65vh;
-            overflow-y: auto;
-        }
-        .product-card {
-            background: var(--bg);
-            border-radius: 20px;
-            padding: 16px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            border: 1px solid transparent;
-            text-align: center;
-        }
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 18px; padding: 24px; max-height: 65vh; overflow-y: auto; }
+        .product-card { background: var(--bg); border-radius: 20px; padding: 16px; cursor: pointer; transition: all 0.2s ease; border: 1px solid transparent; text-align: center; }
         .product-card:hover { transform: translateY(-3px); background: white; border-color: var(--primary); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
         .product-icon { font-size: 2.2rem; margin-bottom: 8px; }
         .product-name { font-weight: 700; font-size: 1rem; }
         .product-price { font-weight: 600; color: var(--primary); margin-top: 6px; font-size: 1rem; }
-        .cart-section {
-            background: var(--surface);
-            border-radius: 28px;
-            border: 1px solid var(--border);
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            height: fit-content;
-            position: sticky;
-            top: 20px;
-            box-shadow: var(--card-shadow);
-        }
+        .cart-section { background: var(--surface); border-radius: 28px; border: 1px solid var(--border); padding: 20px; display: flex; flex-direction: column; height: fit-content; position: sticky; top: 20px; box-shadow: var(--card-shadow); }
         .cart-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid var(--border); }
         .cart-items { max-height: 380px; overflow-y: auto; margin-bottom: 20px; }
         .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); }
@@ -162,42 +63,54 @@
         .btn-secondary { background: var(--bg); border: 1px solid var(--border); color: var(--text-primary); }
         .share-buttons { display: flex; gap: 12px; margin-top: 8px; }
         .share-btn { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; background: var(--bg); border: 1px solid var(--border); border-radius: 40px; padding: 10px; font-weight: 600; cursor: pointer; transition: 0.2s; }
-        .share-btn i { font-size: 1.1rem; }
         .share-btn.print:hover { background: #e2e3e5; }
         .share-btn.whatsapp { background: #25D366; color: white; border: none; }
         .share-btn.whatsapp:hover { background: #128C7E; }
-        .analytics-section {
-            background: var(--surface);
-            border-radius: 28px;
-            border: 1px solid var(--border);
-            padding: 24px;
-            margin-top: 20px;
-        }
+        .analytics-section { background: var(--surface); border-radius: 28px; border: 1px solid var(--border); padding: 24px; margin-top: 20px; }
         .analytics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 16px; }
         .chart-container { background: var(--bg); padding: 16px; border-radius: 20px; }
         canvas { max-height: 200px; width: 100%; }
-        /* Print styles */
-        @media print {
-            body * { visibility: hidden; }
-            #receipt-print, #receipt-print * { visibility: visible; }
-            #receipt-print { position: absolute; top: 0; left: 0; width: 100%; padding: 20px; background: white; color: black; }
-            .no-print { display: none; }
-        }
+        /* Branch & Admin UI */
+        .branch-selector { background: var(--surface); border-radius: 28px; padding: 12px 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; border: 1px solid var(--border); }
+        .branch-selector label { font-weight: 600; }
+        .branch-selector select { padding: 8px 16px; border-radius: 40px; border: 1px solid var(--border); background: var(--bg); }
+        .user-info-bar { display: flex; align-items: center; gap: 12px; background: var(--surface); padding: 8px 20px; border-radius: 40px; border: 1px solid var(--border); }
+        .role-badge { background: var(--primary); color: white; padding: 4px 12px; border-radius: 40px; font-size: 0.7rem; font-weight: 600; }
+        .login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; display: flex; align-items: center; justify-content: center; }
+        .login-card { background: white; border-radius: 32px; padding: 32px; width: 90%; max-width: 400px; text-align: center; }
+        .login-card input, .login-card select { width: 100%; padding: 12px; margin: 10px 0; border-radius: 40px; border: 1px solid #ddd; }
+        .login-card button { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 40px; width: 100%; font-weight: bold; cursor: pointer; }
+        @media print { body * { visibility: hidden; } #receipt-print, #receipt-print * { visibility: visible; } #receipt-print { position: absolute; top: 0; left: 0; width: 100%; padding: 20px; background: white; } .no-print { display: none; } }
         @media (max-width: 1000px) { .pos-grid { grid-template-columns: 1fr; } .cart-section { position: static; } body { padding: 16px; } }
         @media (max-width: 640px) { .stats-cards { width: 100%; justify-content: space-between; } .stat-card { flex: 1; min-width: auto; padding: 12px; } .stat-value { font-size: 1.4rem; } }
-        body.dark { --bg: #0f172a; --surface: #1e293b; --text-primary: #f1f5f9; --text-secondary: #94a3b8; --border: #334155; --card-shadow: 0 8px 20px rgba(0,0,0,0.2); }
     </style>
 </head>
 <body>
-<div class="pos-dashboard">
+<div id="loginOverlay" class="login-overlay">
+    <div class="login-card">
+        <h2><i class="fas fa-cash-register"></i> BillZest POS</h2>
+        <p>Login to continue</p>
+        <input type="text" id="loginEmail" placeholder="Email" value="admin@billzest.com">
+        <input type="password" id="loginPassword" placeholder="Password" value="admin123">
+        <button id="loginBtn">Login</button>
+        <div style="margin-top: 12px; font-size: 12px; color: #888;">Demo: admin@billzest.com / admin123 (Super Admin)<br>manager1@billzest.com / manager123 (Branch Manager - City Mall)<br>manager2@billzest.com / manager123 (Branch Manager - Downtown)</div>
+    </div>
+</div>
+
+<div class="pos-dashboard" id="dashboardMain" style="display: none;">
     <div class="header">
-        <div class="logo"><h1><i class="fas fa-cash-register"></i> Bill<span style="color:#f59e0b;">Zest</span> POS</h1><span>Modern Point of Sale System</span></div>
+        <div class="logo"><h1><i class="fas fa-cash-register"></i> Bill<span style="color:#f59e0b;">Zest</span> POS</h1><span>Multi-Branch Management System</span></div>
         <div class="stats-cards">
             <div class="stat-card"><div class="stat-title">Today's Sales</div><div class="stat-value" id="todaySales">$0</div></div>
             <div class="stat-card"><div class="stat-title">Transactions</div><div class="stat-value" id="transactionsCount">0</div></div>
             <div class="stat-card"><div class="stat-title">Items Sold</div><div class="stat-value" id="itemsSold">0</div></div>
             <div class="stat-card"><div class="stat-title">Cart Value</div><div class="stat-value" id="cartTotalValue">$0</div></div>
         </div>
+    </div>
+    <div class="branch-selector" id="branchSelectorDiv">
+        <label><i class="fas fa-store"></i> Branch:</label>
+        <select id="branchSelect"></select>
+        <div class="user-info-bar"><span id="userNameDisplay"></span> <span class="role-badge" id="roleBadge"></span> <button id="logoutBtn" class="btn-secondary" style="width: auto; padding: 4px 12px;">Logout</button></div>
     </div>
     <div class="pos-grid">
         <div class="products-section">
@@ -215,74 +128,50 @@
         </div>
         <div class="cart-section">
             <div class="cart-header"><h3><i class="fas fa-shopping-cart"></i> Current Order</h3><button class="btn-secondary" id="clearCartBtn" style="width: auto; padding: 6px 16px;">Clear</button></div>
-            <div class="cart-items" id="cartItemsList"><p style="text-align:center; color: var(--text-secondary);">Cart is empty</p></div>
-            <div class="cart-total" id="cartTotals">
-                <div class="total-row"><span>Subtotal:</span><span>$0.00</span></div>
-                <div class="total-row"><span>Tax (10%):</span><span>$0.00</span></div>
-                <div class="grand-total">Total: $0.00</div>
-            </div>
+            <div class="cart-items" id="cartItemsList"><p style="text-align:center;">Cart is empty</p></div>
+            <div class="cart-total" id="cartTotals"><div class="total-row"><span>Subtotal:</span><span>$0.00</span></div><div class="total-row"><span>Tax (10%):</span><span>$0.00</span></div><div class="grand-total">Total: $0.00</div></div>
             <div class="payment-method">
                 <label>Payment Method</label>
-                <select id="paymentMethod">
-                    <option value="cash">💵 Cash</option>
-                    <option value="card">💳 Credit/Debit Card</option>
-                    <option value="mobile">📱 Mobile Payment</option>
-                </select>
-                <div id="cashChangeSection" style="display: none;" class="cash-change">
-                    <label>Cash Received: $</label>
-                    <input type="number" id="cashReceived" step="0.01" placeholder="0.00" style="width:100%; margin-top: 5px; padding:8px; border-radius:12px; border:1px solid var(--border); background: var(--surface);">
-                    <div id="changeDue" style="margin-top: 8px; font-weight: bold;"></div>
-                </div>
+                <select id="paymentMethod"><option value="cash">💵 Cash</option><option value="card">💳 Credit/Debit Card</option><option value="mobile">📱 Mobile Payment</option></select>
+                <div id="cashChangeSection" style="display: none;" class="cash-change"><label>Cash Received: $</label><input type="number" id="cashReceived" step="0.01" placeholder="0.00"><div id="changeDue" style="margin-top: 8px;"></div></div>
             </div>
-            <div class="action-buttons">
-                <button class="btn-primary" id="completeSaleBtn"><i class="fas fa-check-circle"></i> Complete Sale</button>
-                <div class="share-buttons" id="shareButtons" style="display: none;">
-                    <button class="share-btn print" id="printReceiptBtn"><i class="fas fa-print"></i> Print Receipt</button>
-                    <button class="share-btn whatsapp" id="whatsappShareBtn"><i class="fab fa-whatsapp"></i> WhatsApp</button>
-                </div>
-            </div>
-            <div style="margin-top: 12px; text-align: center; font-size: 0.7rem; color: var(--text-secondary);"><i class="fas fa-shield-alt"></i> Secure Transaction</div>
+            <div class="action-buttons"><button class="btn-primary" id="completeSaleBtn"><i class="fas fa-check-circle"></i> Complete Sale</button><div class="share-buttons" id="shareButtons" style="display: none;"><button class="share-btn print" id="printReceiptBtn"><i class="fas fa-print"></i> Print</button><button class="share-btn whatsapp" id="whatsappShareBtn"><i class="fab fa-whatsapp"></i> WhatsApp</button></div></div>
         </div>
     </div>
-    <div class="analytics-section">
-        <h3><i class="fas fa-chart-line"></i> Sales Analytics</h3>
-        <div class="analytics-grid"><div class="chart-container"><canvas id="weeklyChart"></canvas></div><div class="chart-container"><canvas id="categoryChart"></canvas></div></div>
-    </div>
+    <div class="analytics-section"><h3><i class="fas fa-chart-line"></i> Sales Analytics</h3><div class="analytics-grid"><div class="chart-container"><canvas id="weeklyChart"></canvas></div><div class="chart-container"><canvas id="categoryChart"></canvas></div></div></div>
 </div>
-<!-- Hidden receipt template for printing/WhatsApp -->
-<div id="receipt-print" style="display: none; font-family: monospace; padding: 20px; max-width: 300px; margin: auto; background: white; color: black;">
-    <div style="text-align: center;">
-        <h2>BillZest POS</h2>
-        <p>Thank you for your purchase!</p>
-        <hr>
-        <div id="receiptItems"></div>
-        <hr>
-        <div id="receiptTotals"></div>
-        <p>Date: <span id="receiptDate"></span></p>
-        <p>Payment: <span id="receiptPayment"></span></p>
-        <hr>
-        <p>Have a great day!</p>
-    </div>
-</div>
+<div id="receipt-print" style="display: none; font-family: monospace; padding: 20px; max-width: 300px; background: white;"><div style="text-align:center;"><h2>BillZest POS</h2><p>Thank you!</p><hr><div id="receiptItems"></div><hr><div id="receiptTotals"></div><p>Date: <span id="receiptDate"></span></p><p>Branch: <span id="receiptBranch"></span></p><p>Payment: <span id="receiptPayment"></span></p><hr><p>Have a great day!</p></div></div>
 <script>
-    // Product database
-    const products = [
-        { id: 1, name: "Espresso", category: "Coffee", price: 3.50, icon: "☕" },
-        { id: 2, name: "Cappuccino", category: "Coffee", price: 4.50, icon: "☕" },
-        { id: 3, name: "Latte", category: "Coffee", price: 4.80, icon: "☕" },
-        { id: 4, name: "Mocha", category: "Coffee", price: 5.00, icon: "☕" },
-        { id: 5, name: "Croissant", category: "Bakery", price: 3.00, icon: "🥐" },
-        { id: 6, name: "Chocolate Muffin", category: "Bakery", price: 3.20, icon: "🧁" },
-        { id: 7, name: "Club Sandwich", category: "Sandwiches", price: 7.50, icon: "🥪" },
-        { id: 8, name: "Grilled Cheese", category: "Sandwiches", price: 6.00, icon: "🥪" },
-        { id: 9, name: "Iced Tea", category: "Beverages", price: 3.00, icon: "🧃" },
-        { id: 10, name: "Fresh Orange Juice", category: "Beverages", price: 4.00, icon: "🍊" },
-        { id: 11, name: "Blueberry Muffin", category: "Bakery", price: 3.50, icon: "🧁" },
-        { id: 12, name: "Americano", category: "Coffee", price: 3.20, icon: "☕" }
+    // ---------- Branch & User Data ----------
+    const branches = [
+        { id: "branch1", name: "City Mall Branch" },
+        { id: "branch2", name: "Downtown Branch" },
+        { id: "branch3", name: "Airport Branch" }
     ];
+    const users = [
+        { email: "admin@billzest.com", password: "admin123", role: "super_admin", branchId: null },
+        { email: "manager1@billzest.com", password: "manager123", role: "branch_manager", branchId: "branch1" },
+        { email: "manager2@billzest.com", password: "manager123", role: "branch_manager", branchId: "branch2" }
+    ];
+    let currentUser = null;
+    let currentBranchId = null;
+    // Sales data: { branchId, date, total, itemsCount, items, paymentMethod, subtotal, tax }
+    let allSales = JSON.parse(localStorage.getItem("billzest_sales")) || [];
+    function saveSales() { localStorage.setItem("billzest_sales", JSON.stringify(allSales)); }
+    // Products
+    const products = [
+        { id: 1, name: "Espresso", category: "Coffee", price: 3.50, icon: "☕" },{ id: 2, name: "Cappuccino", category: "Coffee", price: 4.50, icon: "☕" },
+        { id: 3, name: "Latte", category: "Coffee", price: 4.80, icon: "☕" },{ id: 4, name: "Mocha", category: "Coffee", price: 5.00, icon: "☕" },
+        { id: 5, name: "Croissant", category: "Bakery", price: 3.00, icon: "🥐" },{ id: 6, name: "Chocolate Muffin", category: "Bakery", price: 3.20, icon: "🧁" },
+        { id: 7, name: "Club Sandwich", category: "Sandwiches", price: 7.50, icon: "🥪" },{ id: 8, name: "Grilled Cheese", category: "Sandwiches", price: 6.00, icon: "🥪" },
+        { id: 9, name: "Iced Tea", category: "Beverages", price: 3.00, icon: "🧃" },{ id: 10, name: "Fresh Orange Juice", category: "Beverages", price: 4.00, icon: "🍊" },
+        { id: 11, name: "Blueberry Muffin", category: "Bakery", price: 3.50, icon: "🧁" },{ id: 12, name: "Americano", category: "Coffee", price: 3.20, icon: "☕" }
+    ];
+    // Cart, UI elements
     let cart = [];
-    let salesHistory = [];
-    let lastSaleData = null; // store last sale for print/WhatsApp
+    let salesHistory = []; // for current session charts (will be filtered by branch)
+    let lastSaleData = null;
+    let weeklyChart, categoryChart;
     // DOM
     const productGrid = document.getElementById('productGrid');
     const searchInput = document.getElementById('searchInput');
@@ -298,165 +187,97 @@
     const transactionsCountSpan = document.getElementById('transactionsCount');
     const itemsSoldSpan = document.getElementById('itemsSold');
     const cartTotalValueSpan = document.getElementById('cartTotalValue');
-    let weeklyChart, categoryChart;
+    const branchSelect = document.getElementById('branchSelect');
+    const userNameDisplay = document.getElementById('userNameDisplay');
+    const roleBadge = document.getElementById('roleBadge');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const loginOverlay = document.getElementById('loginOverlay');
+    const dashboardMain = document.getElementById('dashboardMain');
 
-    function updateStats() {
-        const today = new Date().toDateString();
-        const todaySales = salesHistory.filter(s => new Date(s.date).toDateString() === today).reduce((sum, s) => sum + s.total, 0);
-        todaySalesSpan.innerText = `$${todaySales.toFixed(2)}`;
-        transactionsCountSpan.innerText = salesHistory.length;
-        const totalItemsSold = salesHistory.reduce((sum, s) => sum + s.itemsCount, 0);
-        itemsSoldSpan.innerText = totalItemsSold;
+    function populateBranchSelect() {
+        branchSelect.innerHTML = '';
+        let availableBranches = branches;
+        if (currentUser.role === 'branch_manager') availableBranches = branches.filter(b => b.id === currentUser.branchId);
+        availableBranches.forEach(b => { let opt = document.createElement('option'); opt.value = b.id; opt.textContent = b.name; branchSelect.appendChild(opt); });
+        if (currentUser.role === 'branch_manager') branchSelect.value = currentUser.branchId;
+        currentBranchId = branchSelect.value;
+        if (currentUser.role === 'super_admin') branchSelect.disabled = false; else branchSelect.disabled = true;
+        updateStatsAndCharts();
     }
-
+    function getBranchSales(branchId) { return allSales.filter(s => s.branchId === branchId); }
+    function getTodayBranchSales(branchId) {
+        const today = new Date().toDateString();
+        return getBranchSales(branchId).filter(s => new Date(s.date).toDateString() === today).reduce((sum, s) => sum + s.total, 0);
+    }
+    function updateStatsAndCharts() {
+        const branchId = branchSelect.value;
+        const branchSales = getBranchSales(branchId);
+        const todaySales = branchSales.filter(s => new Date(s.date).toDateString() === new Date().toDateString()).reduce((sum, s) => sum + s.total, 0);
+        todaySalesSpan.innerText = `$${todaySales.toFixed(2)}`;
+        transactionsCountSpan.innerText = branchSales.length;
+        const totalItems = branchSales.reduce((sum, s) => sum + s.itemsCount, 0);
+        itemsSoldSpan.innerText = totalItems;
+        // weekly chart
+        const weeklyData = [0,0,0,0,0,0,0];
+        branchSales.forEach(sale => { const day = new Date(sale.date).getDay(); let idx = (day === 0 ? 6 : day-1); weeklyData[idx] += sale.total; });
+        if (weeklyChart) { weeklyChart.data.datasets[0].data = weeklyData; weeklyChart.update(); }
+        // category chart
+        const categorySales = { Coffee:0, Bakery:0, Sandwiches:0, Beverages:0 };
+        branchSales.forEach(sale => { sale.items.forEach(item => { const prod = products.find(p => p.id === item.id); if (prod) categorySales[prod.category] += (item.price * item.qty); }); });
+        if (categoryChart) { categoryChart.data.datasets[0].data = [categorySales.Coffee, categorySales.Bakery, categorySales.Sandwiches, categorySales.Beverages]; categoryChart.update(); }
+    }
+    branchSelect.addEventListener('change', () => { currentBranchId = branchSelect.value; updateStatsAndCharts(); updateCartUI(); });
     function updateCartUI() {
-        if (cart.length === 0) {
-            cartItemsContainer.innerHTML = '<p style="text-align:center; color: var(--text-secondary);">Cart is empty</p>';
-            document.getElementById('cartTotals').innerHTML = `<div class="total-row"><span>Subtotal:</span><span>$0.00</span></div><div class="total-row"><span>Tax (10%):</span><span>$0.00</span></div><div class="grand-total">Total: $0.00</div>`;
-            cartTotalValueSpan.innerText = "$0.00";
-            shareButtonsDiv.style.display = 'none';
-            return;
-        }
+        if (cart.length === 0) { cartItemsContainer.innerHTML = '<p style="text-align:center;">Cart is empty</p>'; document.getElementById('cartTotals').innerHTML = `<div class="total-row"><span>Subtotal:</span><span>$0.00</span></div><div class="total-row"><span>Tax (10%):</span><span>$0.00</span></div><div class="grand-total">Total: $0.00</div>`; cartTotalValueSpan.innerText = "$0.00"; shareButtonsDiv.style.display = 'none'; return; }
         let itemsHtml = '', subtotal = 0;
-        cart.forEach(item => {
-            const itemTotal = item.price * item.quantity;
-            subtotal += itemTotal;
-            itemsHtml += `<div class="cart-item"><div class="item-info"><h4>${item.name}</h4><p>$${item.price.toFixed(2)} each</p></div><div class="item-actions"><div class="item-qty"><button class="qty-btn" data-id="${item.id}" data-delta="-1">-</button><span>${item.quantity}</span><button class="qty-btn" data-id="${item.id}" data-delta="1">+</button></div><i class="fas fa-trash-alt" data-id="${item.id}" style="color: var(--danger); cursor:pointer;"></i></div></div>`;
-        });
+        cart.forEach(item => { const itemTotal = item.price * item.quantity; subtotal += itemTotal; itemsHtml += `<div class="cart-item"><div class="item-info"><h4>${item.name}</h4><p>$${item.price.toFixed(2)} each</p></div><div class="item-actions"><div class="item-qty"><button class="qty-btn" data-id="${item.id}" data-delta="-1">-</button><span>${item.quantity}</span><button class="qty-btn" data-id="${item.id}" data-delta="1">+</button></div><i class="fas fa-trash-alt" data-id="${item.id}" style="color: var(--danger); cursor:pointer;"></i></div></div>`; });
         cartItemsContainer.innerHTML = itemsHtml;
-        const tax = subtotal * 0.10;
-        const total = subtotal + tax;
+        const tax = subtotal * 0.10; const total = subtotal + tax;
         document.getElementById('cartTotals').innerHTML = `<div class="total-row"><span>Subtotal:</span><span>$${subtotal.toFixed(2)}</span></div><div class="total-row"><span>Tax (10%):</span><span>$${tax.toFixed(2)}</span></div><div class="grand-total">Total: $${total.toFixed(2)}</div>`;
         cartTotalValueSpan.innerText = `$${total.toFixed(2)}`;
         shareButtonsDiv.style.display = 'none';
-        document.querySelectorAll('.qty-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => { const id = parseInt(btn.dataset.id); const delta = parseInt(btn.dataset.delta); updateQuantity(id, delta); });
-        });
-        document.querySelectorAll('.fa-trash-alt').forEach(icon => {
-            icon.addEventListener('click', (e) => { const id = parseInt(icon.dataset.id); removeItem(id); });
-        });
+        document.querySelectorAll('.qty-btn').forEach(btn => { btn.addEventListener('click', (e) => { const id = parseInt(btn.dataset.id); const delta = parseInt(btn.dataset.delta); updateQuantity(id, delta); }); });
+        document.querySelectorAll('.fa-trash-alt').forEach(icon => { icon.addEventListener('click', (e) => { const id = parseInt(icon.dataset.id); removeItem(id); }); });
     }
-
-    function updateQuantity(id, delta) {
-        const index = cart.findIndex(i => i.id === id);
-        if (index !== -1) {
-            const newQty = cart[index].quantity + delta;
-            if (newQty <= 0) cart.splice(index, 1);
-            else cart[index].quantity = newQty;
-            updateCartUI();
-        }
-    }
+    function updateQuantity(id, delta) { const index = cart.findIndex(i => i.id === id); if (index !== -1) { const newQty = cart[index].quantity + delta; if (newQty <= 0) cart.splice(index,1); else cart[index].quantity = newQty; updateCartUI(); } }
     function removeItem(id) { cart = cart.filter(i => i.id !== id); updateCartUI(); }
-    function addToCart(product) {
-        const existing = cart.find(i => i.id === product.id);
-        if (existing) existing.quantity += 1;
-        else cart.push({ ...product, quantity: 1 });
-        updateCartUI();
-    }
+    function addToCart(product) { const existing = cart.find(i => i.id === product.id); if (existing) existing.quantity += 1; else cart.push({ ...product, quantity: 1 }); updateCartUI(); }
     function clearCart() { cart = []; updateCartUI(); if (cashChangeSection.style.display === 'block') { cashChangeSection.style.display = 'none'; if(cashReceivedInput) cashReceivedInput.value = ''; } }
-
-    function generateReceiptData() {
-        if (!lastSaleData) return null;
-        let itemsHtml = '';
-        lastSaleData.items.forEach(item => {
-            itemsHtml += `<div>${item.name} x ${item.qty} = $${(item.price * item.qty).toFixed(2)}</div>`;
-        });
-        return { itemsHtml, subtotal: lastSaleData.subtotal, tax: lastSaleData.tax, total: lastSaleData.total, paymentMethod: lastSaleData.paymentMethod, date: lastSaleData.date };
-    }
-
-    function showPrintReceipt() {
-        const data = generateReceiptData();
-        if (!data) return;
-        document.getElementById('receiptItems').innerHTML = data.itemsHtml;
-        document.getElementById('receiptTotals').innerHTML = `<div>Subtotal: $${data.subtotal.toFixed(2)}</div><div>Tax (10%): $${data.tax.toFixed(2)}</div><div><strong>Total: $${data.total.toFixed(2)}</strong></div>`;
-        document.getElementById('receiptDate').innerText = data.date;
-        document.getElementById('receiptPayment').innerText = data.paymentMethod;
-        const printContents = document.getElementById('receipt-print').innerHTML;
-        const originalTitle = document.title;
-        const printWindow = window.open('', '_blank', 'width=400,height=600');
-        printWindow.document.write(`<html><head><title>BillZest Receipt</title><style>body{font-family: monospace; padding:20px;}</style></head><body>${printContents}</body></html>`);
-        printWindow.document.close();
-        printWindow.print();
-    }
-
-    function shareWhatsApp() {
-        const data = generateReceiptData();
-        if (!data) return;
-        let message = `BillZest POS Receipt\nDate: ${data.date}\n\nItems:\n`;
-        lastSaleData.items.forEach(item => { message += `${item.name} x${item.qty} = $${(item.price * item.qty).toFixed(2)}\n`; });
-        message += `\nSubtotal: $${data.subtotal.toFixed(2)}\nTax (10%): $${data.tax.toFixed(2)}\nTotal: $${data.total.toFixed(2)}\nPayment: ${data.paymentMethod}\n\nThank you!`;
-        const url = `https://wa.me/?text=${encodeURIComponent(message)}`;
-        window.open(url, '_blank');
-    }
-
     function completeSale() {
-        if (cart.length === 0) { alert("Cart is empty. Add items to complete sale."); return; }
+        if (cart.length === 0) { alert("Cart is empty"); return; }
         let subtotal = cart.reduce((sum, i) => sum + (i.price * i.quantity), 0);
-        let tax = subtotal * 0.10;
-        let total = subtotal + tax;
+        let tax = subtotal * 0.10; let total = subtotal + tax;
         let paymentMethod = paymentMethodSelect.value;
-        if (paymentMethod === 'cash') {
-            let cashReceived = parseFloat(cashReceivedInput.value);
-            if (isNaN(cashReceived) || cashReceived < total) { alert(`Insufficient cash. Please enter at least $${total.toFixed(2)}.`); return; }
-            let change = cashReceived - total;
-            alert(`Payment successful! Change: $${change.toFixed(2)}`);
-        } else { alert(`Payment via ${paymentMethod} processed successfully! Total: $${total.toFixed(2)}`); }
+        if (paymentMethod === 'cash') { let cashReceived = parseFloat(cashReceivedInput.value); if (isNaN(cashReceived) || cashReceived < total) { alert(`Insufficient cash`); return; } alert(`Payment successful! Change: $${(cashReceived-total).toFixed(2)}`); }
+        else { alert(`Payment via ${paymentMethod} successful! Total: $${total.toFixed(2)}`); }
         const itemsCount = cart.reduce((sum, i) => sum + i.quantity, 0);
-        const saleRecord = {
-            date: new Date().toLocaleString(),
-            total: total,
-            itemsCount: itemsCount,
-            subtotal: subtotal,
-            tax: tax,
-            paymentMethod: paymentMethod,
-            items: cart.map(i => ({ name: i.name, qty: i.quantity, price: i.price }))
-        };
-        salesHistory.push({ date: new Date(), total: total, itemsCount: itemsCount, cartCopy: [...cart] });
+        const saleRecord = { branchId: branchSelect.value, date: new Date().toISOString(), total: total, itemsCount: itemsCount, subtotal: subtotal, tax: tax, paymentMethod: paymentMethod, items: cart.map(i => ({ id: i.id, name: i.name, qty: i.quantity, price: i.price })) };
+        allSales.push(saleRecord); saveSales();
         lastSaleData = saleRecord;
-        updateStats();
-        updateAnalyticsCharts();
+        updateStatsAndCharts();
         clearCart();
         shareButtonsDiv.style.display = 'flex';
     }
-
+    function generateReceiptData() { if (!lastSaleData) return null; let itemsHtml = ''; lastSaleData.items.forEach(item => { itemsHtml += `<div>${item.name} x ${item.qty} = $${(item.price * item.qty).toFixed(2)}</div>`; }); return { itemsHtml, subtotal: lastSaleData.subtotal, tax: lastSaleData.tax, total: lastSaleData.total, paymentMethod: lastSaleData.paymentMethod, date: new Date(lastSaleData.date).toLocaleString(), branchName: branches.find(b=>b.id===lastSaleData.branchId)?.name }; }
+    function showPrintReceipt() { const data = generateReceiptData(); if (!data) return; document.getElementById('receiptItems').innerHTML = data.itemsHtml; document.getElementById('receiptTotals').innerHTML = `<div>Subtotal: $${data.subtotal.toFixed(2)}</div><div>Tax: $${data.tax.toFixed(2)}</div><div><strong>Total: $${data.total.toFixed(2)}</strong></div>`; document.getElementById('receiptDate').innerText = data.date; document.getElementById('receiptBranch').innerText = data.branchName; document.getElementById('receiptPayment').innerText = data.paymentMethod; const printWindow = window.open('', '_blank', 'width=400,height=600'); printWindow.document.write(`<html><head><title>BillZest Receipt</title><style>body{font-family:monospace;padding:20px;}</style></head><body>${document.getElementById('receipt-print').innerHTML}</body></html>`); printWindow.document.close(); printWindow.print(); }
+    function shareWhatsApp() { const data = generateReceiptData(); if (!data) return; let message = `BillZest POS Receipt\nBranch: ${data.branchName}\nDate: ${data.date}\n\nItems:\n`; lastSaleData.items.forEach(item => { message += `${item.name} x${item.qty} = $${(item.price * item.qty).toFixed(2)}\n`; }); message += `\nSubtotal: $${data.subtotal.toFixed(2)}\nTax: $${data.tax.toFixed(2)}\nTotal: $${data.total.toFixed(2)}\nPayment: ${data.paymentMethod}\n\nThank you!`; window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank'); }
     // Product rendering
     let currentCategory = 'all', searchTerm = '';
-    function renderProducts() {
-        let filtered = products.filter(p => (currentCategory === 'all' || p.category === currentCategory) && p.name.toLowerCase().includes(searchTerm.toLowerCase()));
-        productGrid.innerHTML = filtered.map(p => `<div class="product-card" data-id="${p.id}"><div class="product-icon">${p.icon}</div><div class="product-name">${p.name}</div><div class="product-price">$${p.price.toFixed(2)}</div></div>`).join('');
-        document.querySelectorAll('.product-card').forEach(card => { card.addEventListener('click', () => { const id = parseInt(card.dataset.id); const product = products.find(p => p.id === id); if (product) addToCart(product); }); });
-    }
+    function renderProducts() { let filtered = products.filter(p => (currentCategory === 'all' || p.category === currentCategory) && p.name.toLowerCase().includes(searchTerm.toLowerCase())); productGrid.innerHTML = filtered.map(p => `<div class="product-card" data-id="${p.id}"><div class="product-icon">${p.icon}</div><div class="product-name">${p.name}</div><div class="product-price">$${p.price.toFixed(2)}</div></div>`).join(''); document.querySelectorAll('.product-card').forEach(card => { card.addEventListener('click', () => { const id = parseInt(card.dataset.id); const product = products.find(p => p.id === id); if (product) addToCart(product); }); }); }
     document.querySelectorAll('.cat-btn').forEach(btn => { btn.addEventListener('click', () => { document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); currentCategory = btn.dataset.cat; renderProducts(); }); });
     searchInput.addEventListener('input', (e) => { searchTerm = e.target.value; renderProducts(); });
     paymentMethodSelect.addEventListener('change', (e) => { cashChangeSection.style.display = e.target.value === 'cash' ? 'block' : 'none'; });
-    cashReceivedInput?.addEventListener('input', () => {
-        let subtotal = cart.reduce((sum, i) => sum + (i.price * i.quantity), 0);
-        let total = subtotal + (subtotal * 0.10);
-        let received = parseFloat(cashReceivedInput.value);
-        if (!isNaN(received)) changeDueSpan.innerText = received >= total ? `Change: $${(received - total).toFixed(2)}` : `Remaining: $${(total - received).toFixed(2)}`;
-        else changeDueSpan.innerText = '';
-    });
+    cashReceivedInput?.addEventListener('input', () => { let subtotal = cart.reduce((sum, i) => sum + (i.price * i.quantity), 0); let total = subtotal + (subtotal*0.10); let received = parseFloat(cashReceivedInput.value); if (!isNaN(received)) changeDueSpan.innerText = received >= total ? `Change: $${(received-total).toFixed(2)}` : `Remaining: $${(total-received).toFixed(2)}`; else changeDueSpan.innerText = ''; });
     clearCartBtn.addEventListener('click', clearCart);
     completeSaleBtn.addEventListener('click', completeSale);
     document.getElementById('printReceiptBtn')?.addEventListener('click', showPrintReceipt);
     document.getElementById('whatsappShareBtn')?.addEventListener('click', shareWhatsApp);
-
-    function initCharts() {
-        const weeklyCtx = document.getElementById('weeklyChart').getContext('2d');
-        const categoryCtx = document.getElementById('categoryChart').getContext('2d');
-        weeklyChart = new Chart(weeklyCtx, { type: 'line', data: { labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], datasets: [{ label: 'Sales ($)', data: [1250, 1420, 1680, 2100, 2450, 2780, 3100], borderColor: '#1e2a5e', backgroundColor: 'rgba(30,42,94,0.05)', tension: 0.3, fill: true }] }, options: { responsive: true } });
-        categoryChart = new Chart(categoryCtx, { type: 'doughnut', data: { labels: ['Coffee', 'Bakery', 'Sandwiches', 'Beverages'], datasets: [{ data: [42, 28, 18, 12], backgroundColor: ['#1e2a5e', '#f59e0b', '#10b981', '#3b82f6'] }] }, options: { responsive: true } });
-    }
-    function updateAnalyticsCharts() {
-        const weeklyData = [0,0,0,0,0,0,0];
-        salesHistory.forEach(sale => { const day = new Date(sale.date).getDay(); let idx = (day === 0 ? 6 : day -1); weeklyData[idx] += sale.total; });
-        if (weeklyChart) { weeklyChart.data.datasets[0].data = weeklyData; weeklyChart.update(); }
-        const categorySales = { Coffee:0, Bakery:0, Sandwiches:0, Beverages:0 };
-        salesHistory.forEach(sale => { sale.cartCopy.forEach(item => { const prod = products.find(p => p.id === item.id); if (prod) categorySales[prod.category] += (item.price * item.quantity); }); });
-        if (categoryChart) { categoryChart.data.datasets[0].data = [categorySales.Coffee, categorySales.Bakery, categorySales.Sandwiches, categorySales.Beverages]; categoryChart.update(); }
-    }
-    function init() { renderProducts(); updateCartUI(); updateStats(); initCharts(); setTimeout(() => { if (salesHistory.length === 0) { salesHistory.push({ date: new Date(), total: 158.40, itemsCount: 5, cartCopy: [] }); salesHistory.push({ date: new Date(Date.now() - 86400000), total: 210.20, itemsCount: 8, cartCopy: [] }); updateStats(); updateAnalyticsCharts(); } }, 100); }
-    init();
+    function initCharts() { const weeklyCtx = document.getElementById('weeklyChart').getContext('2d'); const categoryCtx = document.getElementById('categoryChart').getContext('2d'); weeklyChart = new Chart(weeklyCtx, { type: 'line', data: { labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'], datasets: [{ label: 'Sales ($)', data: [0,0,0,0,0,0,0], borderColor: '#1e2a5e', tension: 0.3, fill: false }] }, options: { responsive: true } }); categoryChart = new Chart(categoryCtx, { type: 'doughnut', data: { labels: ['Coffee','Bakery','Sandwiches','Beverages'], datasets: [{ data: [0,0,0,0], backgroundColor: ['#1e2a5e','#f59e0b','#10b981','#3b82f6'] }] }, options: { responsive: true } }); }
+    function login() { const email = document.getElementById('loginEmail').value; const pwd = document.getElementById('loginPassword').value; const user = users.find(u => u.email === email && u.password === pwd); if (!user) { alert("Invalid credentials"); return; } currentUser = user; userNameDisplay.innerText = email.split('@')[0]; roleBadge.innerText = user.role === 'super_admin' ? 'Super Admin' : 'Branch Manager'; loginOverlay.style.display = 'none'; dashboardMain.style.display = 'block'; populateBranchSelect(); renderProducts(); updateCartUI(); initCharts(); updateStatsAndCharts(); }
+    logoutBtn.addEventListener('click', () => { currentUser = null; dashboardMain.style.display = 'none'; loginOverlay.style.display = 'flex'; cart = []; });
+    document.getElementById('loginBtn').addEventListener('click', login);
+    // demo initial sales data if empty
+    if (allSales.length === 0) { allSales.push({ branchId: "branch1", date: new Date().toISOString(), total: 158.40, itemsCount: 5, items: [], subtotal: 144, tax: 14.4, paymentMethod: "card" }); allSales.push({ branchId: "branch2", date: new Date(Date.now()-86400000).toISOString(), total: 210.20, itemsCount: 8, items: [], subtotal: 191.09, tax: 19.11, paymentMethod: "cash" }); saveSales(); }
 </script>
 </body>
 </html>
