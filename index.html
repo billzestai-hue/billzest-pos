@@ -423,6 +423,129 @@ nav{flex-wrap:nowrap!important;overflow:visible!important;padding:8px 10px!impor
 .reg-btn{background:#10b981;color:#fff;border:none;padding:5px 7px;border-radius:6px;font-size:10px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:Poppins,sans-serif;}
 nav button,nav div{touch-action:manipulation;-webkit-tap-highlight-color:transparent;}button{touch-action:manipulation;}
 @media(max-width:500px){.btn-demo-nav{display:none!important;}} #langNavBtn{font-size:10px!important;padding:4px 6px!important;}
+
+/* ===== HIGH-LEVEL NEW FEATURES ===== */
+
+/* 1. EXIT INTENT POPUP */
+.exit-popup-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:99999;align-items:center;justify-content:center;padding:16px;}
+.exit-popup-box{background:#fff;border-radius:20px;width:100%;max-width:480px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.3);animation:exitPop .35s cubic-bezier(0.34,1.56,0.64,1);}
+@keyframes exitPop{from{opacity:0;transform:scale(0.85) translateY(20px);}to{opacity:1;transform:scale(1) translateY(0);}}
+.exit-popup-top{background:linear-gradient(135deg,#4f2d91,#00b5a3);padding:28px 24px 20px;text-align:center;position:relative;}
+.exit-popup-top .ep-close{position:absolute;top:12px;right:14px;background:rgba(255,255,255,.2);border:none;width:28px;height:28px;border-radius:50%;color:#fff;font-size:15px;cursor:pointer;}
+.exit-popup-emoji{font-size:48px;display:block;margin-bottom:8px;}
+.exit-popup-title{font-size:22px;font-weight:800;color:#fff;margin-bottom:4px;}
+.exit-popup-sub{font-size:13px;color:rgba(255,255,255,.85);}
+.exit-popup-body{padding:20px 24px 24px;}
+.exit-offer-row{display:flex;gap:12px;margin-bottom:16px;}
+.exit-offer-item{flex:1;background:#f8f7ff;border:2px solid #e8e0ff;border-radius:12px;padding:12px 8px;text-align:center;}
+.exit-offer-item .eo-icon{font-size:22px;display:block;margin-bottom:4px;}
+.exit-offer-item .eo-text{font-size:11px;font-weight:700;color:#4f2d91;line-height:1.4;}
+.exit-cta{width:100%;background:linear-gradient(135deg,#4f2d91,#7c3aed);color:#fff;border:none;padding:14px;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Poppins',sans-serif;transition:transform .2s;}
+.exit-cta:hover{transform:translateY(-2px);}
+.exit-skip{display:block;text-align:center;margin-top:10px;font-size:12px;color:#aaa;cursor:pointer;}
+.exit-skip:hover{color:#666;}
+.exit-countdown{font-size:11px;color:#ef4444;font-weight:700;text-align:center;margin-bottom:10px;}
+
+/* 2. STICKY BOTTOM CTA BAR */
+.sticky-cta-bar{position:fixed;bottom:0;left:0;right:0;z-index:8000;background:linear-gradient(90deg,#1a0845 0%,#4f2d91 50%,#1a0845 100%);padding:10px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;box-shadow:0 -4px 20px rgba(0,0,0,.3);transform:translateY(100%);transition:transform .4s cubic-bezier(0.34,1.2,0.64,1);}
+.sticky-cta-bar.visible{transform:translateY(0);}
+.sticky-cta-left{display:flex;align-items:center;gap:10px;}
+.sticky-cta-pulse{width:10px;height:10px;background:#10b981;border-radius:50%;flex-shrink:0;animation:pulseGreen 2s ease infinite;}
+@keyframes pulseGreen{0%,100%{box-shadow:0 0 0 0 rgba(16,185,129,.4);}50%{box-shadow:0 0 0 8px rgba(16,185,129,0);}}
+.sticky-cta-text{font-size:13px;color:#fff;font-weight:600;}
+.sticky-cta-text span{color:#f5a623;}
+.sticky-cta-btns{display:flex;gap:8px;flex-shrink:0;}
+.sticky-btn-trial{background:#10b981;color:#fff;border:none;padding:9px 16px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Poppins',sans-serif;white-space:nowrap;}
+.sticky-btn-demo{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);padding:9px 16px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Poppins',sans-serif;white-space:nowrap;}
+.sticky-cta-close{background:none;border:none;color:rgba(255,255,255,.5);font-size:18px;cursor:pointer;padding:0 0 0 4px;flex-shrink:0;}
+@media(max-width:500px){.sticky-cta-text{display:none;}.sticky-cta-bar{justify-content:center;}.sticky-cta-btns{gap:6px;}}
+
+/* 3. LIVE VISITORS COUNTER */
+.live-visitors-badge{display:inline-flex;align-items:center;gap:7px;background:#fff;border:1.5px solid #e8e0ff;border-radius:30px;padding:5px 14px;font-size:12px;color:#333;font-weight:600;margin-bottom:12px;box-shadow:0 2px 10px rgba(79,45,145,.08);}
+.live-dot{width:8px;height:8px;background:#ef4444;border-radius:50%;animation:livePulse 1.5s ease infinite;flex-shrink:0;}
+@keyframes livePulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.6;transform:scale(1.3);}}
+
+/* 4. FLOATING NOTIFICATION TOASTS */
+.notif-stack{position:fixed;top:76px;right:16px;z-index:7000;display:flex;flex-direction:column;gap:8px;pointer-events:none;}
+.notif-card{background:#fff;border-radius:12px;padding:10px 14px;box-shadow:0 8px 24px rgba(0,0,0,.15);display:flex;align-items:center;gap:10px;pointer-events:all;max-width:270px;border-left:3px solid #4f2d91;animation:notifIn .4s cubic-bezier(0.34,1.2,0.64,1);transition:opacity .3s,transform .3s;}
+.notif-card.hiding{opacity:0;transform:translateX(20px);}
+@keyframes notifIn{from{opacity:0;transform:translateX(30px);}to{opacity:1;transform:translateX(0);}}
+.notif-icon{font-size:20px;flex-shrink:0;}
+.notif-text{font-size:11px;color:#333;line-height:1.5;}
+.notif-text strong{color:#4f2d91;font-size:12px;display:block;}
+.notif-time{font-size:10px;color:#aaa;margin-top:1px;}
+
+/* 5. TRUST SEAL STRIP */
+.trust-strip{background:#f8f7ff;border-top:1px solid #ede8ff;border-bottom:1px solid #ede8ff;padding:14px 20px;overflow:hidden;position:relative;}
+.trust-strip-inner{display:flex;align-items:center;gap:32px;animation:trustScroll 25s linear infinite;width:max-content;}
+.trust-strip-inner:hover{animation-play-state:paused;}
+@keyframes trustScroll{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+.trust-item{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;color:#4f2d91;white-space:nowrap;flex-shrink:0;}
+.trust-item span:first-child{font-size:16px;}
+
+/* 6. ANNUAL/MONTHLY PRICE TOGGLE */
+.pricing-toggle-wrap{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:20px;}
+.ptog-label{font-size:13px;font-weight:600;color:#555;}
+.ptog-label.active{color:#4f2d91;}
+.ptog-switch{position:relative;width:52px;height:28px;cursor:pointer;}
+.ptog-switch input{opacity:0;width:0;height:0;position:absolute;}
+.ptog-slider{position:absolute;inset:0;background:#ddd;border-radius:28px;transition:.3s;}
+.ptog-slider::before{content:'';position:absolute;width:22px;height:22px;border-radius:50%;background:#fff;left:3px;top:3px;transition:.3s;box-shadow:0 2px 4px rgba(0,0,0,.2);}
+.ptog-switch input:checked + .ptog-slider{background:#4f2d91;}
+.ptog-switch input:checked + .ptog-slider::before{transform:translateX(24px);}
+.ptog-save{background:#10b981;color:#fff;font-size:10px;font-weight:800;padding:2px 8px;border-radius:20px;margin-left:4px;}
+
+/* 7. FAQ ACCORDION */
+.faq-section{background:#f8f7ff;padding:52px 20px;}
+.faq-inner{max-width:720px;margin:0 auto;}
+.faq-title{font-size:26px;font-weight:800;color:#1a1a1a;text-align:center;margin-bottom:6px;}
+.faq-sub{font-size:14px;color:#888;text-align:center;margin-bottom:32px;}
+.faq-item{background:#fff;border-radius:12px;margin-bottom:10px;overflow:hidden;border:1px solid #ede8ff;transition:box-shadow .2s;}
+.faq-item:hover{box-shadow:0 4px 16px rgba(79,45,145,.1);}
+.faq-q{width:100%;background:none;border:none;padding:16px 20px;text-align:left;font-size:14px;font-weight:600;color:#1a1a1a;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;font-family:'Poppins',sans-serif;}
+.faq-q .faq-icon{font-size:18px;color:#4f2d91;flex-shrink:0;transition:transform .3s;display:inline-block;}
+.faq-q.open .faq-icon{transform:rotate(45deg);}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(0.4,0,0.2,1);}
+.faq-a-inner{padding:0 20px 16px;font-size:13px;color:#555;line-height:1.7;}
+
+/* 8. COMPARE TABLE (vs competitors) */
+.compare-section{background:#fff;padding:52px 20px;}
+.compare-inner{max-width:860px;margin:0 auto;}
+.compare-title{font-size:26px;font-weight:800;color:#1a1a1a;text-align:center;margin-bottom:6px;}
+.compare-sub{font-size:14px;color:#888;text-align:center;margin-bottom:28px;}
+.ctable{width:100%;border-collapse:separate;border-spacing:0;border-radius:16px;overflow:hidden;box-shadow:0 8px 32px rgba(79,45,145,.12);}
+.ctable thead tr{background:linear-gradient(135deg,#4f2d91,#3b1f6e);}
+.ctable thead th{padding:16px 14px;font-size:13px;font-weight:700;color:#fff;text-align:center;}
+.ctable thead th:first-child{text-align:left;}
+.ctable thead th.bz-col{background:rgba(245,166,35,.2);color:#f5a623;}
+.ctable tbody tr:nth-child(even){background:#f9f7ff;}
+.ctable tbody tr:nth-child(odd){background:#fff;}
+.ctable tbody tr:hover{background:#f0ebff;}
+.ctable td{padding:13px 14px;font-size:13px;color:#444;text-align:center;border-bottom:1px solid #f0ebff;}
+.ctable td:first-child{text-align:left;font-weight:600;color:#1a1a1a;}
+.ctable td.bz-col{font-weight:700;color:#4f2d91;}
+.c-yes{color:#10b981;font-size:17px;}
+.c-no{color:#ef4444;font-size:17px;}
+.c-par{color:#f5a623;font-size:13px;font-weight:600;}
+
+/* 9. VIDEO MODAL */
+.vid-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:99998;align-items:center;justify-content:center;padding:16px;}
+.vid-modal-box{background:#000;border-radius:16px;width:100%;max-width:800px;overflow:hidden;position:relative;}
+.vid-modal-close{position:absolute;top:12px;right:12px;background:rgba(255,255,255,.15);border:none;width:34px;height:34px;border-radius:50%;color:#fff;font-size:18px;cursor:pointer;z-index:1;}
+.vid-modal-player{width:100%;aspect-ratio:16/9;background:#111;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;}
+.vid-modal-player .vm-play{width:72px;height:72px;background:#4f2d91;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;cursor:pointer;animation:vmPulse 2s ease infinite;}
+@keyframes vmPulse{0%,100%{box-shadow:0 0 0 0 rgba(79,45,145,.4);}50%{box-shadow:0 0 0 16px rgba(79,45,145,0);}}
+.vid-modal-player .vm-label{color:#fff;font-size:14px;opacity:.7;}
+
+/* 10. SOCIAL PROOF TICKER */
+.social-proof-bar{background:linear-gradient(90deg,#1a0845,#4f2d91,#1a0845);padding:10px 0;overflow:hidden;}
+.sp-inner{display:flex;gap:40px;animation:spScroll 30s linear infinite;width:max-content;}
+.sp-item{display:flex;align-items:center;gap:8px;font-size:12px;color:#fff;white-space:nowrap;opacity:.9;}
+.sp-item span:first-child{font-size:14px;}
+
+/* Smooth scroll */
+html{scroll-behavior:smooth;}
+
 </style>
 </head>
 <body>
@@ -433,6 +556,27 @@ nav button,nav div{touch-action:manipulation;-webkit-tap-highlight-color:transpa
     <span class="wb-star">✦</span>
     <span class="wb-text">Welcome to <strong>BillZest POS</strong> — The All-in-One POS for Hotels, Coffee Shops, Grocery, Electronics & Retail</span>
     <span class="wb-star">✦</span>
+  </div>
+</div>
+
+<!-- SOCIAL PROOF TICKER -->
+<div class="social-proof-bar">
+  <div class="sp-inner" id="spTicker">
+    <div class="sp-item"><span>🏨</span><span>Ahmed's Hotel, Riyadh — just started Free Trial</span></div>
+    <div class="sp-item"><span>⭐</span><span>15,000+ businesses trust BillZest</span></div>
+    <div class="sp-item"><span>☕</span><span>Sara's Café, Dubai — upgraded to All-in-One Plan</span></div>
+    <div class="sp-item"><span>🔒</span><span>ZATCA Approved · SAMA Supervised</span></div>
+    <div class="sp-item"><span>🛒</span><span>Khalid's Grocery, Kuwait — saved 3hrs/day on inventory</span></div>
+    <div class="sp-item"><span>🚀</span><span>Setup in under 5 minutes — no tech skills needed</span></div>
+    <div class="sp-item"><span>📱</span><span>Works on any device — iOS, Android & Web</span></div>
+    <!-- duplicate for infinite scroll -->
+    <div class="sp-item"><span>🏨</span><span>Ahmed's Hotel, Riyadh — just started Free Trial</span></div>
+    <div class="sp-item"><span>⭐</span><span>15,000+ businesses trust BillZest</span></div>
+    <div class="sp-item"><span>☕</span><span>Sara's Café, Dubai — upgraded to All-in-One Plan</span></div>
+    <div class="sp-item"><span>🔒</span><span>ZATCA Approved · SAMA Supervised</span></div>
+    <div class="sp-item"><span>🛒</span><span>Khalid's Grocery, Kuwait — saved 3hrs/day on inventory</span></div>
+    <div class="sp-item"><span>🚀</span><span>Setup in under 5 minutes — no tech skills needed</span></div>
+    <div class="sp-item"><span>📱</span><span>Works on any device — iOS, Android & Web</span></div>
   </div>
 </div>
 
@@ -464,6 +608,11 @@ nav button,nav div{touch-action:manipulation;-webkit-tap-highlight-color:transpa
   <div class="hero-left">
     <div class="stars-bg"></div>
     <div class="hero-badge">ALL-IN-ONE POS</div>
+    <!-- LIVE VISITORS -->
+    <div class="live-visitors-badge">
+      <span class="live-dot"></span>
+      <span id="liveCount">247</span> people viewing this page right now
+    </div>
     <h1 class="hero-title">One System for<br><em>Every Business</em></h1>
     <div class="shop-badges">
       <span class="shop-badge">🏨 Hotels</span>
@@ -556,12 +705,21 @@ nav button,nav div{touch-action:manipulation;-webkit-tap-highlight-color:transpa
 <!-- PRICING - All-in-One Plan -->
 <section class="pricing">
   <div class="pricing-badge"><span>⭐ ONE PLAN. EVERYTHING INCLUDED ⭐</span></div>
+  <!-- ANNUAL/MONTHLY TOGGLE -->
+  <div class="pricing-toggle-wrap">
+    <span class="ptog-label active" id="ptLabelMonthly">Monthly</span>
+    <label class="ptog-switch">
+      <input type="checkbox" id="pricingToggle" onchange="togglePricing(this)">
+      <span class="ptog-slider"></span>
+    </label>
+    <span class="ptog-label" id="ptLabelAnnual">Annual <span class="ptog-save">SAVE 6%</span></span>
+  </div>
   <div class="pcard-wrap">
     <div class="pcard">
       <div class="pc-t">All-in-One POS</div>
       <div class="pc-tagline">For Hotels · Coffee Shops · Grocery · Electronics · Retail</div>
-      <div class="pc-p"><span class="pc-c">﷼</span><span class="pc-n">1888</span><span class="pc-pm">/mo</span></div>
-      <div class="pc-b">Billed Annually (or ﷼1999 monthly) · Hardware FREE</div>
+      <div class="pc-p"><span class="pc-c">﷼</span><span class="pc-n" id="priceDisplay">1999</span><span class="pc-pm">/mo</span></div>
+      <div class="pc-b" id="priceBillingNote">Billed Monthly · Hardware FREE</div>
       <ul class="flist">
         <li>Cloud Point of Sale</li><li>Inventory Management</li>
         <li>Kitchen Display System</li><li>Customer Display Screen</li>
@@ -662,6 +820,104 @@ nav button,nav div{touch-action:manipulation;-webkit-tap-highlight-color:transpa
 <!-- SUBSCRIBE -->
 <div class="sub"><button class="btn-sub" onclick="openPay()">Subscribe Now</button></div>
 
+<!-- TRUST STRIP -->
+<div class="trust-strip">
+  <div class="trust-strip-inner" id="trustStrip">
+    <div class="trust-item"><span>🔒</span><span>ZATCA Approved</span></div>
+    <div class="trust-item"><span>🏦</span><span>SAMA Supervised</span></div>
+    <div class="trust-item"><span>☁️</span><span>99.9% Uptime SLA</span></div>
+    <div class="trust-item"><span>🌍</span><span>5 Countries</span></div>
+    <div class="trust-item"><span>🏅</span><span>ISO 27001 Certified</span></div>
+    <div class="trust-item"><span>📞</span><span>24/7 Arabic & English Support</span></div>
+    <div class="trust-item"><span>💳</span><span>PCI DSS Compliant</span></div>
+    <div class="trust-item"><span>🚀</span><span>Free Hardware Included</span></div>
+    <div class="trust-item"><span>👥</span><span>15,000+ Businesses</span></div>
+    <div class="trust-item"><span>⭐</span><span>4.9 / 5 Rating</span></div>
+    <!-- duplicate -->
+    <div class="trust-item"><span>🔒</span><span>ZATCA Approved</span></div>
+    <div class="trust-item"><span>🏦</span><span>SAMA Supervised</span></div>
+    <div class="trust-item"><span>☁️</span><span>99.9% Uptime SLA</span></div>
+    <div class="trust-item"><span>🌍</span><span>5 Countries</span></div>
+    <div class="trust-item"><span>🏅</span><span>ISO 27001 Certified</span></div>
+    <div class="trust-item"><span>📞</span><span>24/7 Arabic & English Support</span></div>
+    <div class="trust-item"><span>💳</span><span>PCI DSS Compliant</span></div>
+    <div class="trust-item"><span>🚀</span><span>Free Hardware Included</span></div>
+    <div class="trust-item"><span>👥</span><span>15,000+ Businesses</span></div>
+    <div class="trust-item"><span>⭐</span><span>4.9 / 5 Rating</span></div>
+  </div>
+</div>
+
+<!-- COMPETITOR COMPARE TABLE -->
+<section class="compare-section">
+  <div class="compare-inner">
+    <div style="text-align:center;margin-bottom:8px;"><span style="background:#4f2d91;color:#fff;padding:4px 16px;border-radius:20px;font-size:12px;font-weight:700;">⚡ HOW WE COMPARE</span></div>
+    <h2 class="compare-title">BillZest vs Other POS Systems</h2>
+    <p class="compare-sub">See why thousands of businesses in the Middle East choose BillZest</p>
+    <div style="overflow-x:auto;">
+    <table class="ctable">
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th class="bz-col">BillZest ★</th>
+          <th>Competitor A</th>
+          <th>Competitor B</th>
+          <th>Competitor C</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>All-in-One Plan</td><td class="bz-col"><span class="c-yes">✓</span></td><td><span class="c-no">✗</span></td><td><span class="c-par">Partial</span></td><td><span class="c-no">✗</span></td></tr>
+        <tr><td>Free Hardware</td><td class="bz-col"><span class="c-yes">✓</span></td><td><span class="c-no">✗</span></td><td><span class="c-no">✗</span></td><td><span class="c-no">✗</span></td></tr>
+        <tr><td>ZATCA Approved</td><td class="bz-col"><span class="c-yes">✓</span></td><td><span class="c-par">Partial</span></td><td><span class="c-yes">✓</span></td><td><span class="c-no">✗</span></td></tr>
+        <tr><td>Arabic Language</td><td class="bz-col"><span class="c-yes">✓</span></td><td><span class="c-par">Partial</span></td><td><span class="c-yes">✓</span></td><td><span class="c-par">Partial</span></td></tr>
+        <tr><td>Hotel + Café + Grocery in One</td><td class="bz-col"><span class="c-yes">✓</span></td><td><span class="c-no">✗</span></td><td><span class="c-no">✗</span></td><td><span class="c-no">✗</span></td></tr>
+        <tr><td>24/7 Local Support</td><td class="bz-col"><span class="c-yes">✓</span></td><td><span class="c-no">✗</span></td><td><span class="c-par">Business hrs</span></td><td><span class="c-no">✗</span></td></tr>
+        <tr><td>14-Day Free Trial</td><td class="bz-col"><span class="c-yes">✓</span></td><td><span class="c-no">✗</span></td><td><span class="c-par">7 days</span></td><td><span class="c-yes">✓</span></td></tr>
+        <tr><td>Online + QR Ordering Built-in</td><td class="bz-col"><span class="c-yes">✓</span></td><td><span class="c-no">✗</span></td><td><span class="c-par">Add-on</span></td><td><span class="c-no">✗</span></td></tr>
+      </tbody>
+    </table>
+    </div>
+    <div style="text-align:center;margin-top:24px;">
+      <button onclick="if(window.scrollToRegister)window.scrollToRegister()" style="background:#4f2d91;color:#fff;border:none;padding:13px 32px;border-radius:50px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Poppins',sans-serif;">Start Free Trial — No Credit Card 🚀</button>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ SECTION -->
+<section class="faq-section">
+  <div class="faq-inner">
+    <h2 class="faq-title">Frequently Asked Questions</h2>
+    <p class="faq-sub">Everything you need to know about BillZest POS</p>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">How does the 14-day free trial work? <span class="faq-icon">+</span></button>
+      <div class="faq-a"><div class="faq-a-inner">You get full access to all BillZest features for 14 days — completely free, no credit card required. After the trial, simply choose a plan to continue. All your data is saved.</div></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">Is BillZest ZATCA approved? <span class="faq-icon">+</span></button>
+      <div class="faq-a"><div class="faq-a-inner">Yes! BillZest POS is fully ZATCA (Zakat, Tax and Customs Authority) approved for Phase 1 and Phase 2 e-invoicing compliance in Saudi Arabia. Our system automatically generates ZATCA-compliant invoices.</div></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">Do I really get hardware for free? <span class="faq-icon">+</span></button>
+      <div class="faq-a"><div class="faq-a-inner">Yes! When you subscribe to our All-in-One plan, we include the POS hardware at no extra cost. This includes the tablet stand, receipt printer, and customer display. Hardware is subject to plan terms — contact us for details.</div></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">Can I use BillZest for multiple branches? <span class="faq-icon">+</span></button>
+      <div class="faq-a"><div class="faq-a-inner">Absolutely! BillZest supports unlimited branches under one subscription. You get a unified dashboard to manage inventory, staff, reports, and menus across all locations from one place.</div></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">What kind of support do you offer? <span class="faq-icon">+</span></button>
+      <div class="faq-a"><div class="faq-a-inner">We provide 24/7 support in both Arabic and English via WhatsApp, phone, and live chat. Our local support team understands the Middle East market and can assist with setup, training, and ongoing questions.</div></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">Does BillZest work offline? <span class="faq-icon">+</span></button>
+      <div class="faq-a"><div class="faq-a-inner">Yes, BillZest has an offline mode. Your POS continues to process orders and payments even without internet. Data automatically syncs to the cloud when connection is restored.</div></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">Is BillZest suitable for hotels? <span class="faq-icon">+</span></button>
+      <div class="faq-a"><div class="faq-a-inner">Yes! BillZest is designed for hotels with features like room service orders, front desk billing, F&B management, multi-outlet management, and guest folio integration — all in one system.</div></div>
+    </div>
+  </div>
+</section>
+
 <!-- FOOTER (keep original) -->
 <footer><div class="foot-main"><div class="fcol"><div class="flogo">Bill<span>Zest</span></div><p class="fdesc">BillZest POS — Trusted by 15,000+ businesses across the Middle East. ZATCA-approved & SAMA-supervised. All-in-one POS for Hotels, Coffee Shops, Grocery, Electronics & Retail.</p><p class="fph"><a href="/cdn-cgi/l/email-protection#7b12151d143b19121717011e080f0b140855181416" style="color:inherit;text-decoration:none;"><span class="__cf_email__" data-cfemail="60090e060f2002090c0c1a051314100f134e030f0d">[email&#160;protected]</span></a> | billzestpos.com</p><div class="pays"><div class="pay v">VISA</div><div class="pay mc">MC</div><div class="pay mo">Maestro</div><div class="pay ci">Cirrus</div><div class="pay ax">AMEX</div><div class="pay ma">mada</div><div class="pay st">سداد</div></div></div><div class="fcol"><h4>BillZest</h4><a href="#">Careers</a><a href="#">Contact us</a><a href="#">Support</a><a href="#">Press & Media</a></div><div class="fcol"><h4>Products</h4><a href="#">Point of Sale Solution</a><a href="#">BillZest Pay</a><a href="#">BillZest Enterprise</a><a href="#">Online</a><a href="#">Self Ordering</a><a href="#">One Accounting</a></div><div class="fcol"><h4>Resources</h4><a href="#">Help Center</a></div><div class="fcol"><h4>Legal</h4><a href="#">Privacy Policy</a><a href="#">Terms of Service</a><a href="#">Consumer Protection</a><a href="#">Accessibility</a><a href="#">Cookie Policy</a></div></div><div class="foot-bot"><span class="fcopy">BillZest © 2025. All Rights Reserved.</span><div class="socs"><a href="#" class="soc">𝕏</a><a href="#" class="soc">f</a><a href="#" class="soc">◎</a><a href="#" class="soc">in</a></div></div></footer>
 
@@ -751,7 +1007,205 @@ window.BZ=(function(){var isAr=false;var ADMINS=[{e:"admin@billzestpos.com",p:"B
 <!-- Login Modal HTML (keep as before) -->
 <div id="loginModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999;align-items:center;justify-content:center;padding:20px;"><div style="background:#fff;border-radius:16px;padding:30px 36px 36px;width:100%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,.25);position:relative;max-height:90vh;overflow-y:auto;"><button onclick="closeLoginDirect()" style="position:absolute;top:14px;right:14px;background:none;border:none;font-size:22px;cursor:pointer;color:#999;z-index:1;">&#10005;</button><div style="font-size:26px;font-weight:800;text-align:center;margin-bottom:16px;color:#1a1a1a;">Bill<span style="color:#f5a623;">Zest</span></div><div style="display:flex;border:1.5px solid #e0e0e0;border-radius:10px;overflow:hidden;margin-bottom:22px;"><button id="tab-login" onclick="window.BZ&&window.BZ.showLoginTab()" style="flex:1;padding:10px;background:#4f2d91;color:#fff;border:none;font-size:13px;font-weight:700;cursor:pointer;font-family:'Poppins',sans-serif;">Sign In</button><button id="tab-register" onclick="window.BZ&&window.BZ.showRegisterTab()" style="flex:1;padding:10px;background:#fff;color:#888;border:none;font-size:13px;font-weight:600;cursor:pointer;font-family:'Poppins',sans-serif;">Register</button></div><div id="panel-login"><div style="margin-bottom:13px;"><label style="display:block;font-size:11px;font-weight:700;color:#555;margin-bottom:5px;text-transform:uppercase;">Email</label><input type="email" id="lb-email" placeholder="your@email.com" onkeydown="if(event.key==='Enter'&&window.BZ)window.BZ.tryLogin()" style="width:100%;padding:11px 14px;border:1.5px solid #ddd;border-radius:8px;font-size:14px;outline:none;color:#333;" onfocus="this.style.borderColor='#4f2d91'" onblur="this.style.borderColor='#ddd'"></div><div style="margin-bottom:6px;"><label style="display:block;font-size:11px;font-weight:700;color:#555;margin-bottom:5px;text-transform:uppercase;">Password</label><div style="position:relative;"><input type="password" id="lb-pass" placeholder="........" onkeydown="if(event.key==='Enter'&&window.BZ)window.BZ.tryLogin()" style="width:100%;padding:11px 42px 11px 14px;border:1.5px solid #ddd;border-radius:8px;font-size:14px;outline:none;color:#333;" onfocus="this.style.borderColor='#4f2d91'" onblur="this.style.borderColor='#ddd'"><span onclick="var f=document.getElementById('lb-pass');f.type=f.type==='password'?'text':'password';this.textContent=f.type==='password'?'👁️':'🙈';" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:16px;user-select:none;">👁️</span></div></div><div style="text-align:right;margin-bottom:14px;"><span id="lb-fg" onclick="window.BZ&&window.BZ.sendPasswordReset()" style="font-size:12px;color:#4f2d91;cursor:pointer;font-weight:600;">Forgot password?</span></div><div id="lb-err" style="color:#ef4444;font-size:12px;text-align:center;margin-bottom:8px;display:none;"></div><div id="lb-ok" style="color:#00875a;background:#e6fffa;border:1px solid #00c6ae;font-size:12px;text-align:center;padding:9px;border-radius:8px;margin-bottom:8px;display:none;"></div><button id="lb-btn" onclick="if(window.BZ)window.BZ.tryLogin();else alert('Please wait, loading...')" style="width:100%;background:#4f2d91;color:#fff;border:none;padding:13px;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Poppins',sans-serif;">Sign In</button><div style="display:flex;align-items:center;gap:10px;margin:12px 0;"><div style="flex:1;height:1px;background:#eee;"></div><span style="font-size:12px;color:#999;">or</span><div style="flex:1;height:1px;background:#eee;"></div></div><button onclick="var errEl=document.getElementById('lb-err');if(errEl)errEl.style.display='none';if(window.fbGoogleSignIn){window.fbGoogleSignIn().then(function(r){if(r&&!r.ok){if(errEl){errEl.style.display='block';errEl.textContent='Google sign-in failed. Try again.';}}}).catch(function(){if(errEl){errEl.style.display='block';errEl.textContent='Google sign-in failed. Try again.';}})}" style="width:100%;background:#fff;color:#333;border:1.5px solid #ddd;padding:11px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;font-family:'Poppins',sans-serif;"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" style="width:18px;height:18px;"> Continue with Google</button><div style="text-align:center;margin-top:16px;font-size:12px;color:#888;">Don't have an account? <span onclick="window.BZ&&window.BZ.showRegisterTab()" style="color:#4f2d91;font-weight:700;cursor:pointer;">Register here</span></div></div><div id="panel-register" style="display:none;"><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;"><div><label style="display:block;font-size:11px;font-weight:700;color:#555;margin-bottom:4px;text-transform:uppercase;">First Name <sup style="color:#e53e3e;">*</sup></label><input type="text" id="reg-fname" placeholder="Ali" style="width:100%;padding:10px 12px;border:1.5px solid #ddd;border-radius:8px;font-size:13px;outline:none;color:#333;font-family:'Poppins',sans-serif;" onfocus="this.style.borderColor='#4f2d91'" onblur="this.style.borderColor='#ddd'"></div><div><label style="display:block;font-size:11px;font-weight:700;color:#555;margin-bottom:4px;text-transform:uppercase;">Last Name <sup style="color:#e53e3e;">*</sup></label><input type="text" id="reg-lname" placeholder="Khan" style="width:100%;padding:10px 12px;border:1.5px solid #ddd;border-radius:8px;font-size:13px;outline:none;color:#333;font-family:'Poppins',sans-serif;" onfocus="this.style.borderColor='#4f2d91'" onblur="this.style.borderColor='#ddd'"></div></div><div style="margin-bottom:10px;"><label style="display:block;font-size:11px;font-weight:700;color:#555;margin-bottom:4px;text-transform:uppercase;">Business Name <sup style="color:#e53e3e;">*</sup></label><input type="text" id="reg-biz" placeholder="My Restaurant" style="width:100%;padding:10px 12px;border:1.5px solid #ddd;border-radius:8px;font-size:13px;outline:none;color:#333;font-family:'Poppins',sans-serif;" onfocus="this.style.borderColor='#4f2d91'" onblur="this.style.borderColor='#ddd'"></div><div style="margin-bottom:10px;"><label style="display:block;font-size:11px;font-weight:700;color:#555;margin-bottom:4px;text-transform:uppercase;">Phone <sup style="color:#e53e3e;">*</sup></label><input type="tel" id="reg-phone" placeholder="+966 5x xxx xxxx" style="width:100%;padding:10px 12px;border:1.5px solid #ddd;border-radius:8px;font-size:13px;outline:none;color:#333;font-family:'Poppins',sans-serif;" onfocus="this.style.borderColor='#4f2d91'" onblur="this.style.borderColor='#ddd'"></div><div style="margin-bottom:10px;"><label style="display:block;font-size:11px;font-weight:700;color:#555;margin-bottom:4px;text-transform:uppercase;">Email <sup style="color:#e53e3e;">*</sup></label><input type="email" id="reg-email" placeholder="your@email.com" style="width:100%;padding:10px 12px;border:1.5px solid #ddd;border-radius:8px;font-size:13px;outline:none;color:#333;font-family:'Poppins',sans-serif;" onfocus="this.style.borderColor='#4f2d91'" onblur="this.style.borderColor='#ddd'"></div><div style="margin-bottom:10px;"><label style="display:block;font-size:11px;font-weight:700;color:#555;margin-bottom:4px;text-transform:uppercase;">Password <sup style="color:#e53e3e;">*</sup></label><div style="position:relative;"><input type="password" id="reg-pass" placeholder="Min 8 characters" style="width:100%;padding:10px 42px 10px 12px;border:1.5px solid #ddd;border-radius:8px;font-size:13px;outline:none;color:#333;font-family:'Poppins',sans-serif;" onfocus="this.style.borderColor='#4f2d91'" onblur="this.style.borderColor='#ddd'"><span onclick="var f=document.getElementById('reg-pass');f.type=f.type==='password'?'text':'password';this.textContent=f.type==='password'?'👁️':'🙈';" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:15px;user-select:none;">👁️</span></div></div><div style="margin-bottom:14px;"><label style="display:block;font-size:11px;font-weight:700;color:#555;margin-bottom:4px;text-transform:uppercase;">Country</label><select id="reg-country" style="width:100%;padding:10px 12px;border:1.5px solid #ddd;border-radius:8px;font-size:13px;outline:none;color:#333;font-family:'Poppins',sans-serif;background:#fff;" onfocus="this.style.borderColor='#4f2d91'" onblur="this.style.borderColor='#ddd'"><option value="Saudi Arabia">🇸🇦 Saudi Arabia</option><option value="UAE">🇦🇪 UAE</option><option value="Kuwait">🇰🇼 Kuwait</option><option value="Bahrain">🇧🇭 Bahrain</option><option value="Qatar">🇶🇦 Qatar</option><option value="Oman">🇴🇲 Oman</option><option value="Other">🌍 Other</option></select></div><div id="reg-err" style="color:#ef4444;font-size:12px;text-align:center;margin-bottom:8px;display:none;"></div><div id="reg-ok" style="color:#00875a;background:#e6fffa;border:1px solid #00c6ae;font-size:12px;text-align:center;padding:9px;border-radius:8px;margin-bottom:8px;display:none;"></div><button id="reg-btn" onclick="window.BZ&&window.BZ.tryRegister()" style="width:100%;background:#4f2d91;color:#fff;border:none;padding:13px;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Poppins',sans-serif;">Create Account 🚀</button><div style="display:flex;align-items:center;gap:10px;margin:12px 0;"><div style="flex:1;height:1px;background:#eee;"></div><span style="font-size:12px;color:#999;">or</span><div style="flex:1;height:1px;background:#eee;"></div></div><button onclick="var errEl=document.getElementById('reg-err');if(errEl)errEl.style.display='none';if(window.fbGoogleSignIn){window.fbGoogleSignIn().then(function(r){if(r&&!r.ok){if(errEl){errEl.style.display='block';errEl.textContent='Google sign-in failed. Try again.';}}}).catch(function(){if(errEl){errEl.style.display='block';errEl.textContent='Google sign-in failed. Try again.';}})}" style="width:100%;background:#fff;color:#333;border:1.5px solid #ddd;padding:11px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;font-family:'Poppins',sans-serif;"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" style="width:18px;height:18px;"> Continue with Google</button><div style="text-align:center;margin-top:16px;font-size:12px;color:#888;">Already have an account? <span onclick="window.BZ&&window.BZ.showLoginTab()" style="color:#4f2d91;font-weight:700;cursor:pointer;">Sign in</span></div></div></div></div>
 
-<!-- AI Chat with corrected Arabic clear -->
+<!-- STICKY BOTTOM CTA BAR -->
+<div class="sticky-cta-bar" id="stickyCTA">
+  <div class="sticky-cta-left">
+    <span class="sticky-cta-pulse"></span>
+    <span class="sticky-cta-text">🔥 Limited Offer: <span>20% OFF + FREE Hardware</span> — Ends soon!</span>
+  </div>
+  <div class="sticky-cta-btns">
+    <button class="sticky-btn-trial" onclick="if(window.scrollToRegister)window.scrollToRegister()">✨ Free Trial</button>
+    <button class="sticky-btn-demo" onclick="openPay()">Book Demo</button>
+  </div>
+  <button class="sticky-cta-close" onclick="document.getElementById('stickyCTA').style.display='none'">×</button>
+</div>
+
+<!-- FLOATING NOTIFICATION STACK -->
+<div class="notif-stack" id="notifStack"></div>
+
+<!-- EXIT INTENT POPUP -->
+<div class="exit-popup-overlay" id="exitPopup" style="display:none;">
+  <div class="exit-popup-box">
+    <div class="exit-popup-top">
+      <button class="ep-close" onclick="closeExitPopup()">✕</button>
+      <span class="exit-popup-emoji">🎁</span>
+      <div class="exit-popup-title">Wait! Don't leave yet</div>
+      <div class="exit-popup-sub">You're one step away from transforming your business</div>
+    </div>
+    <div class="exit-popup-body">
+      <div class="exit-countdown" id="exitCountdown">⏰ This special offer expires in: <span id="exitTimer">10:00</span></div>
+      <div class="exit-offer-row">
+        <div class="exit-offer-item">
+          <span class="eo-icon">🎯</span>
+          <span class="eo-text">14 Days FREE Trial</span>
+        </div>
+        <div class="exit-offer-item">
+          <span class="eo-icon">💻</span>
+          <span class="eo-text">FREE Hardware Worth ﷼2,000</span>
+        </div>
+        <div class="exit-offer-item">
+          <span class="eo-icon">📉</span>
+          <span class="eo-text">20% OFF First Year</span>
+        </div>
+      </div>
+      <button class="exit-cta" onclick="closeExitPopup();if(window.scrollToRegister)window.scrollToRegister();">🚀 Claim My Free Trial Now</button>
+      <span class="exit-skip" onclick="closeExitPopup()">No thanks, I'll pay full price later</span>
+    </div>
+  </div>
+</div>
+
+<!-- VIDEO DEMO MODAL -->
+<div class="vid-modal-overlay" id="vidModal" style="display:none;">
+  <div class="vid-modal-box">
+    <button class="vid-modal-close" onclick="closeVidModal()">✕</button>
+    <div class="vid-modal-player">
+      <div class="vm-play" onclick="this.innerHTML='▶';this.style.background='#10b981';">▶</div>
+      <div class="vm-label">BillZest POS — Product Walkthrough (3 min)</div>
+      <div style="font-size:12px;color:rgba(255,255,255,.5);margin-top:4px;">Click play to start the demo</div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ---- EXIT INTENT ----
+var exitShown = false;
+document.addEventListener('mouseleave', function(e) {
+  if (e.clientY < 10 && !exitShown && !sessionStorage.getItem('bzExitShown')) {
+    exitShown = true;
+    sessionStorage.setItem('bzExitShown', '1');
+    setTimeout(showExitPopup, 300);
+  }
+});
+// Mobile: show after 45 seconds of inactivity
+var exitMobileTimer = setTimeout(function() {
+  if (!exitShown && !sessionStorage.getItem('bzExitShown')) {
+    exitShown = true;
+    sessionStorage.setItem('bzExitShown', '1');
+    showExitPopup();
+  }
+}, 45000);
+function showExitPopup() {
+  var el = document.getElementById('exitPopup');
+  if (el) { el.style.display = 'flex'; startExitTimer(); }
+}
+function closeExitPopup() {
+  var el = document.getElementById('exitPopup');
+  if (el) el.style.display = 'none';
+}
+document.getElementById('exitPopup').addEventListener('click', function(e) {
+  if (e.target === this) closeExitPopup();
+});
+var exitSecs = 600;
+function startExitTimer() {
+  var el = document.getElementById('exitTimer');
+  var iv = setInterval(function() {
+    exitSecs--;
+    if (exitSecs <= 0) { clearInterval(iv); closeExitPopup(); return; }
+    var m = Math.floor(exitSecs / 60), s = exitSecs % 60;
+    if (el) el.textContent = m + ':' + String(s).padStart(2, '0');
+  }, 1000);
+}
+
+// ---- STICKY CTA BAR ----
+window.addEventListener('scroll', function() {
+  var bar = document.getElementById('stickyCTA');
+  if (!bar) return;
+  if (window.scrollY > 400) { bar.classList.add('visible'); }
+  else { bar.classList.remove('visible'); }
+});
+
+// ---- LIVE VISITORS COUNTER ----
+(function() {
+  var base = 230 + Math.floor(Math.random() * 50);
+  setInterval(function() {
+    var delta = Math.floor(Math.random() * 7) - 3;
+    base = Math.max(180, Math.min(350, base + delta));
+    var el = document.getElementById('liveCount');
+    if (el) el.textContent = base;
+  }, 4000);
+})();
+
+// ---- FLOATING NOTIFICATIONS ----
+var bzNotifs = [
+  { icon: '🏨', name: 'Ahmed K.', city: 'Riyadh', action: 'started a Free Trial', time: '2 min ago' },
+  { icon: '☕', name: 'Sara M.', city: 'Dubai', action: 'upgraded to All-in-One', time: '5 min ago' },
+  { icon: '🛒', name: 'Khalid R.', city: 'Kuwait', action: 'signed up for a Demo', time: '8 min ago' },
+  { icon: '📱', name: 'Fatima A.', city: 'Jeddah', action: 'started a Free Trial', time: '11 min ago' },
+  { icon: '🍽️', name: 'Omar S.', city: 'Abu Dhabi', action: 'activated All-in-One Plan', time: '14 min ago' },
+  { icon: '🏪', name: 'Layla H.', city: 'Doha', action: 'requested a Demo', time: '18 min ago' }
+];
+var nIdx = 0;
+function showNotif() {
+  var n = bzNotifs[nIdx % bzNotifs.length]; nIdx++;
+  var stack = document.getElementById('notifStack');
+  if (!stack) return;
+  var card = document.createElement('div');
+  card.className = 'notif-card';
+  card.innerHTML = '<span class="notif-icon">' + n.icon + '</span><div class="notif-text"><strong>' + n.name + ', ' + n.city + '</strong>' + n.action + '<div class="notif-time">' + n.time + '</div></div>';
+  stack.appendChild(card);
+  setTimeout(function() {
+    card.classList.add('hiding');
+    setTimeout(function() { if (card.parentNode) card.parentNode.removeChild(card); }, 350);
+  }, 4000);
+}
+setTimeout(function() {
+  showNotif();
+  setInterval(showNotif, 9000);
+}, 3000);
+
+// ---- PRICING TOGGLE ----
+function togglePricing(cb) {
+  var price = document.getElementById('priceDisplay');
+  var note = document.getElementById('priceBillingNote');
+  var lm = document.getElementById('ptLabelMonthly');
+  var la = document.getElementById('ptLabelAnnual');
+  if (cb.checked) {
+    if (price) price.textContent = '1888';
+    if (note) note.textContent = 'Billed Annually — Save ﷼1,332/yr · Hardware FREE';
+    if (lm) lm.classList.remove('active');
+    if (la) la.classList.add('active');
+  } else {
+    if (price) price.textContent = '1999';
+    if (note) note.textContent = 'Billed Monthly · Hardware FREE';
+    if (lm) lm.classList.add('active');
+    if (la) la.classList.remove('active');
+  }
+}
+
+// ---- FAQ ACCORDION ----
+function toggleFaq(btn) {
+  var answer = btn.nextElementSibling;
+  var isOpen = btn.classList.contains('open');
+  // close all
+  document.querySelectorAll('.faq-q.open').forEach(function(b) {
+    b.classList.remove('open');
+    b.nextElementSibling.style.maxHeight = '0';
+  });
+  if (!isOpen) {
+    btn.classList.add('open');
+    answer.style.maxHeight = answer.scrollHeight + 'px';
+  }
+}
+
+// ---- VIDEO MODAL ----
+function openVidModal() {
+  var m = document.getElementById('vidModal');
+  if (m) { m.style.display = 'flex'; }
+}
+function closeVidModal() {
+  var m = document.getElementById('vidModal');
+  if (m) m.style.display = 'none';
+}
+document.getElementById('vidModal').addEventListener('click', function(e) {
+  if (e.target === this) closeVidModal();
+});
+// Make video player clickable to open modal
+var vidPlayer = document.querySelector('.vid-player');
+if (vidPlayer) {
+  vidPlayer.onclick = function() { openVidModal(); };
+}
+</script>
+
 <div id="bzB" style="position:fixed;bottom:24px;right:24px;z-index:9000;"><div style="position:absolute;inset:-6px;border-radius:50%;background:rgba(79,45,145,.15);animation:bzR 2s ease-out infinite;pointer-events:none;"></div><button id="bzBtn" onclick="if(window.bzToggle)window.bzToggle()" style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#4f2d91,#00b5a3);border:none;cursor:pointer;font-size:22px;box-shadow:0 6px 20px rgba(79,45,145,.35);position:relative;z-index:1;">&#x1F4AC;<span id="bzN" style="display:none;position:absolute;top:-2px;right:-2px;width:16px;height:16px;background:#ef4444;border-radius:50%;font-size:9px;font-weight:700;color:#fff;line-height:16px;text-align:center;border:2px solid #fff;">1</span><span style="position:absolute;bottom:2px;right:2px;width:11px;height:11px;background:#10b981;border-radius:50%;border:2px solid #fff;display:block;"></span></button></div>
 <div id="bzWin" style="display:none;position:fixed;bottom:92px;right:24px;width:330px;height:500px;background:#fff;border-radius:18px;box-shadow:0 16px 50px rgba(0,0,0,.18);flex-direction:column;z-index:8999;overflow:hidden;"><div style="background:linear-gradient(135deg,#4f2d91,#3b1f6e);padding:13px 15px;display:flex;align-items:center;gap:10px;"><div style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:12px;">AI</div><div style="flex:1;"><div style="font-size:13px;font-weight:700;color:#fff;">BillZest AI</div><div style="font-size:10px;color:rgba(255,255,255,.8);">Online 24/7</div></div><button onclick="if(window.bzToggleLang)window.bzToggleLang()" id="bzLB" style="background:rgba(255,255,255,.15);border:none;width:26px;height:26px;border-radius:50%;cursor:pointer;color:#fff;">&#x1F30D;</button><button onclick="if(window.bzClear)window.bzClear()" style="background:rgba(255,255,255,.15);border:none;width:26px;height:26px;border-radius:50%;cursor:pointer;color:#fff;">&#x1F5D1;</button><button onclick="if(window.bzToggle)window.bzToggle()" style="background:rgba(255,255,255,.15);border:none;width:26px;height:26px;border-radius:50%;cursor:pointer;color:#fff;font-size:14px;">&#x2715;</button></div><div id="bzM" style="flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px;background:#f8f8fc;"></div><div id="bzQ" style="padding:5px 10px;display:flex;gap:4px;flex-wrap:wrap;background:#f8f8fc;border-top:1px solid #eee;min-height:32px;"></div><div style="padding:10px 12px;border-top:1px solid #eee;display:flex;gap:7px;align-items:center;background:#fff;"><textarea id="bzI" placeholder="Type message..." rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();if(window.bzSend)window.bzSend();}" style="flex:1;border:1.5px solid #ddd;border-radius:9px;padding:8px 11px;font-size:12px;outline:none;resize:none;max-height:60px;" onfocus="this.style.borderColor='#4f2d91'" onblur="this.style.borderColor='#ddd'"></textarea><button onclick="if(window.bzSend)window.bzSend()" style="width:34px;height:34px;border-radius:9px;background:#4f2d91;border:none;cursor:pointer;color:#fff;font-size:15px;flex-shrink:0;">&#10148;</button></div></div>
 <style>@keyframes bzR{0%{transform:scale(1);opacity:.7;}100%{transform:scale(1.5);opacity:0;}}@keyframes bzP{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}@keyframes bzD{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}@media(max-width:380px){#bzWin{width:calc(100vw - 16px);right:8px;}}</style>
