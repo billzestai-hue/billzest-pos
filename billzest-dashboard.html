@@ -51,6 +51,22 @@ canvas{max-height:300px;width:100%;}
 .bottom-links{display:flex;gap:16px;justify-content:flex-end;margin-top:24px;}
 .btn{background:var(--purple);color:#fff;border:none;padding:10px 20px;border-radius:8px;font-weight:600;cursor:pointer;}
 .btn-outline{background:transparent;border:1px solid var(--purple);color:var(--purple);}
+
+/* New section styles */
+.page-section { display: none; }
+.page-section.active-page { display: block; }
+.pos-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); gap: 16px; margin-top: 20px; }
+.pos-item { background: #fff; border-radius: 16px; padding: 16px; text-align: center; border: 1px solid #edf2f7; cursor: pointer; transition: 0.2s; }
+.pos-item:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.05); }
+.pos-item h4 { margin: 10px 0 5px; }
+.inv-table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 16px; overflow: hidden; }
+.inv-table th, .inv-table td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
+.inv-table th { background: #f8f7ff; color: var(--purple); }
+.status-badge { padding: 4px 10px; border-radius: 20px; font-size: 12px; background: #e6f7e6; color: #2e7d32; }
+.customers-list { display: flex; flex-direction: column; gap: 12px; }
+.customer-card { background: #fff; border-radius: 12px; padding: 16px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #edf2f7; }
+.report-card { background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 16px; border-left: 4px solid var(--purple); }
+.setting-item { display: flex; justify-content: space-between; align-items: center; padding: 16px; background: #fff; border-radius: 12px; margin-bottom: 12px; }
 @media(max-width:768px){
   .sidebar{display:none;}
   .stats-grid{grid-template-columns:1fr 1fr;}
@@ -64,12 +80,12 @@ canvas{max-height:300px;width:100%;}
 <div class="dash-container">
   <div class="sidebar">
     <div class="logo">Bill<span>Zest</span></div>
-    <div class="nav-item active">📊 Dashboard</div>
-    <div class="nav-item">🛒 POS</div>
-    <div class="nav-item">📦 Inventory</div>
-    <div class="nav-item">👥 Customers</div>
-    <div class="nav-item">📈 Reports</div>
-    <div class="nav-item">⚙️ Settings</div>
+    <div class="nav-item active" data-page="dashboard">📊 Dashboard</div>
+    <div class="nav-item" data-page="pos">🛒 POS</div>
+    <div class="nav-item" data-page="inventory">📦 Inventory</div>
+    <div class="nav-item" data-page="customers">👥 Customers</div>
+    <div class="nav-item" data-page="reports">📈 Reports</div>
+    <div class="nav-item" data-page="settings">⚙️ Settings</div>
   </div>
   <div class="main-content">
     <div class="top-bar">
@@ -87,42 +103,103 @@ canvas{max-height:300px;width:100%;}
       </div>
     </div>
 
-    <!-- Category Selection (shown only if not set) -->
-    <div id="categorySelector" class="category-selector" style="display: none;">
-      <div class="category-title">🏢 Select Your Business Category</div>
-      <p style="margin-bottom: 16px;">Choose the category that best describes your business to see relevant insights.</p>
-      <div class="category-buttons" id="catButtons">
-        <button class="cat-btn" data-cat="Hotel">🏨 Hotel</button>
-        <button class="cat-btn" data-cat="Coffee Shop">☕ Coffee Shop</button>
-        <button class="cat-btn" data-cat="Grocery">🛒 Grocery</button>
-        <button class="cat-btn" data-cat="Electronics">📱 Electronics</button>
-        <button class="cat-btn" data-cat="Retail">🛍️ Retail</button>
-        <button class="cat-btn" data-cat="Restaurant">🍽️ Restaurant</button>
+    <!-- DASHBOARD SECTION (default) -->
+    <div id="dashboardSection" class="page-section active-page">
+      <div id="categorySelector" class="category-selector" style="display: none;">
+        <div class="category-title">🏢 Select Your Business Category</div>
+        <p style="margin-bottom: 16px;">Choose the category that best describes your business to see relevant insights.</p>
+        <div class="category-buttons" id="catButtons">
+          <button class="cat-btn" data-cat="Hotel">🏨 Hotel</button>
+          <button class="cat-btn" data-cat="Coffee Shop">☕ Coffee Shop</button>
+          <button class="cat-btn" data-cat="Grocery">🛒 Grocery</button>
+          <button class="cat-btn" data-cat="Electronics">📱 Electronics</button>
+          <button class="cat-btn" data-cat="Retail">🛍️ Retail</button>
+          <button class="cat-btn" data-cat="Restaurant">🍽️ Restaurant</button>
+        </div>
+      </div>
+      <div class="stats-grid" id="statsGrid">
+        <div class="stat-card"><div class="stat-title">Today's Sales</div><div class="stat-value" id="todaySales">﷼ 0</div><div class="stat-change">↑ 12% from yesterday</div></div>
+        <div class="stat-card"><div class="stat-title">Total Orders</div><div class="stat-value" id="totalOrders">0</div><div class="stat-change">This month</div></div>
+        <div class="stat-card"><div class="stat-title">Inventory Alerts</div><div class="stat-value" id="alertCount">0</div><div class="stat-change">Items low in stock</div></div>
+        <div class="stat-card"><div class="stat-title">Revenue (MTD)</div><div class="stat-value" id="revenueMTD">﷼ 0</div><div class="stat-change">+8% vs last month</div></div>
+      </div>
+      <div class="chart-section">
+        <div class="chart-title" id="chartTitle">Sales Overview (Last 7 Days)</div>
+        <canvas id="salesChart" width="400" height="200"></canvas>
+      </div>
+      <div class="two-col">
+        <div class="recent-orders">
+          <div class="section-title">Recent Orders <span style="font-size:12px;color:var(--purple);">View all →</span></div>
+          <div id="ordersList"></div>
+        </div>
+        <div class="inventory-alerts">
+          <div class="section-title">Alerts & Insights <span style="font-size:12px;color:var(--purple);">Manage →</span></div>
+          <div id="alertsList"></div>
+        </div>
       </div>
     </div>
 
-    <!-- Dashboard Stats (dynamic based on category) -->
-    <div class="stats-grid" id="statsGrid">
-      <div class="stat-card"><div class="stat-title">Today's Sales</div><div class="stat-value" id="todaySales">﷼ 0</div><div class="stat-change">↑ 12% from yesterday</div></div>
-      <div class="stat-card"><div class="stat-title">Total Orders</div><div class="stat-value" id="totalOrders">0</div><div class="stat-change">This month</div></div>
-      <div class="stat-card"><div class="stat-title">Inventory Alerts</div><div class="stat-value" id="alertCount">0</div><div class="stat-change">Items low in stock</div></div>
-      <div class="stat-card"><div class="stat-title">Revenue (MTD)</div><div class="stat-value" id="revenueMTD">﷼ 0</div><div class="stat-change">+8% vs last month</div></div>
+    <!-- POS SECTION -->
+    <div id="posSection" class="page-section">
+      <h2 style="margin-bottom: 20px;">Point of Sale</h2>
+      <div class="pos-grid">
+        <div class="pos-item" onclick="alert('Add to cart: Coffee')"><div>☕</div><h4>Coffee</h4><p>﷼ 12</p></div>
+        <div class="pos-item" onclick="alert('Add to cart: Sandwich')"><div>🥪</div><h4>Sandwich</h4><p>﷼ 18</p></div>
+        <div class="pos-item" onclick="alert('Add to cart: Burger')"><div>🍔</div><h4>Burger</h4><p>﷼ 25</p></div>
+        <div class="pos-item" onclick="alert('Add to cart: Pizza')"><div>🍕</div><h4>Pizza</h4><p>﷼ 35</p></div>
+        <div class="pos-item" onclick="alert('Add to cart: Salad')"><div>🥗</div><h4>Salad</h4><p>﷼ 15</p></div>
+        <div class="pos-item" onclick="alert('Add to cart: Juice')"><div>🧃</div><h4>Juice</h4><p>﷼ 10</p></div>
+      </div>
+      <div style="margin-top: 30px; background:#fff; padding:20px; border-radius:16px;">
+        <h3>Current Cart</h3>
+        <p id="cartMsg" style="color:#888;">Click on any item to add to cart (demo)</p>
+      </div>
     </div>
 
-    <div class="chart-section">
-      <div class="chart-title" id="chartTitle">Sales Overview (Last 7 Days)</div>
-      <canvas id="salesChart" width="400" height="200"></canvas>
+    <!-- INVENTORY SECTION -->
+    <div id="inventorySection" class="page-section">
+      <h2 style="margin-bottom: 20px;">Inventory Management</h2>
+      <table class="inv-table">
+        <thead><tr><th>Product</th><th>Category</th><th>Stock</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Arabic Coffee Beans</td><td>Beverages</td><td>5 kg</td><td><span class="status-badge">Low Stock</span></td></tr>
+          <tr><td>Paper Cups (12oz)</td><td>Supplies</td><td>230 pcs</td><td><span class="status-badge">In Stock</span></td></tr>
+          <tr><td>Loyalty Cards</td><td>Marketing</td><td>80 pcs</td><td><span class="status-badge">Low Stock</span></td></tr>
+          <tr><td>Chicken Breast</td><td>Food</td><td>12 kg</td><td><span class="status-badge">In Stock</span></td></tr>
+        </tbody>
+      </table>
+      <button class="btn" style="margin-top:20px;" onclick="alert('Add new product form coming soon')">+ Add New Product</button>
     </div>
 
-    <div class="two-col">
-      <div class="recent-orders">
-        <div class="section-title">Recent Orders <span style="font-size:12px;color:var(--purple);">View all →</span></div>
-        <div id="ordersList"></div>
+    <!-- CUSTOMERS SECTION -->
+    <div id="customersSection" class="page-section">
+      <h2 style="margin-bottom: 20px;">Customers</h2>
+      <div class="customers-list" id="customersList">
+        <div class="customer-card"><div><strong>Ahmed Al-Khatib</strong><br>ahmed@example.com</div><div>Total orders: 12</div></div>
+        <div class="customer-card"><div><strong>Sara Mohammed</strong><br>sara@example.com</div><div>Total orders: 8</div></div>
+        <div class="customer-card"><div><strong>Khalid Al-Rashidi</strong><br>khalid@example.com</div><div>Total orders: 24</div></div>
       </div>
-      <div class="inventory-alerts">
-        <div class="section-title">Alerts & Insights <span style="font-size:12px;color:var(--purple);">Manage →</span></div>
-        <div id="alertsList"></div>
-      </div>
+      <button class="btn" style="margin-top:20px;" onclick="alert('Customer management panel coming soon')">Manage Customers</button>
+    </div>
+
+    <!-- REPORTS SECTION -->
+    <div id="reportsSection" class="page-section">
+      <h2 style="margin-bottom: 20px;">Sales Reports</h2>
+      <div class="report-card"><strong>Today's Sales</strong><br>﷼ 4,250 | 58 orders</div>
+      <div class="report-card"><strong>This Week</strong><br>﷼ 28,450 | 312 orders</div>
+      <div class="report-card"><strong>This Month</strong><br>﷼ 128,200 | 1,450 orders</div>
+      <button class="btn" onclick="alert('Download report as PDF')">📥 Download Report</button>
+    </div>
+
+    <!-- SETTINGS SECTION -->
+    <div id="settingsSection" class="page-section">
+      <h2 style="margin-bottom: 20px;">Settings</h2>
+      <div class="setting-item"><span>🔔 Email Notifications</span><label><input type="checkbox" checked> Enable</label></div>
+      <div class="setting-item"><span>🌙 Dark Mode</span><label><input type="checkbox" id="darkModeToggle"> Enable</label></div>
+      <div class="setting-item"><span>🌐 Language</span><select><option>English</option><option>العربية</option></select></div>
+      <div class="setting-item"><span>🖨️ Printer Settings</span><button class="btn-outline" onclick="alert('Configure printer')">Configure</button></div>
+      <button class="btn" onclick="alert('Settings saved (demo)')">Save Changes</button>
     </div>
 
     <div class="bottom-links">
@@ -137,7 +214,22 @@ canvas{max-height:300px;width:100%;}
   let salesChart = null;
   let selectedCategory = null;
 
-  // Get user data from Firebase or localStorage
+  // Sidebar navigation
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', function() {
+      const page = this.getAttribute('data-page');
+      document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+      this.classList.add('active');
+      document.querySelectorAll('.page-section').forEach(section => section.classList.remove('active-page'));
+      if (page === 'dashboard') document.getElementById('dashboardSection').classList.add('active-page');
+      if (page === 'pos') document.getElementById('posSection').classList.add('active-page');
+      if (page === 'inventory') document.getElementById('inventorySection').classList.add('active-page');
+      if (page === 'customers') document.getElementById('customersSection').classList.add('active-page');
+      if (page === 'reports') document.getElementById('reportsSection').classList.add('active-page');
+      if (page === 'settings') document.getElementById('settingsSection').classList.add('active-page');
+    });
+  });
+
   async function getUserData() {
     return new Promise((resolve) => {
       if (window.fbAuth && window.fbAuth.currentUser) {
@@ -161,14 +253,12 @@ canvas{max-height:300px;width:100%;}
             uid: u.id
           });
         } else {
-          // fallback to demo
           resolve({ firstName: 'Demo', email: 'demo@billzest.com', businessName: 'Demo Store', uid: 'demo' });
         }
       }
     });
   }
 
-  // Save category to localStorage and Firebase (if possible)
   async function saveCategory(cat) {
     selectedCategory = cat;
     localStorage.setItem('user_category', cat);
@@ -179,13 +269,10 @@ canvas{max-height:300px;width:100%;}
         if (userRef) await userRef.update({ category: cat });
       } catch(e) { console.warn(e); }
     }
-    // Reload dashboard with new category
     loadDashboardForCategory(cat);
   }
 
-  // Load category-specific content
   function loadDashboardForCategory(cat) {
-    // Update stats based on category
     let sales, orders, alerts, revenue;
     let chartData = [1250, 1890, 2100, 1780, 2450, 3200, 2980];
     let orderItems = [];
@@ -222,7 +309,7 @@ canvas{max-height:300px;width:100%;}
         orderItems = ['#R-401 - T-Shirt (L)', '#R-402 - Jeans', '#R-403 - Sneakers'];
         alertItems = ['Size M shirts (8 left)', 'Belts (12 left)', 'Socks (30 pairs)'];
         break;
-      default: // Restaurant
+      default:
         sales = 3450; orders = 176; alerts = 3; revenue = 98500;
         chartData = [2780, 3100, 3450, 3890, 4200, 4700, 4500];
         orderItems = ['#RS-501 - Chicken Biryani', '#RS-502 - Burger Combo', '#RS-503 - Pizza'];
@@ -234,15 +321,12 @@ canvas{max-height:300px;width:100%;}
     document.getElementById('alertCount').innerText = alerts;
     document.getElementById('revenueMTD').innerHTML = `﷼ ${revenue.toLocaleString()}`;
 
-    // Recent orders HTML
     const ordersHtml = orderItems.map((item, idx) => `<div class="order-item"><span class="order-id">${item}</span><span class="order-amount">﷼ ${Math.floor(Math.random()*500+50)}</span><span class="order-status">Completed</span></div>`).join('');
     document.getElementById('ordersList').innerHTML = ordersHtml;
 
-    // Alerts HTML
     const alertsHtml = alertItems.map(a => `<div class="alert-item"><div class="alert-icon">⚠️</div><div class="alert-text">${a}</div><div class="alert-qty">Low stock</div></div>`).join('');
     document.getElementById('alertsList').innerHTML = alertsHtml;
 
-    // Update chart
     const ctx = document.getElementById('salesChart').getContext('2d');
     if (salesChart) salesChart.destroy();
     salesChart = new Chart(ctx, {
@@ -264,7 +348,6 @@ canvas{max-height:300px;width:100%;}
     document.getElementById('chartTitle').innerText = `${cat} Sales Overview (Last 7 Days)`;
   }
 
-  // Main load function
   async function loadDashboard() {
     const user = await getUserData();
     document.getElementById('userNameDisplay').innerText = user.firstName;
@@ -273,10 +356,8 @@ canvas{max-height:300px;width:100%;}
     document.getElementById('userAvatar').innerText = user.firstName.charAt(0).toUpperCase();
     document.getElementById('businessInfo').innerHTML = `🏢 ${user.businessName} · ${user.email}`;
 
-    // Check for saved category
     let savedCat = localStorage.getItem('user_category');
     if (!savedCat && window.fbAuth && window.fbAuth.currentUser && window.db) {
-      // Try to fetch from Firestore
       try {
         const userDoc = await window.db.collection('users').doc(window.fbAuth.currentUser.uid).get();
         if (userDoc.exists && userDoc.data().category) savedCat = userDoc.data().category;
@@ -289,7 +370,6 @@ canvas{max-height:300px;width:100%;}
       loadDashboardForCategory(savedCat);
     } else {
       document.getElementById('categorySelector').style.display = 'block';
-      // Show default stats (generic)
       document.getElementById('todaySales').innerHTML = `﷼ ${Math.floor(Math.random()*5000+1000)}`;
       document.getElementById('totalOrders').innerText = Math.floor(Math.random()*200+50);
       document.getElementById('alertCount').innerText = Math.floor(Math.random()*8+1);
@@ -298,7 +378,6 @@ canvas{max-height:300px;width:100%;}
       document.getElementById('alertsList').innerHTML = '<div class="alert-item">Select a category to see alerts</div>';
     }
 
-    // Attach category button events
     document.querySelectorAll('.cat-btn').forEach(btn => {
       btn.onclick = () => {
         const cat = btn.getAttribute('data-cat');
@@ -332,7 +411,6 @@ canvas{max-height:300px;width:100%;}
         if (user) {
           loadDashboard();
         } else {
-          // Not logged in, redirect to index
           window.location.href = 'index.html';
         }
         unsubscribe();
@@ -343,7 +421,6 @@ canvas{max-height:300px;width:100%;}
   });
 </script>
 
-<!-- Firebase SDK (only if needed, but it's already loaded from index) -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
   import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
@@ -354,7 +431,6 @@ canvas{max-height:300px;width:100%;}
   const db = getFirestore(app);
   window.fbAuth = auth;
   window.db = db;
-  // Re-trigger load if needed
   onAuthStateChanged(auth, (user) => {
     if (user && typeof loadDashboard === 'function') loadDashboard();
   });
