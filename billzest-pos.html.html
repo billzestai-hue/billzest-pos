@@ -28,7 +28,6 @@
         console.log("Firebase ready");
     </script>
     <style>
-        /* Same CSS as before – included in final output */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         :root {
             --bg: #f4f6fb; --surface: #ffffff; --primary: #1e2a5e; --primary-light: #2a3a7a;
@@ -234,7 +233,7 @@
             <button id="logoutSidebarBtn" class="logout-btn-sidebar"><i class="fas fa-sign-out-alt"></i> Logout</button>
         </div>
         <div class="main-content">
-            <!-- POS Page (same content as before, omitted for brevity but included in final) -->
+            <!-- POS Page -->
             <div id="posPage" class="page-content" style="display: block;">
                 <div class="stats-cards">
                     <div class="stat-card"><div class="stat-title">Today's Sales</div><div class="stat-value" id="todaySales">0</div></div>
@@ -280,6 +279,8 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Analytics Page -->
             <div id="analyticsPage" class="page-content" style="display: none;">
                 <div class="stats-cards">
                     <div class="stat-card"><div class="stat-title">Today's Sales</div><div class="stat-value" id="analyticsTodaySales">0</div></div>
@@ -293,6 +294,8 @@
                 </div>
                 <div class="analytics-section"><h3>Sales Overview</h3><div class="analytics-grid"><div class="chart-container"><canvas id="weeklyChart"></canvas></div><div class="chart-container"><canvas id="categoryChart"></canvas></div></div></div>
             </div>
+
+            <!-- Manage Workers Page -->
             <div id="workersPage" class="page-content" style="display: none;">
                 <div class="user-management">
                     <h3>Add New Worker (Branch Manager)</h3>
@@ -306,6 +309,8 @@
                     <div class="workers-list" id="workersList"></div>
                 </div>
             </div>
+
+            <!-- Settings Page -->
             <div id="settingsPage" class="page-content" style="display: none;">
                 <div class="settings-panel"><h3>Business Details</h3><div class="form-group"><label>Business Name</label><input type="text" id="businessName"></div><div class="form-group"><label>GST / VAT</label><input type="text" id="gstNumber"></div><div class="form-group"><label>Address</label><textarea id="businessAddress" rows="2"></textarea></div><div class="form-group"><label>Phone</label><input type="text" id="businessPhone"></div><button id="saveBusinessSettingsBtn" class="btn-primary">Save</button></div>
                 <div class="settings-panel" id="branchManagementPanel"><h3>Manage Branches (Super Admin)</h3><div class="user-form"><input type="text" id="newBranchName" placeholder="New Branch Name"><button id="addBranchBtn" class="btn-primary">Add Branch</button></div><div id="branchesList"></div></div>
@@ -1040,19 +1045,16 @@
             const result = await window.firebase.signInWithPopup(window.firebase.auth, provider);
             const user = result.user;
             const email = user.email;
-            // Check if user exists in our local users array or Firestore
             let existingUser = users.find(u => u.email === email);
             if (!existingUser) {
-                // Create a new branch manager account
                 existingUser = {
                     email: email,
-                    password: "google_auth", // not used
+                    password: "google_auth",
                     role: "branch_manager",
-                    branchId: "branch1" // assign to City Mall by default
+                    branchId: "branch1"
                 };
                 users.push(existingUser);
                 saveUsers();
-                // Also store in Firestore for future reference
                 const docRef = window.firebase.doc(window.firebase.db, "users", user.uid);
                 await window.firebase.setDoc(docRef, {
                     email: email,
