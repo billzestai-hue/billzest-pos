@@ -3,15 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>BillZest POS | Online Payment & Real‑time Sync</title>
+    <title>BillZest POS | Complete Solution</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <!-- EmailJS (free) – replace YOUR_USER_ID with your actual ID after signing up at https://www.emailjs.com/ -->
+    <!-- EmailJS (optional) – replace with your own credentials for real email -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <script type="text/javascript">
         (function(){
-            emailjs.init("YOUR_USER_ID"); // Replace with your EmailJS user ID
+            // Replace with your actual EmailJS credentials if you want real email invoices
+            emailjs.init("YOUR_USER_ID"); 
         })();
     </script>
     <!-- Firebase SDK -->
@@ -35,7 +36,6 @@
         console.log("Firebase ready");
     </script>
     <style>
-        /* Same CSS as previous – unchanged for brevity but included in final output */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         :root {
             --bg: #f4f6fb; --surface: #ffffff; --primary: #1e2a5e; --primary-light: #2a3a7a;
@@ -182,7 +182,6 @@
         .customer-search-wrapper { position: relative; margin-bottom: 8px; }
         .customer-search-wrapper input { width: 100%; padding: 8px 12px; border-radius: 30px; border: 1px solid var(--border); background: var(--bg); color: var(--text-primary); }
         .customer-select-dropdown { width: 100%; padding: 8px; border-radius: 30px; border: 1px solid var(--border); background: var(--bg); color: var(--text-primary); margin-top: 5px; }
-        /* Payment Modal */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.7); z-index: 20000;
@@ -306,7 +305,6 @@
                     </div>
                 </div>
             </div>
-            <!-- Analytics, Workers, Settings pages (same as before, omitted for length but present in final) -->
             <div id="analyticsPage" class="page-content" style="display: none;">
                 <div class="stats-cards">
                     <div class="stat-card"><div class="stat-title">Today's Sales</div><div class="stat-value" id="analyticsTodaySales">0</div></div>
@@ -398,7 +396,7 @@
     let selectedCustomerId = null;
     let unsubscribeFirestore = null;
 
-    // DOM elements (same as before)
+    // DOM elements
     let sidebarAvatar, sidebarName, sidebarRole, branchSelectSidebar, workersNavItem;
     let todaySalesSpan, transactionsCountSpan, itemsSoldSpan, cartTotalValueSpan;
     let analyticsTodaySales, analyticsTotalOrders, analyticsRevenue, analyticsAvgOrder;
@@ -407,7 +405,7 @@
     let posPage, analyticsPage, workersPage, settingsPage;
     let workersListDiv, customersListDiv, salesListDiv;
     let customerSearchInput, customerSelect, pointsDisplay, redeemPointsInput, discountDisplay;
-    let payOnlineBtn, emailInvoiceBtn;
+    let payOnlineBtn, emailInvoiceBtn, printReceiptBtn, whatsappShareBtn;
 
     function initDOM() {
         sidebarAvatar = document.getElementById('sidebarAvatar');
@@ -446,9 +444,11 @@
         discountDisplay = document.getElementById('discountDisplay');
         payOnlineBtn = document.getElementById('payOnlineBtn');
         emailInvoiceBtn = document.getElementById('emailInvoiceBtn');
+        printReceiptBtn = document.getElementById('printReceiptBtn');
+        whatsappShareBtn = document.getElementById('whatsappShareBtn');
     }
 
-    // Load/Save functions (localStorage fallback)
+    // Load/Save functions
     function loadData() {
         const storedUsers = localStorage.getItem("billzest_users");
         if (storedUsers) {
@@ -493,7 +493,7 @@
         return allCategories;
     }
 
-    // Currency (unchanged)
+    // Currency
     function loadCurrency() {
         const saved = localStorage.getItem("billzest_currency");
         const currencySelect = document.getElementById('currencySelect');
@@ -521,7 +521,7 @@
     function formatPrice(amount) { return `${currencySymbol} ${amount.toFixed(2)}`; }
     function updateAllCurrencyDisplays() { if (currentUser) { updateCartUI(); updateStatsAndCharts(); renderProducts(); } }
 
-    // Sidebar & Branch (same as before)
+    // Sidebar & Branch
     function updateSidebar() {
         if (!currentUser) return;
         sidebarName.innerText = currentUser.email.split('@')[0];
@@ -583,7 +583,7 @@
         alert("Business details saved!");
     });
 
-    // Product management (same as before)
+    // Product management
     function loadProductsList() {
         const container = document.getElementById('productsList');
         if (!container) return;
@@ -646,7 +646,7 @@
         });
     }
 
-    // Customer management (same as before)
+    // Customer management
     function loadCustomersList() {
         const container = document.getElementById('customersList');
         if (!container) return;
@@ -681,12 +681,12 @@
     
     function updateCustomerSearch() {
         if (!customerSearchInput || !customerSelect) return;
-        const searchTerm = customerSearchInput.value.toLowerCase();
-        let filtered = customers.filter(c => c.name.toLowerCase().includes(searchTerm) || c.phone.includes(searchTerm));
+        const term = customerSearchInput.value.toLowerCase();
+        let filtered = customers.filter(c => c.name.toLowerCase().includes(term) || c.phone.includes(term));
         let optionsHtml = `<option value="">Walk-in Customer (No points)</option>`;
         filtered.forEach(c => { optionsHtml += `<option value="${c.id}">${c.name} (${c.phone}) - ${c.points} pts</option>`; });
         customerSelect.innerHTML = optionsHtml;
-        if (searchTerm !== "" && filtered.length > 0) { customerSelect.style.display = 'block'; customerSelect.size = Math.min(5, filtered.length + 1); }
+        if (term !== "" && filtered.length > 0) { customerSelect.style.display = 'block'; customerSelect.size = Math.min(5, filtered.length + 1); }
         else customerSelect.style.display = 'none';
         if (selectedCustomerId) {
             const optionExists = Array.from(customerSelect.options).some(opt => opt.value == selectedCustomerId);
@@ -727,7 +727,7 @@
     }
     redeemPointsInput?.addEventListener('input', updateDiscountDisplay);
 
-    // Sales & Refunds (same as before)
+    // Sales & Refunds
     function loadSalesList() {
         if (!salesListDiv) return;
         const branchId = branchSelectSidebar?.value;
@@ -794,7 +794,7 @@
     }
     branchSelectSidebar?.addEventListener('change', () => { updateStatsAndCharts(); updateCartUI(); });
 
-    // Cart functions (same as before)
+    // Cart functions
     function updateCartUI() {
         if (!cartItemsList) return;
         if (cart.length === 0) {
@@ -855,7 +855,7 @@
     }
     function clearCart() { cart = []; updateCartUI(); cashChangeSection.style.display = 'none'; if(cashReceived) cashReceived.value = ''; redeemPointsInput.value = ''; updateDiscountDisplay(); }
 
-    // Online Payment Gateway (simulated Stripe)
+    // Online Payment Gateway
     function openPaymentModal() {
         if (cart.length === 0) { alert("Cart is empty. Add items first."); return; }
         const modal = document.getElementById('paymentModal');
@@ -878,12 +878,9 @@
             alert("Please fill all payment details.");
             return;
         }
-        // Simple validation
         if (cardNum.length < 15 || !/^\d+$/.test(cardNum)) { alert("Invalid card number."); return; }
         alert("✅ Payment processed successfully (demo). Sale will be completed.");
         closePaymentModal();
-        // Complete the sale with payment method "Online"
-        paymentMethod.value = "card"; // simulate card payment
         completeSaleWithPayment("Online (Stripe)");
     }
     function completeSaleWithPayment(paymentType) {
@@ -926,7 +923,6 @@
         selectedCustomerId = null;
         customerSearchInput.value = '';
         updateCustomerSearch();
-        // Sync with Firestore if logged in with Google
         syncToFirestore(saleRecord);
     }
 
@@ -959,33 +955,41 @@
         });
     }
 
-    // Email Invoice using EmailJS (demo)
+    // Email Invoice
     function sendEmailInvoice() {
         if (!lastSaleData) { alert("No sale to email. Complete a sale first."); return; }
         const customerEmail = lastSaleData.customerId ? customers.find(c=>c.id===lastSaleData.customerId)?.email : null;
-        if (!customerEmail) { alert("No email address for this customer. Please add email in customer database."); return; }
+        if (!customerEmail) { 
+            alert("No email address for this customer. Copying receipt to clipboard instead.");
+            copyReceiptToClipboard();
+            return;
+        }
         const receiptData = generateReceiptData();
         const templateParams = {
             to_email: customerEmail,
             from_name: businessSettings.name,
-            message: `Thank you for your purchase! Total: ${formatPrice(receiptData.total)}. Receipt attached.`,
+            message: `Thank you for your purchase! Total: ${formatPrice(receiptData.total)}.`,
             receipt_details: receiptData.itemsHtml
         };
-        emailjs.send("service_xyz", "template_xyz", templateParams).then(() => {
-            alert("Invoice sent to " + customerEmail);
-        }).catch(() => {
-            alert("EmailJS not configured. Copy receipt to clipboard instead.");
+        if (typeof emailjs !== 'undefined' && emailjs.send) {
+            emailjs.send("service_xyz", "template_xyz", templateParams).then(() => {
+                alert("Invoice sent to " + customerEmail);
+            }).catch(() => {
+                alert("EmailJS not configured. Receipt copied to clipboard.");
+                copyReceiptToClipboard();
+            });
+        } else {
             copyReceiptToClipboard();
-        });
+        }
     }
     function copyReceiptToClipboard() {
         const data = generateReceiptData();
         const text = `BillZest POS Receipt\n${businessSettings.name}\nGST: ${businessSettings.gst}\n${businessSettings.address}\n\nBranch: ${data.branchName}\nCustomer: ${data.customerName}\nDate: ${data.date}\n\nItems:\n${lastSaleData.items.map(i=>`${i.name} x${i.qty} = ${formatPrice(i.price*i.qty)}`).join('\n')}\n\nSubtotal: ${formatPrice(data.subtotal)}\nTax: ${formatPrice(data.tax)}${data.discount>0?`\nDiscount: -${formatPrice(data.discount)}`:''}\nTotal: ${formatPrice(data.total)}\nPoints Earned: ${data.pointsEarned}\nPayment: ${data.paymentMethod}\n\nThank you!`;
         navigator.clipboard.writeText(text);
-        alert("Receipt copied to clipboard. You can paste into an email.");
+        alert("Receipt copied to clipboard.");
     }
 
-    // Existing receipt functions
+    // Receipt generation
     function generateReceiptData() {
         if (!lastSaleData) return null;
         let itemsHtml = '';
@@ -1085,7 +1089,7 @@
     }
     document.querySelectorAll('.nav-item').forEach(nav => { nav.onclick = () => { showPage(nav.dataset.page); }; });
 
-    // Worker management (localStorage based)
+    // Worker management
     function loadWorkersList() {
         const workers = users.filter(u => u.role === 'branch_manager');
         workersListDiv.innerHTML = workers.map(w => `<div class="worker-item"><span><strong>${w.email}</strong> - ${branches.find(b=>b.id===w.branchId)?.name || w.branchId}</span><button class="btn-secondary" style="width:auto; padding:4px 12px;" onclick="deleteWorker('${w.email}')">Delete</button></div>`).join('');
@@ -1136,7 +1140,7 @@
     document.getElementById('darkModeBtn')?.addEventListener('click', toggleDarkMode);
     if (localStorage.getItem('billzest_darkmode') === 'true') document.body.classList.add('dark');
 
-    // Cross-tab sync (localStorage)
+    // Cross-tab sync
     window.addEventListener('storage', function(e) {
         if (!currentUser) return;
         if (e.key === 'billzest_products') { loadProducts(); renderProducts(); updateCategoryFilter(); updateStatsAndCharts(); }
@@ -1241,18 +1245,15 @@
     document.getElementById('logoutSidebarBtn').onclick = logout;
     document.getElementById('clearCartBtn').onclick = clearCart;
     document.getElementById('completeSaleBtn').onclick = () => {
-        if (paymentMethod.value === 'cash') {
-            completeSaleWithPayment("Cash");
-        } else {
-            completeSaleWithPayment(paymentMethod.value === 'card' ? "Card" : "Mobile");
-        }
+        if (paymentMethod.value === 'cash') completeSaleWithPayment("Cash");
+        else completeSaleWithPayment(paymentMethod.value === 'card' ? "Card" : "Mobile");
     };
     payOnlineBtn.onclick = openPaymentModal;
     document.getElementById('confirmPaymentBtn').onclick = processOnlinePayment;
     document.getElementById('closePaymentModal').onclick = closePaymentModal;
     emailInvoiceBtn.onclick = sendEmailInvoice;
-    document.getElementById('printReceiptBtn').onclick = showPrintReceipt;
-    document.getElementById('whatsappShareBtn').onclick = shareWhatsApp;
+    printReceiptBtn.onclick = showPrintReceipt;
+    whatsappShareBtn.onclick = shareWhatsApp;
     document.getElementById('loginPassword').addEventListener('keypress', (e) => { if(e.key === 'Enter') emailLogin(); });
     document.getElementById('loginEmail').addEventListener('keypress', (e) => { if(e.key === 'Enter') emailLogin(); });
 
