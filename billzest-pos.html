@@ -7,15 +7,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <!-- EmailJS (optional – replace with your own credentials for real email) -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <script type="text/javascript">
         (function(){
-            // Replace with your actual EmailJS user ID if you want real email invoices
             emailjs.init("YOUR_USER_ID"); 
         })();
     </script>
-    <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
@@ -351,7 +348,7 @@
 </div>
 
 <script>
-    // ---------- Demo Users (localStorage based, for email login) ----------
+    // ---------- Demo Users ----------
     const DEMO_USERS = [
         { email: "admin@billzest.com", password: "admin123", role: "super_admin", branchId: null },
         { email: "manager1@billzest.com", password: "manager123", role: "branch_manager", branchId: "branch1" },
@@ -396,7 +393,7 @@
     let selectedCustomerId = null;
     let unsubscribeFirestore = null;
 
-    // DOM elements
+    // DOM elements (will be initialized after login)
     let sidebarAvatar, sidebarName, sidebarRole, branchSelectSidebar, workersNavItem;
     let todaySalesSpan, transactionsCountSpan, itemsSoldSpan, cartTotalValueSpan;
     let analyticsTodaySales, analyticsTotalOrders, analyticsRevenue, analyticsAvgOrder;
@@ -406,6 +403,7 @@
     let workersListDiv, customersListDiv, salesListDiv;
     let customerSearchInput, customerSelect, pointsDisplay, redeemPointsInput, discountDisplay;
     let payOnlineBtn, emailInvoiceBtn, printReceiptBtn, whatsappShareBtn;
+    let confirmPaymentBtn, closePaymentModalBtn;
 
     function initDOM() {
         sidebarAvatar = document.getElementById('sidebarAvatar');
@@ -446,6 +444,45 @@
         emailInvoiceBtn = document.getElementById('emailInvoiceBtn');
         printReceiptBtn = document.getElementById('printReceiptBtn');
         whatsappShareBtn = document.getElementById('whatsappShareBtn');
+        confirmPaymentBtn = document.getElementById('confirmPaymentBtn');
+        closePaymentModalBtn = document.getElementById('closePaymentModal');
+
+        // Attach all event handlers HERE (after elements exist)
+        if (payOnlineBtn) payOnlineBtn.onclick = openPaymentModal;
+        if (emailInvoiceBtn) emailInvoiceBtn.onclick = sendEmailInvoice;
+        if (printReceiptBtn) printReceiptBtn.onclick = showPrintReceipt;
+        if (whatsappShareBtn) whatsappShareBtn.onclick = shareWhatsApp;
+        if (confirmPaymentBtn) confirmPaymentBtn.onclick = processOnlinePayment;
+        if (closePaymentModalBtn) closePaymentModalBtn.onclick = closePaymentModal;
+        if (document.getElementById('completeSaleBtn')) document.getElementById('completeSaleBtn').onclick = () => {
+            if (paymentMethod.value === 'cash') completeSaleWithPayment("Cash");
+            else completeSaleWithPayment(paymentMethod.value === 'card' ? "Card" : "Mobile");
+        };
+        if (document.getElementById('clearCartBtn')) document.getElementById('clearCartBtn').onclick = clearCart;
+        if (document.getElementById('exportSalesBtn')) document.getElementById('exportSalesBtn').onclick = exportToCSV;
+        if (document.getElementById('addBranchBtn')) document.getElementById('addBranchBtn').onclick = addBranch;
+        if (document.getElementById('saveBusinessSettingsBtn')) document.getElementById('saveBusinessSettingsBtn').onclick = () => {
+            businessSettings.name = document.getElementById('businessName').value;
+            businessSettings.gst = document.getElementById('gstNumber').value;
+            businessSettings.address = document.getElementById('businessAddress').value;
+            businessSettings.phone = document.getElementById('businessPhone').value;
+            saveBusinessSettings();
+            alert("Business details saved!");
+        };
+        if (document.getElementById('addProductBtn')) document.getElementById('addProductBtn').onclick = addProduct;
+        if (document.getElementById('addNewCategoryBtn')) document.getElementById('addNewCategoryBtn').onclick = () => {
+            const newCat = prompt("Enter new category name:");
+            if (newCat && newCat.trim()) {
+                const catSelect = document.getElementById('productCategory');
+                const option = document.createElement('option');
+                option.value = newCat.trim(); option.textContent = newCat.trim();
+                catSelect.appendChild(option); catSelect.value = newCat.trim();
+            }
+        };
+        if (document.getElementById('addCustomerBtn')) document.getElementById('addCustomerBtn').onclick = addCustomer;
+        if (document.getElementById('createWorkerBtn')) document.getElementById('createWorkerBtn').onclick = createWorker;
+        if (document.getElementById('darkModeBtn')) document.getElementById('darkModeBtn').onclick = toggleDarkMode;
+        if (document.getElementById('logoutSidebarBtn')) document.getElementById('logoutSidebarBtn').onclick = logout;
     }
 
     // Load/Save functions
@@ -521,7 +558,7 @@
     function formatPrice(amount) { return `${currencySymbol} ${amount.toFixed(2)}`; }
     function updateAllCurrencyDisplays() { if (currentUser) { updateCartUI(); updateStatsAndCharts(); renderProducts(); } }
 
-    // Sidebar & Branch (FIXED: ensures branch selector is populated)
+    // Sidebar & Branch
     function updateSidebar() {
         if (!currentUser) return;
         sidebarName.innerText = currentUser.email.split('@')[0];
@@ -532,7 +569,6 @@
         const productMgmtPanel = document.getElementById('productManagementPanel');
         if (branchMgmtPanel) branchMgmtPanel.style.display = currentUser.role === 'super_admin' ? 'block' : 'none';
         if (productMgmtPanel) productMgmtPanel.style.display = currentUser.role === 'super_admin' ? 'block' : 'none';
-        // Populate branch selector
         branchSelectSidebar.innerHTML = '';
         let availableBranches = currentUser.role === 'branch_manager' ? branches.filter(b => b.id === currentUser.branchId) : branches;
         if (availableBranches.length === 0 && currentUser.role === 'super_admin') availableBranches = branches;
@@ -580,15 +616,6 @@
         loadBranchesList();
         alert(`Branch "${newName}" added successfully!`);
     }
-    document.getElementById('addBranchBtn')?.addEventListener('click', addBranch);
-    document.getElementById('saveBusinessSettingsBtn')?.addEventListener('click', () => {
-        businessSettings.name = document.getElementById('businessName').value;
-        businessSettings.gst = document.getElementById('gstNumber').value;
-        businessSettings.address = document.getElementById('businessAddress').value;
-        businessSettings.phone = document.getElementById('businessPhone').value;
-        saveBusinessSettings();
-        alert("Business details saved!");
-    });
 
     // Product management
     function loadProductsList() {
@@ -627,16 +654,6 @@
         loadProductsList(); renderProducts(); updateCategoryFilter(); updateStatsAndCharts();
         alert("Product added!");
     }
-    document.getElementById('addProductBtn')?.addEventListener('click', addProduct);
-    document.getElementById('addNewCategoryBtn')?.addEventListener('click', () => {
-        const newCat = prompt("Enter new category name:");
-        if (newCat && newCat.trim()) {
-            const catSelect = document.getElementById('productCategory');
-            const option = document.createElement('option');
-            option.value = newCat.trim(); option.textContent = newCat.trim();
-            catSelect.appendChild(option); catSelect.value = newCat.trim();
-        }
-    });
 
     function updateCategoryFilter() {
         const cats = extractCategories();
@@ -684,7 +701,6 @@
         loadCustomersList();
         alert("Customer added!");
     }
-    document.getElementById('addCustomerBtn')?.addEventListener('click', addCustomer);
     
     function updateCustomerSearch() {
         if (!customerSearchInput || !customerSelect) return;
@@ -769,7 +785,6 @@
         const blob = new Blob([csv], {type: "text/csv"}); const url = URL.createObjectURL(blob);
         const a = document.createElement('a'); a.href = url; a.download = `sales_${branchId}_${new Date().toISOString().slice(0,19)}.csv`; a.click(); URL.revokeObjectURL(url);
     }
-    document.getElementById('exportSalesBtn')?.addEventListener('click', exportToCSV);
 
     // Stats & Charts
     function getBranchSales(branchId) { return allSales.filter(s => s.branchId === branchId); }
@@ -971,7 +986,6 @@
             copyReceiptToClipboard();
             return;
         }
-        // For demo, just copy to clipboard
         copyReceiptToClipboard();
         alert("Receipt copied to clipboard. You can paste it into an email.");
     }
@@ -1109,30 +1123,30 @@
         document.getElementById('newWorkerPassword').value = '';
         loadWorkersList();
     }
-    document.getElementById('createWorkerBtn')?.addEventListener('click', createWorker);
 
     // Currency events
-    const currencySelect = document.getElementById('currencySelect');
-    const customCurrencyInput = document.getElementById('customCurrency');
-    currencySelect.addEventListener('change', () => {
-        if (currencySelect.value === 'custom') {
-            customCurrencyInput.style.display = 'block';
-            let customVal = customCurrencyInput.value.trim();
-            if (customVal) saveCurrency(customVal, true);
-            else saveCurrency('﷼', true);
-        } else {
-            customCurrencyInput.style.display = 'none';
-            saveCurrency(currencySelect.value, false);
-        }
-    });
-    customCurrencyInput.addEventListener('input', () => { let val = customCurrencyInput.value.trim(); if (val) saveCurrency(val, true); });
+    const currencySelectElem = document.getElementById('currencySelect');
+    const customCurrencyInputElem = document.getElementById('customCurrency');
+    if (currencySelectElem) {
+        currencySelectElem.addEventListener('change', () => {
+            if (currencySelectElem.value === 'custom') {
+                customCurrencyInputElem.style.display = 'block';
+                let customVal = customCurrencyInputElem.value.trim();
+                if (customVal) saveCurrency(customVal, true);
+                else saveCurrency('﷼', true);
+            } else {
+                customCurrencyInputElem.style.display = 'none';
+                saveCurrency(currencySelectElem.value, false);
+            }
+        });
+        customCurrencyInputElem.addEventListener('input', () => { let val = customCurrencyInputElem.value.trim(); if (val) saveCurrency(val, true); });
+    }
 
     // Dark Mode
     function toggleDarkMode() {
         document.body.classList.toggle('dark');
         localStorage.setItem('billzest_darkmode', document.body.classList.contains('dark'));
     }
-    document.getElementById('darkModeBtn')?.addEventListener('click', toggleDarkMode);
     if (localStorage.getItem('billzest_darkmode') === 'true') document.body.classList.add('dark');
 
     // Cross-tab sync
@@ -1196,7 +1210,7 @@
         }
     }
 
-    // Email login (uses localStorage demo users)
+    // Email login
     function emailLogin() {
         const email = document.getElementById('loginEmail').value.trim();
         const pwd = document.getElementById('loginPassword').value;
@@ -1233,22 +1247,10 @@
         cart = [];
     }
 
-    // Attach event listeners
+    // Attach login event listeners
     document.getElementById('emailLoginBtn').onclick = emailLogin;
     document.getElementById('googleLoginBtn').onclick = googleRealLogin;
     document.getElementById('resetDataBtn').onclick = resetDemoData;
-    document.getElementById('logoutSidebarBtn').onclick = logout;
-    document.getElementById('clearCartBtn').onclick = clearCart;
-    document.getElementById('completeSaleBtn').onclick = () => {
-        if (paymentMethod.value === 'cash') completeSaleWithPayment("Cash");
-        else completeSaleWithPayment(paymentMethod.value === 'card' ? "Card" : "Mobile");
-    };
-    payOnlineBtn.onclick = openPaymentModal;
-    document.getElementById('confirmPaymentBtn').onclick = processOnlinePayment;
-    document.getElementById('closePaymentModal').onclick = closePaymentModal;
-    emailInvoiceBtn.onclick = sendEmailInvoice;
-    printReceiptBtn.onclick = showPrintReceipt;
-    whatsappShareBtn.onclick = shareWhatsApp;
     document.getElementById('loginPassword').addEventListener('keypress', (e) => { if(e.key === 'Enter') emailLogin(); });
     document.getElementById('loginEmail').addEventListener('keypress', (e) => { if(e.key === 'Enter') emailLogin(); });
 
