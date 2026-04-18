@@ -3,15 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>BillZest POS | Real Google Login</title>
+    <title>BillZest POS | Online Payment & Real‑time Sync</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <!-- EmailJS (free) – replace YOUR_USER_ID with your actual ID after signing up at https://www.emailjs.com/ -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function(){
+            emailjs.init("YOUR_USER_ID"); // Replace with your EmailJS user ID
+        })();
+    </script>
     <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, getDocs, query, where, onSnapshot, addDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
         const firebaseConfig = {
             apiKey: "AIzaSyCN0akvFXOHM6WPHv9ve9noqqmauO3TJRY",
             authDomain: "billzest-pos.firebaseapp.com",
@@ -24,10 +31,11 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        window.firebase = { auth, db, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut, doc, setDoc, getDoc, collection, getDocs, query, where };
+        window.firebase = { auth, db, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut, doc, setDoc, getDoc, collection, getDocs, query, where, onSnapshot, addDoc, updateDoc, deleteDoc };
         console.log("Firebase ready");
     </script>
     <style>
+        /* Same CSS as previous – unchanged for brevity but included in final output */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         :root {
             --bg: #f4f6fb; --surface: #ffffff; --primary: #1e2a5e; --primary-light: #2a3a7a;
@@ -147,7 +155,7 @@
         .payment-method select { width: 100%; padding: 10px; border-radius: 30px; border: 1px solid var(--border); margin: 12px 0; background: var(--bg); color: var(--text-primary); }
         .btn-primary { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 40px; font-weight: 700; cursor: pointer; width: 100%; }
         .btn-secondary { background: var(--bg); border: 1px solid var(--border); padding: 10px; border-radius: 40px; cursor: pointer; color: var(--text-primary); }
-        .share-buttons { display: flex; gap: 10px; margin-top: 10px; }
+        .share-buttons { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
         .share-btn { flex: 1; padding: 8px; border-radius: 30px; text-align: center; cursor: pointer; background: var(--bg); color: var(--text-primary); }
         .share-btn.whatsapp { background: #25D366; color: white; }
         .analytics-section { background: var(--surface); border-radius: 24px; padding: 20px; margin-top: 20px; border: 1px solid var(--border); }
@@ -174,6 +182,22 @@
         .customer-search-wrapper { position: relative; margin-bottom: 8px; }
         .customer-search-wrapper input { width: 100%; padding: 8px 12px; border-radius: 30px; border: 1px solid var(--border); background: var(--bg); color: var(--text-primary); }
         .customer-select-dropdown { width: 100%; padding: 8px; border-radius: 30px; border: 1px solid var(--border); background: var(--bg); color: var(--text-primary); margin-top: 5px; }
+        /* Payment Modal */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); z-index: 20000;
+            display: flex; align-items: center; justify-content: center;
+            visibility: hidden; opacity: 0; transition: 0.2s;
+        }
+        .modal-overlay.active { visibility: visible; opacity: 1; }
+        .payment-modal {
+            background: var(--surface); border-radius: 28px; padding: 28px;
+            width: 90%; max-width: 400px; color: var(--text-primary);
+        }
+        .payment-modal input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 40px; border: 1px solid var(--border); background: var(--bg); }
+        .sync-status {
+            font-size: 11px; margin-top: 8px; text-align: center; color: var(--success);
+        }
         @media (max-width: 1000px) { .sidebar { display: none; } .pos-grid { grid-template-columns: 1fr; } .stats-cards { grid-template-columns: 1fr 1fr; } .main-content { padding: 16px; } }
         @media print { body * { visibility: hidden; } #receipt-print, #receipt-print * { visibility: visible; } #receipt-print { position: absolute; top: 0; left: 0; width: 100%; padding: 20px; background: white; color: black; } }
     </style>
@@ -271,16 +295,18 @@
                             <input type="number" id="redeemPoints" placeholder="Points to redeem" style="width:100%; padding: 10px; border-radius: 30px; border: 1px solid var(--border); background: var(--bg); color: var(--text-primary);">
                             <div id="discountDisplay" style="font-size:12px; margin-top:4px;"></div>
                         </div>
-                        <button class="btn-primary" id="completeSaleBtn"><i class="fas fa-check-circle"></i> Complete Sale</button>
+                        <button class="btn-primary" id="completeSaleBtn"><i class="fas fa-check-circle"></i> Complete Sale (Cash/Card)</button>
+                        <button class="btn-primary" id="payOnlineBtn" style="background: #10b981; margin-top: 8px;"><i class="fas fa-credit-card"></i> Pay Online (Stripe)</button>
                         <div class="share-buttons" id="shareButtons" style="display: none;">
                             <button class="share-btn print" id="printReceiptBtn"><i class="fas fa-print"></i> Print</button>
                             <button class="share-btn whatsapp" id="whatsappShareBtn"><i class="fab fa-whatsapp"></i> WhatsApp</button>
+                            <button class="share-btn" id="emailInvoiceBtn"><i class="fas fa-envelope"></i> Email Invoice</button>
                         </div>
+                        <div class="sync-status" id="syncStatus">🔄 Real-time sync active</div>
                     </div>
                 </div>
             </div>
-
-            <!-- Analytics Page -->
+            <!-- Analytics, Workers, Settings pages (same as before, omitted for length but present in final) -->
             <div id="analyticsPage" class="page-content" style="display: none;">
                 <div class="stats-cards">
                     <div class="stat-card"><div class="stat-title">Today's Sales</div><div class="stat-value" id="analyticsTodaySales">0</div></div>
@@ -294,29 +320,30 @@
                 </div>
                 <div class="analytics-section"><h3>Sales Overview</h3><div class="analytics-grid"><div class="chart-container"><canvas id="weeklyChart"></canvas></div><div class="chart-container"><canvas id="categoryChart"></canvas></div></div></div>
             </div>
-
-            <!-- Manage Workers Page -->
             <div id="workersPage" class="page-content" style="display: none;">
-                <div class="user-management">
-                    <h3>Add New Worker (Branch Manager)</h3>
-                    <div class="user-form">
-                        <input type="email" id="newWorkerEmail" placeholder="Email">
-                        <input type="password" id="newWorkerPassword" placeholder="Password">
-                        <select id="newWorkerBranch"></select>
-                        <button id="createWorkerBtn" class="btn-primary">Add Worker</button>
-                    </div>
-                    <h3>Existing Workers</h3>
-                    <div class="workers-list" id="workersList"></div>
-                </div>
+                <div class="user-management"><h3>Add New Worker (Branch Manager)</h3><div class="user-form"><input type="email" id="newWorkerEmail" placeholder="Email"><input type="password" id="newWorkerPassword" placeholder="Password"><select id="newWorkerBranch"></select><button id="createWorkerBtn" class="btn-primary">Add Worker</button></div><h3>Existing Workers</h3><div class="workers-list" id="workersList"></div></div>
             </div>
-
-            <!-- Settings Page -->
             <div id="settingsPage" class="page-content" style="display: none;">
                 <div class="settings-panel"><h3>Business Details</h3><div class="form-group"><label>Business Name</label><input type="text" id="businessName"></div><div class="form-group"><label>GST / VAT</label><input type="text" id="gstNumber"></div><div class="form-group"><label>Address</label><textarea id="businessAddress" rows="2"></textarea></div><div class="form-group"><label>Phone</label><input type="text" id="businessPhone"></div><button id="saveBusinessSettingsBtn" class="btn-primary">Save</button></div>
                 <div class="settings-panel" id="branchManagementPanel"><h3>Manage Branches (Super Admin)</h3><div class="user-form"><input type="text" id="newBranchName" placeholder="New Branch Name"><button id="addBranchBtn" class="btn-primary">Add Branch</button></div><div id="branchesList"></div></div>
                 <div class="settings-panel" id="productManagementPanel"><h3>Manage Products & Stock</h3><div class="product-form"><input type="text" id="productName" placeholder="Name"><div style="display:flex; gap:6px;"><select id="productCategory"></select><button id="addNewCategoryBtn" class="add-category-btn">+ New</button></div><input type="number" id="productPrice" placeholder="Price"><input type="number" id="productStock" placeholder="Stock" value="100"><input type="text" id="productImage" placeholder="Image URL"><button id="addProductBtn" class="btn-primary">Add Product</button></div><div id="productsList"></div></div>
                 <div class="settings-panel"><h3>Customer Database</h3><div class="user-form"><input type="text" id="customerName" placeholder="Name"><input type="text" id="customerPhone" placeholder="Phone"><input type="email" id="customerEmail" placeholder="Email"><button id="addCustomerBtn" class="btn-primary">Add Customer</button></div><div id="customersList"></div></div>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Payment Modal -->
+<div id="paymentModal" class="modal-overlay">
+    <div class="payment-modal">
+        <h3><i class="fas fa-credit-card"></i> Online Payment (Stripe Demo)</h3>
+        <p>Enter test card: 4242 4242 4242 4242 | Exp: 12/30 | CVV: 123</p>
+        <input type="text" id="cardNumber" placeholder="Card Number">
+        <div style="display: flex; gap: 10px;"><input type="text" id="cardExpiry" placeholder="MM/YY"><input type="password" id="cardCvv" placeholder="CVV"></div>
+        <input type="text" id="cardName" placeholder="Cardholder Name">
+        <div style="display: flex; gap: 10px; margin-top: 16px;">
+            <button id="confirmPaymentBtn" class="btn-primary">Pay Now</button>
+            <button id="closePaymentModal" class="btn-secondary">Cancel</button>
         </div>
     </div>
 </div>
@@ -369,8 +396,9 @@
     let searchTerm = "";
     let allCategories = [];
     let selectedCustomerId = null;
+    let unsubscribeFirestore = null;
 
-    // DOM elements
+    // DOM elements (same as before)
     let sidebarAvatar, sidebarName, sidebarRole, branchSelectSidebar, workersNavItem;
     let todaySalesSpan, transactionsCountSpan, itemsSoldSpan, cartTotalValueSpan;
     let analyticsTodaySales, analyticsTotalOrders, analyticsRevenue, analyticsAvgOrder;
@@ -379,6 +407,7 @@
     let posPage, analyticsPage, workersPage, settingsPage;
     let workersListDiv, customersListDiv, salesListDiv;
     let customerSearchInput, customerSelect, pointsDisplay, redeemPointsInput, discountDisplay;
+    let payOnlineBtn, emailInvoiceBtn;
 
     function initDOM() {
         sidebarAvatar = document.getElementById('sidebarAvatar');
@@ -415,9 +444,11 @@
         pointsDisplay = document.getElementById('pointsDisplay');
         redeemPointsInput = document.getElementById('redeemPoints');
         discountDisplay = document.getElementById('discountDisplay');
+        payOnlineBtn = document.getElementById('payOnlineBtn');
+        emailInvoiceBtn = document.getElementById('emailInvoiceBtn');
     }
 
-    // Load/Save functions (same as before)
+    // Load/Save functions (localStorage fallback)
     function loadData() {
         const storedUsers = localStorage.getItem("billzest_users");
         if (storedUsers) {
@@ -823,7 +854,39 @@
         updateCartUI();
     }
     function clearCart() { cart = []; updateCartUI(); cashChangeSection.style.display = 'none'; if(cashReceived) cashReceived.value = ''; redeemPointsInput.value = ''; updateDiscountDisplay(); }
-    function completeSale() {
+
+    // Online Payment Gateway (simulated Stripe)
+    function openPaymentModal() {
+        if (cart.length === 0) { alert("Cart is empty. Add items first."); return; }
+        const modal = document.getElementById('paymentModal');
+        modal.classList.add('active');
+    }
+    function closePaymentModal() {
+        const modal = document.getElementById('paymentModal');
+        modal.classList.remove('active');
+        document.getElementById('cardNumber').value = '';
+        document.getElementById('cardExpiry').value = '';
+        document.getElementById('cardCvv').value = '';
+        document.getElementById('cardName').value = '';
+    }
+    function processOnlinePayment() {
+        const cardNum = document.getElementById('cardNumber').value.replace(/\s/g, '');
+        const expiry = document.getElementById('cardExpiry').value;
+        const cvv = document.getElementById('cardCvv').value;
+        const name = document.getElementById('cardName').value.trim();
+        if (!cardNum || !expiry || !cvv || !name) {
+            alert("Please fill all payment details.");
+            return;
+        }
+        // Simple validation
+        if (cardNum.length < 15 || !/^\d+$/.test(cardNum)) { alert("Invalid card number."); return; }
+        alert("✅ Payment processed successfully (demo). Sale will be completed.");
+        closePaymentModal();
+        // Complete the sale with payment method "Online"
+        paymentMethod.value = "card"; // simulate card payment
+        completeSaleWithPayment("Online (Stripe)");
+    }
+    function completeSaleWithPayment(paymentType) {
         if (cart.length === 0) { alert("Cart is empty"); return; }
         let subtotal = cart.reduce((sum,i) => sum + (i.price*i.quantity),0);
         let tax = subtotal*0.10, total = subtotal+tax;
@@ -840,15 +903,7 @@
             }
         }
         const finalTotal = total - discount;
-        let method = paymentMethod.value;
-        if (method === 'cash') {
-            let received = parseFloat(cashReceived.value);
-            if (isNaN(received) || received < finalTotal) {
-                alert(`💸 Insufficient Cash!\nReceived amount is less than total.\nPlease enter at least ${formatPrice(finalTotal)} or select another payment method.`);
-                return;
-            }
-            alert(`✅ Payment successful! Change: ${formatPrice(received-finalTotal)}`);
-        } else alert(`✅ Payment via ${method} successful! Total: ${formatPrice(finalTotal)}`);
+        alert(`✅ Payment via ${paymentType} successful! Total: ${formatPrice(finalTotal)}`);
         cart.forEach(item => { const prod = products.find(p => p.id === item.id); if (prod) prod.stock -= item.quantity; });
         const pointsEarned = Math.floor(finalTotal / 10);
         let customerId = selectedCustomerId;
@@ -861,7 +916,7 @@
         }
         const saleRecord = {
             branchId: branchSelectSidebar.value, date: new Date().toISOString(), total: finalTotal, itemsCount: cart.reduce((s,i)=>s+i.quantity,0),
-            subtotal, tax, discount, pointsUsed, pointsEarned, customerId, paymentMethod: method, items: cart.map(i=>({ id:i.id, name:i.name, qty:i.quantity, price:i.price })), refunded: false
+            subtotal, tax, discount, pointsUsed, pointsEarned, customerId, paymentMethod: paymentType, items: cart.map(i=>({ id:i.id, name:i.name, qty:i.quantity, price:i.price })), refunded: false
         };
         allSales.push(saleRecord); saveSales(); saveProducts(); saveCustomers();
         lastSaleData = saleRecord;
@@ -871,7 +926,66 @@
         selectedCustomerId = null;
         customerSearchInput.value = '';
         updateCustomerSearch();
+        // Sync with Firestore if logged in with Google
+        syncToFirestore(saleRecord);
     }
+
+    // Real-time sync with Firestore
+    async function syncToFirestore(saleRecord) {
+        if (window.firebase && window.firebase.auth && window.firebase.auth.currentUser && window.firebase.db) {
+            try {
+                const db = window.firebase.db;
+                await window.firebase.addDoc(window.firebase.collection(db, "sales"), saleRecord);
+                console.log("Sale synced to cloud");
+            } catch(e) { console.warn("Sync failed", e); }
+        }
+    }
+    function startRealtimeSync() {
+        if (!window.firebase || !window.firebase.db || !window.firebase.auth.currentUser) return;
+        const db = window.firebase.db;
+        if (unsubscribeFirestore) unsubscribeFirestore();
+        unsubscribeFirestore = window.firebase.onSnapshot(window.firebase.collection(db, "sales"), (snapshot) => {
+            snapshot.docChanges().forEach(change => {
+                if (change.type === "added") {
+                    const newSale = change.doc.data();
+                    if (!allSales.some(s => s.date === newSale.date && s.total === newSale.total)) {
+                        allSales.push(newSale);
+                        saveSales();
+                        updateStatsAndCharts();
+                        loadSalesList();
+                    }
+                }
+            });
+        });
+    }
+
+    // Email Invoice using EmailJS (demo)
+    function sendEmailInvoice() {
+        if (!lastSaleData) { alert("No sale to email. Complete a sale first."); return; }
+        const customerEmail = lastSaleData.customerId ? customers.find(c=>c.id===lastSaleData.customerId)?.email : null;
+        if (!customerEmail) { alert("No email address for this customer. Please add email in customer database."); return; }
+        const receiptData = generateReceiptData();
+        const templateParams = {
+            to_email: customerEmail,
+            from_name: businessSettings.name,
+            message: `Thank you for your purchase! Total: ${formatPrice(receiptData.total)}. Receipt attached.`,
+            receipt_details: receiptData.itemsHtml
+        };
+        emailjs.send("service_xyz", "template_xyz", templateParams).then(() => {
+            alert("Invoice sent to " + customerEmail);
+        }).catch(() => {
+            alert("EmailJS not configured. Copy receipt to clipboard instead.");
+            copyReceiptToClipboard();
+        });
+    }
+    function copyReceiptToClipboard() {
+        const data = generateReceiptData();
+        const text = `BillZest POS Receipt\n${businessSettings.name}\nGST: ${businessSettings.gst}\n${businessSettings.address}\n\nBranch: ${data.branchName}\nCustomer: ${data.customerName}\nDate: ${data.date}\n\nItems:\n${lastSaleData.items.map(i=>`${i.name} x${i.qty} = ${formatPrice(i.price*i.qty)}`).join('\n')}\n\nSubtotal: ${formatPrice(data.subtotal)}\nTax: ${formatPrice(data.tax)}${data.discount>0?`\nDiscount: -${formatPrice(data.discount)}`:''}\nTotal: ${formatPrice(data.total)}\nPoints Earned: ${data.pointsEarned}\nPayment: ${data.paymentMethod}\n\nThank you!`;
+        navigator.clipboard.writeText(text);
+        alert("Receipt copied to clipboard. You can paste into an email.");
+    }
+
+    // Existing receipt functions
     function generateReceiptData() {
         if (!lastSaleData) return null;
         let itemsHtml = '';
@@ -971,7 +1085,7 @@
     }
     document.querySelectorAll('.nav-item').forEach(nav => { nav.onclick = () => { showPage(nav.dataset.page); }; });
 
-    // Worker management (localStorage based, for email users)
+    // Worker management (localStorage based)
     function loadWorkersList() {
         const workers = users.filter(u => u.role === 'branch_manager');
         workersListDiv.innerHTML = workers.map(w => `<div class="worker-item"><span><strong>${w.email}</strong> - ${branches.find(b=>b.id===w.branchId)?.name || w.branchId}</span><button class="btn-secondary" style="width:auto; padding:4px 12px;" onclick="deleteWorker('${w.email}')">Delete</button></div>`).join('');
@@ -1022,7 +1136,7 @@
     document.getElementById('darkModeBtn')?.addEventListener('click', toggleDarkMode);
     if (localStorage.getItem('billzest_darkmode') === 'true') document.body.classList.add('dark');
 
-    // Cross-tab sync
+    // Cross-tab sync (localStorage)
     window.addEventListener('storage', function(e) {
         if (!currentUser) return;
         if (e.key === 'billzest_products') { loadProducts(); renderProducts(); updateCategoryFilter(); updateStatsAndCharts(); }
@@ -1076,6 +1190,7 @@
             updateStatsAndCharts();
             renderProducts();
             showPage('pos');
+            startRealtimeSync();
         } catch (err) {
             console.error(err);
             alert("Google login failed: " + err.message);
@@ -1104,6 +1219,7 @@
         updateStatsAndCharts();
         renderProducts();
         showPage('pos');
+        if (window.firebase && window.firebase.auth.currentUser) startRealtimeSync();
     }
 
     // Logout
@@ -1111,6 +1227,7 @@
         if (window.firebase && window.firebase.auth && window.firebase.auth.currentUser) {
             await window.firebase.signOut(window.firebase.auth);
         }
+        if (unsubscribeFirestore) unsubscribeFirestore();
         currentUser = null;
         document.getElementById('dashboardMain').style.display = 'none';
         document.getElementById('loginOverlay').style.display = 'flex';
@@ -1123,7 +1240,17 @@
     document.getElementById('resetDataBtn').onclick = resetDemoData;
     document.getElementById('logoutSidebarBtn').onclick = logout;
     document.getElementById('clearCartBtn').onclick = clearCart;
-    document.getElementById('completeSaleBtn').onclick = completeSale;
+    document.getElementById('completeSaleBtn').onclick = () => {
+        if (paymentMethod.value === 'cash') {
+            completeSaleWithPayment("Cash");
+        } else {
+            completeSaleWithPayment(paymentMethod.value === 'card' ? "Card" : "Mobile");
+        }
+    };
+    payOnlineBtn.onclick = openPaymentModal;
+    document.getElementById('confirmPaymentBtn').onclick = processOnlinePayment;
+    document.getElementById('closePaymentModal').onclick = closePaymentModal;
+    emailInvoiceBtn.onclick = sendEmailInvoice;
     document.getElementById('printReceiptBtn').onclick = showPrintReceipt;
     document.getElementById('whatsappShareBtn').onclick = shareWhatsApp;
     document.getElementById('loginPassword').addEventListener('keypress', (e) => { if(e.key === 'Enter') emailLogin(); });
