@@ -151,6 +151,9 @@
         .sale-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border); align-items: center; }
         .refund-btn { background: var(--danger); color: white; border: none; padding: 2px 8px; border-radius: 20px; cursor: pointer; font-size: 11px; }
         .refunded { opacity: 0.6; text-decoration: line-through; }
+        .customer-search-wrapper { position: relative; margin-bottom: 8px; }
+        .customer-search-wrapper input { width: 100%; padding: 8px 12px; border-radius: 30px; border: 1px solid var(--border); background: var(--bg); color: var(--text-primary); }
+        .customer-select-dropdown { width: 100%; padding: 8px; border-radius: 30px; border: 1px solid var(--border); background: var(--bg); color: var(--text-primary); margin-top: 5px; }
         @media (max-width: 1000px) { .sidebar { display: none; } .pos-grid { grid-template-columns: 1fr; } .stats-cards { grid-template-columns: 1fr 1fr; } .main-content { padding: 16px; } }
         @media print { body * { visibility: hidden; } #receipt-print, #receipt-print * { visibility: visible; } #receipt-print { position: absolute; top: 0; left: 0; width: 100%; padding: 20px; background: white; color: black; } }
     </style>
@@ -237,8 +240,11 @@
                             </div>
                         </div>
                         <div class="customer-section" style="margin: 10px 0;">
-                            <label>Select Customer (for loyalty points)</label>
-                            <select id="customerSelect" style="width:100%; padding:8px; border-radius:30px; border:1px solid var(--border); background:var(--bg);"></select>
+                            <label>Search Customer</label>
+                            <div class="customer-search-wrapper">
+                                <input type="text" id="customerSearchInput" placeholder="Type customer name or phone...">
+                                <select id="customerSelect" class="customer-select-dropdown" size="5" style="display: none;"></select>
+                            </div>
                             <div id="pointsDisplay" style="font-size:12px; margin-top:4px;"></div>
                         </div>
                         <div class="redeem-section" style="margin: 10px 0;">
@@ -411,7 +417,7 @@
     let paymentMethod, cashReceived, changeDue, cashChangeSection;
     let posPage, analyticsPage, workersPage, settingsPage;
     let workersListDiv, customersListDiv, salesListDiv;
-    let customerSelect, pointsDisplay, redeemPointsInput, discountDisplay;
+    let customerSearchInput, customerSelect, pointsDisplay, redeemPointsInput, discountDisplay;
 
     function initDOM() {
         sidebarAvatar = document.getElementById('sidebarAvatar');
@@ -443,6 +449,7 @@
         workersListDiv = document.getElementById('workersList');
         customersListDiv = document.getElementById('customersList');
         salesListDiv = document.getElementById('salesList');
+        customerSearchInput = document.getElementById('customerSearchInput');
         customerSelect = document.getElementById('customerSelect');
         pointsDisplay = document.getElementById('pointsDisplay');
         redeemPointsInput = document.getElementById('redeemPoints');
@@ -538,7 +545,7 @@
         loadCustomersList();
         loadSalesList();
         updateCategoryFilter();
-        updateCustomerSelect();
+        updateCustomerSearch();
     }
     function loadBranchesList() {
         const container = document.getElementById('branchesList');
@@ -636,12 +643,12 @@
         });
     }
 
-    // Customer management
+    // Customer management with live search
     function loadCustomersList() {
         const container = document.getElementById('customersList');
         if (!container) return;
         container.innerHTML = customers.map(c => `<div class="customer-item"><span><strong>${c.name}</strong> (${c.phone}) - Points: ${c.points}</span><div class="customer-actions"><button onclick="editCustomer(${c.id})"><i class="fas fa-edit"></i></button><button onclick="deleteCustomer(${c.id})"><i class="fas fa-trash"></i></button></div></div>`).join('');
-        updateCustomerSelect();
+        updateCustomerSearch();
     }
     window.editCustomer = function(id) {
         const cust = customers.find(c => c.id === id);
@@ -653,7 +660,7 @@
         saveCustomers(); loadCustomersList();
     };
     window.deleteCustomer = function(id) {
-        if (confirm("Delete customer?")) { customers = customers.filter(c => c.id !== id); saveCustomers(); loadCustomersList(); updateCustomerSelect(); }
+        if (confirm("Delete customer?")) { customers = customers.filter(c => c.id !== id); saveCustomers(); loadCustomersList(); if(selectedCustomerId === id) { selectedCustomerId = null; updateCustomerSearch(); } }
     };
     function addCustomer() {
         const name = document.getElementById('customerName').value.trim();
@@ -668,18 +675,52 @@
         alert("Customer added!");
     }
     document.getElementById('addCustomerBtn')?.addEventListener('click', addCustomer);
-    function updateCustomerSelect() {
-        if (!customerSelect) return;
-        customerSelect.innerHTML = '<option value="">Walk-in Customer (No points)</option>' + customers.map(c => `<option value="${c.id}">${c.name} (${c.points} pts)</option>`).join('');
-        customerSelect.onchange = () => {
-            selectedCustomerId = customerSelect.value ? parseInt(customerSelect.value) : null;
-            if (selectedCustomerId) {
-                const cust = customers.find(c => c.id === selectedCustomerId);
-                pointsDisplay.innerText = `Points: ${cust.points} (10 pts = 1 SAR discount)`;
-            } else pointsDisplay.innerText = '';
-            redeemPoints = 0; if(redeemPointsInput) redeemPointsInput.value = ''; updateDiscountDisplay();
-        };
+    
+    function updateCustomerSearch() {
+        if (!customerSearchInput || !customerSelect) return;
+        const searchTerm = customerSearchInput.value.toLowerCase();
+        let filtered = customers.filter(c => c.name.toLowerCase().includes(searchTerm) || c.phone.includes(searchTerm));
+        // Always keep walk-in option
+        let optionsHtml = `<option value="">Walk-in Customer (No points)</option>`;
+        filtered.forEach(c => {
+            optionsHtml += `<option value="${c.id}">${c.name} (${c.phone}) - ${c.points} pts</option>`;
+        });
+        customerSelect.innerHTML = optionsHtml;
+        // Show dropdown if there are matches or if input not empty
+        if (searchTerm !== "" && filtered.length > 0) {
+            customerSelect.style.display = 'block';
+            customerSelect.size = Math.min(5, filtered.length + 1);
+        } else {
+            customerSelect.style.display = 'none';
+        }
+        // Preselect if a customer was selected before
+        if (selectedCustomerId) {
+            const optionExists = Array.from(customerSelect.options).some(opt => opt.value == selectedCustomerId);
+            if (optionExists) customerSelect.value = selectedCustomerId;
+            else selectedCustomerId = null;
+        }
+        if (selectedCustomerId) {
+            const cust = customers.find(c => c.id === selectedCustomerId);
+            pointsDisplay.innerText = `Points: ${cust.points} (10 pts = 1 SAR discount)`;
+        } else pointsDisplay.innerText = '';
+        updateDiscountDisplay();
     }
+    customerSearchInput?.addEventListener('input', () => { updateCustomerSearch(); });
+    customerSelect?.addEventListener('change', () => {
+        const val = customerSelect.value;
+        selectedCustomerId = val ? parseInt(val) : null;
+        if (selectedCustomerId) {
+            const cust = customers.find(c => c.id === selectedCustomerId);
+            if (cust) pointsDisplay.innerText = `Points: ${cust.points} (10 pts = 1 SAR discount)`;
+            else pointsDisplay.innerText = '';
+        } else pointsDisplay.innerText = '';
+        redeemPointsInput.value = '';
+        updateDiscountDisplay();
+        updateCartUI(); // update totals with discount
+        customerSelect.style.display = 'none'; // hide after selection
+        customerSearchInput.value = selectedCustomerId ? (customers.find(c=>c.id===selectedCustomerId)?.name || '') : '';
+    });
+
     function updateDiscountDisplay() {
         if (!selectedCustomerId) { discountDisplay.innerText = ''; return; }
         const cust = customers.find(c => c.id === selectedCustomerId);
@@ -688,6 +729,7 @@
         if (points > cust.points) points = cust.points;
         const discount = points / 10;
         discountDisplay.innerText = `Discount: ${formatPrice(discount)} (using ${points} points)`;
+        updateCartUI();
     }
     redeemPointsInput?.addEventListener('input', updateDiscountDisplay);
 
@@ -710,12 +752,10 @@
         if (!sale || sale.refunded) { alert("Already refunded"); return; }
         if (!confirm(`Refund sale of ${formatPrice(sale.total)}? Stock will be restored and loyalty points deducted.`)) return;
         sale.refunded = true;
-        // Restore stock
         sale.items.forEach(item => {
             const prod = products.find(p => p.id === item.id);
             if (prod) prod.stock += item.qty;
         });
-        // Deduct points from customer
         if (sale.customerId) {
             const cust = customers.find(c => c.id === sale.customerId);
             if (cust) cust.points = Math.max(0, cust.points - (sale.pointsEarned || 0));
@@ -876,7 +916,9 @@
         updateStatsAndCharts(); renderProducts(); loadCustomersList(); loadSalesList();
         clearCart();
         shareButtons.style.display = 'flex';
-        selectedCustomerId = null; if(customerSelect) customerSelect.value = ''; updateCustomerSelect();
+        selectedCustomerId = null;
+        customerSearchInput.value = '';
+        updateCustomerSearch();
     }
     function generateReceiptData() {
         if (!lastSaleData) return null;
@@ -1015,7 +1057,7 @@
     document.getElementById('darkModeBtn')?.addEventListener('click', toggleDarkMode);
     if (localStorage.getItem('billzest_darkmode') === 'true') document.body.classList.add('dark');
 
-    // Cross-tab sync
+    // Cross-tab sync (same as before, omitted for brevity, but works)
     window.addEventListener('storage', function(e) {
         if (!currentUser) return;
         if (e.key === 'billzest_products') { loadProducts(); renderProducts(); updateCategoryFilter(); updateStatsAndCharts(); }
@@ -1023,7 +1065,7 @@
         if (e.key === 'billzest_users') { const stored = localStorage.getItem('billzest_users'); if (stored) users = JSON.parse(stored); if (currentUser?.role === 'super_admin') loadWorkersList(); }
         if (e.key === 'billzest_currency' || e.key === 'billzest_custom_currency') { loadCurrency(); renderProducts(); updateCartUI(); updateStatsAndCharts(); }
         if (e.key === 'billzest_business') { const stored = localStorage.getItem('billzest_business'); if (stored) businessSettings = JSON.parse(stored); if (document.getElementById('businessName')) { document.getElementById('businessName').value = businessSettings.name || ''; document.getElementById('gstNumber').value = businessSettings.gst || ''; document.getElementById('businessAddress').value = businessSettings.address || ''; document.getElementById('businessPhone').value = businessSettings.phone || ''; } }
-        if (e.key === 'billzest_customers') { const stored = localStorage.getItem('billzest_customers'); if (stored) customers = JSON.parse(stored); loadCustomersList(); updateCustomerSelect(); }
+        if (e.key === 'billzest_customers') { const stored = localStorage.getItem('billzest_customers'); if (stored) customers = JSON.parse(stored); loadCustomersList(); updateCustomerSearch(); }
         if (e.key === 'billzest_sales') { const stored = localStorage.getItem('billzest_sales'); if (stored) allSales = JSON.parse(stored); updateStatsAndCharts(); loadSalesList(); }
     });
 
