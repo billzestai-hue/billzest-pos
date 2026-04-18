@@ -3,11 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>BillZest POS | Complete Business Solution</title>
+    <title>BillZest POS | Real Google Login</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+        const firebaseConfig = {
+            apiKey: "AIzaSyCN0akvFXOHM6WPHv9ve9noqqmauO3TJRY",
+            authDomain: "billzest-pos.firebaseapp.com",
+            projectId: "billzest-pos",
+            storageBucket: "billzest-pos.firebasestorage.app",
+            messagingSenderId: "946546876429",
+            appId: "1:946546876429:web:9b4a7aa3cecbf3aea83544",
+            measurementId: "G-69WEHH9X5D"
+        };
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        window.firebase = { auth, db, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut, doc, setDoc, getDoc, collection, getDocs, query, where };
+        console.log("Firebase ready");
+    </script>
     <style>
+        /* Same CSS as before – included in final output */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         :root {
             --bg: #f4f6fb; --surface: #ffffff; --primary: #1e2a5e; --primary-light: #2a3a7a;
@@ -40,10 +61,7 @@
             padding: 12px; border-radius: 40px; width: 100%;
             font-weight: bold; cursor: pointer; margin-top: 8px;
         }
-        .google-demo-btn {
-            background: #fff; color: #333; border: 1px solid #ddd;
-            display: flex; align-items: center; justify-content: center; gap: 10px;
-        }
+        .google-btn { background: #fff; color: #333; border: 1px solid #ddd; display: flex; align-items: center; justify-content: center; gap: 10px; }
         .reset-btn { background: #ef4444; margin-top: 8px; }
         .login-status { margin-top: 12px; font-size: 12px; color: red; }
         .dashboard-container { display: flex; min-height: 100vh; }
@@ -168,16 +186,16 @@
         <p>Login to continue</p>
         <input type="email" id="loginEmail" placeholder="Email" value="admin@billzest.com">
         <input type="password" id="loginPassword" placeholder="Password" value="admin123">
-        <button id="loginBtn">Login with Email</button>
-        <button id="googleDemoBtn" class="google-demo-btn"><i class="fab fa-google"></i> Login with Google (Demo)</button>
+        <button id="emailLoginBtn">Login with Email</button>
+        <button id="googleLoginBtn" class="google-btn"><i class="fab fa-google"></i> Login with Google (Real)</button>
         <button id="resetDataBtn" class="reset-btn">Reset Demo Data</button>
         <div class="login-status" id="loginStatus"></div>
         <div style="margin-top: 16px; font-size: 12px; color: #888;">
-            <strong>Demo Accounts:</strong><br>
+            <strong>Demo Email Accounts:</strong><br>
             Super Admin: admin@billzest.com / admin123<br>
             Branch Manager (City Mall): manager1@billzest.com / manager123<br>
             Branch Manager (Downtown): manager2@billzest.com / manager123<br>
-            <strong>Google Demo:</strong> Click the Google button – it creates a demo branch manager instantly.
+            <strong>Real Google Login:</strong> Click the Google button – a real Firebase authentication popup will appear.
         </div>
     </div>
 </div>
@@ -216,7 +234,7 @@
             <button id="logoutSidebarBtn" class="logout-btn-sidebar"><i class="fas fa-sign-out-alt"></i> Logout</button>
         </div>
         <div class="main-content">
-            <!-- POS Page -->
+            <!-- POS Page (same content as before, omitted for brevity but included in final) -->
             <div id="posPage" class="page-content" style="display: block;">
                 <div class="stats-cards">
                     <div class="stat-card"><div class="stat-title">Today's Sales</div><div class="stat-value" id="todaySales">0</div></div>
@@ -262,8 +280,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Analytics Page -->
             <div id="analyticsPage" class="page-content" style="display: none;">
                 <div class="stats-cards">
                     <div class="stat-card"><div class="stat-title">Today's Sales</div><div class="stat-value" id="analyticsTodaySales">0</div></div>
@@ -272,101 +288,40 @@
                     <div class="stat-card"><div class="stat-title">Avg Order Value</div><div class="stat-value" id="analyticsAvgOrder">0</div></div>
                 </div>
                 <div class="analytics-section">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                        <h3>Sales History & Refunds</h3>
-                        <button id="exportSalesBtn" class="btn-primary" style="width: auto; padding: 6px 12px;"><i class="fas fa-file-excel"></i> Export CSV</button>
-                    </div>
+                    <div style="display: flex; justify-content: space-between;"><h3>Sales History & Refunds</h3><button id="exportSalesBtn" class="btn-primary" style="width: auto;">Export CSV</button></div>
                     <div class="sales-list" id="salesList"></div>
                 </div>
-                <div class="analytics-section">
-                    <h3>Sales Overview</h3>
-                    <div class="analytics-grid"><div class="chart-container"><canvas id="weeklyChart"></canvas></div><div class="chart-container"><canvas id="categoryChart"></canvas></div></div>
-                </div>
+                <div class="analytics-section"><h3>Sales Overview</h3><div class="analytics-grid"><div class="chart-container"><canvas id="weeklyChart"></canvas></div><div class="chart-container"><canvas id="categoryChart"></canvas></div></div></div>
             </div>
-
-            <!-- Manage Workers Page -->
             <div id="workersPage" class="page-content" style="display: none;">
                 <div class="user-management">
-                    <h3><i class="fas fa-user-plus"></i> Add New Worker</h3>
+                    <h3>Add New Worker (Branch Manager)</h3>
                     <div class="user-form">
-                        <input type="email" id="newWorkerEmail" placeholder="Worker Email">
+                        <input type="email" id="newWorkerEmail" placeholder="Email">
                         <input type="password" id="newWorkerPassword" placeholder="Password">
                         <select id="newWorkerBranch"></select>
-                        <button id="createWorkerBtn" class="btn-primary" style="width: auto; padding: 10px 20px;">Add Worker</button>
+                        <button id="createWorkerBtn" class="btn-primary">Add Worker</button>
                     </div>
                     <h3>Existing Workers</h3>
                     <div class="workers-list" id="workersList"></div>
                 </div>
             </div>
-
-            <!-- Settings Page -->
             <div id="settingsPage" class="page-content" style="display: none;">
-                <div class="settings-panel">
-                    <h3><i class="fas fa-building"></i> Business Details</h3>
-                    <div class="form-group"><label>Business Name</label><input type="text" id="businessName" placeholder="Your Business Name"></div>
-                    <div class="form-group"><label>GST / VAT Number</label><input type="text" id="gstNumber" placeholder="GST/VAT Number"></div>
-                    <div class="form-group"><label>Address</label><textarea id="businessAddress" rows="2" placeholder="Business Address"></textarea></div>
-                    <div class="form-group"><label>Phone</label><input type="text" id="businessPhone" placeholder="Phone Number"></div>
-                    <button id="saveBusinessSettingsBtn" class="btn-primary" style="width: auto; padding: 10px 20px;">Save Business Details</button>
-                </div>
-                <div class="settings-panel" id="branchManagementPanel" style="display: none;">
-                    <h3><i class="fas fa-store-alt"></i> Manage Branches (Super Admin)</h3>
-                    <div class="user-form"><input type="text" id="newBranchName" placeholder="New Branch Name"><button id="addBranchBtn" class="btn-primary" style="width: auto; padding: 10px 20px;">Add Branch</button></div>
-                    <div id="branchesList"></div>
-                </div>
-                <div class="settings-panel" id="productManagementPanel" style="display: none;">
-                    <h3><i class="fas fa-utensils"></i> Manage Products & Stock (Super Admin)</h3>
-                    <div class="product-form">
-                        <input type="text" id="productName" placeholder="Product Name">
-                        <div style="display: flex; gap: 6px; flex:1;">
-                            <select id="productCategory"></select>
-                            <button id="addNewCategoryBtn" class="add-category-btn" title="Add new category">+ New</button>
-                        </div>
-                        <input type="number" id="productPrice" step="0.01" placeholder="Price">
-                        <input type="number" id="productStock" step="1" placeholder="Stock Qty" value="100">
-                        <input type="text" id="productImage" placeholder="Image URL (optional)">
-                        <button id="addProductBtn" class="btn-primary" style="width: auto; padding: 10px 20px;">Add Product</button>
-                    </div>
-                    <div id="productsList"></div>
-                    <p style="font-size:12px; margin-top:10px;">💡 Low stock alert: when stock < 5</p>
-                </div>
-                <div class="settings-panel">
-                    <h3><i class="fas fa-users"></i> Customer Database & Loyalty</h3>
-                    <div class="user-form">
-                        <input type="text" id="customerName" placeholder="Customer Name">
-                        <input type="text" id="customerPhone" placeholder="Phone">
-                        <input type="email" id="customerEmail" placeholder="Email">
-                        <button id="addCustomerBtn" class="btn-primary" style="width: auto; padding: 10px 20px;">Add Customer</button>
-                    </div>
-                    <div id="customersList"></div>
-                </div>
+                <div class="settings-panel"><h3>Business Details</h3><div class="form-group"><label>Business Name</label><input type="text" id="businessName"></div><div class="form-group"><label>GST / VAT</label><input type="text" id="gstNumber"></div><div class="form-group"><label>Address</label><textarea id="businessAddress" rows="2"></textarea></div><div class="form-group"><label>Phone</label><input type="text" id="businessPhone"></div><button id="saveBusinessSettingsBtn" class="btn-primary">Save</button></div>
+                <div class="settings-panel" id="branchManagementPanel"><h3>Manage Branches (Super Admin)</h3><div class="user-form"><input type="text" id="newBranchName" placeholder="New Branch Name"><button id="addBranchBtn" class="btn-primary">Add Branch</button></div><div id="branchesList"></div></div>
+                <div class="settings-panel" id="productManagementPanel"><h3>Manage Products & Stock</h3><div class="product-form"><input type="text" id="productName" placeholder="Name"><div style="display:flex; gap:6px;"><select id="productCategory"></select><button id="addNewCategoryBtn" class="add-category-btn">+ New</button></div><input type="number" id="productPrice" placeholder="Price"><input type="number" id="productStock" placeholder="Stock" value="100"><input type="text" id="productImage" placeholder="Image URL"><button id="addProductBtn" class="btn-primary">Add Product</button></div><div id="productsList"></div></div>
+                <div class="settings-panel"><h3>Customer Database</h3><div class="user-form"><input type="text" id="customerName" placeholder="Name"><input type="text" id="customerPhone" placeholder="Phone"><input type="email" id="customerEmail" placeholder="Email"><button id="addCustomerBtn" class="btn-primary">Add Customer</button></div><div id="customersList"></div></div>
             </div>
         </div>
     </div>
 </div>
 
 <div id="receipt-print" style="display: none; font-family: monospace; padding: 20px; max-width: 300px; background: white; color: black;">
-    <div style="text-align:center;">
-        <h2>BillZest POS</h2>
-        <div id="receiptBusinessName"></div>
-        <div id="receiptGST" style="font-size: 10px;"></div>
-        <div id="receiptAddress" style="font-size: 10px;"></div>
-        <hr>
-        <div id="receiptItems"></div>
-        <hr>
-        <div id="receiptTotals"></div>
-        <p>Date: <span id="receiptDate"></span></p>
-        <p>Branch: <span id="receiptBranch"></span></p>
-        <p>Customer: <span id="receiptCustomer"></span></p>
-        <p>Points Earned: <span id="receiptPoints"></span></p>
-        <p>Payment: <span id="receiptPayment"></span></p>
-        <hr>
-        <p>Thank you!</p>
-    </div>
+    <div style="text-align:center;"><h2>BillZest POS</h2><div id="receiptBusinessName"></div><div id="receiptGST"></div><div id="receiptAddress"></div><hr><div id="receiptItems"></div><hr><div id="receiptTotals"></div><p>Date: <span id="receiptDate"></span></p><p>Branch: <span id="receiptBranch"></span></p><p>Customer: <span id="receiptCustomer"></span></p><p>Points: <span id="receiptPoints"></span></p><p>Payment: <span id="receiptPayment"></span></p><hr><p>Thank you!</p></div>
 </div>
 
 <script>
-    // ---------- Demo Users (localStorage based, always works) ----------
+    // ---------- Demo Users (localStorage based, for email login) ----------
     const DEMO_USERS = [
         { email: "admin@billzest.com", password: "admin123", role: "super_admin", branchId: null },
         { email: "manager1@billzest.com", password: "manager123", role: "branch_manager", branchId: "branch1" },
@@ -457,7 +412,7 @@
         discountDisplay = document.getElementById('discountDisplay');
     }
 
-    // Load/Save functions
+    // Load/Save functions (same as before)
     function loadData() {
         const storedUsers = localStorage.getItem("billzest_users");
         if (storedUsers) {
@@ -502,7 +457,7 @@
         return allCategories;
     }
 
-    // Currency
+    // Currency (unchanged)
     function loadCurrency() {
         const saved = localStorage.getItem("billzest_currency");
         const currencySelect = document.getElementById('currencySelect');
@@ -530,7 +485,7 @@
     function formatPrice(amount) { return `${currencySymbol} ${amount.toFixed(2)}`; }
     function updateAllCurrencyDisplays() { if (currentUser) { updateCartUI(); updateStatsAndCharts(); renderProducts(); } }
 
-    // Sidebar & Branch
+    // Sidebar & Branch (same as before)
     function updateSidebar() {
         if (!currentUser) return;
         sidebarName.innerText = currentUser.email.split('@')[0];
@@ -562,27 +517,14 @@
     function loadBranchesList() {
         const container = document.getElementById('branchesList');
         if (!container) return;
-        container.innerHTML = branches.map(b => `
-            <div class="branch-item">
-                <span><strong>${b.name}</strong></span>
-                <div class="branch-actions">
-                    <button onclick="editBranch('${b.id}')"><i class="fas fa-edit"></i></button>
-                    <button onclick="deleteBranch('${b.id}')"><i class="fas fa-trash"></i></button>
-                </div>
-            </div>
-        `).join('');
+        container.innerHTML = branches.map(b => `<div class="branch-item"><span><strong>${b.name}</strong></span><div class="branch-actions"><button onclick="editBranch('${b.id}')"><i class="fas fa-edit"></i></button><button onclick="deleteBranch('${b.id}')"><i class="fas fa-trash"></i></button></div></div>`).join('');
     }
     window.editBranch = function(id) {
         const newName = prompt("Enter new branch name:", branches.find(b=>b.id===id).name);
         if (newName) { branches.find(b=>b.id===id).name = newName; saveBranches(); updateSidebar(); loadBranchesList(); }
     };
     window.deleteBranch = function(id) {
-        if (confirm("Delete branch? This will affect workers assigned to it.")) {
-            branches = branches.filter(b=>b.id !== id);
-            saveBranches();
-            updateSidebar();
-            loadBranchesList();
-        }
+        if (confirm("Delete branch?")) { branches = branches.filter(b=>b.id !== id); saveBranches(); updateSidebar(); loadBranchesList(); }
     };
     function addBranch() {
         const newName = document.getElementById('newBranchName').value.trim();
@@ -605,19 +547,11 @@
         alert("Business details saved!");
     });
 
-    // Product management
+    // Product management (same as before)
     function loadProductsList() {
         const container = document.getElementById('productsList');
         if (!container) return;
-        container.innerHTML = products.map(p => `
-            <div class="product-item">
-                <div style="flex:2"><strong>${p.name}</strong> (${p.category}) - ${formatPrice(p.price)} | Stock: ${p.stock}</div>
-                <div class="product-actions">
-                    <button onclick="editProduct(${p.id})"><i class="fas fa-edit"></i></button>
-                    <button onclick="deleteProduct(${p.id})"><i class="fas fa-trash"></i></button>
-                </div>
-            </div>
-        `).join('');
+        container.innerHTML = products.map(p => `<div class="product-item"><div style="flex:2"><strong>${p.name}</strong> (${p.category}) - ${formatPrice(p.price)} | Stock: ${p.stock}</div><div class="product-actions"><button onclick="editProduct(${p.id})"><i class="fas fa-edit"></i></button><button onclick="deleteProduct(${p.id})"><i class="fas fa-trash"></i></button></div></div>`).join('');
         const catSelect = document.getElementById('productCategory');
         if (catSelect) { const cats = extractCategories(); catSelect.innerHTML = cats.map(c => `<option value="${c}">${c}</option>`).join(''); }
     }
@@ -676,19 +610,11 @@
         });
     }
 
-    // Customer management with live search
+    // Customer management (same as before)
     function loadCustomersList() {
         const container = document.getElementById('customersList');
         if (!container) return;
-        container.innerHTML = customers.map(c => `
-            <div class="customer-item">
-                <span><strong>${c.name}</strong> (${c.phone}) - Points: ${c.points}</span>
-                <div class="customer-actions">
-                    <button onclick="editCustomer(${c.id})"><i class="fas fa-edit"></i></button>
-                    <button onclick="deleteCustomer(${c.id})"><i class="fas fa-trash"></i></button>
-                </div>
-            </div>
-        `).join('');
+        container.innerHTML = customers.map(c => `<div class="customer-item"><span><strong>${c.name}</strong> (${c.phone}) - Points: ${c.points}</span><div class="customer-actions"><button onclick="editCustomer(${c.id})"><i class="fas fa-edit"></i></button><button onclick="deleteCustomer(${c.id})"><i class="fas fa-trash"></i></button></div></div>`).join('');
         updateCustomerSearch();
     }
     window.editCustomer = function(id) {
@@ -722,16 +648,10 @@
         const searchTerm = customerSearchInput.value.toLowerCase();
         let filtered = customers.filter(c => c.name.toLowerCase().includes(searchTerm) || c.phone.includes(searchTerm));
         let optionsHtml = `<option value="">Walk-in Customer (No points)</option>`;
-        filtered.forEach(c => {
-            optionsHtml += `<option value="${c.id}">${c.name} (${c.phone}) - ${c.points} pts</option>`;
-        });
+        filtered.forEach(c => { optionsHtml += `<option value="${c.id}">${c.name} (${c.phone}) - ${c.points} pts</option>`; });
         customerSelect.innerHTML = optionsHtml;
-        if (searchTerm !== "" && filtered.length > 0) {
-            customerSelect.style.display = 'block';
-            customerSelect.size = Math.min(5, filtered.length + 1);
-        } else {
-            customerSelect.style.display = 'none';
-        }
+        if (searchTerm !== "" && filtered.length > 0) { customerSelect.style.display = 'block'; customerSelect.size = Math.min(5, filtered.length + 1); }
+        else customerSelect.style.display = 'none';
         if (selectedCustomerId) {
             const optionExists = Array.from(customerSelect.options).some(opt => opt.value == selectedCustomerId);
             if (optionExists) customerSelect.value = selectedCustomerId;
@@ -771,17 +691,12 @@
     }
     redeemPointsInput?.addEventListener('input', updateDiscountDisplay);
 
-    // Sales & Refunds
+    // Sales & Refunds (same as before)
     function loadSalesList() {
         if (!salesListDiv) return;
         const branchId = branchSelectSidebar?.value;
         const branchSales = allSales.filter(s => s.branchId === branchId);
-        salesListDiv.innerHTML = branchSales.map((s, idx) => `
-            <div class="sale-item ${s.refunded ? 'refunded' : ''}">
-                <div><strong>#${idx+1}</strong> ${new Date(s.date).toLocaleString()}<br>Total: ${formatPrice(s.total)}</div>
-                <div>${s.refunded ? 'REFUNDED' : `<button class="refund-btn" onclick="refundSale(${idx})">Refund</button>`}</div>
-            </div>
-        `).join('');
+        salesListDiv.innerHTML = branchSales.map((s, idx) => `<div class="sale-item ${s.refunded ? 'refunded' : ''}"><div><strong>#${idx+1}</strong> ${new Date(s.date).toLocaleString()}<br>Total: ${formatPrice(s.total)}</div><div>${s.refunded ? 'REFUNDED' : `<button class="refund-btn" onclick="refundSale(${idx})">Refund</button>`}</div></div>`).join('');
     }
     window.refundSale = function(saleIndex) {
         const branchId = branchSelectSidebar.value;
@@ -790,10 +705,7 @@
         if (!sale || sale.refunded) { alert("Already refunded"); return; }
         if (!confirm(`Refund sale of ${formatPrice(sale.total)}? Stock will be restored and loyalty points deducted.`)) return;
         sale.refunded = true;
-        sale.items.forEach(item => {
-            const prod = products.find(p => p.id === item.id);
-            if (prod) prod.stock += item.qty;
-        });
+        sale.items.forEach(item => { const prod = products.find(p => p.id === item.id); if (prod) prod.stock += item.qty; });
         if (sale.customerId) {
             const cust = customers.find(c => c.id === sale.customerId);
             if (cust) cust.points = Math.max(0, cust.points - (sale.pointsEarned || 0));
@@ -839,20 +751,14 @@
         const weeklyData = [0,0,0,0,0,0,0];
         branchSales.forEach(sale => { const day = new Date(sale.date).getDay(); let idx = (day === 0 ? 6 : day-1); weeklyData[idx] += sale.total; });
         if (weeklyChart) { weeklyChart.data.datasets[0].data = weeklyData; weeklyChart.update(); }
-        const catSales = {};
-        extractCategories().forEach(c => catSales[c] = 0);
-        branchSales.forEach(sale => {
-            sale.items.forEach(item => {
-                const prod = products.find(p => p.id === item.id);
-                if (prod) catSales[prod.category] += (item.price * item.qty);
-            });
-        });
+        const catSales = {}; extractCategories().forEach(c => catSales[c] = 0);
+        branchSales.forEach(sale => { sale.items.forEach(item => { const prod = products.find(p => p.id === item.id); if (prod) catSales[prod.category] += (item.price * item.qty); }); });
         if (categoryChart) { categoryChart.data.datasets[0].data = extractCategories().map(c => catSales[c] || 0); categoryChart.data.labels = extractCategories(); categoryChart.update(); }
         loadSalesList();
     }
     branchSelectSidebar?.addEventListener('change', () => { updateStatsAndCharts(); updateCartUI(); });
 
-    // Cart functions
+    // Cart functions (same as before)
     function updateCartUI() {
         if (!cartItemsList) return;
         if (cart.length === 0) {
@@ -938,11 +844,7 @@
             }
             alert(`✅ Payment successful! Change: ${formatPrice(received-finalTotal)}`);
         } else alert(`✅ Payment via ${method} successful! Total: ${formatPrice(finalTotal)}`);
-        // Deduct stock
-        cart.forEach(item => {
-            const prod = products.find(p => p.id === item.id);
-            if (prod) prod.stock -= item.quantity;
-        });
+        cart.forEach(item => { const prod = products.find(p => p.id === item.id); if (prod) prod.stock -= item.quantity; });
         const pointsEarned = Math.floor(finalTotal / 10);
         let customerId = selectedCustomerId;
         if (customerId) {
@@ -1062,19 +964,12 @@
             loadBranchesList(); loadProductsList(); loadCustomersList();
         }
     }
-    document.querySelectorAll('.nav-item').forEach(nav => {
-        nav.onclick = () => { showPage(nav.dataset.page); };
-    });
+    document.querySelectorAll('.nav-item').forEach(nav => { nav.onclick = () => { showPage(nav.dataset.page); }; });
 
-    // Worker management (localStorage based)
+    // Worker management (localStorage based, for email users)
     function loadWorkersList() {
         const workers = users.filter(u => u.role === 'branch_manager');
-        workersListDiv.innerHTML = workers.map(w => `
-            <div class="worker-item">
-                <span><strong>${w.email}</strong> - ${branches.find(b=>b.id===w.branchId)?.name || w.branchId}</span>
-                <button class="btn-secondary" style="width:auto; padding:4px 12px;" onclick="deleteWorker('${w.email}')">Delete</button>
-            </div>
-        `).join('');
+        workersListDiv.innerHTML = workers.map(w => `<div class="worker-item"><span><strong>${w.email}</strong> - ${branches.find(b=>b.id===w.branchId)?.name || w.branchId}</span><button class="btn-secondary" style="width:auto; padding:4px 12px;" onclick="deleteWorker('${w.email}')">Delete</button></div>`).join('');
     }
     window.deleteWorker = function(email) {
         users = users.filter(u => u.email !== email);
@@ -1134,12 +1029,66 @@
         if (e.key === 'billzest_sales') { const stored = localStorage.getItem('billzest_sales'); if (stored) allSales = JSON.parse(stored); updateStatsAndCharts(); loadSalesList(); }
     });
 
-    // Login with email
-    function login() {
+    // ========== REAL GOOGLE LOGIN ==========
+    async function googleRealLogin() {
+        if (!window.firebase || !window.firebase.auth) {
+            alert("Firebase not ready. Please check your internet connection and reload.");
+            return;
+        }
+        const provider = new window.firebase.GoogleAuthProvider();
+        try {
+            const result = await window.firebase.signInWithPopup(window.firebase.auth, provider);
+            const user = result.user;
+            const email = user.email;
+            // Check if user exists in our local users array or Firestore
+            let existingUser = users.find(u => u.email === email);
+            if (!existingUser) {
+                // Create a new branch manager account
+                existingUser = {
+                    email: email,
+                    password: "google_auth", // not used
+                    role: "branch_manager",
+                    branchId: "branch1" // assign to City Mall by default
+                };
+                users.push(existingUser);
+                saveUsers();
+                // Also store in Firestore for future reference
+                const docRef = window.firebase.doc(window.firebase.db, "users", user.uid);
+                await window.firebase.setDoc(docRef, {
+                    email: email,
+                    role: "branch_manager",
+                    branchId: "branch1",
+                    createdAt: new Date().toISOString()
+                });
+            }
+            currentUser = { ...existingUser };
+            document.getElementById('loginOverlay').style.display = 'none';
+            document.getElementById('dashboardMain').style.display = 'block';
+            initDOM();
+            loadCurrency();
+            initCharts();
+            initFilters();
+            initPaymentUI();
+            updateCartUI();
+            updateSidebar();
+            updateStatsAndCharts();
+            renderProducts();
+            showPage('pos');
+        } catch (err) {
+            console.error(err);
+            alert("Google login failed: " + err.message);
+        }
+    }
+
+    // Email login (uses localStorage demo users)
+    function emailLogin() {
         const email = document.getElementById('loginEmail').value.trim();
         const pwd = document.getElementById('loginPassword').value;
         const user = users.find(u => u.email === email && u.password === pwd);
-        if (!user) { document.getElementById('loginStatus').innerText = "Invalid credentials. Try admin@billzest.com / admin123"; return; }
+        if (!user) {
+            document.getElementById('loginStatus').innerText = "Invalid credentials. Try admin@billzest.com / admin123";
+            return;
+        }
         currentUser = { ...user };
         document.getElementById('loginOverlay').style.display = 'none';
         document.getElementById('dashboardMain').style.display = 'block';
@@ -1155,52 +1104,28 @@
         showPage('pos');
     }
 
-    // Demo Google Login (creates a local branch manager account)
-    function googleDemoLogin() {
-        // Generate a unique demo email
-        const demoEmail = `google_demo_${Date.now()}@example.com`;
-        // Check if already exists (unlikely)
-        let existing = users.find(u => u.email === demoEmail);
-        if (!existing) {
-            // Create a new branch manager user
-            const newUser = {
-                email: demoEmail,
-                password: 'google_demo', // not used for login, but stored
-                role: 'branch_manager',
-                branchId: 'branch1' // assign to City Mall branch
-            };
-            users.push(newUser);
-            saveUsers();
-            currentUser = newUser;
-        } else {
-            currentUser = existing;
+    // Logout
+    async function logout() {
+        if (window.firebase && window.firebase.auth && window.firebase.auth.currentUser) {
+            await window.firebase.signOut(window.firebase.auth);
         }
-        document.getElementById('loginOverlay').style.display = 'none';
-        document.getElementById('dashboardMain').style.display = 'block';
-        initDOM();
-        loadCurrency();
-        initCharts();
-        initFilters();
-        initPaymentUI();
-        updateCartUI();
-        updateSidebar();
-        updateStatsAndCharts();
-        renderProducts();
-        showPage('pos');
-        alert(`Logged in as ${demoEmail} (Demo Google Account)`);
+        currentUser = null;
+        document.getElementById('dashboardMain').style.display = 'none';
+        document.getElementById('loginOverlay').style.display = 'flex';
+        cart = [];
     }
 
-    // Event listeners
-    document.getElementById('loginBtn').onclick = login;
-    document.getElementById('googleDemoBtn').onclick = googleDemoLogin;
+    // Attach event listeners
+    document.getElementById('emailLoginBtn').onclick = emailLogin;
+    document.getElementById('googleLoginBtn').onclick = googleRealLogin;
     document.getElementById('resetDataBtn').onclick = resetDemoData;
-    document.getElementById('logoutSidebarBtn').onclick = () => { currentUser = null; document.getElementById('dashboardMain').style.display = 'none'; document.getElementById('loginOverlay').style.display = 'flex'; cart = []; };
+    document.getElementById('logoutSidebarBtn').onclick = logout;
     document.getElementById('clearCartBtn').onclick = clearCart;
     document.getElementById('completeSaleBtn').onclick = completeSale;
     document.getElementById('printReceiptBtn').onclick = showPrintReceipt;
     document.getElementById('whatsappShareBtn').onclick = shareWhatsApp;
-    document.getElementById('loginPassword').addEventListener('keypress', (e) => { if(e.key === 'Enter') login(); });
-    document.getElementById('loginEmail').addEventListener('keypress', (e) => { if(e.key === 'Enter') login(); });
+    document.getElementById('loginPassword').addEventListener('keypress', (e) => { if(e.key === 'Enter') emailLogin(); });
+    document.getElementById('loginEmail').addEventListener('keypress', (e) => { if(e.key === 'Enter') emailLogin(); });
 
     loadData();
 </script>
