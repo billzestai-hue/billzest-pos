@@ -40,6 +40,10 @@
             padding: 12px; border-radius: 40px; width: 100%;
             font-weight: bold; cursor: pointer; margin-top: 8px;
         }
+        .google-demo-btn {
+            background: #fff; color: #333; border: 1px solid #ddd;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
         .reset-btn { background: #ef4444; margin-top: 8px; }
         .login-status { margin-top: 12px; font-size: 12px; color: red; }
         .dashboard-container { display: flex; min-height: 100vh; }
@@ -165,13 +169,15 @@
         <input type="email" id="loginEmail" placeholder="Email" value="admin@billzest.com">
         <input type="password" id="loginPassword" placeholder="Password" value="admin123">
         <button id="loginBtn">Login with Email</button>
+        <button id="googleDemoBtn" class="google-demo-btn"><i class="fab fa-google"></i> Login with Google (Demo)</button>
         <button id="resetDataBtn" class="reset-btn">Reset Demo Data</button>
         <div class="login-status" id="loginStatus"></div>
         <div style="margin-top: 16px; font-size: 12px; color: #888;">
             <strong>Demo Accounts:</strong><br>
             Super Admin: admin@billzest.com / admin123<br>
             Branch Manager (City Mall): manager1@billzest.com / manager123<br>
-            Branch Manager (Downtown): manager2@billzest.com / manager123
+            Branch Manager (Downtown): manager2@billzest.com / manager123<br>
+            <strong>Google Demo:</strong> Click the Google button – it creates a demo branch manager instantly.
         </div>
     </div>
 </div>
@@ -360,7 +366,7 @@
 </div>
 
 <script>
-    // ---------- Demo Users (always works, no external dependency) ----------
+    // ---------- Demo Users (localStorage based, always works) ----------
     const DEMO_USERS = [
         { email: "admin@billzest.com", password: "admin123", role: "super_admin", branchId: null },
         { email: "manager1@billzest.com", password: "manager123", role: "branch_manager", branchId: "branch1" },
@@ -1128,7 +1134,7 @@
         if (e.key === 'billzest_sales') { const stored = localStorage.getItem('billzest_sales'); if (stored) allSales = JSON.parse(stored); updateStatsAndCharts(); loadSalesList(); }
     });
 
-    // Login
+    // Login with email
     function login() {
         const email = document.getElementById('loginEmail').value.trim();
         const pwd = document.getElementById('loginPassword').value;
@@ -1149,8 +1155,44 @@
         showPage('pos');
     }
 
+    // Demo Google Login (creates a local branch manager account)
+    function googleDemoLogin() {
+        // Generate a unique demo email
+        const demoEmail = `google_demo_${Date.now()}@example.com`;
+        // Check if already exists (unlikely)
+        let existing = users.find(u => u.email === demoEmail);
+        if (!existing) {
+            // Create a new branch manager user
+            const newUser = {
+                email: demoEmail,
+                password: 'google_demo', // not used for login, but stored
+                role: 'branch_manager',
+                branchId: 'branch1' // assign to City Mall branch
+            };
+            users.push(newUser);
+            saveUsers();
+            currentUser = newUser;
+        } else {
+            currentUser = existing;
+        }
+        document.getElementById('loginOverlay').style.display = 'none';
+        document.getElementById('dashboardMain').style.display = 'block';
+        initDOM();
+        loadCurrency();
+        initCharts();
+        initFilters();
+        initPaymentUI();
+        updateCartUI();
+        updateSidebar();
+        updateStatsAndCharts();
+        renderProducts();
+        showPage('pos');
+        alert(`Logged in as ${demoEmail} (Demo Google Account)`);
+    }
+
     // Event listeners
     document.getElementById('loginBtn').onclick = login;
+    document.getElementById('googleDemoBtn').onclick = googleDemoLogin;
     document.getElementById('resetDataBtn').onclick = resetDemoData;
     document.getElementById('logoutSidebarBtn').onclick = () => { currentUser = null; document.getElementById('dashboardMain').style.display = 'none'; document.getElementById('loginOverlay').style.display = 'flex'; cart = []; };
     document.getElementById('clearCartBtn').onclick = clearCart;
