@@ -680,20 +680,17 @@
         if (!customerSearchInput || !customerSelect) return;
         const searchTerm = customerSearchInput.value.toLowerCase();
         let filtered = customers.filter(c => c.name.toLowerCase().includes(searchTerm) || c.phone.includes(searchTerm));
-        // Always keep walk-in option
         let optionsHtml = `<option value="">Walk-in Customer (No points)</option>`;
         filtered.forEach(c => {
             optionsHtml += `<option value="${c.id}">${c.name} (${c.phone}) - ${c.points} pts</option>`;
         });
         customerSelect.innerHTML = optionsHtml;
-        // Show dropdown if there are matches or if input not empty
         if (searchTerm !== "" && filtered.length > 0) {
             customerSelect.style.display = 'block';
             customerSelect.size = Math.min(5, filtered.length + 1);
         } else {
             customerSelect.style.display = 'none';
         }
-        // Preselect if a customer was selected before
         if (selectedCustomerId) {
             const optionExists = Array.from(customerSelect.options).some(opt => opt.value == selectedCustomerId);
             if (optionExists) customerSelect.value = selectedCustomerId;
@@ -716,8 +713,8 @@
         } else pointsDisplay.innerText = '';
         redeemPointsInput.value = '';
         updateDiscountDisplay();
-        updateCartUI(); // update totals with discount
-        customerSelect.style.display = 'none'; // hide after selection
+        updateCartUI();
+        customerSelect.style.display = 'none';
         customerSearchInput.value = selectedCustomerId ? (customers.find(c=>c.id===selectedCustomerId)?.name || '') : '';
     });
 
@@ -869,6 +866,8 @@
         updateCartUI();
     }
     function clearCart() { cart = []; updateCartUI(); cashChangeSection.style.display = 'none'; if(cashReceived) cashReceived.value = ''; redeemPointsInput.value = ''; updateDiscountDisplay(); }
+    
+    // Updated cash error message (unique and user-friendly)
     function completeSale() {
         if (cart.length === 0) { alert("Cart is empty"); return; }
         let subtotal = cart.reduce((sum,i) => sum + (i.price*i.quantity),0);
@@ -889,15 +888,18 @@
         let method = paymentMethod.value;
         if (method === 'cash') {
             let received = parseFloat(cashReceived.value);
-            if (isNaN(received) || received < finalTotal) { alert(`Insufficient cash. Need ${formatPrice(finalTotal)}`); return; }
-            alert(`Payment successful! Change: ${formatPrice(received-finalTotal)}`);
-        } else alert(`Payment via ${method} successful! Total: ${formatPrice(finalTotal)}`);
+            if (isNaN(received) || received < finalTotal) {
+                // Custom unique error message
+                alert(`💸 Insufficient Cash!\nReceived amount is less than total.\nPlease enter at least ${formatPrice(finalTotal)} or select another payment method.`);
+                return;
+            }
+            alert(`✅ Payment successful! Change: ${formatPrice(received-finalTotal)}`);
+        } else alert(`✅ Payment via ${method} successful! Total: ${formatPrice(finalTotal)}`);
         // Deduct stock
         cart.forEach(item => {
             const prod = products.find(p => p.id === item.id);
             if (prod) prod.stock -= item.quantity;
         });
-        // Award points (1 point per 10 SAR spent on final total after discount)
         const pointsEarned = Math.floor(finalTotal / 10);
         let customerId = selectedCustomerId;
         if (customerId) {
@@ -920,6 +922,7 @@
         customerSearchInput.value = '';
         updateCustomerSearch();
     }
+    
     function generateReceiptData() {
         if (!lastSaleData) return null;
         let itemsHtml = '';
@@ -956,7 +959,6 @@
     function renderProducts() {
         let filtered = products.filter(p => (currentCategory === 'all' || p.category === currentCategory) && p.name.toLowerCase().includes(searchTerm.toLowerCase()));
         productGrid.innerHTML = filtered.map(p => {
-            const stockClass = p.stock < 5 ? 'stock-badge' : '';
             const stockText = p.stock < 5 ? `<div class="stock-badge">⚠️ Low Stock (${p.stock})</div>` : `<div class="stock-badge">In Stock: ${p.stock}</div>`;
             const imageHtml = p.image ? `<img src="${p.image}" class="product-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">` : '';
             const emojiHtml = !p.image ? `<div class="product-icon">${getEmojiForCategory(p.category)}</div>` : `<div class="product-icon" style="display:none;">${getEmojiForCategory(p.category)}</div>`;
@@ -1057,7 +1059,7 @@
     document.getElementById('darkModeBtn')?.addEventListener('click', toggleDarkMode);
     if (localStorage.getItem('billzest_darkmode') === 'true') document.body.classList.add('dark');
 
-    // Cross-tab sync (same as before, omitted for brevity, but works)
+    // Cross-tab sync (simplified but works)
     window.addEventListener('storage', function(e) {
         if (!currentUser) return;
         if (e.key === 'billzest_products') { loadProducts(); renderProducts(); updateCategoryFilter(); updateStatsAndCharts(); }
