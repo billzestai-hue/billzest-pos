@@ -11,7 +11,6 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <script type="text/javascript">
         (function(){
-            // Replace with your actual EmailJS user ID if you want real email invoices
             emailjs.init("YOUR_USER_ID"); 
         })();
     </script>
@@ -256,7 +255,6 @@
             <button id="logoutSidebarBtn" class="logout-btn-sidebar"><i class="fas fa-sign-out-alt"></i> Logout</button>
         </div>
         <div class="main-content">
-            <!-- POS Page -->
             <div id="posPage" class="page-content" style="display: block;">
                 <div class="stats-cards">
                     <div class="stat-card"><div class="stat-title">Today's Sales</div><div class="stat-value" id="todaySales">0</div></div>
@@ -331,7 +329,6 @@
     </div>
 </div>
 
-<!-- Payment Modal -->
 <div id="paymentModal" class="modal-overlay">
     <div class="payment-modal">
         <h3><i class="fas fa-credit-card"></i> Online Payment (Stripe Demo)</h3>
@@ -396,7 +393,6 @@
     let selectedCustomerId = null;
     let unsubscribeFirestore = null;
 
-    // DOM elements
     let sidebarAvatar, sidebarName, sidebarRole, branchSelectSidebar, workersNavItem;
     let todaySalesSpan, transactionsCountSpan, itemsSoldSpan, cartTotalValueSpan;
     let analyticsTodaySales, analyticsTotalOrders, analyticsRevenue, analyticsAvgOrder;
@@ -448,7 +444,6 @@
         whatsappShareBtn = document.getElementById('whatsappShareBtn');
     }
 
-    // Load/Save functions
     function loadData() {
         const storedUsers = localStorage.getItem("billzest_users");
         if (storedUsers) {
@@ -493,7 +488,6 @@
         return allCategories;
     }
 
-    // Currency
     function loadCurrency() {
         const saved = localStorage.getItem("billzest_currency");
         const currencySelect = document.getElementById('currencySelect');
@@ -521,7 +515,6 @@
     function formatPrice(amount) { return `${currencySymbol} ${amount.toFixed(2)}`; }
     function updateAllCurrencyDisplays() { if (currentUser) { updateCartUI(); updateStatsAndCharts(); renderProducts(); } }
 
-    // Sidebar & Branch (FIXED: ensures branch selector is populated)
     function updateSidebar() {
         if (!currentUser) return;
         sidebarName.innerText = currentUser.email.split('@')[0];
@@ -532,7 +525,6 @@
         const productMgmtPanel = document.getElementById('productManagementPanel');
         if (branchMgmtPanel) branchMgmtPanel.style.display = currentUser.role === 'super_admin' ? 'block' : 'none';
         if (productMgmtPanel) productMgmtPanel.style.display = currentUser.role === 'super_admin' ? 'block' : 'none';
-        // Populate branch selector
         branchSelectSidebar.innerHTML = '';
         let availableBranches = currentUser.role === 'branch_manager' ? branches.filter(b => b.id === currentUser.branchId) : branches;
         if (availableBranches.length === 0 && currentUser.role === 'super_admin') availableBranches = branches;
@@ -590,7 +582,6 @@
         alert("Business details saved!");
     });
 
-    // Product management
     function loadProductsList() {
         const container = document.getElementById('productsList');
         if (!container) return;
@@ -653,7 +644,6 @@
         });
     }
 
-    // Customer management
     function loadCustomersList() {
         const container = document.getElementById('customersList');
         if (!container) return;
@@ -734,7 +724,6 @@
     }
     redeemPointsInput?.addEventListener('input', updateDiscountDisplay);
 
-    // Sales & Refunds
     function loadSalesList() {
         if (!salesListDiv) return;
         const branchId = branchSelectSidebar?.value;
@@ -771,7 +760,6 @@
     }
     document.getElementById('exportSalesBtn')?.addEventListener('click', exportToCSV);
 
-    // Stats & Charts
     function getBranchSales(branchId) { return allSales.filter(s => s.branchId === branchId); }
     function updateStatsAndCharts() {
         if (!todaySalesSpan) return;
@@ -801,7 +789,6 @@
     }
     branchSelectSidebar?.addEventListener('change', () => { updateStatsAndCharts(); updateCartUI(); });
 
-    // Cart functions
     function updateCartUI() {
         if (!cartItemsList) return;
         if (cart.length === 0) {
@@ -862,7 +849,6 @@
     }
     function clearCart() { cart = []; updateCartUI(); cashChangeSection.style.display = 'none'; if(cashReceived) cashReceived.value = ''; redeemPointsInput.value = ''; updateDiscountDisplay(); }
 
-    // Online Payment Gateway
     function openPaymentModal() {
         if (cart.length === 0) { alert("Cart is empty. Add items first."); return; }
         const modal = document.getElementById('paymentModal');
@@ -933,7 +919,6 @@
         syncToFirestore(saleRecord);
     }
 
-    // Real-time sync with Firestore
     async function syncToFirestore(saleRecord) {
         if (window.firebase && window.firebase.auth && window.firebase.auth.currentUser && window.firebase.db) {
             try {
@@ -962,7 +947,6 @@
         });
     }
 
-    // Email Invoice (fallback to clipboard)
     function sendEmailInvoice() {
         if (!lastSaleData) { alert("No sale to email. Complete a sale first."); return; }
         const customerEmail = lastSaleData.customerId ? customers.find(c=>c.id===lastSaleData.customerId)?.email : null;
@@ -971,7 +955,6 @@
             copyReceiptToClipboard();
             return;
         }
-        // For demo, just copy to clipboard
         copyReceiptToClipboard();
         alert("Receipt copied to clipboard. You can paste it into an email.");
     }
@@ -983,7 +966,6 @@
         alert("Receipt copied to clipboard.");
     }
 
-    // Receipt generation
     function generateReceiptData() {
         if (!lastSaleData) return null;
         let itemsHtml = '';
@@ -1017,7 +999,6 @@
         window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
     }
 
-    // Product rendering
     function renderProducts() {
         let filtered = products.filter(p => (currentCategory === 'all' || p.category === currentCategory) && p.name.toLowerCase().includes(searchTerm.toLowerCase()));
         productGrid.innerHTML = filtered.map(p => {
@@ -1084,7 +1065,6 @@
     }
     document.querySelectorAll('.nav-item').forEach(nav => { nav.onclick = () => { showPage(nav.dataset.page); }; });
 
-    // Worker management
     function loadWorkersList() {
         const workers = users.filter(u => u.role === 'branch_manager');
         workersListDiv.innerHTML = workers.map(w => `<div class="worker-item"><span><strong>${w.email}</strong> - ${branches.find(b=>b.id===w.branchId)?.name || w.branchId}</span><button class="btn-secondary" style="width:auto; padding:4px 12px;" onclick="deleteWorker('${w.email}')">Delete</button></div>`).join('');
@@ -1111,7 +1091,6 @@
     }
     document.getElementById('createWorkerBtn')?.addEventListener('click', createWorker);
 
-    // Currency events
     const currencySelect = document.getElementById('currencySelect');
     const customCurrencyInput = document.getElementById('customCurrency');
     currencySelect.addEventListener('change', () => {
@@ -1127,7 +1106,6 @@
     });
     customCurrencyInput.addEventListener('input', () => { let val = customCurrencyInput.value.trim(); if (val) saveCurrency(val, true); });
 
-    // Dark Mode
     function toggleDarkMode() {
         document.body.classList.toggle('dark');
         localStorage.setItem('billzest_darkmode', document.body.classList.contains('dark'));
@@ -1135,7 +1113,6 @@
     document.getElementById('darkModeBtn')?.addEventListener('click', toggleDarkMode);
     if (localStorage.getItem('billzest_darkmode') === 'true') document.body.classList.add('dark');
 
-    // Cross-tab sync
     window.addEventListener('storage', function(e) {
         if (!currentUser) return;
         if (e.key === 'billzest_products') { loadProducts(); renderProducts(); updateCategoryFilter(); updateStatsAndCharts(); }
@@ -1147,7 +1124,6 @@
         if (e.key === 'billzest_sales') { const stored = localStorage.getItem('billzest_sales'); if (stored) allSales = JSON.parse(stored); updateStatsAndCharts(); loadSalesList(); }
     });
 
-    // ========== REAL GOOGLE LOGIN ==========
     async function googleRealLogin() {
         if (!window.firebase || !window.firebase.auth) {
             alert("Firebase not ready. Please check your internet connection and reload.");
@@ -1196,7 +1172,6 @@
         }
     }
 
-    // Email login (uses localStorage demo users)
     function emailLogin() {
         const email = document.getElementById('loginEmail').value.trim();
         const pwd = document.getElementById('loginPassword').value;
@@ -1221,7 +1196,6 @@
         if (window.firebase && window.firebase.auth.currentUser) startRealtimeSync();
     }
 
-    // Logout
     async function logout() {
         if (window.firebase && window.firebase.auth && window.firebase.auth.currentUser) {
             await window.firebase.signOut(window.firebase.auth);
@@ -1233,7 +1207,6 @@
         cart = [];
     }
 
-    // Attach event listeners
     document.getElementById('emailLoginBtn').onclick = emailLogin;
     document.getElementById('googleLoginBtn').onclick = googleRealLogin;
     document.getElementById('resetDataBtn').onclick = resetDemoData;
