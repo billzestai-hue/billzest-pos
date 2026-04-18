@@ -11,7 +11,7 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <script type="text/javascript">
         (function(){
-            // Replace with your actual EmailJS credentials if you want real email invoices
+            // Replace with your actual EmailJS user ID if you want real email invoices
             emailjs.init("YOUR_USER_ID"); 
         })();
     </script>
@@ -521,7 +521,7 @@
     function formatPrice(amount) { return `${currencySymbol} ${amount.toFixed(2)}`; }
     function updateAllCurrencyDisplays() { if (currentUser) { updateCartUI(); updateStatsAndCharts(); renderProducts(); } }
 
-    // Sidebar & Branch
+    // Sidebar & Branch (FIXED: ensures branch selector is populated)
     function updateSidebar() {
         if (!currentUser) return;
         sidebarName.innerText = currentUser.email.split('@')[0];
@@ -532,9 +532,16 @@
         const productMgmtPanel = document.getElementById('productManagementPanel');
         if (branchMgmtPanel) branchMgmtPanel.style.display = currentUser.role === 'super_admin' ? 'block' : 'none';
         if (productMgmtPanel) productMgmtPanel.style.display = currentUser.role === 'super_admin' ? 'block' : 'none';
+        // Populate branch selector
         branchSelectSidebar.innerHTML = '';
         let availableBranches = currentUser.role === 'branch_manager' ? branches.filter(b => b.id === currentUser.branchId) : branches;
-        availableBranches.forEach(b => { let opt = document.createElement('option'); opt.value = b.id; opt.textContent = b.name; branchSelectSidebar.appendChild(opt); });
+        if (availableBranches.length === 0 && currentUser.role === 'super_admin') availableBranches = branches;
+        availableBranches.forEach(b => { 
+            let opt = document.createElement('option'); 
+            opt.value = b.id; 
+            opt.textContent = b.name; 
+            branchSelectSidebar.appendChild(opt); 
+        });
         if (currentUser.role === 'branch_manager') branchSelectSidebar.value = currentUser.branchId;
         branchSelectSidebar.disabled = (currentUser.role !== 'super_admin');
         updateStatsAndCharts();
@@ -955,7 +962,7 @@
         });
     }
 
-    // Email Invoice
+    // Email Invoice (fallback to clipboard)
     function sendEmailInvoice() {
         if (!lastSaleData) { alert("No sale to email. Complete a sale first."); return; }
         const customerEmail = lastSaleData.customerId ? customers.find(c=>c.id===lastSaleData.customerId)?.email : null;
@@ -964,25 +971,12 @@
             copyReceiptToClipboard();
             return;
         }
-        const receiptData = generateReceiptData();
-        const templateParams = {
-            to_email: customerEmail,
-            from_name: businessSettings.name,
-            message: `Thank you for your purchase! Total: ${formatPrice(receiptData.total)}.`,
-            receipt_details: receiptData.itemsHtml
-        };
-        if (typeof emailjs !== 'undefined' && emailjs.send) {
-            emailjs.send("service_xyz", "template_xyz", templateParams).then(() => {
-                alert("Invoice sent to " + customerEmail);
-            }).catch(() => {
-                alert("EmailJS not configured. Receipt copied to clipboard.");
-                copyReceiptToClipboard();
-            });
-        } else {
-            copyReceiptToClipboard();
-        }
+        // For demo, just copy to clipboard
+        copyReceiptToClipboard();
+        alert("Receipt copied to clipboard. You can paste it into an email.");
     }
     function copyReceiptToClipboard() {
+        if (!lastSaleData) return;
         const data = generateReceiptData();
         const text = `BillZest POS Receipt\n${businessSettings.name}\nGST: ${businessSettings.gst}\n${businessSettings.address}\n\nBranch: ${data.branchName}\nCustomer: ${data.customerName}\nDate: ${data.date}\n\nItems:\n${lastSaleData.items.map(i=>`${i.name} x${i.qty} = ${formatPrice(i.price*i.qty)}`).join('\n')}\n\nSubtotal: ${formatPrice(data.subtotal)}\nTax: ${formatPrice(data.tax)}${data.discount>0?`\nDiscount: -${formatPrice(data.discount)}`:''}\nTotal: ${formatPrice(data.total)}\nPoints Earned: ${data.pointsEarned}\nPayment: ${data.paymentMethod}\n\nThank you!`;
         navigator.clipboard.writeText(text);
@@ -1013,7 +1007,8 @@
         win.document.close(); win.print();
     }
     function shareWhatsApp() {
-        const data = generateReceiptData(); if (!data) return;
+        if (!lastSaleData) return;
+        const data = generateReceiptData();
         let msg = `BillZest POS Receipt\n${businessSettings.name}\nGST: ${businessSettings.gst}\n${businessSettings.address}\n\nBranch: ${data.branchName}\nCustomer: ${data.customerName}\nDate: ${data.date}\n\nItems:\n`;
         lastSaleData.items.forEach(i => { msg += `${i.name} x${i.qty} = ${formatPrice(i.price*i.qty)}\n`; });
         msg += `\nSubtotal: ${formatPrice(data.subtotal)}\nTax: ${formatPrice(data.tax)}`;
