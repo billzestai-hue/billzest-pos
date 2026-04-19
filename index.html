@@ -440,6 +440,15 @@ nav button,nav div{touch-action:manipulation;-webkit-tap-highlight-color:transpa
 .pos-product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px,1fr)); gap: 10px; margin-bottom: 20px; }
 .pos-product-btn { background: #4f2d91; color: white; border: none; padding: 10px; border-radius: 12px; cursor: pointer; }
 .cart-item { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #ddd; }
+
+/* Login Modal */
+.login-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 10000; align-items: center; justify-content: center; }
+.login-modal-content { background: white; border-radius: 20px; padding: 30px; width: 90%; max-width: 400px; position: relative; }
+.login-modal-content .close { position: absolute; top: 12px; right: 16px; font-size: 24px; cursor: pointer; color: #888; }
+.login-modal-content h2 { margin-bottom: 20px; text-align: center; color: var(--purple); }
+.login-modal-content input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; }
+.login-modal-content button { width: 100%; padding: 12px; background: var(--purple); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+.login-modal-content .error { color: red; font-size: 12px; margin-top: 5px; display: none; }
 </style>
 </head>
 <body>
@@ -610,7 +619,7 @@ nav button,nav div{touch-action:manipulation;-webkit-tap-highlight-color:transpa
   </div>
 </section>
 
-<!-- FEATURES SECTION (unchanged) -->
+<!-- FEATURES SECTION -->
 <section class="features">
   <div class="feat-hdr"><h2>Get to Know the Product in Our Packages</h2></div>
   <div class="ftabs-outer">
@@ -651,7 +660,7 @@ nav button,nav div{touch-action:manipulation;-webkit-tap-highlight-color:transpa
   </div>
 </section>
 
-<!-- VIDEO DEMO SECTION (unchanged) -->
+<!-- VIDEO DEMO SECTION -->
 <section class="vid-section">
   <div class="vid-inner">
     <div class="vid-left">
@@ -680,29 +689,36 @@ nav button,nav div{touch-action:manipulation;-webkit-tap-highlight-color:transpa
 <!-- COUNTER SECTION -->
 <section class="counter-section"><div class="counter-inner"><div class="counter-label">Trusted by businesses across the Middle East</div><div class="counter-grid"><div class="counter-item"><div class="counter-num" id="c1" data-target="15000">0</div><div class="counter-plus">+</div><div class="counter-text">Businesses</div></div><div class="counter-divider"></div><div class="counter-item"><div class="counter-num" id="c2" data-target="5">0</div><div class="counter-text">Countries</div></div><div class="counter-divider"></div><div class="counter-item"><div class="counter-num" id="c3" data-target="50">0</div><div class="counter-plus">M+</div><div class="counter-text">Transactions</div></div><div class="counter-divider"></div><div class="counter-item"><div class="counter-num" id="c4" data-target="98">0</div><div class="counter-plus">%</div><div class="counter-text">Satisfaction</div></div></div></div></section>
 
-<!-- TESTIMONIALS (shortened but same as original) -->
+<!-- TESTIMONIALS -->
 <section class="testi-section"><div class="testi-tag">⭐ Customer Reviews</div><h2 class="testi-title">What Our Customers Say</h2><p class="testi-sub">Join thousands of satisfied business owners across the Middle East</p><div class="testi-grid"><div class="testi-card"><div class="testi-stars">★★★★★</div><p class="testi-text">"BillZest transformed our hotel operations. Everything from front desk to F&B in one system!"</p><div class="testi-author"><div class="testi-avatar" style="background:linear-gradient(135deg,#4f2d91,#7c3aed);">AK</div><div class="testi-info"><div class="testi-name">Ahmed Al-Khatib</div><div class="testi-role">Hotel Manager, Riyadh</div></div></div></div><div class="testi-card testi-featured"><div class="testi-badge-top">Most Helpful ✓</div><div class="testi-stars">★★★★★</div><p class="testi-text">"Perfect for our coffee shop chain! Inventory and loyalty are game-changers."</p><div class="testi-author"><div class="testi-avatar" style="background:linear-gradient(135deg,#00b5a3,#059669);">SM</div><div class="testi-info"><div class="testi-name">Sara Mohammed</div><div class="testi-role">Cafe Owner, Dubai</div></div></div></div><div class="testi-card"><div class="testi-stars">★★★★★</div><p class="testi-text">"Used for grocery store – stock management and billing is super fast. Highly recommend."</p><div class="testi-author"><div class="testi-avatar" style="background:linear-gradient(135deg,#f5a623,#d97706);">KR</div><div class="testi-info"><div class="testi-name">Khalid Al-Rashidi</div><div class="testi-role">Grocery Owner, Kuwait</div></div></div></div></div><div class="testi-bottom"><div class="testi-rating-big"><span class="tbr-num">4.9</span><div><div class="tbr-stars">★★★★★</div><div class="tbr-label">Average rating from 2,400+ reviews</div></div></div><div class="testi-platforms"><div class="tp-item">🍎 App Store <strong>4.8★</strong></div><div class="tp-item">🤖 Google Play <strong>4.9★</strong></div><div class="tp-item">🌐 Trustpilot <strong>4.7★</strong></div></div></div></section>
 
-<!-- LANGUAGE COMPARE TABLE (unchanged) -->
-<section class="lang-compare-section"><div class="lang-compare-inner"><div class="lang-compare-header"><div class="lang-badge"><span>🇬🇧 English</span><span>🇸🇦 العربية</span></div><h2>🌐 Fully Bilingual Experience</h2><p>BillZest POS supports both English and Arabic – switch instantly with one click.</p></div><div class="comp-table-wrapper"><table class="comp-table"><thead><tr><th>Element</th><th>English</th><th>العربية</th></tr></thead><tbody><tr><td>Welcome Banner</td><td>Welcome to BillZest POS — The All-in-One POS for Hotels, Coffee Shops, Grocery, Electronics & Retail</td><td>مرحباً بكم في بيلزيست – نظام نقاط البيع المتكامل للفنادق والمقاهي والبقالة والإلكترونيات</td></tr>
-<tr><td>Navbar Login</td><td>Login</td><td>دخول</td></tr>
-<tr><td>Free Trial Button</td><td>✨ Free Trial</td><td>✨ تجربة مجانية</td></tr>
-<tr><td>Hero Title</td><td>One System for Every Business</td><td>نظام واحد لكل الأعمال</td></tr>
-<tr><td>Plan Name</td><td>All-in-One POS</td><td>نظام شامل للمبيعات</td></tr>
-<tr><td>Subscribe Button</td><td>Start 14-Day Free Trial</td><td>ابدأ النسخة التجريبية المجانية لمدة 14 يوماً</td></tr>
-</tbody></table></div><div style="text-align:center;margin-top:28px;font-size:14px;color:#4f2d91;">⚡ Click the <strong>عربي / English</strong> button in the navbar to switch instantly!</div></div></section>
+<!-- LANGUAGE COMPARE TABLE -->
+<section class="lang-compare-section"><div class="lang-compare-inner"><div class="lang-compare-header"><div class="lang-badge"><span>🇬🇧 English</span><span>🇸🇦 العربية</span></div><h2>🌐 Fully Bilingual Experience</h2><p>BillZest POS supports both English and Arabic – switch instantly with one click.</p></div><div class="comp-table-wrapper"><table class="comp-table"><thead><tr><th>Element</th><th>English</th><th>العربية</th></tr></thead><tbody><tr><td>Welcome Banner</td><td>Welcome to BillZest POS — The All-in-One POS for Hotels, Coffee Shops, Grocery, Electronics & Retail</td><td>مرحباً بكم في بيلزيست – نظام نقاط البيع المتكامل للفنادق والمقاهي والبقالة والإلكترونيات</td></tr><tr><td>Navbar Login</td><td>Login</td><td>دخول</td></tr><tr><td>Free Trial Button</td><td>✨ Free Trial</td><td>✨ تجربة مجانية</td></tr><tr><td>Hero Title</td><td>One System for Every Business</td><td>نظام واحد لكل الأعمال</td></tr><tr><td>Plan Name</td><td>All-in-One POS</td><td>نظام شامل للمبيعات</td></tr><tr><td>Subscribe Button</td><td>Start 14-Day Free Trial</td><td>ابدأ النسخة التجريبية المجانية لمدة 14 يوماً</td></tr></tbody></table></div><div style="text-align:center;margin-top:28px;font-size:14px;color:#4f2d91;">⚡ Click the <strong>عربي / English</strong> button in the navbar to switch instantly!</div></div></section>
 
 <!-- SUBSCRIBE -->
 <div class="sub"><button class="btn-sub" onclick="scrollToRegister()">Subscribe Now</button></div>
 
-<!-- FOOTER (email removed, only billzestai@gmail.com) -->
+<!-- FOOTER -->
 <footer><div class="foot-main"><div class="fcol"><div class="flogo">Bill<span>Zest</span></div><p class="fdesc">BillZest POS — Trusted by 15,000+ businesses across the Middle East. ZATCA-approved & SAMA-supervised. All-in-one POS for Hotels, Coffee Shops, Grocery, Electronics & Retail.</p><p class="fph"><span style="font-size:14px;">📧 Support: billzestai@gmail.com</span><br>billzestpos.com</p><div class="pays"><div class="pay v">VISA</div><div class="pay mc">MC</div><div class="pay mo">Maestro</div><div class="pay ci">Cirrus</div><div class="pay ax">AMEX</div><div class="pay ma">mada</div><div class="pay st">سداد</div></div></div><div class="fcol"><h4>BillZest</h4><a href="#">Careers</a><a href="#">Contact us</a><a href="#">Support</a><a href="#">Press & Media</a></div><div class="fcol"><h4>Products</h4><a href="#">Point of Sale Solution</a><a href="#">BillZest Pay</a><a href="#">BillZest Enterprise</a><a href="#">Online</a><a href="#">Self Ordering</a><a href="#">One Accounting</a></div><div class="fcol"><h4>Resources</h4><a href="#">Help Center</a></div><div class="fcol"><h4>Legal</h4><a href="#">Privacy Policy</a><a href="#">Terms of Service</a><a href="#">Consumer Protection</a><a href="#">Accessibility</a><a href="#">Cookie Policy</a></div></div><div class="foot-bot"><span class="fcopy">BillZest © 2025. All Rights Reserved.</span><div class="socs"><a href="#" class="soc">𝕏</a><a href="#" class="soc">f</a><a href="#" class="soc">◎</a><a href="#" class="soc">in</a></div></div></footer>
 
 <!-- WA Button -->
 <a href="https://wa.me/966550898978" target="_blank" rel="noopener" id="waBtn" style="position:fixed;bottom:90px;right:24px;z-index:8998;width:52px;height:52px;background:#25D366;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(37,211,102,0.45);text-decoration:none;transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="28" height="28" fill="#fff"><path d="M16 2C8.28 2 2 8.28 2 16c0 2.46.66 4.76 1.8 6.76L2 30l7.44-1.76A13.93 13.93 0 0016 30c7.72 0 14-6.28 14-14S23.72 2 16 2zm0 25.5a11.44 11.44 0 01-5.84-1.6l-.42-.25-4.42 1.04 1.06-4.3-.28-.44A11.47 11.47 0 014.5 16C4.5 9.6 9.6 4.5 16 4.5S27.5 9.6 27.5 16 22.4 27.5 16 27.5zm6.28-8.56c-.34-.17-2.02-1-2.34-1.11-.32-.11-.55-.17-.78.17s-.9 1.11-1.1 1.34c-.2.23-.4.26-.74.09-.34-.17-1.44-.53-2.74-1.69-1.01-.9-1.7-2.01-1.9-2.35-.2-.34-.02-.52.15-.69.15-.15.34-.4.51-.6.17-.2.23-.34.34-.57.11-.23.06-.43-.03-.6-.09-.17-.78-1.88-1.07-2.57-.28-.67-.57-.58-.78-.59h-.66c-.23 0-.6.09-.91.43-.31.34-1.19 1.16-1.19 2.83s1.22 3.28 1.39 3.51c.17.23 2.4 3.67 5.82 5.14.81.35 1.45.56 1.94.72.82.26 1.56.22 2.15.13.66-.1 2.02-.82 2.3-1.62.28-.8.28-1.48.2-1.62-.09-.14-.31-.23-.65-.4z"/></svg></a>
 
-<!-- MODAL for payment -->
+<!-- PAYMENT MODAL -->
 <div class="mbk" id="payModal"><div class="mbx"><button class="mcl" onclick="closePay()">✕</button><div class="mtt">💳 Complete Your Payment</div><div class="msb">Secure payment powered by BillZest</div><div class="mchips"><div class="mchip on" onclick="pickP(this)"><strong>All-in-One</strong>﷼1100/mo</div></div><div class="mf"><label>Card Number</label><input type="text" id="mCard" maxlength="19" placeholder="1234 5678 9012 3456" oninput="fCard(this)"></div><div class="mrow"><div class="mf"><label>Expiry</label><input type="text" id="mExp" maxlength="5" placeholder="MM/YY" oninput="fExp(this)"></div><div class="mf"><label>CVV</label><input type="password" id="mCvv" maxlength="3" placeholder="•••"></div></div><div class="mf"><label>Cardholder Name</label><input type="text" id="mNm" placeholder="Name on card"></div><div class="merr" id="mErr"></div><div class="mok" id="mOk">🎉 Payment Successful! Welcome to BillZest!</div><button class="bpay" id="payBtn" onclick="doPay()">🔒 Pay Securely Now</button><div class="ssl">🔐 256-bit SSL Encrypted · PCI DSS Compliant</div></div></div>
+
+<!-- LOGIN MODAL -->
+<div id="loginModal" class="login-modal">
+  <div class="login-modal-content">
+    <span class="close" onclick="closeLoginModal()">&times;</span>
+    <h2>Login to BillZest</h2>
+    <input type="email" id="loginEmail" placeholder="Email" autocomplete="email">
+    <input type="password" id="loginPassword" placeholder="Password" autocomplete="current-password">
+    <div id="loginError" class="error"></div>
+    <button onclick="performLogin()">Login</button>
+    <p style="margin-top:12px; text-align:center;">Don't have an account? <a href="#" onclick="closeLoginModal(); scrollToRegister();">Register here</a></p>
+  </div>
+</div>
 
 <script>
 // ---------- GLOBAL FUNCTIONS ----------
@@ -807,10 +823,50 @@ function scrollToRegister() {
   if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-// Login modal (simple alert + scroll to form)
+// Login Modal functions
 function openLoginModal() {
-  alert('Please register or login using the form below. If you already have an account, enter your email and password in the form and click "Start Free Trial".');
-  scrollToRegister();
+  document.getElementById('loginModal').style.display = 'flex';
+  document.getElementById('loginError').style.display = 'none';
+  document.getElementById('loginEmail').value = '';
+  document.getElementById('loginPassword').value = '';
+}
+function closeLoginModal() {
+  document.getElementById('loginModal').style.display = 'none';
+}
+async function performLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const pwd = document.getElementById('loginPassword').value;
+  const errorDiv = document.getElementById('loginError');
+  errorDiv.style.display = 'none';
+  if (!email || !pwd) {
+    errorDiv.textContent = 'Please enter email and password';
+    errorDiv.style.display = 'block';
+    return;
+  }
+  // Try Firebase login first if available
+  if (typeof window.fbSignIn === 'function') {
+    try {
+      await window.fbSignIn(email, pwd);
+      // On success, Firebase onAuthStateChanged will trigger showLoggedInInterface
+      closeLoginModal();
+      return;
+    } catch (err) {
+      console.warn(err);
+      errorDiv.textContent = err.message || 'Invalid credentials';
+      errorDiv.style.display = 'block';
+      return;
+    }
+  }
+  // Fallback: check localStorage
+  const customers = JSON.parse(localStorage.getItem('bz_customers') || '[]');
+  const user = customers.find(c => c.email === email && c.pass === pwd);
+  if (user) {
+    closeLoginModal();
+    showLoggedInInterface({ email: user.email, displayName: user.firstName + ' ' + user.lastName, uid: user.id });
+  } else {
+    errorDiv.textContent = 'Invalid email or password';
+    errorDiv.style.display = 'block';
+  }
 }
 
 // Language toggle
@@ -1000,7 +1056,7 @@ async function doSubmit() {
 <!-- Firebase SDK (optional) -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-  import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
   import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
   const firebaseConfig = { apiKey: "AIzaSyCN0akvFXOHM6WPHv9ve9noqqmauO3TJRY", authDomain: "billzest-pos.firebaseapp.com", projectId: "billzest-pos", storageBucket: "billzest-pos.firebasestorage.app", messagingSenderId: "946546876429", appId: "1:946546876429:web:9b4a7aa3cecbf3aea83544" };
   let auth, db;
@@ -1013,6 +1069,9 @@ async function doSubmit() {
       const cred = await createUserWithEmailAndPassword(auth, email, password);
       await setDoc(doc(db, "users", cred.user.uid), { ...userData, uid: cred.user.uid, createdAt: new Date().toISOString() });
       return cred;
+    };
+    window.fbSignIn = async (email, password) => {
+      await signInWithEmailAndPassword(auth, email, password);
     };
     window.fbLogout = async () => { await signOut(auth); location.reload(); };
     onAuthStateChanged(auth, (user) => {
