@@ -460,7 +460,7 @@ nav button,nav div{touch-action:manipulation;-webkit-tap-highlight-color:transpa
     <button class="btn-demo-nav" onclick="openPay()">Get a 1-to-1<br>demo</button>
     <button class="btn-login-nav" id="loginNavBtn" onclick="openLoginModal()">Login</button>
     <button class="btn-logout-nav" id="logoutNavBtn" onclick="logoutUser()" style="display:none;">Logout</button>
-    <button class="reg-btn" onclick="if(window.scrollToRegister)window.scrollToRegister()">✨ Free Trial</button>
+    <button class="reg-btn" onclick="scrollToRegister()">✨ Free Trial</button>
     <button id="langNavBtn" onclick="toggleLanguage()" style="font-size:11px;color:#333;cursor:pointer;background:none;border:1px solid #ddd;padding:5px 7px;border-radius:6px;font-family:Poppins,sans-serif;white-space:nowrap;">🇸🇦 عربي</button>
     <div class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
   </div>
@@ -472,7 +472,7 @@ nav button,nav div{touch-action:manipulation;-webkit-tap-highlight-color:transpa
   <a href="#" style="padding:13px 20px;border-bottom:1px solid #f0f0f0;font-size:14px;color:#333;text-decoration:none;display:block;">Resources</a>
   <a href="#" style="padding:13px 20px;border-bottom:1px solid #f0f0f0;font-size:14px;color:#333;text-decoration:none;display:block;">About</a>
   <button onclick="openPay()" style="margin:10px 20px;background:#4f2d91;color:#fff;border:none;padding:11px;border-radius:6px;font-size:14px;font-weight:600;font-family:'Poppins',sans-serif;cursor:pointer;">Get a 1-to-1 demo</button>
-  <button onclick="if(window.scrollToRegister){window.scrollToRegister();toggleMenu();}" style="background:#10b981;color:#fff;border:none;padding:11px;border-radius:6px;font-size:14px;font-weight:700;font-family:'Poppins',sans-serif;cursor:pointer;margin:0 20px 14px;">✨ Register Free — 14 Days Trial</button>
+  <button onclick="scrollToRegister();toggleMenu();" style="background:#10b981;color:#fff;border:none;padding:11px;border-radius:6px;font-size:14px;font-weight:700;font-family:'Poppins',sans-serif;cursor:pointer;margin:0 20px 14px;">✨ Register Free — 14 Days Trial</button>
 </div>
 
 <!-- HERO -->
@@ -550,12 +550,6 @@ nav button,nav div{touch-action:manipulation;-webkit-tap-highlight-color:transpa
         <label class="fl">Business name<sup>*</sup></label>
         <input class="fi" type="text" id="fBiz" placeholder="My Business">
         
-        <!-- NEW BUTTONS: Dashboard and POS (will appear after login, but we add them hidden initially) -->
-        <div id="dashboardPosButtons" style="display:none; gap:10px; margin-bottom:15px; margin-top:5px;">
-          <button type="button" id="showDashboardBtn" style="flex:1; background:#4f2d91; color:#fff; border:none; padding:10px; border-radius:8px; font-weight:600; cursor:pointer;">📊 Dashboard</button>
-          <button type="button" id="showPOSBtn" style="flex:1; background:#00b5a3; color:#fff; border:none; padding:10px; border-radius:8px; font-weight:600; cursor:pointer;">🖥️ POS</button>
-        </div>
-        
         <label class="fl">Password<sup>*</sup></label>
         <div style="position:relative;margin-bottom:13px;">
           <input class="fi" type="password" id="fPass" placeholder="Min 8 characters" style="margin-bottom:0;padding-right:40px;">
@@ -611,7 +605,7 @@ nav button,nav div{touch-action:manipulation;-webkit-tap-highlight-color:transpa
         <li>Waiter App</li><li>Multi-branch Support</li>
         <li>API Integrations</li><li>24/7 Support</li>
       </ul>
-      <button class="btn-allinone" onclick="document.getElementById('registerSection').scrollIntoView({behavior:'smooth'})">🎯 Start 14-Day Free Trial →</button>
+      <button class="btn-allinone" onclick="scrollToRegister()">🎯 Start 14-Day Free Trial →</button>
     </div>
   </div>
 </section>
@@ -690,10 +684,16 @@ nav button,nav div{touch-action:manipulation;-webkit-tap-highlight-color:transpa
 <section class="testi-section"><div class="testi-tag">⭐ Customer Reviews</div><h2 class="testi-title">What Our Customers Say</h2><p class="testi-sub">Join thousands of satisfied business owners across the Middle East</p><div class="testi-grid"><div class="testi-card"><div class="testi-stars">★★★★★</div><p class="testi-text">"BillZest transformed our hotel operations. Everything from front desk to F&B in one system!"</p><div class="testi-author"><div class="testi-avatar" style="background:linear-gradient(135deg,#4f2d91,#7c3aed);">AK</div><div class="testi-info"><div class="testi-name">Ahmed Al-Khatib</div><div class="testi-role">Hotel Manager, Riyadh</div></div></div></div><div class="testi-card testi-featured"><div class="testi-badge-top">Most Helpful ✓</div><div class="testi-stars">★★★★★</div><p class="testi-text">"Perfect for our coffee shop chain! Inventory and loyalty are game-changers."</p><div class="testi-author"><div class="testi-avatar" style="background:linear-gradient(135deg,#00b5a3,#059669);">SM</div><div class="testi-info"><div class="testi-name">Sara Mohammed</div><div class="testi-role">Cafe Owner, Dubai</div></div></div></div><div class="testi-card"><div class="testi-stars">★★★★★</div><p class="testi-text">"Used for grocery store – stock management and billing is super fast. Highly recommend."</p><div class="testi-author"><div class="testi-avatar" style="background:linear-gradient(135deg,#f5a623,#d97706);">KR</div><div class="testi-info"><div class="testi-name">Khalid Al-Rashidi</div><div class="testi-role">Grocery Owner, Kuwait</div></div></div></div></div><div class="testi-bottom"><div class="testi-rating-big"><span class="tbr-num">4.9</span><div><div class="tbr-stars">★★★★★</div><div class="tbr-label">Average rating from 2,400+ reviews</div></div></div><div class="testi-platforms"><div class="tp-item">🍎 App Store <strong>4.8★</strong></div><div class="tp-item">🤖 Google Play <strong>4.9★</strong></div><div class="tp-item">🌐 Trustpilot <strong>4.7★</strong></div></div></div></section>
 
 <!-- LANGUAGE COMPARE TABLE (unchanged) -->
-<section class="lang-compare-section"><div class="lang-compare-inner"><div class="lang-compare-header"><div class="lang-badge"><span>🇬🇧 English</span><span>🇸🇦 العربية</span></div><h2>🌐 Fully Bilingual Experience</h2><p>BillZest POS supports both English and Arabic – switch instantly with one click.</p></div><div class="comp-table-wrapper"><table class="comp-table"><thead><tr><th>Element</th><th>English</th><th>العربية</th></tr></thead><tbody><tr><td>Welcome Banner</td><td>Welcome to BillZest POS — The All-in-One POS for Hotels, Coffee Shops, Grocery, Electronics & Retail</td><td>مرحباً بكم في بيلزيست – نظام نقاط البيع المتكامل للفنادق والمقاهي والبقالة والإلكترونيات</td></tr><tr><td>Navbar Login</td><td>Login</td><td>دخول</td></tr><tr><td>Free Trial Button</td><td>✨ Free Trial</td><td>✨ تجربة مجانية</td></tr><tr><td>Hero Title</td><td>One System for Every Business</td><td>نظام واحد لكل الأعمال</td></tr><tr><td>Plan Name</td><td>All-in-One POS</td><td>نظام شامل للمبيعات</td></tr><tr><td>Subscribe Button</td><td>Start 14-Day Free Trial</td><td>ابدأ النسخة التجريبية المجانية لمدة 14 يوماً</td></tr></tbody></table></div><div style="text-align:center;margin-top:28px;font-size:14px;color:#4f2d91;">⚡ Click the <strong>عربي / English</strong> button in the navbar to switch instantly!</div></div></section>
+<section class="lang-compare-section"><div class="lang-compare-inner"><div class="lang-compare-header"><div class="lang-badge"><span>🇬🇧 English</span><span>🇸🇦 العربية</span></div><h2>🌐 Fully Bilingual Experience</h2><p>BillZest POS supports both English and Arabic – switch instantly with one click.</p></div><div class="comp-table-wrapper"><table class="comp-table"><thead><tr><th>Element</th><th>English</th><th>العربية</th></tr></thead><tbody><tr><td>Welcome Banner</td><td>Welcome to BillZest POS — The All-in-One POS for Hotels, Coffee Shops, Grocery, Electronics & Retail</td><td>مرحباً بكم في بيلزيست – نظام نقاط البيع المتكامل للفنادق والمقاهي والبقالة والإلكترونيات</td></tr>
+<tr><td>Navbar Login</td><td>Login</td><td>دخول</td></tr>
+<tr><td>Free Trial Button</td><td>✨ Free Trial</td><td>✨ تجربة مجانية</td></tr>
+<tr><td>Hero Title</td><td>One System for Every Business</td><td>نظام واحد لكل الأعمال</td></tr>
+<tr><td>Plan Name</td><td>All-in-One POS</td><td>نظام شامل للمبيعات</td></tr>
+<tr><td>Subscribe Button</td><td>Start 14-Day Free Trial</td><td>ابدأ النسخة التجريبية المجانية لمدة 14 يوماً</td></tr>
+</tbody></table></div><div style="text-align:center;margin-top:28px;font-size:14px;color:#4f2d91;">⚡ Click the <strong>عربي / English</strong> button in the navbar to switch instantly!</div></div></section>
 
 <!-- SUBSCRIBE -->
-<div class="sub"><button class="btn-sub" onclick="document.getElementById('registerSection').scrollIntoView({behavior:'smooth'})">Subscribe Now</button></div>
+<div class="sub"><button class="btn-sub" onclick="scrollToRegister()">Subscribe Now</button></div>
 
 <!-- FOOTER (email removed, only billzestai@gmail.com) -->
 <footer><div class="foot-main"><div class="fcol"><div class="flogo">Bill<span>Zest</span></div><p class="fdesc">BillZest POS — Trusted by 15,000+ businesses across the Middle East. ZATCA-approved & SAMA-supervised. All-in-one POS for Hotels, Coffee Shops, Grocery, Electronics & Retail.</p><p class="fph"><span style="font-size:14px;">📧 Support: billzestai@gmail.com</span><br>billzestpos.com</p><div class="pays"><div class="pay v">VISA</div><div class="pay mc">MC</div><div class="pay mo">Maestro</div><div class="pay ci">Cirrus</div><div class="pay ax">AMEX</div><div class="pay ma">mada</div><div class="pay st">سداد</div></div></div><div class="fcol"><h4>BillZest</h4><a href="#">Careers</a><a href="#">Contact us</a><a href="#">Support</a><a href="#">Press & Media</a></div><div class="fcol"><h4>Products</h4><a href="#">Point of Sale Solution</a><a href="#">BillZest Pay</a><a href="#">BillZest Enterprise</a><a href="#">Online</a><a href="#">Self Ordering</a><a href="#">One Accounting</a></div><div class="fcol"><h4>Resources</h4><a href="#">Help Center</a></div><div class="fcol"><h4>Legal</h4><a href="#">Privacy Policy</a><a href="#">Terms of Service</a><a href="#">Consumer Protection</a><a href="#">Accessibility</a><a href="#">Cookie Policy</a></div></div><div class="foot-bot"><span class="fcopy">BillZest © 2025. All Rights Reserved.</span><div class="socs"><a href="#" class="soc">𝕏</a><a href="#" class="soc">f</a><a href="#" class="soc">◎</a><a href="#" class="soc">in</a></div></div></footer>
@@ -705,36 +705,138 @@ nav button,nav div{touch-action:manipulation;-webkit-tap-highlight-color:transpa
 <div class="mbk" id="payModal"><div class="mbx"><button class="mcl" onclick="closePay()">✕</button><div class="mtt">💳 Complete Your Payment</div><div class="msb">Secure payment powered by BillZest</div><div class="mchips"><div class="mchip on" onclick="pickP(this)"><strong>All-in-One</strong>﷼1100/mo</div></div><div class="mf"><label>Card Number</label><input type="text" id="mCard" maxlength="19" placeholder="1234 5678 9012 3456" oninput="fCard(this)"></div><div class="mrow"><div class="mf"><label>Expiry</label><input type="text" id="mExp" maxlength="5" placeholder="MM/YY" oninput="fExp(this)"></div><div class="mf"><label>CVV</label><input type="password" id="mCvv" maxlength="3" placeholder="•••"></div></div><div class="mf"><label>Cardholder Name</label><input type="text" id="mNm" placeholder="Name on card"></div><div class="merr" id="mErr"></div><div class="mok" id="mOk">🎉 Payment Successful! Welcome to BillZest!</div><button class="bpay" id="payBtn" onclick="doPay()">🔒 Pay Securely Now</button><div class="ssl">🔐 256-bit SSL Encrypted · PCI DSS Compliant</div></div></div>
 
 <script>
-// ---------- ORIGINAL FUNCTIONS (unchanged except for logout and dashboard) ----------
-function toggleMenu(){var m=document.getElementById('mMenu');m.style.display=m.style.display==='flex'?'none':'flex';}
-function setCat(el){document.querySelectorAll('.cat-item').forEach(function(t){t.classList.remove('active');});el.classList.add('active');}
-var FD={pos:{t:'Point of Sale',i:['Plug & play setup','Cloud-based solution','Real-time reporting','Rich marketplace']},inv:{t:'Inventory',i:['Stock tracking','Low stock alerts','Supplier management','Waste tracking']},onl:{t:'Online',i:['Online ordering','Delivery modes','Promo codes','Menu sync']},mob:{t:'Mobile App',i:['Branded app','Push notifications','Loyalty points','iOS & Android']},kds:{t:'Kitchen Display Screen',i:['Order display','Prep time tracking','Multi-station','Delay alerts']},acc:{t:'Accounting',i:['Automated bookkeeping','VAT compliance','P&L reports','Expense tracking']},pat:{t:'Pay at Table',i:['QR payment','Split bills','Tipping support','Receipt via SMS']},qr:{t:'QR Menu',i:['Dynamic menus','Instant updates','Multilingual','No app needed']},wtr:{t:'Waiter App',i:['Tableside ordering','Table management','Bill splitting','Offline mode']},mul:{t:'Managing Multiple Brands',i:['Unified dashboard','Separate menus','Consolidated reports','Multi-location']}};
-function setFt(el,k){document.querySelectorAll('.ft').forEach(function(t){t.classList.remove('active');});el.classList.add('active');var d=FD[k]||FD.pos;document.getElementById('ftT').textContent=d.t;document.getElementById('ftL').innerHTML=d.i.map(function(i){return'<li>'+i+'</li>';}).join('');}
-function openPay(){document.getElementById('payModal').style.display='flex';document.getElementById('mErr').style.display='none';document.getElementById('mOk').style.display='none';var b=document.getElementById('payBtn');b.textContent='🔒 Pay Securely Now';b.disabled=false;b.style.background='';}
-function closePay(){document.getElementById('payModal').style.display='none';}
-document.getElementById('payModal').onclick=function(e){if(e.target===this)closePay();};
-function pickP(el){document.querySelectorAll('.mchip').forEach(function(c){c.classList.remove('on');});el.classList.add('on');}
-function fCard(el){var v=el.value.replace(/\D/g,'').substring(0,16);el.value=v.replace(/(.{4})/g,'$1 ').trim();}
-function fExp(el){var v=el.value.replace(/\D/g,'').substring(0,4);if(v.length>=2)v=v.substring(0,2)+'/'+v.substring(2);el.value=v;}
-function doPay(){var c=document.getElementById('mCard').value.replace(/\s/g,''),x=document.getElementById('mExp').value,v=document.getElementById('mCvv').value,n=document.getElementById('mNm').value.trim();var e=document.getElementById('mErr'),o=document.getElementById('mOk');e.style.display='none';if(c.length<16){e.textContent='Enter valid 16-digit card number.';e.style.display='block';return;}if(!/^\d{2}\/\d{2}$/.test(x)){e.textContent='Enter valid expiry MM/YY.';e.style.display='block';return;}if(v.length<3){e.textContent='Enter valid 3-digit CVV.';e.style.display='block';return;}if(!n){e.textContent='Enter cardholder name.';e.style.display='block';return;}var b=document.getElementById('payBtn');b.textContent='⏳ Processing...';b.disabled=true;setTimeout(function(){o.style.display='block';b.textContent='✅ Payment Complete!';b.style.background='#00875a';},2000);}
-function animateCounter(el,target){var start=0,duration=2000,step=target/duration*16;var timer=setInterval(function(){start+=step;if(start>=target){start=target;clearInterval(timer);}el.textContent=Math.floor(start).toLocaleString();},16);}
-var countersDone=false;
-function checkCounters(){if(countersDone)return;var sec=document.querySelector('.counter-section');if(!sec)return;var rect=sec.getBoundingClientRect();if(rect.top<window.innerHeight-80){countersDone=true;animateCounter(document.getElementById('c1'),15000);animateCounter(document.getElementById('c2'),5);animateCounter(document.getElementById('c3'),50);animateCounter(document.getElementById('c4'),98);}}
-window.addEventListener('scroll',checkCounters);setTimeout(checkCounters,500);
-function playVideo(el){el.querySelector('.vid-play-btn').innerHTML='<div style="color:#fff;font-size:16px;font-weight:600;background:rgba(0,0,0,0.5);padding:10px 20px;border-radius:20px;">▶ Playing Demo...</div>';setTimeout(function(){el.querySelector('.vid-play-btn').innerHTML='<div style="color:#fff;font-size:14px;text-align:center;background:rgba(0,0,0,0.6);padding:14px 20px;border-radius:12px;max-width:300px;line-height:1.6;">📅 Ready to see BillZest live?<br><button onclick="openPay()" style="background:var(--purple);color:#fff;border:none;padding:10px 20px;border-radius:6px;font-family:Poppins,sans-serif;font-weight:600;margin-top:10px;cursor:pointer;display:block;width:100%;">Book a Free Demo</button></div>';},2000);}
-window.scrollToRegister=function(){var el=document.getElementById('registerSection')||document.querySelector('.hero-right');if(el){el.scrollIntoView({behavior:'smooth',block:'start'});setTimeout(function(){var f=document.getElementById('fFirst');if(f)f.focus();},600);}};
-function openLoginModal(){ document.getElementById('registerSection').scrollIntoView({behavior:'smooth'}); }
-function toggleLanguage(){ isArabic=!isArabic; document.documentElement.setAttribute('dir',isArabic?'rtl':'ltr'); document.body.style.fontFamily=isArabic?"'Tajawal',sans-serif":"'Poppins',sans-serif"; var btn=document.getElementById('langNavBtn'); btn.innerText=isArabic?'English':'🇸🇦 عربي'; var wb=document.querySelector('.wb-text'); if(wb) wb.innerHTML=isArabic?"🔥 <strong>عرض محدود:</strong> الأجهزة مجاناً + خصم 20% – فقط ١١٠٠ ريال/شهر!":"🔥 <strong>Limited Offer:</strong> Hardware FREE + 20% OFF – Only ﷼1100/month!"; document.querySelector('.hero-title').innerHTML=isArabic?"نظام واحد <em>لكل الأعمال</em>":"One System for <em>Every Business</em>"; }
+// ---------- GLOBAL FUNCTIONS ----------
+function toggleMenu() { var m = document.getElementById('mMenu'); m.style.display = m.style.display === 'flex' ? 'none' : 'flex'; }
 
-// ---------- DASHBOARD AND POS LOGIC ----------
+// Pricing feature tabs
+var FD = {
+  pos: { t: 'Point of Sale', i: ['Plug & play setup','Cloud-based solution','Real-time reporting','Rich marketplace'] },
+  inv: { t: 'Inventory', i: ['Stock tracking','Low stock alerts','Supplier management','Waste tracking'] },
+  onl: { t: 'Online', i: ['Online ordering','Delivery modes','Promo codes','Menu sync'] },
+  mob: { t: 'Mobile App', i: ['Branded app','Push notifications','Loyalty points','iOS & Android'] },
+  kds: { t: 'Kitchen Display Screen', i: ['Order display','Prep time tracking','Multi-station','Delay alerts'] },
+  acc: { t: 'Accounting', i: ['Automated bookkeeping','VAT compliance','P&L reports','Expense tracking'] },
+  pat: { t: 'Pay at Table', i: ['QR payment','Split bills','Tipping support','Receipt via SMS'] },
+  qr: { t: 'QR Menu', i: ['Dynamic menus','Instant updates','Multilingual','No app needed'] },
+  wtr: { t: 'Waiter App', i: ['Tableside ordering','Table management','Bill splitting','Offline mode'] },
+  mul: { t: 'Managing Multiple Brands', i: ['Unified dashboard','Separate menus','Consolidated reports','Multi-location'] }
+};
+function setFt(el, k) {
+  document.querySelectorAll('.ft').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  var d = FD[k] || FD.pos;
+  document.getElementById('ftT').textContent = d.t;
+  document.getElementById('ftL').innerHTML = d.i.map(i => '<li>' + i + '</li>').join('');
+}
+
+// Payment modal functions
+function openPay() {
+  document.getElementById('payModal').style.display = 'flex';
+  document.getElementById('mErr').style.display = 'none';
+  document.getElementById('mOk').style.display = 'none';
+  var b = document.getElementById('payBtn');
+  b.textContent = '🔒 Pay Securely Now';
+  b.disabled = false;
+  b.style.background = '';
+}
+function closePay() { document.getElementById('payModal').style.display = 'none'; }
+document.getElementById('payModal').onclick = function(e) { if (e.target === this) closePay(); };
+function pickP(el) {
+  document.querySelectorAll('.mchip').forEach(c => c.classList.remove('on'));
+  el.classList.add('on');
+}
+function fCard(el) { var v = el.value.replace(/\D/g,'').substring(0,16); el.value = v.replace(/(.{4})/g,'$1 ').trim(); }
+function fExp(el) { var v = el.value.replace(/\D/g,'').substring(0,4); if (v.length>=2) v = v.substring(0,2)+'/'+v.substring(2); el.value = v; }
+function doPay() {
+  var c = document.getElementById('mCard').value.replace(/\s/g,'');
+  var x = document.getElementById('mExp').value;
+  var v = document.getElementById('mCvv').value;
+  var n = document.getElementById('mNm').value.trim();
+  var e = document.getElementById('mErr'), o = document.getElementById('mOk');
+  e.style.display = 'none';
+  if (c.length < 16) { e.textContent = 'Enter valid 16-digit card number.'; e.style.display = 'block'; return; }
+  if (!/^\d{2}\/\d{2}$/.test(x)) { e.textContent = 'Enter valid expiry MM/YY.'; e.style.display = 'block'; return; }
+  if (v.length < 3) { e.textContent = 'Enter valid 3-digit CVV.'; e.style.display = 'block'; return; }
+  if (!n) { e.textContent = 'Enter cardholder name.'; e.style.display = 'block'; return; }
+  var b = document.getElementById('payBtn');
+  b.textContent = '⏳ Processing...';
+  b.disabled = true;
+  setTimeout(function() {
+    o.style.display = 'block';
+    b.textContent = '✅ Payment Complete!';
+    b.style.background = '#00875a';
+  }, 2000);
+}
+
+// Counter animation
+function animateCounter(el, target) {
+  var start = 0, duration = 2000, step = target / (duration / 16);
+  var timer = setInterval(function() {
+    start += step;
+    if (start >= target) { start = target; clearInterval(timer); }
+    el.textContent = Math.floor(start).toLocaleString();
+  }, 16);
+}
+var countersDone = false;
+function checkCounters() {
+  if (countersDone) return;
+  var sec = document.querySelector('.counter-section');
+  if (!sec) return;
+  var rect = sec.getBoundingClientRect();
+  if (rect.top < window.innerHeight - 80) {
+    countersDone = true;
+    animateCounter(document.getElementById('c1'), 15000);
+    animateCounter(document.getElementById('c2'), 5);
+    animateCounter(document.getElementById('c3'), 50);
+    animateCounter(document.getElementById('c4'), 98);
+  }
+}
+window.addEventListener('scroll', checkCounters);
+setTimeout(checkCounters, 500);
+
+function playVideo(el) {
+  el.querySelector('.vid-play-btn').innerHTML = '<div style="color:#fff;font-size:16px;font-weight:600;background:rgba(0,0,0,0.5);padding:10px 20px;border-radius:20px;">▶ Playing Demo...</div>';
+  setTimeout(function() {
+    el.querySelector('.vid-play-btn').innerHTML = '<div style="color:#fff;font-size:14px;text-align:center;background:rgba(0,0,0,0.6);padding:14px 20px;border-radius:12px;max-width:300px;line-height:1.6;">📅 Ready to see BillZest live?<br><button onclick="openPay()" style="background:var(--purple);color:#fff;border:none;padding:10px 20px;border-radius:6px;font-family:Poppins,sans-serif;font-weight:600;margin-top:10px;cursor:pointer;display:block;width:100%;">Book a Free Demo</button></div>';
+  }, 2000);
+}
+
+// Scroll to registration form
+function scrollToRegister() {
+  var el = document.getElementById('registerSection');
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// Login modal (simple alert + scroll to form)
+function openLoginModal() {
+  alert('Please register or login using the form below. If you already have an account, enter your email and password in the form and click "Start Free Trial".');
+  scrollToRegister();
+}
+
+// Language toggle
+var isArabic = false;
+function toggleLanguage() {
+  isArabic = !isArabic;
+  document.documentElement.setAttribute('dir', isArabic ? 'rtl' : 'ltr');
+  document.body.style.fontFamily = isArabic ? "'Tajawal', sans-serif" : "'Poppins', sans-serif";
+  var btn = document.getElementById('langNavBtn');
+  btn.innerText = isArabic ? 'English' : '🇸🇦 عربي';
+  var wb = document.querySelector('.wb-text');
+  if (wb) wb.innerHTML = isArabic ? "🔥 <strong>عرض محدود:</strong> الأجهزة مجاناً + خصم 20% – فقط ١١٠٠ ريال/شهر!" : "🔥 <strong>Limited Offer:</strong> Hardware FREE + 20% OFF – Only ﷼1100/month!";
+  var heroTitle = document.querySelector('.hero-title');
+  if (heroTitle) heroTitle.innerHTML = isArabic ? "نظام واحد <em>لكل الأعمال</em>" : "One System for <em>Every Business</em>";
+}
+
+// ---------- DASHBOARD AND POS LOGIC (for logged in users) ----------
 let currentUserObj = null;
-let activeView = 'dashboard';
 let posCart = [];
 
 function renderDashboard() {
   const container = document.getElementById('dashboardView');
+  if (!container) return;
   container.style.display = 'block';
-  document.getElementById('posView').style.display = 'none';
+  const posView = document.getElementById('posView');
+  if (posView) posView.style.display = 'none';
   container.innerHTML = `
     <div class="dashboard-container">
       <div class="dashboard-grid">
@@ -758,14 +860,15 @@ function renderDashboard() {
   `;
   setTimeout(() => {
     let canvas = document.getElementById('salesChart');
-    if(canvas && canvas.getContext) {
+    if (canvas && canvas.getContext) {
       let ctx = canvas.getContext('2d');
-      canvas.width = canvas.offsetWidth; canvas.height = 120;
+      canvas.width = canvas.offsetWidth;
+      canvas.height = 120;
       ctx.fillStyle = '#4f2d91';
       let data = [30, 45, 60, 35, 70, 55];
       let w = canvas.width / data.length;
-      for(let i=0;i<data.length;i++) {
-        ctx.fillRect(i*w, canvas.height - data[i], w-2, data[i]);
+      for (let i = 0; i < data.length; i++) {
+        ctx.fillRect(i * w, canvas.height - data[i], w - 2, data[i]);
       }
     }
   }, 50);
@@ -773,8 +876,10 @@ function renderDashboard() {
 
 function renderPOS() {
   const container = document.getElementById('posView');
+  if (!container) return;
   container.style.display = 'block';
-  document.getElementById('dashboardView').style.display = 'none';
+  const dashboardView = document.getElementById('dashboardView');
+  if (dashboardView) dashboardView.style.display = 'none';
   container.innerHTML = `
     <div class="pos-container">
       <h3>🖥️ Point of Sale (Demo)</h3>
@@ -800,7 +905,7 @@ function renderPOS() {
 function updatePOSUI() {
   let cartDiv = document.getElementById('posCartList');
   let totalSpan = document.getElementById('posTotalAmount');
-  if(cartDiv) {
+  if (cartDiv) {
     cartDiv.innerHTML = '';
     let total = 0;
     posCart.forEach((item, idx) => {
@@ -810,18 +915,18 @@ function updatePOSUI() {
       div.innerHTML = `<span>${item.name} x${item.qty}</span><span>${item.price*item.qty} ﷼ <button onclick="removeFromCart(${idx})" style="background:none;border:none;color:red;cursor:pointer;">🗑️</button></span>`;
       cartDiv.appendChild(div);
     });
-    if(totalSpan) totalSpan.innerText = total;
+    if (totalSpan) totalSpan.innerText = total;
   }
 }
 
 window.addToCart = function(name, price) {
   let existing = posCart.find(i => i.name === name);
-  if(existing) existing.qty++;
-  else posCart.push({name, price, qty:1});
+  if (existing) existing.qty++;
+  else posCart.push({ name, price, qty: 1 });
   updatePOSUI();
 };
 window.removeFromCart = function(idx) {
-  posCart.splice(idx,1);
+  posCart.splice(idx, 1);
   updatePOSUI();
 };
 window.checkoutPOS = function() {
@@ -842,12 +947,12 @@ function showLoggedInInterface(user) {
   document.getElementById('welcomeName').innerText = displayName;
   document.getElementById('userEmailDisplay').innerText = user.email;
   renderDashboard();
-  document.getElementById('showDashboardBtnLogged').onclick = () => { activeView = 'dashboard'; renderDashboard(); };
-  document.getElementById('showPOSBtnLogged').onclick = () => { activeView = 'pos'; renderPOS(); };
+  document.getElementById('showDashboardBtnLogged').onclick = () => { renderDashboard(); };
+  document.getElementById('showPOSBtnLogged').onclick = () => { renderPOS(); };
 }
 
 function logoutUser() {
-  if(window.fbAuth && window.fbLogout) window.fbLogout();
+  if (window.fbAuth && window.fbLogout) window.fbLogout();
   localStorage.removeItem('bz_customers');
   currentUserObj = null;
   document.getElementById('regFormContainer').style.display = 'block';
@@ -895,12 +1000,12 @@ async function doSubmit() {
 <!-- Firebase SDK (optional) -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+  import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
   import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
   const firebaseConfig = { apiKey: "AIzaSyCN0akvFXOHM6WPHv9ve9noqqmauO3TJRY", authDomain: "billzest-pos.firebaseapp.com", projectId: "billzest-pos", storageBucket: "billzest-pos.firebasestorage.app", messagingSenderId: "946546876429", appId: "1:946546876429:web:9b4a7aa3cecbf3aea83544" };
-  let app, auth, db;
+  let auth, db;
   try {
-    app = initializeApp(firebaseConfig);
+    const app = initializeApp(firebaseConfig);
     auth = getAuth(app);
     db = getFirestore(app);
     window.fbAuth = auth;
@@ -909,23 +1014,10 @@ async function doSubmit() {
       await setDoc(doc(db, "users", cred.user.uid), { ...userData, uid: cred.user.uid, createdAt: new Date().toISOString() });
       return cred;
     };
-    window.fbSignIn = async (email, password) => {
-      await signInWithEmailAndPassword(auth, email, password);
-    };
-    window.fbLogout = async () => {
-      await signOut(auth);
-      location.reload();
-    };
+    window.fbLogout = async () => { await signOut(auth); location.reload(); };
     onAuthStateChanged(auth, (user) => {
-      if(user) {
+      if (user) {
         showLoggedInInterface({ email: user.email, displayName: user.displayName, uid: user.uid });
-      } else {
-        if(document.getElementById('regFormContainer').style.display !== 'block') {
-          document.getElementById('regFormContainer').style.display = 'block';
-          document.getElementById('loggedInContainer').style.display = 'none';
-          document.getElementById('loginNavBtn').style.display = 'inline-block';
-          document.getElementById('logoutNavBtn').style.display = 'none';
-        }
       }
     });
     console.log('Firebase ready');
