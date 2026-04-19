@@ -447,6 +447,8 @@ nav button,nav div{touch-action:manipulation;-webkit-tap-highlight-color:transpa
 .login-modal-content h2 { margin-bottom: 20px; text-align: center; color: var(--purple); }
 .login-modal-content input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; }
 .login-modal-content button { width: 100%; padding: 12px; background: var(--purple); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+.login-modal-content .google-btn { background: white; color: #333; border: 1px solid #ddd; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+.login-modal-content .google-btn img { width: 20px; height: 20px; }
 .login-modal-content .error { color: red; font-size: 12px; margin-top: 5px; display: none; }
 </style>
 </head>
@@ -712,7 +714,7 @@ nav button,nav div{touch-action:manipulation;-webkit-tap-highlight-color:transpa
 <!-- PAYMENT MODAL -->
 <div class="mbk" id="payModal"><div class="mbx"><button class="mcl" onclick="closePay()">✕</button><div class="mtt">💳 Complete Your Payment</div><div class="msb">Secure payment powered by BillZest</div><div class="mchips"><div class="mchip on" onclick="pickP(this)"><strong>All-in-One</strong>﷼1100/mo</div></div><div class="mf"><label>Card Number</label><input type="text" id="mCard" maxlength="19" placeholder="1234 5678 9012 3456" oninput="fCard(this)"></div><div class="mrow"><div class="mf"><label>Expiry</label><input type="text" id="mExp" maxlength="5" placeholder="MM/YY" oninput="fExp(this)"></div><div class="mf"><label>CVV</label><input type="password" id="mCvv" maxlength="3" placeholder="•••"></div></div><div class="mf"><label>Cardholder Name</label><input type="text" id="mNm" placeholder="Name on card"></div><div class="merr" id="mErr"></div><div class="mok" id="mOk">🎉 Payment Successful! Welcome to BillZest!</div><button class="bpay" id="payBtn" onclick="doPay()">🔒 Pay Securely Now</button><div class="ssl">🔐 256-bit SSL Encrypted · PCI DSS Compliant</div></div></div>
 
-<!-- LOGIN MODAL -->
+<!-- LOGIN MODAL (with Google button) -->
 <div id="loginModal" class="login-modal">
   <div class="login-modal-content">
     <span class="close" onclick="closeLoginModal()">&times;</span>
@@ -721,6 +723,10 @@ nav button,nav div{touch-action:manipulation;-webkit-tap-highlight-color:transpa
     <input type="password" id="loginPassword" placeholder="Password" autocomplete="current-password">
     <div id="loginError" class="error"></div>
     <button onclick="performLogin()">Login</button>
+    <button class="google-btn" onclick="googleLogin()">
+      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo">
+      Sign in with Google
+    </button>
     <p style="margin-top:12px; text-align:center;">Don't have an account? <a href="#" onclick="closeLoginModal(); scrollToRegister();">Register here</a></p>
   </div>
 </div>
@@ -852,7 +858,6 @@ async function performLogin() {
   if (typeof window.fbSignIn === 'function') {
     try {
       await window.fbSignIn(email, pwd);
-      // On success, Firebase onAuthStateChanged will trigger showLoggedInInterface
       closeLoginModal();
       return;
     } catch (err) {
@@ -871,6 +876,16 @@ async function performLogin() {
   } else {
     errorDiv.textContent = 'Invalid email or password';
     errorDiv.style.display = 'block';
+  }
+}
+
+// Google Login
+async function googleLogin() {
+  if (typeof window.fbGoogleSignIn === 'function') {
+    closeLoginModal();
+    await window.fbGoogleSignIn();
+  } else {
+    alert('Google sign-in is not available. Please use email/password or register.');
   }
 }
 
@@ -1061,14 +1076,15 @@ async function doSubmit() {
 <!-- Firebase SDK (optional) -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-  import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+  import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
   const firebaseConfig = { apiKey: "AIzaSyCN0akvFXOHM6WPHv9ve9noqqmauO3TJRY", authDomain: "billzest-pos.firebaseapp.com", projectId: "billzest-pos", storageBucket: "billzest-pos.firebasestorage.app", messagingSenderId: "946546876429", appId: "1:946546876429:web:9b4a7aa3cecbf3aea83544" };
-  let auth, db;
+  let auth, db, googleProvider;
   try {
     const app = initializeApp(firebaseConfig);
     auth = getAuth(app);
     db = getFirestore(app);
+    googleProvider = new GoogleAuthProvider();
     window.fbAuth = auth;
     window.fbCreateUser = async (email, password, userData) => {
       const cred = await createUserWithEmailAndPassword(auth, email, password);
@@ -1079,12 +1095,36 @@ async function doSubmit() {
       await signInWithEmailAndPassword(auth, email, password);
     };
     window.fbLogout = async () => { await signOut(auth); location.reload(); };
+    window.fbGoogleSignIn = async () => {
+      try {
+        const result = await signInWithPopup(auth, googleProvider);
+        const user = result.user;
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+        if (!userDoc.exists()) {
+          await setDoc(doc(db, "users", user.uid), {
+            firstName: user.displayName ? user.displayName.split(' ')[0] : 'User',
+            lastName: user.displayName ? user.displayName.split(' ').slice(1).join(' ') : '',
+            email: user.email,
+            uid: user.uid,
+            plan: 'All-in-One',
+            createdAt: new Date().toISOString(),
+            status: 'Active'
+          });
+        }
+        // showLoggedInInterface will be triggered by onAuthStateChanged
+        return true;
+      } catch(e) {
+        console.error(e);
+        alert('Google sign-in failed: ' + e.message);
+        return false;
+      }
+    };
     onAuthStateChanged(auth, (user) => {
       if (user) {
         showLoggedInInterface({ email: user.email, displayName: user.displayName, uid: user.uid });
       }
     });
-    console.log('Firebase ready');
+    console.log('Firebase ready with Google');
   } catch(e) { console.warn('Firebase not loaded, using localStorage fallback'); }
 </script>
 
