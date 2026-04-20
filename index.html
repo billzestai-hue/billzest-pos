@@ -14,6 +14,7 @@
 <meta name="robots" content="index, follow">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;0,800;1,700&display=swap" rel="stylesheet">
 <style>
+/* [All your existing CSS – exactly as in the previous working version] */
 *{margin:0;padding:0;box-sizing:border-box;}
 :root{--purple:#4f2d91;--purple-dark:#3b1f6e;--teal:#00b5a3;--orange:#f5a623;--gray:#f5f5f5;--bdr:#e0e0e0;--dark:#1a1a1a;--white:#fff;}
 body{font-family:'Poppins',sans-serif;color:var(--dark);background:#fff;}
@@ -423,7 +424,7 @@ nav{flex-wrap:nowrap!important;overflow:visible!important;padding:8px 10px!impor
 nav button,nav div{touch-action:manipulation;-webkit-tap-highlight-color:transparent;}button{touch-action:manipulation;}
 @media(max-width:500px){.btn-demo-nav{display:none!important;}} #langNavBtn{font-size:10px!important;padding:4px 6px!important;}
 
-/* Dashboard & POS styles (only for logged-in area) */
+/* Dashboard & POS styles */
 .dashboard-container, .pos-container { background: #f5f5f5; border-radius: 20px; padding: 20px; margin-top: 10px; }
 .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap: 20px; margin-top: 20px; }
 .dashboard-card { background: white; border-radius: 16px; padding: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
@@ -735,7 +736,7 @@ nav button,nav div{touch-action:manipulation;-webkit-tap-highlight-color:transpa
   </div>
 </section>
 
-<!-- VIDEO DEMO SECTION (RESTORED) -->
+<!-- VIDEO DEMO SECTION -->
 <section class="vid-section">
   <div class="vid-inner">
     <div class="vid-left">
@@ -769,12 +770,12 @@ nav button,nav div{touch-action:manipulation;-webkit-tap-highlight-color:transpa
 
 <!-- LANGUAGE COMPARE TABLE -->
 <section class="lang-compare-section"><div class="lang-compare-inner"><div class="lang-compare-header"><div class="lang-badge"><span>🇬🇧 English</span><span>🇸🇦 العربية</span></div><h2>🌐 Fully Bilingual Experience</h2><p>BillZest POS supports both English and Arabic – switch instantly with one click.</p></div><div class="comp-table-wrapper"><table class="comp-table"><thead><tr><th>Element</th><th>English</th><th>العربية</th></tr></thead><tbody><tr><td>Welcome Banner<th>Welcome to BillZest POS — The All-in-One POS for Hotels, Coffee Shops, Grocery, Electronics & Retail<th>مرحباً بكم في بيلزيست – نظام نقاط البيع المتكامل للفنادق والمقاهي والبقالة والإلكترونيات
-</table>
+<tr>
 <tr><td>Navbar Login<th>Login<th>دخول
 </tr>
 <tr><td>Free Trial Button<th>✨ Free Trial<th>✨ تجربة مجانية
-<tr>
-<tr><td>Hero Title<th>One System for Every Business<th>نظام واحد لكل الأعمال
+</tr>
+ etxek<th>Hero Title<th>One System for Every Business<th>نظام واحد لكل الأعمال
 </tr>
 <tr><td>Plan Name<th>All-in-One POS<th>نظام شامل للمبيعات
 </tr>
@@ -1160,7 +1161,7 @@ function addNewProduct() {
 // ---------- LOGIN HANDLER (shows portal selection instead of direct dashboard) ----------
 function showLoggedInInterface(user) {
   currentUserObj = user;
-  // Hide hero section and pricing (optional)
+  // Hide hero section and pricing
   document.querySelector('.hero').style.display = 'none';
   document.querySelector('.pricing').style.display = 'none';
   // Hide registration form and show portal selection
@@ -1235,7 +1236,7 @@ async function doSubmit() {
 <!-- Firebase SDK (optional) -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithRedirect, getRedirectResult } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
   import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
   const firebaseConfig = { apiKey: "AIzaSyCN0akvFXOHM6WPHv9ve9noqqmauO3TJRY", authDomain: "billzest-pos.firebaseapp.com", projectId: "billzest-pos", storageBucket: "billzest-pos.firebasestorage.app", messagingSenderId: "946546876429", appId: "1:946546876429:web:9b4a7aa3cecbf3aea83544" };
   let auth, db;
@@ -1253,29 +1254,39 @@ async function doSubmit() {
       await signInWithEmailAndPassword(auth, email, password);
     };
     window.fbLogout = async () => { await signOut(auth); location.reload(); };
+    // Use redirect instead of popup to avoid COOP errors
+    const googleProvider = new GoogleAuthProvider();
     window.fbGoogleSignIn = async () => {
-      const provider = new GoogleAuthProvider();
-      const result = await signInWithPopup(auth, provider);
-      const user = result.user;
-      const userDoc = await getDoc(doc(db, "users", user.uid));
-      if (!userDoc.exists()) {
-        await setDoc(doc(db, "users", user.uid), {
-          firstName: user.displayName ? user.displayName.split(' ')[0] : 'User',
-          lastName: user.displayName ? user.displayName.split(' ').slice(1).join(' ') : '',
-          email: user.email,
-          uid: user.uid,
-          plan: 'All-in-One',
-          createdAt: new Date().toISOString()
-        });
+      try {
+        await signInWithRedirect(auth, googleProvider);
+      } catch(e) {
+        console.error(e);
+        alert('Google sign-in failed. Please try again.');
       }
-      return true;
     };
+    getRedirectResult(auth).then(async (result) => {
+      if (result && result.user) {
+        const user = result.user;
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+        if (!userDoc.exists()) {
+          await setDoc(doc(db, "users", user.uid), {
+            firstName: user.displayName ? user.displayName.split(' ')[0] : 'User',
+            lastName: user.displayName ? user.displayName.split(' ').slice(1).join(' ') : '',
+            email: user.email,
+            uid: user.uid,
+            plan: 'All-in-One',
+            createdAt: new Date().toISOString()
+          });
+        }
+        showLoggedInInterface({ email: user.email, displayName: user.displayName, uid: user.uid });
+      }
+    }).catch(e => console.warn(e));
     onAuthStateChanged(auth, (user) => {
       if (user) {
         showLoggedInInterface({ email: user.email, displayName: user.displayName, uid: user.uid });
       }
     });
-    console.log('Firebase ready with Google');
+    console.log('Firebase ready with redirect');
   } catch(e) { console.warn('Firebase not loaded, using localStorage fallback'); }
 </script>
 </body>
