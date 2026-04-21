@@ -452,7 +452,7 @@ nav button,nav div{touch-action:manipulation;-webkit-tap-highlight-color:transpa
 .login-modal-content .google-btn img { width: 20px; height: 20px; }
 .login-modal-content .error { color: red; font-size: 12px; margin-top: 5px; display: none; }
 
-/* Portal Selection Screen */
+/* Portal Selection Screen (kept but hidden when logged in) */
 .portal-selection {
   display: flex;
   flex-direction: column;
@@ -515,6 +515,21 @@ nav button,nav div{touch-action:manipulation;-webkit-tap-highlight-color:transpa
 .modal-content .close { position: absolute; top: 10px; right: 15px; font-size: 24px; cursor: pointer; }
 .modal-content input, .modal-content select { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; }
 .modal-content button { width: 100%; padding: 10px; background: var(--purple); color: white; border: none; border-radius: 8px; margin-top: 10px; cursor: pointer; }
+
+/* Switch to POS button inside dashboard */
+.switch-pos-btn {
+  background: var(--teal);
+  color: #1a1a1a;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 30px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 15px;
+  display: inline-block;
+}
+.switch-pos-btn:hover { background: #00a18f; }
 </style>
 </head>
 <body>
@@ -550,7 +565,6 @@ nav button,nav div{touch-action:manipulation;-webkit-tap-highlight-color:transpa
   <button onclick="scrollToRegister();toggleMenu();" style="background:#10b981;color:#fff;border:none;padding:11px;border-radius:6px;font-size:14px;font-weight:700;font-family:'Poppins',sans-serif;cursor:pointer;margin:0 20px 14px;">✨ Register Free — 14 Days Trial</button>
 </div>
 
-<!-- HERO + REGISTRATION + PORTAL + DASHBOARD/POS all inside hero-right, but we'll control visibility -->
 <section class="hero">
   <div class="hero-left">
     <div class="stars-bg"></div>
@@ -644,7 +658,7 @@ nav button,nav div{touch-action:manipulation;-webkit-tap-highlight-color:transpa
         <div style="text-align:center;font-size:11px;color:#aaa;margin-top:6px;">✅ No credit card · ✅ All modules included · ✅ 14 days free</div>
       </div>
       
-      <!-- Portal Selection Screen (hidden initially) -->
+      <!-- Portal Selection Screen (hidden initially, never shown after login because dashboard opens directly) -->
       <div id="selectionInterface" style="display:none;">
         <div class="portal-selection">
           <h2 class="portal-title">Welcome Back! Select your Workspace</h2>
@@ -663,7 +677,7 @@ nav button,nav div{touch-action:manipulation;-webkit-tap-highlight-color:transpa
         </div>
       </div>
       
-      <!-- Dashboard and POS views (hidden initially) -->
+      <!-- Dashboard and POS views -->
       <div id="dashboardView" style="display:none;"></div>
       <div id="posView" style="display:none;"></div>
     </div>
@@ -774,10 +788,10 @@ nav button,nav div{touch-action:manipulation;-webkit-tap-highlight-color:transpa
 </tr>
 <tr><td>Free Trial Button<th>✨ Free Trial<th>✨ تجربة مجانية
 </tr>
- etxek<th>Hero Title<th>One System for Every Business<th>نظام واحد لكل الأعمال
+<tr><td>Hero Title<th>One System for Every Business<th>نظام واحد لكل الأعمال
 </tr>
 <tr><td>Plan Name<th>All-in-One POS<th>نظام شامل للمبيعات
-</tr>
+</td>
 <tr><td>Subscribe Button<th>Start 14-Day Free Trial<th>ابدأ النسخة التجريبية المجانية لمدة 14 يوماً
 </tr>
 </tbody>
@@ -1019,6 +1033,10 @@ function renderDashboard() {
   document.getElementById('posView').style.display = 'none';
   container.innerHTML = `
     <div class="dashboard-container">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+        <h2 style="font-size: 24px;">📊 Admin Dashboard</h2>
+        <button class="switch-pos-btn" onclick="switchToPOS()">💻 Switch to POS System</button>
+      </div>
       <div class="dashboard-grid">
         <div class="dashboard-card"><h3>Today's Sales</h3><div class="big-number">﷼ 4,250</div><span class="trend-up">↑ 12% from yesterday</span></div>
         <div class="dashboard-card"><h3>Total Orders</h3><div class="big-number">58</div><span>This month</span></div>
@@ -1070,7 +1088,10 @@ function renderPOS() {
   });
   container.innerHTML = `
     <div class="pos-container">
-      <h3>🖥️ Point of Sale (Demo)</h3>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+        <h2 style="font-size: 24px;">🖥️ Point of Sale (Demo)</h2>
+        <button class="switch-pos-btn" onclick="switchToDashboard()">📊 Back to Dashboard</button>
+      </div>
       <div class="pos-product-grid" id="posProductGrid">
         ${productsHtml}
       </div>
@@ -1119,6 +1140,14 @@ window.checkoutPOS = function() {
   updatePOSUI();
 };
 
+// Switch between dashboard and POS
+function switchToPOS() {
+  renderPOS();
+}
+function switchToDashboard() {
+  renderDashboard();
+}
+
 // New Order and Add Product functions
 function openNewOrderModal() {
   const select = document.getElementById('orderProductSelect');
@@ -1157,29 +1186,28 @@ function addNewProduct() {
   document.getElementById('newProductPrice').value = '';
 }
 
-// ---------- LOGIN HANDLER (shows portal selection instead of direct dashboard) ----------
+// ---------- LOGIN HANDLER: DIRECTLY OPEN DASHBOARD (FULL SCREEN) ----------
 function showLoggedInInterface(user) {
   currentUserObj = user;
   // Hide hero section and pricing
   document.querySelector('.hero').style.display = 'none';
   document.querySelector('.pricing').style.display = 'none';
-  // Hide registration form and show portal selection
+  // Hide registration form and portal selection
   document.getElementById('regFormContainer').style.display = 'none';
-  document.getElementById('selectionInterface').style.display = 'block';
+  document.getElementById('selectionInterface').style.display = 'none';  // never shown
   document.getElementById('loginNavBtn').style.display = 'none';
   document.getElementById('logoutNavBtn').style.display = 'inline-block';
   
-  let displayName = user.displayName || (user.email ? user.email.split('@')[0] : 'User');
-  if (user.email === 'airtech2029@gmail.com') displayName = 'Air';
-  // (Optional) show welcome name somewhere – can be added later
+  // Directly open Dashboard (full screen)
+  renderDashboard();
 }
 
 function openPortal(type) {
-  // Hide portal selection screen
-  document.getElementById('selectionInterface').style.display = 'none';
+  // This function is kept for compatibility but not used directly after login.
+  // However, if called, it will switch between dashboard and POS.
   if (type === 'dashboard') {
     renderDashboard();
-  } else {
+  } else if (type === 'pos') {
     renderPOS();
   }
 }
@@ -1188,7 +1216,7 @@ function logoutUser() {
   if (window.fbAuth && window.fbLogout) window.fbLogout();
   localStorage.removeItem('bz_customers');
   currentUserObj = null;
-  // Reset visibility: show hero, pricing, registration form, hide portal/dashboard/pos
+  // Reset visibility: show hero, pricing, registration form, hide dashboard/pos
   document.querySelector('.hero').style.display = 'flex';
   document.querySelector('.pricing').style.display = 'block';
   document.getElementById('regFormContainer').style.display = 'block';
@@ -1253,7 +1281,6 @@ async function doSubmit() {
       await signInWithEmailAndPassword(auth, email, password);
     };
     window.fbLogout = async () => { await signOut(auth); location.reload(); };
-    // Use redirect instead of popup to avoid COOP errors
     const googleProvider = new GoogleAuthProvider();
     window.fbGoogleSignIn = async () => {
       try {
