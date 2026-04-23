@@ -128,25 +128,167 @@ canvas{max-height:200px;width:100%;}
 
     <!-- DASHBOARD SECTION -->
     <div id="dashboardSection" class="page-section active-page">
+
+      <!-- STATS ROW 1 -->
       <div class="stats-grid">
-        <div class="stat-card"><div class="stat-title">Today's Sales</div><div class="stat-value" id="todaySales">﷼ 0</div><div class="stat-change">↑ 12% from yesterday</div></div>
-        <div class="stat-card"><div class="stat-title">Total Orders</div><div class="stat-value" id="totalOrders">0</div><div class="stat-change">This month</div></div>
-        <div class="stat-card"><div class="stat-title">Inventory Alerts</div><div class="stat-value" id="alertCount">0</div><div class="stat-change">Items low in stock</div></div>
-        <div class="stat-card"><div class="stat-title">Net Profit</div><div class="stat-value" id="netProfit">﷼ 0</div><div class="stat-change">Expenses deducted</div></div>
+        <div class="stat-card" style="border-left:4px solid #4f2d91;">
+          <div class="stat-title">🏦 Today's Revenue</div>
+          <div class="stat-value" id="todaySales">﷼ 0</div>
+          <div class="stat-change" style="color:#00b5a3;">↑ 18.4% vs yesterday</div>
+        </div>
+        <div class="stat-card" style="border-left:4px solid #f5a623;">
+          <div class="stat-title">🧾 Total Orders</div>
+          <div class="stat-value" id="totalOrders">0</div>
+          <div class="stat-change" style="color:#00b5a3;">↑ 32 new today</div>
+        </div>
+        <div class="stat-card" style="border-left:4px solid #e53e3e;">
+          <div class="stat-title">⚠️ Stock Alerts</div>
+          <div class="stat-value" id="alertCount">0</div>
+          <div class="stat-change" style="color:#e53e3e;">Items need reorder</div>
+        </div>
+        <div class="stat-card" style="border-left:4px solid #00b5a3;">
+          <div class="stat-title">💰 Net Profit</div>
+          <div class="stat-value" id="netProfit">﷼ 0</div>
+          <div class="stat-change" style="color:#00b5a3;">After all expenses</div>
+        </div>
       </div>
+
+      <!-- STATS ROW 2 — Extra Cards -->
+      <div class="stats-grid" style="margin-bottom:24px;">
+        <div class="stat-card" style="border-left:4px solid #7c3aed;">
+          <div class="stat-title">👥 New Customers</div>
+          <div class="stat-value" style="font-size:26px;" id="newCustomers">0</div>
+          <div class="stat-change" style="color:#00b5a3;">↑ 12 joined today</div>
+        </div>
+        <div class="stat-card" style="border-left:4px solid #0ea5e9;">
+          <div class="stat-title">🔁 Avg. Order Value</div>
+          <div class="stat-value" style="font-size:26px;" id="avgOrder">﷼ 0</div>
+          <div class="stat-change" style="color:#00b5a3;">↑ 5.2% this week</div>
+        </div>
+        <div class="stat-card" style="border-left:4px solid #10b981;">
+          <div class="stat-title">✅ Completed Sales</div>
+          <div class="stat-value" style="font-size:26px;" id="completedSales">0</div>
+          <div class="stat-change" style="color:#888;">Out of total orders</div>
+        </div>
+        <div class="stat-card" style="border-left:4px solid #f59e0b;">
+          <div class="stat-title">⭐ Customer Rating</div>
+          <div class="stat-value" style="font-size:26px;">4.8★</div>
+          <div class="stat-change" style="color:#00b5a3;">From 2,400+ reviews</div>
+        </div>
+      </div>
+
+      <!-- CHARTS ROW -->
       <div class="two-col-grid">
-        <div class="section-card"><div class="section-title">📈 Sales by Hour</div><canvas id="hourlyChart" height="150"></canvas></div>
-        <div class="section-card"><div class="section-title">💳 Payment Methods</div><div class="payment-breakdown"><div class="pie-chart-container"><canvas id="paymentChart" width="150" height="150"></canvas></div><div class="payment-legend" id="paymentLegend"></div></div></div>
+        <div class="section-card">
+          <div class="section-title">📈 Hourly Sales Today</div>
+          <canvas id="hourlyChart" height="150"></canvas>
+        </div>
+        <div class="section-card">
+          <div class="section-title">💳 Payment Methods</div>
+          <div class="payment-breakdown">
+            <div class="pie-chart-container"><canvas id="paymentChart" width="150" height="150"></canvas></div>
+            <div class="payment-legend" id="paymentLegend"></div>
+          </div>
+        </div>
       </div>
+
+      <!-- WEEKLY SALES BAR CHART -->
+      <div class="section-card" style="margin-bottom:24px;">
+        <div class="section-title">📊 Weekly Sales Overview</div>
+        <canvas id="weeklyChart" height="100"></canvas>
+      </div>
+
+      <!-- TOP PRODUCTS + LOW STOCK -->
       <div class="two-col-grid">
-        <div class="section-card"><div class="section-title">🔥 Top Selling Products</div><ul class="top-products-list" id="topProductsList"></ul></div>
-        <div class="section-card"><div class="section-title">⚠️ Low Stock Alerts</div><div id="lowStockList"></div></div>
+        <div class="section-card">
+          <div class="section-title">🔥 Top Selling Products</div>
+          <ul class="top-products-list" id="topProductsList"></ul>
+        </div>
+        <div class="section-card">
+          <div class="section-title">📦 Low Stock Alerts</div>
+          <div id="lowStockList"></div>
+        </div>
       </div>
+
+      <!-- RECENT ORDERS TABLE -->
+      <div class="section-card" style="margin-bottom:24px;">
+        <div class="section-title">🧾 Recent Orders</div>
+        <table style="width:100%;border-collapse:collapse;font-size:13px;">
+          <thead>
+            <tr style="background:#f8f7ff;text-align:left;">
+              <th style="padding:10px 12px;">Order #</th>
+              <th style="padding:10px 12px;">Customer</th>
+              <th style="padding:10px 12px;">Items</th>
+              <th style="padding:10px 12px;">Amount</th>
+              <th style="padding:10px 12px;">Status</th>
+              <th style="padding:10px 12px;">Time</th>
+            </tr>
+          </thead>
+          <tbody id="recentOrdersTable">
+            <tr><td colspan="6" style="padding:16px;text-align:center;color:#888;">Loading...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ACTIVITY + EXPENSE -->
       <div class="two-col-grid">
-        <div class="section-card"><div class="section-title">🔄 Recent Activity</div><div class="activity-feed" id="activityFeed"></div></div>
-        <div class="section-card"><div class="section-title">💰 Expense Snapshot</div><div class="expense-card"><div>Today's Revenue</div><div class="expense-number" id="expRevenue">﷼ 0</div><div>Today's Expenses</div><div class="expense-number" id="expExpenses">﷼ 0</div><div style="margin-top:8px;">Net Profit</div><div class="expense-number" style="color:var(--teal);" id="expNet">﷼ 0</div></div></div>
+        <div class="section-card">
+          <div class="section-title">🔔 Recent Activity</div>
+          <div class="activity-feed" id="activityFeed"></div>
+        </div>
+        <div class="section-card">
+          <div class="section-title">💸 Expense Snapshot</div>
+          <div style="display:flex;flex-direction:column;gap:12px;margin-top:8px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:#f8f7ff;border-radius:10px;">
+              <span style="font-size:13px;color:#555;">🏦 Total Revenue</span>
+              <span style="font-weight:800;color:#4f2d91;" id="expRevenue">﷼ 0</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:#fff5f5;border-radius:10px;">
+              <span style="font-size:13px;color:#555;">💸 Total Expenses</span>
+              <span style="font-weight:800;color:#e53e3e;" id="expExpenses">﷼ 0</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:#f0fdf4;border-radius:10px;">
+              <span style="font-size:13px;color:#555;">✅ Net Profit</span>
+              <span style="font-weight:800;color:#00b5a3;" id="expNet">﷼ 0</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:#fffbeb;border-radius:10px;">
+              <span style="font-size:13px;color:#555;">🧾 Tax (VAT 15%)</span>
+              <span style="font-weight:800;color:#f5a623;" id="expTax">﷼ 0</span>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="section-card"><div class="section-title">⚡ Quick Actions</div><div class="quick-actions"><button class="action-btn" onclick="alert('New Order screen coming soon')">➕ New Order</button><button class="action-btn" onclick="alert('Add Product form coming soon')">📦 Add Product</button><button class="action-btn" onclick="alert('Printing report...')">🖨️ Print Report</button><button class="action-btn" onclick="alert('Data synced!')">🔄 Sync Data</button></div></div>
+
+      <!-- STAFF PERFORMANCE -->
+      <div class="section-card" style="margin-bottom:24px;">
+        <div class="section-title">👨‍💼 Staff Performance Today</div>
+        <table style="width:100%;border-collapse:collapse;font-size:13px;">
+          <thead>
+            <tr style="background:#f8f7ff;text-align:left;">
+              <th style="padding:10px 12px;">👤 Staff</th>
+              <th style="padding:10px 12px;">🧾 Orders</th>
+              <th style="padding:10px 12px;">💰 Sales</th>
+              <th style="padding:10px 12px;">⭐ Rating</th>
+              <th style="padding:10px 12px;">📍 Branch</th>
+            </tr>
+          </thead>
+          <tbody id="staffTable"></tbody>
+        </table>
+      </div>
+
+      <!-- QUICK ACTIONS -->
+      <div class="section-card">
+        <div class="section-title">⚡ Quick Actions</div>
+        <div class="quick-actions" style="flex-wrap:wrap;gap:10px;">
+          <button class="action-btn" onclick="document.querySelector('[data-page=pos]').click()">🛒 Go to POS</button>
+          <button class="action-btn" style="background:#00b5a3;" onclick="document.querySelector('[data-page=inventory]').click()">📦 Manage Inventory</button>
+          <button class="action-btn" style="background:#f5a623;color:#1a1a1a;" onclick="document.querySelector('[data-page=reports]').click()">📈 View Reports</button>
+          <button class="action-btn" style="background:#e53e3e;" onclick="window.print()">🖨️ Print Report</button>
+          <button class="action-btn" style="background:#7c3aed;" onclick="document.querySelector('[data-page=customers]').click()">👥 Customers</button>
+          <button class="action-btn" style="background:#0ea5e9;" onclick="alert('Data synced successfully! ✅')">🔄 Sync Data</button>
+        </div>
+      </div>
+
     </div>
 
     <!-- ENHANCED POS SECTION (Coffee Shop focused) -->
@@ -328,31 +470,159 @@ canvas{max-height:200px;width:100%;}
 
   function renderDashboard(cat) {
     const d = getCategoryData(cat);
+
+    // Stats row 1
     document.getElementById('todaySales').innerHTML = `﷼ ${d.sales.toLocaleString()}`;
     document.getElementById('totalOrders').innerText = d.orders;
     document.getElementById('alertCount').innerText = d.alerts;
     document.getElementById('netProfit').innerHTML = `﷼ ${d.profit.toLocaleString()}`;
+
+    // Stats row 2
+    const avgVal = Math.round(d.sales / d.orders);
+    document.getElementById('newCustomers').innerText = Math.floor(d.orders * 0.4);
+    document.getElementById('avgOrder').innerHTML = `﷼ ${avgVal}`;
+    document.getElementById('completedSales').innerText = Math.floor(d.orders * 0.92);
+
+    // Expense snapshot
     document.getElementById('expRevenue').innerHTML = `﷼ ${d.revenue.toLocaleString()}`;
     document.getElementById('expExpenses').innerHTML = `﷼ ${d.expenses.toLocaleString()}`;
     document.getElementById('expNet').innerHTML = `﷼ ${(d.revenue - d.expenses).toLocaleString()}`;
-    
+    document.getElementById('expTax').innerHTML = `﷼ ${Math.round(d.revenue * 0.15).toLocaleString()}`;
+
+    // Top products
     const prodList = document.getElementById('topProductsList');
-    prodList.innerHTML = d.topProducts.map(p => `<li><span>${p.name}</span><div class="prod-bar"><div class="prod-bar-fill" style="width:${(p.qty/100)*100}%"></div></div><span class="prod-qty">${p.qty} sold</span></li>`).join('');
-    
+    prodList.innerHTML = d.topProducts.map(p => `
+      <li>
+        <span style="font-weight:600;">${p.name}</span>
+        <div class="prod-bar"><div class="prod-bar-fill" style="width:${Math.min((p.qty/150)*100,100)}%"></div></div>
+        <span class="prod-qty">${p.qty} sold</span>
+      </li>`).join('');
+
+    // Low stock
     const lowStockDiv = document.getElementById('lowStockList');
-    lowStockDiv.innerHTML = d.lowStock.map(item => `<div class="stock-item"><span>${item.name}</span><div class="stock-progress"><div class="stock-fill" style="width:${(item.stock/item.threshold)*100}%"></div></div><span>${item.stock} left</span><button class="reorder-btn" onclick="alert('Reorder ${item.name}')">Reorder</button></div>`).join('');
-    
+    lowStockDiv.innerHTML = d.lowStock.map(item => `
+      <div class="stock-item">
+        <span style="font-weight:600;">📦 ${item.name}</span>
+        <div class="stock-progress"><div class="stock-fill" style="width:${Math.min((item.stock/item.threshold)*100,100)}%;background:${item.stock < item.threshold*0.3 ? '#e53e3e' : '#f5a623'};"></div></div>
+        <span style="font-size:12px;color:#888;">${item.stock} left</span>
+        <button class="reorder-btn" onclick="alert('Reorder request sent for ${item.name}! ✅')">Reorder</button>
+      </div>`).join('');
+
+    // Activity feed
+    const activityDiv = document.getElementById('activityFeed');
+    const allActivities = [
+      ...d.activity,
+      '💳 Payment received ﷼ ' + Math.floor(Math.random()*500+100),
+      '👤 New customer registered',
+      '🔄 Inventory synced successfully',
+      '⭐ New 5-star review received',
+      '📦 Stock updated for 3 items'
+    ];
+    activityDiv.innerHTML = allActivities.map((act, i) => `
+      <div class="activity-item">
+        <div class="activity-icon" style="background:${['#f0f0ff','#f0fff4','#fff5f0','#fffbeb','#f0f9ff'][i%5]};">
+          ${['📌','✅','💳','👤','🔄','⭐'][i%6]}
+        </div>
+        <div>
+          <div style="font-size:13px;font-weight:500;">${act}</div>
+          <div style="font-size:11px;color:#aaa;">${Math.floor(Math.random()*50)+1} min ago</div>
+        </div>
+      </div>`).join('');
+
+    // Recent Orders Table
+    const orders = [
+      { id:'#1042', customer:'Ahmed Al-Khatib', items:'Burger + Cola', amount: 45, status:'✅ Paid', time:'2 min ago' },
+      { id:'#1041', customer:'Sara Mohammed', items:'Latte + Croissant', amount: 28, status:'✅ Paid', time:'8 min ago' },
+      { id:'#1040', customer:'Khalid Al-Rashidi', items:'Pizza Combo', amount: 85, status:'🔄 Preparing', time:'12 min ago' },
+      { id:'#1039', customer:'Fatima Al-Zahrani', items:'Chicken Wrap x2', amount: 110, status:'✅ Paid', time:'18 min ago' },
+      { id:'#1038', customer:'Omar Al-Ghamdi', items:'Fresh Juice + Sandwich', amount: 32, status:'⏳ Pending', time:'25 min ago' },
+      { id:'#1037', customer:'Nora Al-Otaibi', items:'Espresso x3', amount: 24, status:'✅ Paid', time:'31 min ago' },
+    ];
+    const tbody = document.getElementById('recentOrdersTable');
+    if (tbody) {
+      tbody.innerHTML = orders.map(o => `
+        <tr style="border-bottom:1px solid #f0f0f0;">
+          <td style="padding:10px 12px;font-weight:700;color:#4f2d91;">${o.id}</td>
+          <td style="padding:10px 12px;">${o.customer}</td>
+          <td style="padding:10px 12px;color:#555;">${o.items}</td>
+          <td style="padding:10px 12px;font-weight:700;">﷼ ${o.amount}</td>
+          <td style="padding:10px 12px;">${o.status}</td>
+          <td style="padding:10px 12px;color:#aaa;font-size:12px;">${o.time}</td>
+        </tr>`).join('');
+    }
+
+    // Staff Performance Table
+    const staff = [
+      { name:'Mohammed Al-Saud', orders: 42, sales: 1850, rating: '⭐ 4.9', branch: cat },
+      { name:'Aisha Al-Rashid',  orders: 38, sales: 1620, rating: '⭐ 4.8', branch: cat },
+      { name:'Tariq Al-Zahrani', orders: 31, sales: 1340, rating: '⭐ 4.7', branch: cat },
+      { name:'Hana Al-Ghamdi',   orders: 27, sales: 1180, rating: '⭐ 4.9', branch: cat },
+    ];
+    const staffTbody = document.getElementById('staffTable');
+    if (staffTbody) {
+      staffTbody.innerHTML = staff.map(s => `
+        <tr style="border-bottom:1px solid #f0f0f0;">
+          <td style="padding:10px 12px;font-weight:600;">👤 ${s.name}</td>
+          <td style="padding:10px 12px;">${s.orders}</td>
+          <td style="padding:10px 12px;font-weight:700;color:#4f2d91;">﷼ ${s.sales.toLocaleString()}</td>
+          <td style="padding:10px 12px;">${s.rating}</td>
+          <td style="padding:10px 12px;"><span style="background:#f0f0ff;color:#4f2d91;padding:3px 10px;border-radius:20px;font-size:12px;">${s.branch}</span></td>
+        </tr>`).join('');
+    }
+
+    // Hourly Chart
     const ctxHour = document.getElementById('hourlyChart').getContext('2d');
     if (hourlyChart) hourlyChart.destroy();
-    hourlyChart = new Chart(ctxHour, { type: 'line', data: { labels: ['6am','8am','10am','12pm','2pm','4pm','6pm','8pm','10pm','12am'], datasets: [{ label: 'Orders', data: d.hourly, borderColor: '#4f2d91', tension: 0.3, fill: false }] }, options: { responsive: true } });
-    
+    hourlyChart = new Chart(ctxHour, {
+      type: 'line',
+      data: {
+        labels: ['6am','8am','10am','12pm','2pm','4pm','6pm','8pm','10pm','12am'],
+        datasets: [{
+          label: 'Orders',
+          data: d.hourly,
+          borderColor: '#4f2d91',
+          backgroundColor: 'rgba(79,45,145,0.08)',
+          tension: 0.4,
+          fill: true,
+          pointBackgroundColor: '#f5a623',
+          pointRadius: 4
+        }]
+      },
+      options: { responsive: true, plugins: { legend: { display: false } } }
+    });
+
+    // Weekly Chart
+    const ctxWeek = document.getElementById('weeklyChart');
+    if (ctxWeek) {
+      if (window._weeklyChart) window._weeklyChart.destroy();
+      window._weeklyChart = new Chart(ctxWeek.getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+          datasets: [
+            { label: 'Revenue (﷼)', data: [8200,10500,7800,12400,15600,18900,d.sales], backgroundColor: 'rgba(79,45,145,0.7)', borderRadius: 6 },
+            { label: 'Expenses (﷼)', data: [2100,2800,2200,3100,4000,5200,d.expenses/7|0], backgroundColor: 'rgba(245,166,35,0.7)', borderRadius: 6 }
+          ]
+        },
+        options: { responsive: true, plugins: { legend: { position: 'top' } } }
+      });
+    }
+
+    // Payment Pie Chart
     const ctxPay = document.getElementById('paymentChart').getContext('2d');
     if (paymentChart) paymentChart.destroy();
-    paymentChart = new Chart(ctxPay, { type: 'pie', data: { labels: ['Card','Cash','Wallet'], datasets: [{ data: [d.payment.card, d.payment.cash, d.payment.wallet], backgroundColor: ['#4f2d91','#f5a623','#00b5a3'] }] }, options: { responsive: true } });
-    document.getElementById('paymentLegend').innerHTML = `<div class="legend-item"><div class="legend-color" style="background:#4f2d91"></div> Card ${d.payment.card}%</div><div class="legend-item"><div class="legend-color" style="background:#f5a623"></div> Cash ${d.payment.cash}%</div><div class="legend-item"><div class="legend-color" style="background:#00b5a3"></div> Wallet ${d.payment.wallet}%</div>`;
-    
-    const activityDiv = document.getElementById('activityFeed');
-    activityDiv.innerHTML = d.activity.map(act => `<div class="activity-item"><div class="activity-icon">📌</div><div>${act}</div></div>`).join('');
+    paymentChart = new Chart(ctxPay, {
+      type: 'doughnut',
+      data: {
+        labels: ['💳 Card','💵 Cash','📱 Wallet'],
+        datasets: [{ data: [d.payment.card, d.payment.cash, d.payment.wallet], backgroundColor: ['#4f2d91','#f5a623','#00b5a3'], borderWidth: 0 }]
+      },
+      options: { responsive: true, cutout: '65%' }
+    });
+    document.getElementById('paymentLegend').innerHTML =
+      `<div class="legend-item"><div class="legend-color" style="background:#4f2d91"></div> 💳 Card ${d.payment.card}%</div>
+       <div class="legend-item"><div class="legend-color" style="background:#f5a623"></div> 💵 Cash ${d.payment.cash}%</div>
+       <div class="legend-item"><div class="legend-color" style="background:#00b5a3"></div> 📱 Wallet ${d.payment.wallet}%</div>`;
   }
 
   function saveCategory(cat) {
