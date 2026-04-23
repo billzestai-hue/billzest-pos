@@ -444,7 +444,7 @@ nav button,nav div{touch-action:manipulation;-webkit-tap-highlight-color:transpa
         </div>
       </div>
       
-      <!-- Dashboard and POS views -->
+      <!-- Dashboard and POS views (will be replaced by dynamic container) -->
       <div id="dashboardView" style="display:none;"></div>
       <div id="posView" style="display:none;"></div>
     </div>
@@ -792,17 +792,15 @@ let posProducts = [
   { name: 'Fries', price: 10 }
 ];
 
-function renderDashboard() {
-  const container = document.getElementById('dashboardView');
+// Dynamic dashboard render
+function renderDashboardInContainer(container) {
   if (!container) return;
-  container.style.display = 'block';
-  document.getElementById('posView').style.display = 'none';
-  // Prepare user display name
   let userName = currentUserObj?.displayName || currentUserObj?.email || 'User';
   if (userName && userName.includes('@')) userName = userName.split('@')[0];
+  
   container.innerHTML = `
-    <div class="dashboard-container">
-      <!-- PROFILE CARD - NEW -->
+    <div class="dashboard-container" style="background:#f5f5f5; padding:30px 20px; min-height:100vh;">
+      <!-- Profile Card -->
       <div style="background: linear-gradient(135deg, #4f2d91, #7c3aed); color: white; padding: 16px 20px; border-radius: 20px; margin-bottom: 24px; display: flex; align-items: center; gap: 15px; box-shadow: 0 6px 14px rgba(79,45,145,0.2);">
         <div style="background: white; width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; color: #4f2d91;">👤</div>
         <div>
@@ -810,22 +808,26 @@ function renderDashboard() {
           <div style="font-size: 13px; opacity: 0.9;">Role: Administrator • Last login: Today</div>
         </div>
       </div>
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+      
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap;">
         <h2 style="font-size: 24px;">📊 Admin Dashboard</h2>
-        <button class="switch-pos-btn" onclick="switchToPOS()">💻 Switch to POS System</button>
+        <button class="switch-pos-btn" onclick="switchToPOSDynamic()">💻 Switch to POS System</button>
       </div>
+      
       <div class="dashboard-grid">
         <div class="dashboard-card"><h3>Today's Sales</h3><div class="big-number">﷼ 4,250</div><span class="trend-up">↑ 12% from yesterday</span></div>
         <div class="dashboard-card"><h3>Total Orders</h3><div class="big-number">58</div><span>This month</span></div>
         <div class="dashboard-card"><h3>Inventory Alerts</h3><div class="big-number">3</div><span>Items low in stock</span></div>
         <div class="dashboard-card"><h3>Net Profit</h3><div class="big-number">﷼ 96,500</div><span>Expenses deducted</span></div>
       </div>
+      
       <div class="dashboard-grid">
-        <div class="dashboard-card"><h3>📈 Sales by Hour</h3><canvas id="salesChart" height="120" style="width:100%;background:#fff;border-radius:8px;"></canvas></div>
+        <div class="dashboard-card"><h3>📈 Sales by Hour</h3><canvas id="salesChartDynamic" height="120" style="width:100%;background:#fff;border-radius:8px;"></canvas></div>
         <div class="dashboard-card"><h3>💳 Payment Methods</h3><div>Card 55%</div><div>Cash 35%</div><div>Wallet 10%</div><div style="height:8px;background:#eee;border-radius:4px;margin-top:8px;"><div style="width:55%;height:8px;background:#4f2d91;border-radius:4px;"></div></div></div>
         <div class="dashboard-card"><h3>🔥 Top Selling Products</h3><ul style="list-style:none;"><li>Room Service - 45 sold</li><li>Mini Bar - 32 sold</li><li>Banquet - 28 sold</li></ul></div>
         <div class="dashboard-card"><h3>⚠️ Low Stock Alerts</h3><div class="low-stock-item"><span>Towels (12 left)</span><button class="reorder-btn" onclick="alert('Reorder request sent for Towels')">Reorder</button></div><div class="low-stock-item"><span>Coffee sachets (8 left)</span><button class="reorder-btn" onclick="alert('Reorder request sent for Coffee sachets')">Reorder</button></div></div>
       </div>
+      
       <div class="dashboard-grid">
         <div class="dashboard-card"><h3>🔄 Recent Activity</h3><div class="activity-item">📌 New booking #1024</div><div class="activity-item">📌 Order #998 completed</div></div>
         <div class="dashboard-card"><h3>💰 Expense Snapshot</h3><div>Today's Revenue: ﷼ 128,500</div><div>Today's Expenses: ﷼ 32,000</div><div><strong>Net Profit: ﷼ 96,500</strong></div></div>
@@ -838,8 +840,9 @@ function renderDashboard() {
       </div>
     </div>
   `;
+  
   setTimeout(() => {
-    let canvas = document.getElementById('salesChart');
+    let canvas = document.getElementById('salesChartDynamic');
     if (canvas && canvas.getContext) {
       let ctx = canvas.getContext('2d');
       canvas.width = canvas.offsetWidth;
@@ -851,41 +854,44 @@ function renderDashboard() {
         ctx.fillRect(i * w, canvas.height - data[i], w - 2, data[i]);
       }
     }
-  }, 50);
+  }, 100);
 }
 
-function renderPOS() {
-  const container = document.getElementById('posView');
-  if (!container) return;
-  container.style.display = 'block';
-  document.getElementById('dashboardView').style.display = 'none';
+function switchToPOSDynamic() {
+  const dashContainer = document.getElementById('dynamicDashboard');
+  if (!dashContainer) return;
   let productsHtml = '';
   posProducts.forEach(p => {
     productsHtml += `<button class="pos-product-btn" onclick="addToCart('${p.name}',${p.price})">${p.name} ${p.price}﷼</button>`;
   });
-  container.innerHTML = `
-    <div class="pos-container">
+  dashContainer.innerHTML = `
+    <div class="pos-container" style="background:#f5f5f5; padding:30px 20px; min-height:100vh;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
         <h2 style="font-size: 24px;">🖥️ Point of Sale (Demo)</h2>
-        <button class="switch-pos-btn" onclick="switchToDashboard()">📊 Back to Dashboard</button>
+        <button class="switch-pos-btn" onclick="switchToDashboardDynamic()">📊 Back to Dashboard</button>
       </div>
-      <div class="pos-product-grid" id="posProductGrid">
+      <div class="pos-product-grid" id="posProductGridDynamic">
         ${productsHtml}
       </div>
       <div style="background:#fff;border-radius:12px;padding:15px;">
         <h4>Cart</h4>
-        <div id="posCartList"></div>
-        <div style="margin-top:10px;"><strong>Total: </strong><span id="posTotalAmount">0</span> ﷼</div>
-        <button class="qa-btn" style="margin-top:15px;background:#10b981;" onclick="checkoutPOS()">💳 Checkout (Demo)</button>
+        <div id="posCartListDynamic"></div>
+        <div style="margin-top:10px;"><strong>Total: </strong><span id="posTotalAmountDynamic">0</span> ﷼</div>
+        <button class="qa-btn" style="margin-top:15px;background:#10b981;" onclick="checkoutPOSDynamic()">💳 Checkout (Demo)</button>
       </div>
     </div>
   `;
-  updatePOSUI();
+  updatePOSUIDynamic();
 }
 
-function updatePOSUI() {
-  let cartDiv = document.getElementById('posCartList');
-  let totalSpan = document.getElementById('posTotalAmount');
+function switchToDashboardDynamic() {
+  const dashContainer = document.getElementById('dynamicDashboard');
+  if (dashContainer) renderDashboardInContainer(dashContainer);
+}
+
+function updatePOSUIDynamic() {
+  let cartDiv = document.getElementById('posCartListDynamic');
+  let totalSpan = document.getElementById('posTotalAmountDynamic');
   if (cartDiv) {
     cartDiv.innerHTML = '';
     let total = 0;
@@ -893,32 +899,30 @@ function updatePOSUI() {
       total += item.price * item.qty;
       let div = document.createElement('div');
       div.className = 'cart-item';
-      div.innerHTML = `<span>${item.name} x${item.qty}</span><span>${item.price*item.qty} ﷼ <button onclick="removeFromCart(${idx})" style="background:none;border:none;color:red;cursor:pointer;">🗑️</button></span>`;
+      div.innerHTML = `<span>${item.name} x${item.qty}</span><span>${item.price*item.qty} ﷼ <button onclick="removeFromCartDynamic(${idx})" style="background:none;border:none;color:red;cursor:pointer;">🗑️</button></span>`;
       cartDiv.appendChild(div);
     });
     if (totalSpan) totalSpan.innerText = total;
   }
 }
 
+window.removeFromCartDynamic = function(idx) {
+  posCart.splice(idx, 1);
+  updatePOSUIDynamic();
+};
+window.checkoutPOSDynamic = function() {
+  let total = document.getElementById('posTotalAmountDynamic')?.innerText || '0';
+  alert(`🧾 Demo checkout complete! Total: ${total} ﷼`);
+  posCart = [];
+  updatePOSUIDynamic();
+};
 window.addToCart = function(name, price) {
   let existing = posCart.find(i => i.name === name);
   if (existing) existing.qty++;
   else posCart.push({ name, price, qty: 1 });
-  updatePOSUI();
+  if (document.getElementById('posCartListDynamic')) updatePOSUIDynamic();
+  else updatePOSUI(); // fallback (if old POS is visible)
 };
-window.removeFromCart = function(idx) {
-  posCart.splice(idx, 1);
-  updatePOSUI();
-};
-window.checkoutPOS = function() {
-  let total = document.getElementById('posTotalAmount')?.innerText || '0';
-  alert(`🧾 Demo checkout complete! Total: ${total} ﷼\n\nFull POS billing with receipt, payment gateway, and inventory will be available after registration.`);
-  posCart = [];
-  updatePOSUI();
-};
-
-function switchToPOS() { renderPOS(); }
-function switchToDashboard() { renderDashboard(); }
 
 function openNewOrderModal() {
   const select = document.getElementById('orderProductSelect');
@@ -948,7 +952,7 @@ function addNewProduct() {
   let price = parseFloat(document.getElementById('newProductPrice').value);
   if (!name || isNaN(price) || price<=0) { alert('Please enter valid product name and price.'); return; }
   posProducts.push({ name, price });
-  if (document.getElementById('posView').style.display === 'block') renderPOS();
+  if (document.getElementById('posView').style.display === 'block') renderPOS(); // old pos view (not used after fix)
   const orderSelect = document.getElementById('orderProductSelect');
   if (orderSelect) { let opt = document.createElement('option'); opt.value = price; opt.textContent = `${name} - ${price}﷼`; orderSelect.appendChild(opt); }
   alert(`✅ Product "${name}" added successfully!`);
@@ -957,32 +961,30 @@ function addNewProduct() {
   document.getElementById('newProductPrice').value = '';
 }
 
-// ---------- FIXED LOGIN HANDLER: shows profile, full width, and dashboard ----------
+// ---------- FIXED LOGIN HANDLER: hides hero/pricing and injects dynamic dashboard ----------
 function showLoggedInInterface(user) {
   currentUserObj = user;
-  // Hide left side
-  document.querySelector('.hero-left').style.display = 'none';
-  // Make right side full width
-  const heroRight = document.querySelector('.hero-right');
-  heroRight.style.flex = '1';
-  heroRight.style.width = '100%';
-  heroRight.style.maxWidth = '100%';
-  heroRight.style.padding = '20px';
-  // Make form-wrap full width
-  const formWrap = document.querySelector('.form-wrap');
-  if (formWrap) {
-    formWrap.style.maxWidth = 'none';
-    formWrap.style.width = '100%';
-  }
+  
+  // Hide hero section completely
+  const heroSection = document.querySelector('.hero');
+  if (heroSection) heroSection.style.display = 'none';
+  
   // Hide pricing section
   const pricingSec = document.querySelector('.pricing');
   if (pricingSec) pricingSec.style.display = 'none';
-  // Hide registration and portal selection
-  document.getElementById('regFormContainer').style.display = 'none';
-  document.getElementById('selectionInterface').style.display = 'none';
-  // Toggle navbar buttons
+  
+  // Hide registration form container
+  const regContainer = document.getElementById('regFormContainer');
+  if (regContainer) regContainer.style.display = 'none';
+  
+  // Hide portal selection if visible
+  const selInterface = document.getElementById('selectionInterface');
+  if (selInterface) selInterface.style.display = 'none';
+  
+  // Navbar button toggles
   document.getElementById('loginNavBtn').style.display = 'none';
   document.getElementById('logoutNavBtn').style.display = 'inline-block';
+  
   // Show profile name in navbar
   const profileSpan = document.getElementById('userProfileName');
   if (profileSpan) {
@@ -991,42 +993,58 @@ function showLoggedInInterface(user) {
     profileSpan.textContent = '👤 ' + displayName;
     profileSpan.style.display = 'inline-block';
   }
-  // Render dashboard directly
-  renderDashboard();
+  
+  // Create or get dynamic dashboard container (insert after hero)
+  let dashContainer = document.getElementById('dynamicDashboard');
+  if (!dashContainer) {
+    dashContainer = document.createElement('div');
+    dashContainer.id = 'dynamicDashboard';
+    // Insert after hero section
+    heroSection.insertAdjacentElement('afterend', dashContainer);
+  }
+  dashContainer.style.display = 'block';
+  
+  // Render dashboard
+  renderDashboardInContainer(dashContainer);
 }
 
 function logoutUser() {
   if (window.fbAuth && window.fbLogout) window.fbLogout();
   localStorage.removeItem('bz_customers');
   currentUserObj = null;
-  // Restore left side
-  document.querySelector('.hero-left').style.display = 'flex';
-  // Reset hero-right styles
-  const heroRight = document.querySelector('.hero-right');
-  heroRight.style.flex = '';
-  heroRight.style.width = '';
-  heroRight.style.maxWidth = '';
-  heroRight.style.padding = '';
-  // Reset form-wrap width
+  
+  // Show hero section again
+  const heroSection = document.querySelector('.hero');
+  if (heroSection) heroSection.style.display = 'flex';
+  
+  // Show pricing section again
+  const pricingSec = document.querySelector('.pricing');
+  if (pricingSec) pricingSec.style.display = 'block';
+  
+  // Show registration form again
+  const regContainer = document.getElementById('regFormContainer');
+  if (regContainer) regContainer.style.display = 'block';
+  
+  // Remove dynamic dashboard container
+  const dashContainer = document.getElementById('dynamicDashboard');
+  if (dashContainer) dashContainer.remove();
+  
+  // Reset navbar buttons
+  document.getElementById('loginNavBtn').style.display = 'inline-block';
+  document.getElementById('logoutNavBtn').style.display = 'none';
+  
+  // Hide profile span
+  const profileSpan = document.getElementById('userProfileName');
+  if (profileSpan) profileSpan.style.display = 'none';
+  
+  // Reset form-wrap width (optional)
   const formWrap = document.querySelector('.form-wrap');
   if (formWrap) {
     formWrap.style.maxWidth = '420px';
     formWrap.style.width = '';
   }
-  // Show pricing again
-  const pricingSec = document.querySelector('.pricing');
-  if (pricingSec) pricingSec.style.display = 'block';
-  // Show registration form, hide others
-  document.getElementById('regFormContainer').style.display = 'block';
-  document.getElementById('selectionInterface').style.display = 'none';
-  document.getElementById('dashboardView').style.display = 'none';
-  document.getElementById('posView').style.display = 'none';
-  // Toggle navbar buttons
-  document.getElementById('loginNavBtn').style.display = 'inline-block';
-  document.getElementById('logoutNavBtn').style.display = 'none';
-  // Hide profile span
-  const profileSpan = document.getElementById('userProfileName');
-  if (profileSpan) profileSpan.style.display = 'none';
+  
+  // Optionally reload to reset all state (clean)
   location.reload();
 }
 
