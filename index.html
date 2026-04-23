@@ -309,11 +309,12 @@ nav button,nav div{touch-action:manipulation;-webkit-tap-highlight-color:transpa
   </div>
 </div>
 
-<!-- NAVBAR -->
+<!-- NAVBAR with Profile Span -->
 <nav>
   <div class="nav-logo">Bill<span>Zest</span></div>
   <div class="nav-right">
     <button class="btn-demo-nav" onclick="openPay()">Get a 1-to-1<br>demo</button>
+    <span id="userProfileName" style="display:none; font-size:13px; font-weight:600; color:#4f2d91; background:#f0eef9; padding:5px 12px; border-radius:30px; margin-right:5px;"></span>
     <button class="btn-login-nav" id="loginNavBtn" onclick="openLoginModal()">Login</button>
     <button class="btn-logout-nav" id="logoutNavBtn" onclick="logoutUser()" style="display:none;">Logout</button>
     <button class="reg-btn" onclick="scrollToRegister()">✨ Free Trial</button>
@@ -796,8 +797,19 @@ function renderDashboard() {
   if (!container) return;
   container.style.display = 'block';
   document.getElementById('posView').style.display = 'none';
+  // Prepare user display name
+  let userName = currentUserObj?.displayName || currentUserObj?.email || 'User';
+  if (userName && userName.includes('@')) userName = userName.split('@')[0];
   container.innerHTML = `
     <div class="dashboard-container">
+      <!-- PROFILE CARD - NEW -->
+      <div style="background: linear-gradient(135deg, #4f2d91, #7c3aed); color: white; padding: 16px 20px; border-radius: 20px; margin-bottom: 24px; display: flex; align-items: center; gap: 15px; box-shadow: 0 6px 14px rgba(79,45,145,0.2);">
+        <div style="background: white; width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; color: #4f2d91;">👤</div>
+        <div>
+          <div style="font-size: 18px; font-weight: 800;">Welcome back, ${userName}!</div>
+          <div style="font-size: 13px; opacity: 0.9;">Role: Administrator • Last login: Today</div>
+        </div>
+      </div>
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
         <h2 style="font-size: 24px;">📊 Admin Dashboard</h2>
         <button class="switch-pos-btn" onclick="switchToPOS()">💻 Switch to POS System</button>
@@ -945,10 +957,10 @@ function addNewProduct() {
   document.getElementById('newProductPrice').value = '';
 }
 
-// ---------- LOGIN HANDLER: hides left side, expands right side, shows dashboard directly ----------
+// ---------- FIXED LOGIN HANDLER: shows profile, full width, and dashboard ----------
 function showLoggedInInterface(user) {
   currentUserObj = user;
-  // Hide left side of hero
+  // Hide left side
   document.querySelector('.hero-left').style.display = 'none';
   // Make right side full width
   const heroRight = document.querySelector('.hero-right');
@@ -956,14 +968,30 @@ function showLoggedInInterface(user) {
   heroRight.style.width = '100%';
   heroRight.style.maxWidth = '100%';
   heroRight.style.padding = '20px';
-  // Hide pricing
-  document.querySelector('.pricing').style.display = 'none';
-  // Hide registration form and portal selection
+  // Make form-wrap full width
+  const formWrap = document.querySelector('.form-wrap');
+  if (formWrap) {
+    formWrap.style.maxWidth = 'none';
+    formWrap.style.width = '100%';
+  }
+  // Hide pricing section
+  const pricingSec = document.querySelector('.pricing');
+  if (pricingSec) pricingSec.style.display = 'none';
+  // Hide registration and portal selection
   document.getElementById('regFormContainer').style.display = 'none';
   document.getElementById('selectionInterface').style.display = 'none';
+  // Toggle navbar buttons
   document.getElementById('loginNavBtn').style.display = 'none';
   document.getElementById('logoutNavBtn').style.display = 'inline-block';
-  // Directly open Dashboard
+  // Show profile name in navbar
+  const profileSpan = document.getElementById('userProfileName');
+  if (profileSpan) {
+    let displayName = user.displayName || user.email || (user.firstName + ' ' + user.lastName);
+    if (!displayName && user.email) displayName = user.email.split('@')[0];
+    profileSpan.textContent = '👤 ' + displayName;
+    profileSpan.style.display = 'inline-block';
+  }
+  // Render dashboard directly
   renderDashboard();
 }
 
@@ -971,7 +999,7 @@ function logoutUser() {
   if (window.fbAuth && window.fbLogout) window.fbLogout();
   localStorage.removeItem('bz_customers');
   currentUserObj = null;
-  // Restore hero left
+  // Restore left side
   document.querySelector('.hero-left').style.display = 'flex';
   // Reset hero-right styles
   const heroRight = document.querySelector('.hero-right');
@@ -979,13 +1007,26 @@ function logoutUser() {
   heroRight.style.width = '';
   heroRight.style.maxWidth = '';
   heroRight.style.padding = '';
-  document.querySelector('.pricing').style.display = 'block';
+  // Reset form-wrap width
+  const formWrap = document.querySelector('.form-wrap');
+  if (formWrap) {
+    formWrap.style.maxWidth = '420px';
+    formWrap.style.width = '';
+  }
+  // Show pricing again
+  const pricingSec = document.querySelector('.pricing');
+  if (pricingSec) pricingSec.style.display = 'block';
+  // Show registration form, hide others
   document.getElementById('regFormContainer').style.display = 'block';
   document.getElementById('selectionInterface').style.display = 'none';
   document.getElementById('dashboardView').style.display = 'none';
   document.getElementById('posView').style.display = 'none';
+  // Toggle navbar buttons
   document.getElementById('loginNavBtn').style.display = 'inline-block';
   document.getElementById('logoutNavBtn').style.display = 'none';
+  // Hide profile span
+  const profileSpan = document.getElementById('userProfileName');
+  if (profileSpan) profileSpan.style.display = 'none';
   location.reload();
 }
 
