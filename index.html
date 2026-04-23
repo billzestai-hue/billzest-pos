@@ -280,15 +280,96 @@ nav button,nav div{touch-action:manipulation;-webkit-tap-highlight-color:transpa
 .login-modal-content .google-btn{background:white;color:#333;border:1px solid #ddd;margin-top:10px;display:flex;align-items:center;justify-content:center;gap:10px;}
 .login-modal-content .google-btn img{width:20px;height:20px;}
 .login-modal-content .error{color:red;font-size:12px;margin-top:5px;display:none;}
-.portal-selection{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;background:#f8f7ff;min-height:80vh;}
-.portal-title{font-size:24px;font-weight:700;color:var(--purple);margin-bottom:30px;text-align:center;}
-.portal-grid{display:flex;gap:20px;max-width:600px;width:100%;}
-.portal-card{flex:1;background:#fff;border:2px solid #e8e0f8;border-radius:16px;padding:30px 20px;text-align:center;cursor:pointer;transition:all 0.3s ease;box-shadow:0 4px 12px rgba(0,0,0,0.05);}
-.portal-card:hover{border-color:var(--purple);transform:translateY(-5px);box-shadow:0 10px 25px rgba(79,45,145,0.15);}
-.portal-icon{font-size:40px;margin-bottom:15px;display:block;}
-.portal-card h3{color:#1a1a1a;font-size:18px;margin-bottom:8px;}
-.portal-card p{font-size:13px;color:#666;}
-@media(max-width:600px){.portal-grid{flex-direction:column;}}
+/* ===== FULLSCREEN PORTAL SELECTION ===== */
+.portal-fullscreen-overlay{
+  position:fixed;inset:0;z-index:9000;
+  background:linear-gradient(135deg,#0c1940 0%,#1a0845 50%,#0d1b4b 100%);
+  display:none;flex-direction:column;align-items:center;justify-content:center;
+  animation:portalFadeIn 0.5s ease;
+}
+.portal-fullscreen-overlay.active{display:flex;}
+@keyframes portalFadeIn{from{opacity:0;transform:scale(0.97);}to{opacity:1;transform:scale(1);}}
+
+/* Stars BG */
+.portal-stars{position:absolute;inset:0;overflow:hidden;pointer-events:none;}
+.portal-stars::before{content:'';position:absolute;inset:0;
+  background-image:radial-gradient(circle,rgba(255,255,255,0.8) 1px,transparent 1px),
+    radial-gradient(circle,rgba(255,255,255,0.4) 1px,transparent 1px),
+    radial-gradient(circle,rgba(255,255,255,0.6) 1px,transparent 1px);
+  background-size:100px 100px,70px 70px,140px 140px;
+  background-position:20px 20px,50px 50px,10px 80px;}
+
+/* Glowing orbs */
+.portal-orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:0.25;}
+.portal-orb1{width:500px;height:500px;background:#4f2d91;top:-150px;right:-100px;animation:orbFloat 7s ease-in-out infinite;}
+.portal-orb2{width:350px;height:350px;background:#f5a623;bottom:-100px;left:-80px;animation:orbFloat 9s ease-in-out infinite reverse;}
+.portal-orb3{width:250px;height:250px;background:#00b5a3;top:50%;left:50%;animation:orbFloat 5s ease-in-out infinite;}
+@keyframes orbFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-20px);}}
+
+/* User greeting */
+.portal-greeting{position:relative;z-index:2;text-align:center;margin-bottom:44px;animation:slideUp 0.5s ease both;}
+@keyframes slideUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+.portal-logo{font-size:30px;font-weight:800;letter-spacing:-1px;color:#fff;margin-bottom:8px;}
+.portal-logo span{color:var(--orange);}
+.portal-user-badge{display:inline-flex;align-items:center;gap:10px;background:rgba(255,255,255,0.1);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.15);border-radius:40px;padding:8px 20px;margin-bottom:20px;}
+.portal-user-avatar{width:32px;height:32px;background:var(--orange);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;color:#1a1a1a;font-size:14px;}
+.portal-user-name{color:#fff;font-size:14px;font-weight:600;}
+.portal-title-big{font-size:32px;font-weight:800;color:#fff;margin-bottom:8px;}
+.portal-title-big span{color:var(--orange);}
+.portal-sub{font-size:15px;color:rgba(255,255,255,0.6);}
+
+/* Cards */
+.portal-cards-row{display:flex;gap:24px;z-index:2;animation:slideUp 0.5s ease 0.1s both;}
+.portal-pcard{
+  width:280px;background:rgba(255,255,255,0.06);backdrop-filter:blur(16px);
+  border:2px solid rgba(255,255,255,0.08);border-radius:28px;padding:40px 28px;
+  text-align:center;cursor:pointer;
+  transition:all 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  position:relative;overflow:hidden;
+}
+.portal-pcard::before{
+  content:'';position:absolute;inset:0;border-radius:26px;opacity:0;transition:opacity 0.3s;
+}
+.portal-pcard.dash::before{background:linear-gradient(135deg,rgba(79,45,145,0.3),rgba(0,181,163,0.1));}
+.portal-pcard.pos-c::before{background:linear-gradient(135deg,rgba(245,166,35,0.3),rgba(79,45,145,0.1));}
+.portal-pcard:hover{transform:translateY(-10px) scale(1.02);}
+.portal-pcard.dash:hover{border-color:rgba(79,45,145,0.8);box-shadow:0 30px 60px rgba(79,45,145,0.3);}
+.portal-pcard.pos-c:hover{border-color:rgba(245,166,35,0.8);box-shadow:0 30px 60px rgba(245,166,35,0.2);}
+.portal-pcard:hover::before{opacity:1;}
+.portal-pcard:active{transform:scale(0.97);}
+
+.pcard-icon-wrap{
+  width:90px;height:90px;border-radius:24px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:44px;margin:0 auto 24px;
+}
+.dash .pcard-icon-wrap{background:rgba(79,45,145,0.2);border:2px solid rgba(79,45,145,0.4);}
+.pos-c .pcard-icon-wrap{background:rgba(245,166,35,0.15);border:2px solid rgba(245,166,35,0.3);}
+
+.pcard-title{font-size:22px;font-weight:800;color:#fff;margin-bottom:10px;}
+.pcard-desc{font-size:13px;color:rgba(255,255,255,0.55);line-height:1.7;margin-bottom:24px;}
+.pcard-features{list-style:none;text-align:left;margin-bottom:24px;}
+.pcard-features li{font-size:12px;color:rgba(255,255,255,0.7);padding:4px 0;display:flex;align-items:center;gap:8px;}
+.pcard-features li::before{content:'✓';font-weight:700;font-size:11px;flex-shrink:0;}
+.dash .pcard-features li::before{color:#00b5a3;}
+.pos-c .pcard-features li::before{color:#f5a623;}
+
+.pcard-btn{
+  width:100%;padding:14px;border:none;border-radius:14px;
+  font-family:'Poppins',sans-serif;font-size:14px;font-weight:700;
+  cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.dash .pcard-btn{background:var(--purple);color:#fff;box-shadow:0 8px 24px rgba(79,45,145,0.4);}
+.dash .pcard-btn:hover{background:var(--purple-dark);}
+.pos-c .pcard-btn{background:var(--orange);color:#1a1a1a;box-shadow:0 8px 24px rgba(245,166,35,0.35);}
+.pos-c .pcard-btn:hover{background:#e0950f;}
+
+/* Portal logout */
+.portal-logout-wrap{z-index:2;margin-top:36px;animation:slideUp 0.5s ease 0.2s both;}
+.portal-logout-btn{background:transparent;border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.6);padding:10px 28px;border-radius:40px;font-family:'Poppins',sans-serif;font-size:13px;cursor:pointer;transition:all 0.2s;}
+.portal-logout-btn:hover{border-color:rgba(239,68,68,0.5);color:#ef4444;}
+
+@media(max-width:640px){.portal-cards-row{flex-direction:column;gap:16px;}.portal-pcard{width:100%;max-width:340px;padding:28px 20px;}.portal-title-big{font-size:24px;}}
 .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:10001;align-items:center;justify-content:center;}
 .modal-content{background:white;border-radius:20px;padding:25px;width:90%;max-width:400px;position:relative;}
 .modal-content .close{position:absolute;top:10px;right:15px;font-size:24px;cursor:pointer;}
@@ -426,24 +507,8 @@ nav button,nav div{touch-action:manipulation;-webkit-tap-highlight-color:transpa
         <div style="text-align:center;font-size:11px;color:#aaa;margin-top:6px;">✅ No credit card · ✅ All modules included · ✅ 14 days free</div>
       </div>
       
-      <!-- Portal Selection (hidden) -->
-      <div id="selectionInterface" style="display:none;">
-        <div class="portal-selection">
-          <h2 class="portal-title">Welcome Back! Select your Workspace</h2>
-          <div class="portal-grid">
-            <div class="portal-card" onclick="openPortal('dashboard')">
-              <span class="portal-icon">📊</span>
-              <h3>Admin Dashboard</h3>
-              <p>View reports, manage inventory, and settings.</p>
-            </div>
-            <div class="portal-card" onclick="openPortal('pos')">
-              <span class="portal-icon">💻</span>
-              <h3>POS System</h3>
-              <p>Quick billing, checkout, and sales terminal.</p>
-            </div>
-          </div>
-        </div>
-      </div>
+      <!-- Portal Selection (hidden inline fallback - not used) -->
+      <div id="selectionInterface" style="display:none;"></div>
       
       <!-- Dashboard and POS views -->
       <div id="dashboardView" style="display:none;"></div>
@@ -574,6 +639,58 @@ nav button,nav div{touch-action:manipulation;-webkit-tap-highlight-color:transpa
 
 <!-- FOOTER -->
 <footer><div class="foot-main"><div class="fcol"><div class="flogo">Bill<span>Zest</span></div><p class="fdesc">BillZest POS — Trusted by 15,000+ businesses across the Middle East. ZATCA-approved & SAMA-supervised. All-in-one POS for Hotels, Coffee Shops, Grocery, Electronics & Retail.</p><p class="fph"><span style="font-size:14px;">📧 Support: billzestai@gmail.com</span><br>billzestpos.com</p><div class="pays"><div class="pay v">VISA</div><div class="pay mc">MC</div><div class="pay mo">Maestro</div><div class="pay ci">Cirrus</div><div class="pay ax">AMEX</div><div class="pay ma">mada</div><div class="pay st">سداد</div></div></div><div class="fcol"><h4>BillZest</h4><a href="#">Careers</a><a href="#">Contact us</a><a href="#">Support</a><a href="#">Press & Media</a></div><div class="fcol"><h4>Products</h4><a href="#">Point of Sale Solution</a><a href="#">BillZest Pay</a><a href="#">BillZest Enterprise</a><a href="#">Online</a><a href="#">Self Ordering</a><a href="#">One Accounting</a></div><div class="fcol"><h4>Resources</h4><a href="#">Help Center</a></div><div class="fcol"><h4>Legal</h4><a href="#">Privacy Policy</a><a href="#">Terms of Service</a><a href="#">Consumer Protection</a><a href="#">Accessibility</a><a href="#">Cookie Policy</a></div></div><div class="foot-bot"><span class="fcopy">BillZest © 2025. All Rights Reserved.</span><div class="socs"><a href="#" class="soc">𝕏</a><a href="#" class="soc">f</a><a href="#" class="soc">◎</a><a href="#" class="soc">in</a></div></div></footer>
+
+<!-- ===== FULLSCREEN PORTAL SELECTION OVERLAY ===== -->
+<div class="portal-fullscreen-overlay" id="portalOverlay">
+  <div class="portal-stars"></div>
+  <div class="portal-orb portal-orb1"></div>
+  <div class="portal-orb portal-orb2"></div>
+  <div class="portal-orb portal-orb3"></div>
+
+  <div class="portal-greeting">
+    <div class="portal-logo">Bill<span>Zest</span></div>
+    <div class="portal-user-badge">
+      <div class="portal-user-avatar" id="portalAvatar">U</div>
+      <div class="portal-user-name" id="portalUserName">Welcome Back!</div>
+    </div>
+    <div class="portal-title-big">Select Your <span>Workspace</span></div>
+    <div class="portal-sub">Choose where you want to work today</div>
+  </div>
+
+  <div class="portal-cards-row">
+    <!-- Admin Dashboard Card -->
+    <div class="portal-pcard dash" onclick="openPortal('dashboard')">
+      <div class="pcard-icon-wrap">📊</div>
+      <div class="pcard-title">Admin Dashboard</div>
+      <div class="pcard-desc">Full control of your business — reports, inventory, analytics & settings</div>
+      <ul class="pcard-features">
+        <li>Real-time Sales Reports</li>
+        <li>Inventory Management</li>
+        <li>Customer Analytics</li>
+        <li>Staff & Branch Control</li>
+      </ul>
+      <button class="pcard-btn">Open Dashboard →</button>
+    </div>
+
+    <!-- POS System Card -->
+    <div class="portal-pcard pos-c" onclick="openPortal('pos')">
+      <div class="pcard-icon-wrap">💻</div>
+      <div class="pcard-title">POS System</div>
+      <div class="pcard-desc">Fast billing, checkout and sales terminal for daily operations</div>
+      <ul class="pcard-features">
+        <li>Quick Billing & Checkout</li>
+        <li>Cart & Payment Processing</li>
+        <li>Receipt & WhatsApp Share</li>
+        <li>Multi-branch Support</li>
+      </ul>
+      <button class="pcard-btn">Open POS →</button>
+    </div>
+  </div>
+
+  <div class="portal-logout-wrap">
+    <button class="portal-logout-btn" onclick="logoutUser()">← Logout</button>
+  </div>
+</div>
 
 <!-- WA Button -->
 <a href="https://wa.me/966550898978" target="_blank" rel="noopener" id="waBtn" style="position:fixed;bottom:90px;right:24px;z-index:8998;width:52px;height:52px;background:#25D366;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(37,211,102,0.45);text-decoration:none;transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="28" height="28" fill="#fff"><path d="M16 2C8.28 2 2 8.28 2 16c0 2.46.66 4.76 1.8 6.76L2 30l7.44-1.76A13.93 13.93 0 0016 30c7.72 0 14-6.28 14-14S23.72 2 16 2z"/></svg></a>
@@ -937,50 +1054,69 @@ function addNewProduct() {
   document.getElementById('newProductPrice').value = '';
 }
 
-// ---------- FIXED LOGIN HANDLER: COMPLETELY REMOVES HERO & PRICING AND SHOWS DASHBOARD ----------
+// ---------- UPDATED LOGIN HANDLER: SHOWS FULLSCREEN PORTAL OVERLAY ----------
 function showLoggedInInterface(user) {
   currentUserObj = user;
-  // Hide the entire hero section and pricing section
+  // Hide hero and pricing
   const hero = document.getElementById('heroSection');
   const pricing = document.getElementById('pricingSection');
   if (hero) hero.style.display = 'none';
   if (pricing) pricing.style.display = 'none';
-  // Hide registration form and portal selection
+  // Hide reg form and selection interface
   document.getElementById('regFormContainer').style.display = 'none';
   document.getElementById('selectionInterface').style.display = 'none';
-  // Toggle navbar buttons
+  document.getElementById('dashboardView').style.display = 'none';
+  document.getElementById('posView').style.display = 'none';
+  // Toggle nav buttons
   document.getElementById('loginNavBtn').style.display = 'none';
   document.getElementById('logoutNavBtn').style.display = 'inline-block';
-  // Show profile name
+  // Show user profile in nav
   const profileSpan = document.getElementById('userProfileName');
   if (profileSpan) {
-    let displayName = user.displayName || user.email || (user.firstName + ' ' + user.lastName);
+    let displayName = user.displayName || user.email || '';
     if (!displayName && user.email) displayName = user.email.split('@')[0];
     profileSpan.textContent = '👤 ' + displayName;
     profileSpan.style.display = 'inline-block';
   }
-  // Now show the portal selection directly (as per original flow)
-  const selectionDiv = document.getElementById('selectionInterface');
-  if (selectionDiv) selectionDiv.style.display = 'block';
-  // Also ensure dashboard/pos views are hidden initially
-  document.getElementById('dashboardView').style.display = 'none';
-  document.getElementById('posView').style.display = 'none';
+  // Show fullscreen portal overlay
+  const overlay = document.getElementById('portalOverlay');
+  if (overlay) {
+    overlay.classList.add('active');
+    // Set user info in portal
+    const nameEl = document.getElementById('portalUserName');
+    const avatarEl = document.getElementById('portalAvatar');
+    let displayName = user.displayName || user.email || 'User';
+    if (!displayName && user.email) displayName = user.email.split('@')[0];
+    if (nameEl) nameEl.textContent = displayName;
+    if (avatarEl) avatarEl.textContent = (displayName.charAt(0) || 'U').toUpperCase();
+  }
 }
 
 function openPortal(type) {
-  if (type === 'dashboard') {
-    renderDashboard();
-  } else {
-    renderPOS();
+  // Hide portal overlay with animation
+  const overlay = document.getElementById('portalOverlay');
+  if (overlay) {
+    overlay.style.animation = 'portalFadeIn 0.3s ease reverse';
+    setTimeout(() => {
+      overlay.classList.remove('active');
+      overlay.style.animation = '';
+    }, 280);
   }
-  // Hide the portal selection after choice
-  document.getElementById('selectionInterface').style.display = 'none';
+  // Redirect to the appropriate page
+  if (type === 'dashboard') {
+    window.location.href = 'billzest-dashboard.html';
+  } else {
+    window.location.href = 'billzest-pos.html';
+  }
 }
 
 function logoutUser() {
   if (window.fbAuth && window.fbLogout) window.fbLogout();
   localStorage.removeItem('bz_customers');
   currentUserObj = null;
+  // Hide portal overlay
+  const overlay = document.getElementById('portalOverlay');
+  if (overlay) overlay.classList.remove('active');
   // Show hero and pricing again
   const hero = document.getElementById('heroSection');
   const pricing = document.getElementById('pricingSection');
