@@ -14,7 +14,7 @@
 <meta name="robots" content="index, follow">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;0,800;1,700&display=swap" rel="stylesheet">
 <style>
-/* ========== FULL CSS (same as original working version) ========== */
+/* ========== FULL CSS (same as original) ========== */
 *{margin:0;padding:0;box-sizing:border-box;}
 :root{--purple:#4f2d91;--purple-dark:#3b1f6e;--teal:#00b5a3;--orange:#f5a623;--gray:#f5f5f5;--bdr:#e0e0e0;--dark:#1a1a1a;--white:#fff;}
 body{font-family:'Poppins',sans-serif;color:var(--dark);background:#fff;}
@@ -426,7 +426,7 @@ nav button,nav div{touch-action:manipulation;-webkit-tap-highlight-color:transpa
         <div style="text-align:center;font-size:11px;color:#aaa;margin-top:6px;">✅ No credit card · ✅ All modules included · ✅ 14 days free</div>
       </div>
       
-      <!-- Portal Selection (hidden) -->
+      <!-- Portal Selection (hidden initially) -->
       <div id="selectionInterface" style="display:none;">
         <div class="portal-selection">
           <h2 class="portal-title">Welcome Back! Select your Workspace</h2>
@@ -445,14 +445,14 @@ nav button,nav div{touch-action:manipulation;-webkit-tap-highlight-color:transpa
         </div>
       </div>
       
-      <!-- Dashboard and POS views (will be replaced by dynamic container) -->
+      <!-- Dashboard and POS views (hidden initially) -->
       <div id="dashboardView" style="display:none;"></div>
       <div id="posView" style="display:none;"></div>
     </div>
   </div>
 </section>
 
-<!-- PRICING -->
+<!-- PRICING SECTION -->
 <section class="pricing" id="pricingSection">
   <div class="pricing-badge"><span>⭐ ONE PLAN. EVERYTHING INCLUDED ⭐</span></div>
   <div class="pcard-wrap">
@@ -476,7 +476,7 @@ nav button,nav div{touch-action:manipulation;-webkit-tap-highlight-color:transpa
   </div>
 </section>
 
-<!-- FEATURES -->
+<!-- FEATURES, VIDEO, COUNTER, TESTIMONIALS, LANGUAGE TABLE, FOOTER (same as original, but I'll keep them for completeness) -->
 <section class="features">
   <div class="feat-hdr"><h2>Get to Know the Product in Our Packages</h2></div>
   <div class="ftabs-outer">
@@ -517,7 +517,6 @@ nav button,nav div{touch-action:manipulation;-webkit-tap-highlight-color:transpa
   </div>
 </section>
 
-<!-- VIDEO DEMO -->
 <section class="vid-section">
   <div class="vid-inner">
     <div class="vid-left">
@@ -543,13 +542,10 @@ nav button,nav div{touch-action:manipulation;-webkit-tap-highlight-color:transpa
   </div>
 </section>
 
-<!-- COUNTER -->
 <section class="counter-section"><div class="counter-inner"><div class="counter-label">Trusted by businesses across the Middle East</div><div class="counter-grid"><div class="counter-item"><div class="counter-num" id="c1" data-target="15000">0</div><div class="counter-plus">+</div><div class="counter-text">Businesses</div></div><div class="counter-divider"></div><div class="counter-item"><div class="counter-num" id="c2" data-target="5">0</div><div class="counter-text">Countries</div></div><div class="counter-divider"></div><div class="counter-item"><div class="counter-num" id="c3" data-target="50">0</div><div class="counter-plus">M+</div><div class="counter-text">Transactions</div></div><div class="counter-divider"></div><div class="counter-item"><div class="counter-num" id="c4" data-target="98">0</div><div class="counter-plus">%</div><div class="counter-text">Satisfaction</div></div></div></div></section>
 
-<!-- TESTIMONIALS -->
 <section class="testi-section"><div class="testi-tag">⭐ Customer Reviews</div><h2 class="testi-title">What Our Customers Say</h2><p class="testi-sub">Join thousands of satisfied business owners across the Middle East</p><div class="testi-grid"><div class="testi-card"><div class="testi-stars">★★★★★</div><p class="testi-text">"BillZest transformed our hotel operations. Everything from front desk to F&B in one system!"</p><div class="testi-author"><div class="testi-avatar" style="background:linear-gradient(135deg,#4f2d91,#7c3aed);">AK</div><div class="testi-info"><div class="testi-name">Ahmed Al-Khatib</div><div class="testi-role">Hotel Manager, Riyadh</div></div></div></div><div class="testi-card testi-featured"><div class="testi-badge-top">Most Helpful ✓</div><div class="testi-stars">★★★★★</div><p class="testi-text">"Perfect for our coffee shop chain! Inventory and loyalty are game-changers."</p><div class="testi-author"><div class="testi-avatar" style="background:linear-gradient(135deg,#00b5a3,#059669);">SM</div><div class="testi-info"><div class="testi-name">Sara Mohammed</div><div class="testi-role">Cafe Owner, Dubai</div></div></div></div><div class="testi-card"><div class="testi-stars">★★★★★</div><p class="testi-text">"Used for grocery store – stock management and billing is super fast. Highly recommend."</p><div class="testi-author"><div class="testi-avatar" style="background:linear-gradient(135deg,#f5a623,#d97706);">KR</div><div class="testi-info"><div class="testi-name">Khalid Al-Rashidi</div><div class="testi-role">Grocery Owner, Kuwait</div></div></div></div></div><div class="testi-bottom"><div class="testi-rating-big"><span class="tbr-num">4.9</span><div><div class="tbr-stars">★★★★★</div><div class="tbr-label">Average rating from 2,400+ reviews</div></div></div><div class="testi-platforms"><div class="tp-item">🍎 App Store <strong>4.8★</strong></div><div class="tp-item">🤖 Google Play <strong>4.9★</strong></div><div class="tp-item">🌐 Trustpilot <strong>4.7★</strong></div></div></div></section>
 
-<!-- LANGUAGE TABLE -->
 <section class="lang-compare-section"><div class="lang-compare-inner"><div class="lang-compare-header"><div class="lang-badge"><span>🇬🇧 English</span><span>🇸🇦 العربية</span></div><h2>🌐 Fully Bilingual Experience</h2><p>BillZest POS supports both English and Arabic – switch instantly with one click.</p></div><div class="comp-table-wrapper"><table class="comp-table"><thead><tr><th>Element</th><th>English</th><th>العربية</th></tr></thead><tbody><tr><td>Welcome Banner<th>Welcome to BillZest POS — The All-in-One POS for Hotels, Coffee Shops, Grocery, Electronics & Retail<th>مرحباً بكم في بيلزيست – نظام نقاط البيع المتكامل للفنادق والمقاهي والبقالة والإلكترونيات
 </tr>
 <tr><td>Navbar Login<th>Login<th>دخول
@@ -569,11 +565,12 @@ nav button,nav div{touch-action:manipulation;-webkit-tap-highlight-color:transpa
 </div>
 </section>
 
-<!-- SUBSCRIBE -->
 <div class="sub"><button class="btn-sub" onclick="scrollToRegister()">Subscribe Now</button></div>
 
-<!-- FOOTER -->
 <footer><div class="foot-main"><div class="fcol"><div class="flogo">Bill<span>Zest</span></div><p class="fdesc">BillZest POS — Trusted by 15,000+ businesses across the Middle East. ZATCA-approved & SAMA-supervised. All-in-one POS for Hotels, Coffee Shops, Grocery, Electronics & Retail.</p><p class="fph"><span style="font-size:14px;">📧 Support: billzestai@gmail.com</span><br>billzestpos.com</p><div class="pays"><div class="pay v">VISA</div><div class="pay mc">MC</div><div class="pay mo">Maestro</div><div class="pay ci">Cirrus</div><div class="pay ax">AMEX</div><div class="pay ma">mada</div><div class="pay st">سداد</div></div></div><div class="fcol"><h4>BillZest</h4><a href="#">Careers</a><a href="#">Contact us</a><a href="#">Support</a><a href="#">Press & Media</a></div><div class="fcol"><h4>Products</h4><a href="#">Point of Sale Solution</a><a href="#">BillZest Pay</a><a href="#">BillZest Enterprise</a><a href="#">Online</a><a href="#">Self Ordering</a><a href="#">One Accounting</a></div><div class="fcol"><h4>Resources</h4><a href="#">Help Center</a></div><div class="fcol"><h4>Legal</h4><a href="#">Privacy Policy</a><a href="#">Terms of Service</a><a href="#">Consumer Protection</a><a href="#">Accessibility</a><a href="#">Cookie Policy</a></div></div><div class="foot-bot"><span class="fcopy">BillZest © 2025. All Rights Reserved.</span><div class="socs"><a href="#" class="soc">𝕏</a><a href="#" class="soc">f</a><a href="#" class="soc">◎</a><a href="#" class="soc">in</a></div></div></footer>
+
+<!-- WA Button -->
+<a href="https://wa.me/966550898978" target="_blank" rel="noopener" id="waBtn" style="position:fixed;bottom:90px;right:24px;z-index:8998;width:52px;height:52px;background:#25D366;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(37,211,102,0.45);text-decoration:none;transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="28" height="28" fill="#fff"><path d="M16 2C8.28 2 2 8.28 2 16c0 2.46.66 4.76 1.8 6.76L2 30l7.44-1.76A13.93 13.93 0 0016 30c7.72 0 14-6.28 14-14S23.72 2 16 2z"/></svg></a>
 
 <!-- PAYMENT MODAL -->
 <div class="mbk" id="payModal"><div class="mbx"><button class="mcl" onclick="closePay()">✕</button><div class="mtt">💳 Complete Your Payment</div><div class="msb">Secure payment powered by BillZest</div><div class="mchips"><div class="mchip on" onclick="pickP(this)"><strong>All-in-One</strong>﷼1100/mo</div></div><div class="mf"><label>Card Number</label><input type="text" id="mCard" maxlength="19" placeholder="1234 5678 9012 3456" oninput="fCard(this)"></div><div class="mrow"><div class="mf"><label>Expiry</label><input type="text" id="mExp" maxlength="5" placeholder="MM/YY" oninput="fExp(this)"></div><div class="mf"><label>CVV</label><input type="password" id="mCvv" maxlength="3" placeholder="•••"></div></div><div class="mf"><label>Cardholder Name</label><input type="text" id="mNm" placeholder="Name on card"></div><div class="merr" id="mErr"></div><div class="mok" id="mOk">🎉 Payment Successful! Welcome to BillZest!</div><button class="bpay" id="payBtn" onclick="doPay()">🔒 Pay Securely Now</button><div class="ssl">🔐 256-bit SSL Encrypted · PCI DSS Compliant</div></div></div>
@@ -592,7 +589,7 @@ nav button,nav div{touch-action:manipulation;-webkit-tap-highlight-color:transpa
   </div>
 </div>
 
-<!-- New Order and Add Product Modals (for dashboard) -->
+<!-- New Order and Add Product Modals -->
 <div id="newOrderModal" class="modal">
   <div class="modal-content">
     <span class="close" onclick="closeNewOrderModal()">&times;</span>
@@ -617,7 +614,7 @@ nav button,nav div{touch-action:manipulation;-webkit-tap-highlight-color:transpa
 </div>
 
 <script>
-// ---------- ORIGINAL JAVASCRIPT (with login fix) ----------
+// ========== FIXED JAVASCRIPT ==========
 function toggleMenu() { var m = document.getElementById('mMenu'); m.style.display = m.style.display === 'flex' ? 'none' : 'flex'; }
 function scrollToRegister() { document.getElementById('registerSection').scrollIntoView({ behavior: 'smooth', block: 'start' }); }
 
@@ -642,22 +639,11 @@ function setFt(el, k) {
   document.getElementById('ftL').innerHTML = d.i.map(i => '<li>' + i + '</li>').join('');
 }
 
-// Payment modal functions
-function openPay() {
-  document.getElementById('payModal').style.display = 'flex';
-  document.getElementById('mErr').style.display = 'none';
-  document.getElementById('mOk').style.display = 'none';
-  var b = document.getElementById('payBtn');
-  b.textContent = '🔒 Pay Securely Now';
-  b.disabled = false;
-  b.style.background = '';
-}
+// Payment functions (unchanged)
+function openPay() { document.getElementById('payModal').style.display = 'flex'; document.getElementById('mErr').style.display = 'none'; document.getElementById('mOk').style.display = 'none'; var b = document.getElementById('payBtn'); b.textContent = '🔒 Pay Securely Now'; b.disabled = false; b.style.background = ''; }
 function closePay() { document.getElementById('payModal').style.display = 'none'; }
 document.getElementById('payModal').onclick = function(e) { if (e.target === this) closePay(); };
-function pickP(el) {
-  document.querySelectorAll('.mchip').forEach(c => c.classList.remove('on'));
-  el.classList.add('on');
-}
+function pickP(el) { document.querySelectorAll('.mchip').forEach(c => c.classList.remove('on')); el.classList.add('on'); }
 function fCard(el) { var v = el.value.replace(/\D/g,'').substring(0,16); el.value = v.replace(/(.{4})/g,'$1 ').trim(); }
 function fExp(el) { var v = el.value.replace(/\D/g,'').substring(0,4); if (v.length>=2) v = v.substring(0,2)+'/'+v.substring(2); el.value = v; }
 function doPay() {
@@ -674,11 +660,7 @@ function doPay() {
   var b = document.getElementById('payBtn');
   b.textContent = '⏳ Processing...';
   b.disabled = true;
-  setTimeout(function() {
-    o.style.display = 'block';
-    b.textContent = '✅ Payment Complete!';
-    b.style.background = '#00875a';
-  }, 2000);
+  setTimeout(function() { o.style.display = 'block'; b.textContent = '✅ Payment Complete!'; b.style.background = '#00875a'; }, 2000);
 }
 
 // Counter animation
@@ -714,52 +696,14 @@ function playVideo(el) {
   }, 2000);
 }
 
-// Login modal and authentication
-let currentUserObj = null;
-let posCart = [];
-let posProducts = [
-  { name: 'Coffee', price: 12 },
-  { name: 'Sandwich', price: 22 },
-  { name: 'Juice', price: 15 },
-  { name: 'Cake', price: 18 },
-  { name: 'Burger', price: 25 },
-  { name: 'Fries', price: 10 }
-];
-
+// Login modal
 function openLoginModal() {
   document.getElementById('loginModal').style.display = 'flex';
   document.getElementById('loginError').style.display = 'none';
   document.getElementById('loginEmail').value = '';
   document.getElementById('loginPassword').value = '';
 }
-function closeLoginModal() {
-  document.getElementById('loginModal').style.display = 'none';
-}
-async function performLogin() {
-  const email = document.getElementById('loginEmail').value.trim();
-  const pwd = document.getElementById('loginPassword').value;
-  const errorDiv = document.getElementById('loginError');
-  errorDiv.style.display = 'none';
-  if (!email || !pwd) {
-    errorDiv.textContent = 'Please enter email and password';
-    errorDiv.style.display = 'block';
-    return;
-  }
-  // Use localStorage for demo (fallback)
-  const customers = JSON.parse(localStorage.getItem('bz_customers') || '[]');
-  const user = customers.find(c => c.email === email && c.pass === pwd);
-  if (user) {
-    localStorage.setItem('bz_current_user', JSON.stringify(user));
-    closeLoginModal();
-    showLoggedInInterface({ email: user.email, displayName: user.firstName + ' ' + user.lastName });
-  } else {
-    errorDiv.textContent = 'Invalid email or password';
-    errorDiv.style.display = 'block';
-  }
-}
-async function googleLogin() {
-  alert('Google login is disabled in this demo. Please use email/password registration.');
-}
+function closeLoginModal() { document.getElementById('loginModal').style.display = 'none'; }
 
 // Language toggle
 var isArabic = false;
@@ -775,146 +719,125 @@ function toggleLanguage() {
   if (heroTitle) heroTitle.innerHTML = isArabic ? "نظام واحد <em>لكل الأعمال</em>" : "One System for <em>Every Business</em>";
 }
 
-// Dashboard rendering
-function showLoggedInInterface(user) {
-  currentUserObj = user;
-  // Hide hero and pricing sections
-  document.getElementById('heroSection').style.display = 'none';
-  document.getElementById('pricingSection').style.display = 'none';
-  // Hide registration form and portal selection
-  document.getElementById('regFormContainer').style.display = 'none';
-  document.getElementById('selectionInterface').style.display = 'none';
-  // Navbar buttons
-  document.getElementById('loginNavBtn').style.display = 'none';
-  document.getElementById('logoutNavBtn').style.display = 'inline-block';
-  // Show profile name
-  const profileSpan = document.getElementById('userProfileName');
-  if (profileSpan) {
-    let displayName = user.displayName || user.email;
-    profileSpan.textContent = '👤 ' + (displayName || 'User');
-    profileSpan.style.display = 'inline-block';
-  }
-  // Create dashboard container if not exists
-  let dashContainer = document.getElementById('dynamicDashboard');
-  if (!dashContainer) {
-    dashContainer = document.createElement('div');
-    dashContainer.id = 'dynamicDashboard';
-    const hero = document.getElementById('heroSection');
-    hero.parentNode.insertBefore(dashContainer, hero.nextSibling);
-  }
-  renderDashboardContent(dashContainer);
-}
+// Dashboard and POS logic
+let currentUserObj = null;
+let posCart = [];
+let posProducts = [
+  { name: 'Coffee', price: 12 },
+  { name: 'Sandwich', price: 22 },
+  { name: 'Juice', price: 15 },
+  { name: 'Cake', price: 18 },
+  { name: 'Burger', price: 25 },
+  { name: 'Fries', price: 10 }
+];
 
-function renderDashboardContent(container) {
-  let userName = currentUserObj?.displayName || currentUserObj?.email || 'User';
-  if (userName && userName.includes('@')) userName = userName.split('@')[0];
+function renderDashboard() {
+  const container = document.getElementById('dashboardView');
+  if (!container) return;
+  container.style.display = 'block';
+  document.getElementById('posView').style.display = 'none';
   container.innerHTML = `
     <div class="dashboard-container">
-      <div style="background: linear-gradient(135deg, #4f2d91, #7c3aed); color: white; padding: 16px 20px; border-radius: 20px; margin-bottom: 24px; display: flex; align-items: center; gap: 15px;">
-        <div style="background: white; width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; color: #4f2d91;">👤</div>
-        <div><div style="font-size: 18px; font-weight: 800;">Welcome back, ${userName}!</div><div style="font-size: 13px;">Administrator • Last login: Today</div></div>
-      </div>
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-        <h2>📊 Admin Dashboard</h2>
-        <button class="switch-pos-btn" onclick="switchToPOSDynamic()">💻 Switch to POS</button>
+      <div class="dashboard-grid">
+        <div class="dashboard-card"><h3>Today's Sales</h3><div class="big-number">﷼ 4,250</div><span class="trend-up">↑ 12% from yesterday</span></div>
+        <div class="dashboard-card"><h3>Total Orders</h3><div class="big-number">58</div><span>This month</span></div>
+        <div class="dashboard-card"><h3>Inventory Alerts</h3><div class="big-number">3</div><span>Items low in stock</span></div>
+        <div class="dashboard-card"><h3>Net Profit</h3><div class="big-number">﷼ 96,500</div><span>Expenses deducted</span></div>
       </div>
       <div class="dashboard-grid">
-        <div class="dashboard-card"><h3>Today's Sales</h3><div class="big-number">﷼ 4,250</div><span class="trend-up">↑ 12%</span></div>
-        <div class="dashboard-card"><h3>Total Orders</h3><div class="big-number">58</div></div>
-        <div class="dashboard-card"><h3>Low Stock</h3><div class="big-number">3</div></div>
-        <div class="dashboard-card"><h3>Net Profit</h3><div class="big-number">﷼ 96.5K</div></div>
+        <div class="dashboard-card"><h3>📈 Sales by Hour</h3><canvas id="salesChart" height="120" style="width:100%;background:#fff;border-radius:8px;"></canvas></div>
+        <div class="dashboard-card"><h3>💳 Payment Methods</h3><div>Card 55%</div><div>Cash 35%</div><div>Wallet 10%</div><div style="height:8px;background:#eee;border-radius:4px;margin-top:8px;"><div style="width:55%;height:8px;background:#4f2d91;border-radius:4px;"></div></div></div>
+        <div class="dashboard-card"><h3>🔥 Top Selling Products</h3><ul style="list-style:none;"><li>Room Service - 45 sold</li><li>Mini Bar - 32 sold</li><li>Banquet - 28 sold</li></ul></div>
+        <div class="dashboard-card"><h3>⚠️ Low Stock Alerts</h3><div class="low-stock-item"><span>Towels (12 left)</span><button class="reorder-btn" onclick="alert('Reorder request sent for Towels')">Reorder</button></div><div class="low-stock-item"><span>Coffee sachets (8 left)</span><button class="reorder-btn" onclick="alert('Reorder request sent for Coffee sachets')">Reorder</button></div></div>
       </div>
-      <div class="quick-actions">
-        <button class="qa-btn" onclick="openNewOrderModal()">➕ New Order</button>
-        <button class="qa-btn" onclick="openAddProductModal()">📦 Add Product</button>
-        <button class="qa-btn" onclick="window.print()">🖨️ Print Report</button>
-        <button class="qa-btn" onclick="alert('🔄 Data synced successfully!')">🔄 Sync Data</button>
+      <div class="dashboard-grid">
+        <div class="dashboard-card"><h3>🔄 Recent Activity</h3><div class="activity-item">📌 New booking #1024</div><div class="activity-item">📌 Order #998 completed</div></div>
+        <div class="dashboard-card"><h3>💰 Expense Snapshot</h3><div>Today's Revenue: ﷼ 128,500</div><div>Today's Expenses: ﷼ 32,000</div><div><strong>Net Profit: ﷼ 96,500</strong></div></div>
+        <div class="dashboard-card"><h3>⚡ Quick Actions</h3><div class="quick-actions">
+          <button class="qa-btn" onclick="openNewOrderModal()">➕ New Order</button>
+          <button class="qa-btn" onclick="openAddProductModal()">📦 Add Product</button>
+          <button class="qa-btn" onclick="window.print()">🖨️ Print Report</button>
+          <button class="qa-btn" onclick="alert('🔄 Data synced successfully!')">🔄 Sync Data</button>
+        </div></div>
       </div>
-      <div id="posContainerDynamic" style="margin-top:20px;"></div>
     </div>
   `;
+  setTimeout(() => {
+    let canvas = document.getElementById('salesChart');
+    if (canvas && canvas.getContext) {
+      let ctx = canvas.getContext('2d');
+      canvas.width = canvas.offsetWidth;
+      canvas.height = 120;
+      ctx.fillStyle = '#4f2d91';
+      let data = [30, 45, 60, 35, 70, 55];
+      let w = canvas.width / data.length;
+      for (let i = 0; i < data.length; i++) {
+        ctx.fillRect(i * w, canvas.height - data[i], w - 2, data[i]);
+      }
+    }
+  }, 50);
 }
 
-function switchToPOSDynamic() {
-  const container = document.getElementById('posContainerDynamic');
+function renderPOS() {
+  const container = document.getElementById('posView');
   if (!container) return;
+  container.style.display = 'block';
+  document.getElementById('dashboardView').style.display = 'none';
   let productsHtml = '';
   posProducts.forEach(p => {
-    productsHtml += `<button class="pos-product-btn" onclick="addToCartDynamic('${p.name}',${p.price})">${p.name} ${p.price}﷼</button>`;
+    productsHtml += `<button class="pos-product-btn" onclick="addToCart('${p.name}',${p.price})">${p.name} ${p.price}﷼</button>`;
   });
   container.innerHTML = `
-    <div style="background:#fff; border-radius:16px; padding:20px;">
-      <h3>Point of Sale</h3>
-      <div class="pos-product-grid">${productsHtml}</div>
-      <div id="cartListDynamic"></div>
-      <p>Total: <span id="cartTotalDynamic">0</span> ﷼</p>
-      <button class="qa-btn" onclick="checkoutDynamic()">Checkout</button>
-      <button class="switch-pos-btn" onclick="switchBackToDashboard()">Back to Dashboard</button>
+    <div class="pos-container">
+      <h3>🖥️ Point of Sale (Demo)</h3>
+      <div class="pos-product-grid" id="posProductGrid">
+        ${productsHtml}
+      </div>
+      <div style="background:#fff;border-radius:12px;padding:15px;">
+        <h4>Cart</h4>
+        <div id="posCartList"></div>
+        <div style="margin-top:10px;"><strong>Total: </strong><span id="posTotalAmount">0</span> ﷼</div>
+        <button class="qa-btn" style="margin-top:15px;background:#10b981;" onclick="checkoutPOS()">💳 Checkout (Demo)</button>
+      </div>
     </div>
   `;
-  updateCartDynamic();
-}
-function switchBackToDashboard() {
-  const dashContainer = document.getElementById('dynamicDashboard');
-  if (dashContainer) renderDashboardContent(dashContainer);
-}
-function addToCartDynamic(name, price) {
-  posCart.push({ name, price });
-  updateCartDynamic();
-}
-function updateCartDynamic() {
-  let cartDiv = document.getElementById('cartListDynamic');
-  let totalSpan = document.getElementById('cartTotalDynamic');
-  if (!cartDiv) return;
-  let total = 0;
-  cartDiv.innerHTML = posCart.map((item, idx) => {
-    total += item.price;
-    return `<div class="cart-item">${item.name} ${item.price}﷼ <button onclick="removeFromCartDynamic(${idx})">🗑️</button></div>`;
-  }).join('');
-  if (totalSpan) totalSpan.innerText = total;
-}
-function removeFromCartDynamic(idx) { posCart.splice(idx,1); updateCartDynamic(); }
-function checkoutDynamic() { alert('Checkout complete'); posCart = []; updateCartDynamic(); }
-
-function logoutUser() {
-  localStorage.removeItem('bz_current_user');
-  location.reload();
+  updatePOSUI();
 }
 
-async function doSubmit() {
-  const fErr = document.getElementById('fErr'), fOk = document.getElementById('fOk');
-  const first = document.getElementById('fFirst').value.trim();
-  const last = document.getElementById('fLast').value.trim();
-  const email = document.getElementById('fEmail').value.trim();
-  const phone = document.getElementById('fCountryCode').value + ' ' + document.getElementById('fPhone').value.trim();
-  const biz = document.getElementById('fBiz').value.trim();
-  const pass = document.getElementById('fPass').value;
-  if (!first || !last || !email || !phone || !biz || !pass) {
-    fErr.innerText = 'Please fill all fields.'; fErr.style.display = 'block'; return;
-  }
-  if (pass.length < 8) { fErr.innerText = 'Password min 8 chars.'; fErr.style.display = 'block'; return; }
-  let customers = JSON.parse(localStorage.getItem('bz_customers') || '[]');
-  if (customers.find(c => c.email === email)) {
-    fErr.innerText = 'Email already exists.'; fErr.style.display = 'block'; return;
-  }
-  customers.push({ firstName: first, lastName: last, email, pass, business: biz, phone });
-  localStorage.setItem('bz_customers', JSON.stringify(customers));
-  fOk.innerText = 'Account created! Please login.'; fOk.style.display = 'block';
-  setTimeout(() => { openLoginModal(); }, 1000);
-}
-
-// Check if already logged in
-window.onload = function() {
-  const savedUser = localStorage.getItem('bz_current_user');
-  if (savedUser) {
-    try {
-      const user = JSON.parse(savedUser);
-      showLoggedInInterface({ email: user.email, displayName: user.firstName + ' ' + user.lastName });
-    } catch(e) {}
+function updatePOSUI() {
+  let cartDiv = document.getElementById('posCartList');
+  let totalSpan = document.getElementById('posTotalAmount');
+  if (cartDiv) {
+    cartDiv.innerHTML = '';
+    let total = 0;
+    posCart.forEach((item, idx) => {
+      total += item.price * item.qty;
+      let div = document.createElement('div');
+      div.className = 'cart-item';
+      div.innerHTML = `<span>${item.name} x${item.qty}</span><span>${item.price*item.qty} ﷼ <button onclick="removeFromCart(${idx})" style="background:none;border:none;color:red;cursor:pointer;">🗑️</button></span>`;
+      cartDiv.appendChild(div);
+    });
+    if (totalSpan) totalSpan.innerText = total;
   }
 }
 
-// Modal functions for dashboard
+window.addToCart = function(name, price) {
+  let existing = posCart.find(i => i.name === name);
+  if (existing) existing.qty++;
+  else posCart.push({ name, price, qty: 1 });
+  updatePOSUI();
+};
+window.removeFromCart = function(idx) {
+  posCart.splice(idx, 1);
+  updatePOSUI();
+};
+window.checkoutPOS = function() {
+  let total = document.getElementById('posTotalAmount')?.innerText || '0';
+  alert(`🧾 Demo checkout complete! Total: ${total} ﷼\n\nFull POS billing with receipt, payment gateway, and inventory will be available after registration.`);
+  posCart = [];
+  updatePOSUI();
+};
+
 function openNewOrderModal() {
   const select = document.getElementById('orderProductSelect');
   select.innerHTML = '';
@@ -943,11 +866,326 @@ function addNewProduct() {
   let price = parseFloat(document.getElementById('newProductPrice').value);
   if (!name || isNaN(price) || price<=0) { alert('Please enter valid product name and price.'); return; }
   posProducts.push({ name, price });
+  if (document.getElementById('posView').style.display === 'block') renderPOS();
+  const orderSelect = document.getElementById('orderProductSelect');
+  if (orderSelect) { let opt = document.createElement('option'); opt.value = price; opt.textContent = `${name} - ${price}﷼`; orderSelect.appendChild(opt); }
   alert(`✅ Product "${name}" added successfully!`);
   closeAddProductModal();
   document.getElementById('newProductName').value = '';
   document.getElementById('newProductPrice').value = '';
 }
+
+// ---------- FIXED LOGIN HANDLER: Removes hero & pricing, shows portal/dashboard in a new container ----------
+function showLoggedInInterface(user) {
+  currentUserObj = user;
+  // Hide the entire hero section and pricing section
+  const hero = document.getElementById('heroSection');
+  const pricing = document.getElementById('pricingSection');
+  if (hero) hero.style.display = 'none';
+  if (pricing) pricing.style.display = 'none';
+  // Hide registration form (still inside hidden hero, but just to be safe)
+  document.getElementById('regFormContainer').style.display = 'none';
+  // Show portal selection inside a new container outside hero
+  let portalContainer = document.getElementById('portalContainer');
+  if (!portalContainer) {
+    portalContainer = document.createElement('div');
+    portalContainer.id = 'portalContainer';
+    // Insert after the pricing section (which is now hidden)
+    pricing.parentNode.insertBefore(portalContainer, pricing.nextSibling);
+  }
+  portalContainer.innerHTML = `
+    <div class="portal-selection">
+      <h2 class="portal-title">Welcome Back, ${user.displayName || user.email.split('@')[0]}!</h2>
+      <div class="portal-grid">
+        <div class="portal-card" onclick="openPortal('dashboard')">
+          <span class="portal-icon">📊</span>
+          <h3>Admin Dashboard</h3>
+          <p>View reports, manage inventory, and settings.</p>
+        </div>
+        <div class="portal-card" onclick="openPortal('pos')">
+          <span class="portal-icon">💻</span>
+          <h3>POS System</h3>
+          <p>Quick billing, checkout, and sales terminal.</p>
+        </div>
+      </div>
+    </div>
+  `;
+  // Also update navbar
+  document.getElementById('loginNavBtn').style.display = 'none';
+  document.getElementById('logoutNavBtn').style.display = 'inline-block';
+  const profileSpan = document.getElementById('userProfileName');
+  if (profileSpan) {
+    profileSpan.textContent = '👤 ' + (user.displayName || user.email.split('@')[0]);
+    profileSpan.style.display = 'inline-block';
+  }
+}
+
+function openPortal(type) {
+  // Remove portal selection container
+  const portalContainer = document.getElementById('portalContainer');
+  if (portalContainer) portalContainer.remove();
+  // Now render dashboard or pos inside a new main container
+  let appContainer = document.getElementById('appContainer');
+  if (!appContainer) {
+    appContainer = document.createElement('div');
+    appContainer.id = 'appContainer';
+    // Insert after the (hidden) pricing section
+    const pricing = document.getElementById('pricingSection');
+    pricing.parentNode.insertBefore(appContainer, pricing.nextSibling);
+  }
+  if (type === 'dashboard') {
+    // We'll reuse the existing dashboardView but move it? Simpler: render directly in appContainer.
+    appContainer.innerHTML = '';
+    const dashDiv = document.createElement('div');
+    dashDiv.id = 'dashboardView';
+    dashDiv.style.display = 'block';
+    appContainer.appendChild(dashDiv);
+    // Temporarily reassign dashboardView to this new div
+    const oldDashboardView = document.getElementById('dashboardView');
+    if (oldDashboardView && oldDashboardView !== dashDiv) {
+      // copy content? easier: just render in appContainer directly
+      renderDashboardDirect(appContainer);
+    } else {
+      renderDashboardDirect(appContainer);
+    }
+  } else {
+    appContainer.innerHTML = '';
+    const posDiv = document.createElement('div');
+    posDiv.id = 'posView';
+    posDiv.style.display = 'block';
+    appContainer.appendChild(posDiv);
+    renderPOSDirect(appContainer);
+  }
+}
+
+function renderDashboardDirect(container) {
+  let userName = currentUserObj?.displayName || currentUserObj?.email || 'User';
+  if (userName && userName.includes('@')) userName = userName.split('@')[0];
+  container.innerHTML = `
+    <div class="dashboard-container" style="background:#f5f5f5; padding:30px 20px; min-height:100vh;">
+      <div style="background: linear-gradient(135deg, #4f2d91, #7c3aed); color: white; padding: 16px 20px; border-radius: 20px; margin-bottom: 24px; display: flex; align-items: center; gap: 15px;">
+        <div style="background: white; width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; color: #4f2d91;">👤</div>
+        <div><div style="font-size: 18px; font-weight: 800;">Welcome back, ${userName}!</div><div style="font-size: 13px;">Administrator • Last login: Today</div></div>
+      </div>
+      <div class="dashboard-grid">
+        <div class="dashboard-card"><h3>Today's Sales</h3><div class="big-number">﷼ 4,250</div><span class="trend-up">↑ 12%</span></div>
+        <div class="dashboard-card"><h3>Total Orders</h3><div class="big-number">58</div></div>
+        <div class="dashboard-card"><h3>Low Stock</h3><div class="big-number">3</div></div>
+        <div class="dashboard-card"><h3>Net Profit</h3><div class="big-number">﷼ 96.5K</div></div>
+      </div>
+      <div class="quick-actions">
+        <button class="qa-btn" onclick="openNewOrderModal()">➕ New Order</button>
+        <button class="qa-btn" onclick="openAddProductModal()">📦 Add Product</button>
+        <button class="qa-btn" onclick="window.print()">🖨️ Print Report</button>
+        <button class="qa-btn" onclick="alert('🔄 Data synced successfully!')">🔄 Sync Data</button>
+      </div>
+      <button class="switch-pos-btn" onclick="openPortal('pos')">💻 Switch to POS</button>
+    </div>
+  `;
+}
+
+function renderPOSDirect(container) {
+  let productsHtml = '';
+  posProducts.forEach(p => {
+    productsHtml += `<button class="pos-product-btn" onclick="addToCartPOS('${p.name}',${p.price})">${p.name} ${p.price}﷼</button>`;
+  });
+  container.innerHTML = `
+    <div class="pos-container" style="background:#f5f5f5; padding:30px 20px; min-height:100vh;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+        <h2>🖥️ Point of Sale</h2>
+        <button class="switch-pos-btn" onclick="openPortal('dashboard')">📊 Back to Dashboard</button>
+      </div>
+      <div class="pos-product-grid" id="posProductGridDirect">
+        ${productsHtml}
+      </div>
+      <div style="background:#fff;border-radius:12px;padding:15px;">
+        <h4>Cart</h4>
+        <div id="posCartListDirect"></div>
+        <div style="margin-top:10px;"><strong>Total: </strong><span id="posTotalAmountDirect">0</span> ﷼</div>
+        <button class="qa-btn" style="margin-top:15px;background:#10b981;" onclick="checkoutPOSDirect()">💳 Checkout (Demo)</button>
+      </div>
+    </div>
+  `;
+  updatePOSUIDirect();
+}
+
+function updatePOSUIDirect() {
+  let cartDiv = document.getElementById('posCartListDirect');
+  let totalSpan = document.getElementById('posTotalAmountDirect');
+  if (cartDiv) {
+    cartDiv.innerHTML = '';
+    let total = 0;
+    posCart.forEach((item, idx) => {
+      total += item.price * item.qty;
+      let div = document.createElement('div');
+      div.className = 'cart-item';
+      div.innerHTML = `<span>${item.name} x${item.qty}</span><span>${item.price*item.qty} ﷼ <button onclick="removeFromCartDirect(${idx})" style="background:none;border:none;color:red;cursor:pointer;">🗑️</button></span>`;
+      cartDiv.appendChild(div);
+    });
+    if (totalSpan) totalSpan.innerText = total;
+  }
+}
+window.addToCartPOS = function(name, price) {
+  let existing = posCart.find(i => i.name === name);
+  if (existing) existing.qty++;
+  else posCart.push({ name, price, qty: 1 });
+  updatePOSUIDirect();
+};
+window.removeFromCartDirect = function(idx) {
+  posCart.splice(idx, 1);
+  updatePOSUIDirect();
+};
+window.checkoutPOSDirect = function() {
+  let total = document.getElementById('posTotalAmountDirect')?.innerText || '0';
+  alert(`🧾 Demo checkout complete! Total: ${total} ﷼`);
+  posCart = [];
+  updatePOSUIDirect();
+};
+
+async function performLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const pwd = document.getElementById('loginPassword').value;
+  const errorDiv = document.getElementById('loginError');
+  errorDiv.style.display = 'none';
+  if (!email || !pwd) {
+    errorDiv.textContent = 'Please enter email and password';
+    errorDiv.style.display = 'block';
+    return;
+  }
+  if (typeof window.fbSignIn === 'function') {
+    try {
+      await window.fbSignIn(email, pwd);
+      closeLoginModal();
+      return;
+    } catch (err) {
+      errorDiv.textContent = err.message || 'Invalid credentials';
+      errorDiv.style.display = 'block';
+      return;
+    }
+  }
+  const customers = JSON.parse(localStorage.getItem('bz_customers') || '[]');
+  const user = customers.find(c => c.email === email && c.pass === pwd);
+  if (user) {
+    closeLoginModal();
+    showLoggedInInterface({ email: user.email, displayName: user.firstName + ' ' + user.lastName, uid: user.id });
+  } else {
+    errorDiv.textContent = 'Invalid email or password';
+    errorDiv.style.display = 'block';
+  }
+}
+async function googleLogin() {
+  if (typeof window.fbGoogleSignIn === 'function') {
+    closeLoginModal();
+    await window.fbGoogleSignIn();
+  } else {
+    alert('Google sign-in is not available. Please use email/password or register.');
+  }
+}
+function logoutUser() {
+  if (window.fbAuth && window.fbLogout) window.fbLogout();
+  localStorage.removeItem('bz_customers');
+  currentUserObj = null;
+  // Remove any added containers and show hero/pricing again
+  const portal = document.getElementById('portalContainer');
+  const app = document.getElementById('appContainer');
+  if (portal) portal.remove();
+  if (app) app.remove();
+  const hero = document.getElementById('heroSection');
+  const pricing = document.getElementById('pricingSection');
+  if (hero) hero.style.display = 'flex';
+  if (pricing) pricing.style.display = 'block';
+  document.getElementById('regFormContainer').style.display = 'block';
+  document.getElementById('loginNavBtn').style.display = 'inline-block';
+  document.getElementById('logoutNavBtn').style.display = 'none';
+  const profileSpan = document.getElementById('userProfileName');
+  if (profileSpan) profileSpan.style.display = 'none';
+  location.reload(); // clean reload to reset all state
+}
+async function doSubmit() {
+  const fErr = document.getElementById('fErr'), fOk = document.getElementById('fOk');
+  const first = document.getElementById('fFirst').value.trim();
+  const last = document.getElementById('fLast').value.trim();
+  const email = document.getElementById('fEmail').value.trim();
+  const phone = document.getElementById('fCountryCode').value + ' ' + document.getElementById('fPhone').value.trim();
+  const biz = document.getElementById('fBiz').value.trim();
+  const pass = document.getElementById('fPass').value;
+  if (!first || !last || !email || !phone || !biz || !pass) {
+    fErr.innerText = 'Please fill all fields.'; fErr.style.display = 'block'; return;
+  }
+  if (pass.length < 8) { fErr.innerText = 'Password min 8 chars.'; fErr.style.display = 'block'; return; }
+  document.getElementById('sbBtn').disabled = true;
+  document.getElementById('sbBtn').innerText = 'Creating...';
+  const userData = { firstName: first, lastName: last, email, phone, business: biz, plan: 'All-in-One', date: new Date().toISOString() };
+  if (typeof window.fbCreateUser === 'function') {
+    try {
+      await window.fbCreateUser(email, pass, userData);
+      return;
+    } catch(err) { console.warn(err); }
+  }
+  let customers = JSON.parse(localStorage.getItem('bz_customers') || '[]');
+  customers.unshift({ ...userData, pass });
+  localStorage.setItem('bz_customers', JSON.stringify(customers));
+  fOk.innerText = `Account created! Redirecting...`; fOk.style.display = 'block';
+  setTimeout(() => {
+    let fakeUser = { email, displayName: first + ' ' + last, uid: Date.now().toString() };
+    showLoggedInInterface(fakeUser);
+  }, 1000);
+}
+</script>
+
+<!-- Firebase SDK -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithRedirect, getRedirectResult } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+  import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+  const firebaseConfig = { apiKey: "AIzaSyCN0akvFXOHM6WPHv9ve9noqqmauO3TJRY", authDomain: "billzest-pos.firebaseapp.com", projectId: "billzest-pos", storageBucket: "billzest-pos.firebasestorage.app", messagingSenderId: "946546876429", appId: "1:946546876429:web:9b4a7aa3cecbf3aea83544" };
+  let auth, db;
+  try {
+    const app = initializeApp(firebaseConfig);
+    auth = getAuth(app);
+    db = getFirestore(app);
+    window.fbAuth = auth;
+    window.fbCreateUser = async (email, password, userData) => {
+      const cred = await createUserWithEmailAndPassword(auth, email, password);
+      await setDoc(doc(db, "users", cred.user.uid), { ...userData, uid: cred.user.uid, createdAt: new Date().toISOString() });
+      return cred;
+    };
+    window.fbSignIn = async (email, password) => {
+      await signInWithEmailAndPassword(auth, email, password);
+    };
+    window.fbLogout = async () => { await signOut(auth); location.reload(); };
+    const googleProvider = new GoogleAuthProvider();
+    window.fbGoogleSignIn = async () => {
+      try {
+        await signInWithRedirect(auth, googleProvider);
+      } catch(e) {
+        console.error(e);
+        alert('Google sign-in failed. Please try again.');
+      }
+    };
+    getRedirectResult(auth).then(async (result) => {
+      if (result && result.user) {
+        const user = result.user;
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+        if (!userDoc.exists()) {
+          await setDoc(doc(db, "users", user.uid), {
+            firstName: user.displayName ? user.displayName.split(' ')[0] : 'User',
+            lastName: user.displayName ? user.displayName.split(' ').slice(1).join(' ') : '',
+            email: user.email,
+            uid: user.uid,
+            plan: 'All-in-One',
+            createdAt: new Date().toISOString()
+          });
+        }
+        showLoggedInInterface({ email: user.email, displayName: user.displayName, uid: user.uid });
+      }
+    }).catch(e => console.warn(e));
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        showLoggedInInterface({ email: user.email, displayName: user.displayName, uid: user.uid });
+      }
+    });
+  } catch(e) { console.warn('Firebase not loaded, using localStorage fallback'); }
 </script>
 </body>
 </html>
