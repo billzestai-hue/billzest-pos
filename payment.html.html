@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment - Billzestpos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .payment-container {
+            max-width: 550px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 32px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+        }
+
+        .payment-header {
+            background: linear-gradient(135deg, #4f46e5, #ec4899);
+            padding: 30px;
+            text-align: center;
+            color: white;
+        }
+
+        .payment-header h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .order-summary {
+            padding: 25px;
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .order-summary h3 {
+            font-size: 1rem;
+            color: #64748b;
+            margin-bottom: 15px;
+        }
+
+        .order-items {
+            margin-bottom: 15px;
+        }
+
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .total-amount {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid #cbd5e1;
+            font-weight: 800;
+            font-size: 1.2rem;
+        }
+
+        .bank-details {
+            padding: 25px;
+            background: white;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .bank-details h3 {
+            font-size: 1rem;
+            color: #64748b;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .bank-card {
+            background: linear-gradient(145deg, #0f172a, #1e293b);
+            color: white;
+            border-radius: 20px;
+            padding: 25px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bank-card::before {
+            content: "✦✦✦";
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            font-size: 80px;
+            opacity: 0.1;
+        }
+
+        .bank-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .bank-info {
+            margin-top: 20px;
+        }
+
+        .bank-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .bank-label {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        .bank-value {
+            font-weight: 600;
+            letter-spacing: 1px;
+            word-break: break-all;
+        }
+
+        .copy-btn {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.7rem;
+        }
+
+        .payment-form {
+            padding: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #334155;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79,70,229,0.1);
+        }
+
+        .upload-area {
+            border: 2px dashed #cbd5e1;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .upload-area:hover {
+            border-color: #4f46e5;
+            background: #f8fafc;
+        }
+
+        .upload-area i {
+            font-size: 32px;
+            color: #64748b;
+            margin-bottom: 10px;
+        }
+
+        #screenshotPreview {
+            margin-top: 15px;
+            max-width: 100%;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #4f46e5, #ec4899);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(79,70,229,0.3);
+        }
+
+        .whatsapp-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #25D366;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: none;
+            color: white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            background: #10b981;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            display: none;
+            z-index: 1000;
+        }
+
+        @media (max-width: 768px) {
+            .payment-container { margin: 15px; border-radius: 24px; }
+            .bank-card { padding: 20px; }
+            .bank-row { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="payment-container">
+        <div class="payment-header">
+            <h1>💳 Payment Portal</h1>
+            <p>Complete your payment securely</p>
+        </div>
+
+        <div class="order-summary" id="orderSummary">
+            <h3>📋 Order Summary</h3>
+            <div class="order-items" id="orderItems"></div>
+            <div class="total-amount">
+                <span>Total Amount</span>
+                <span id="totalAmount">SAR 0.00</span>
+            </div>
+        </div>
+
+        <div class="bank-details">
+            <h3><i data-lucide="building-2"></i> Bank Transfer Details</h3>
+            <div class="bank-card">
+                <div class="bank-logo">
+                    <i data-lucide="bank"></i>
+                    <span style="font-weight: 700;">AL RAJHI BANK</span>
+                </div>
+                <div class="bank-info">
+                    <div class="bank-row">
+                        <span class="bank-label">Account Name</span>
+                        <span class="bank-value" id="bankAccountName">[ENTER YOUR NAME]</span>
+                        <button class="copy-btn" onclick="copyText(document.getElementById('bankAccountName').innerText)">Copy</button>
+                    </div>
+                    <div class="bank-row">
+                        <span class="bank-label">Account Number</span>
+                        <span class="bank-value" id="bankAccountNo">[ENTER ACCOUNT NUMBER]</span>
+                        <button class="copy-btn" onclick="copyText(document.getElementById('bankAccountNo').innerText)">Copy</button>
+                    </div>
+                    <div class="bank-row">
+                        <span class="bank-label">IBAN</span>
+                        <span class="bank-value" id="bankIban">[ENTER IBAN]</span>
+                        <button class="copy-btn" onclick="copyText(document.getElementById('bankIban').innerText)">Copy</button>
+                    </div>
+                </div>
+            </div>
+            <p style="font-size: 0.8rem; color: #64748b; margin-top: 15px; text-align: center;">
+                <i data-lucide="shield-check" size="14"></i> SAMA approved • Secure transfer
+            </p>
+        </div>
+
+        <div class="payment-form">
+            <form id="paymentForm">
+                <div class="form-group">
+                    <label>Full Name <span style="color: #ef4444;">*</span></label>
+                    <input type="text" id="customerName" placeholder="Enter your full name" required>
+                </div>
+                <div class="form-group">
+                    <label>Phone Number <span style="color: #ef4444;">*</span></label>
+                    <input type="tel" id="customerPhone" placeholder="05XXXXXXXX" required>
+                </div>
+                <div class="form-group">
+                    <label>Email (Optional)</label>
+                    <input type="email" id="customerEmail" placeholder="your@email.com">
+                </div>
+                <div class="form-group">
+                    <label>Reference / Transaction ID <span style="color: #ef4444;">*</span></label>
+                    <input type="text" id="transactionId" placeholder="e.g., TRF-123456789" required>
+                    <small>From your Al Rajhi app after transfer</small>
+                </div>
+                <div class="form-group">
+                    <label>Screenshot (Optional)</label>
+                    <div class="upload-area" onclick="document.getElementById('screenshot').click()">
+                        <i data-lucide="upload-cloud"></i>
+                        <p>Click to upload screenshot</p>
+                    </div>
+                    <input type="file" id="screenshot" accept="image/*" style="display: none;">
+                    <img id="screenshotPreview" alt="Preview">
+                </div>
+                <button type="submit" class="btn-submit">
+                    <i data-lucide="check-circle"></i>
+                    Confirm Payment
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <button class="whatsapp-btn" onclick="openWhatsApp()">
+        <i data-lucide="message-circle"></i>
+    </button>
+    <div id="toast" class="toast"></div>
+
+    <script>
+        lucide.createIcons();
+
+        // ========== LOAD ORDER FROM URL PARAMETERS ==========
+        function loadOrderFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const itemsStr = urlParams.get('items');
+            const total = urlParams.get('total');
+            
+            const orderItemsDiv = document.getElementById('orderItems');
+            
+            if (itemsStr) {
+                try {
+                    const items = JSON.parse(decodeURIComponent(itemsStr));
+                    orderItemsDiv.innerHTML = '';
+                    items.forEach(item => {
+                        const div = document.createElement('div');
+                        div.className = 'order-item';
+                        div.innerHTML = `<span>${item.name} x${item.quantity}</span><span>SAR ${item.price}</span>`;
+                        orderItemsDiv.appendChild(div);
+                    });
+                } catch(e) {
+                    setDefaultItems();
+                }
+            } else {
+                setDefaultItems();
+            }
+            
+            if (total) {
+                document.getElementById('totalAmount').innerText = `SAR ${total}`;
+            } else {
+                document.getElementById('totalAmount').innerText = 'SAR 63.00';
+            }
+        }
+
+        function setDefaultItems() {
+            const items = [
+                { name: 'Butter Chicken', quantity: 1, price: '45.00' },
+                { name: 'Garlic Naan', quantity: 2, price: '10.00' },
+                { name: 'Soft Drink', quantity: 1, price: '8.00' }
+            ];
+            const container = document.getElementById('orderItems');
+            container.innerHTML = '';
+            items.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'order-item';
+                div.innerHTML = `<span>${item.name} x${item.quantity}</span><span>SAR ${item.price}</span>`;
+                container.appendChild(div);
+            });
+        }
+
+        // ========== COPY FUNCTION ==========
+        window.copyText = function(text) {
+            navigator.clipboard.writeText(text);
+            showToast("Copied to clipboard! ✅");
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.style.display = 'block';
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 2000);
+        }
+
+        // ========== SCREENSHOT PREVIEW ==========
+        document.getElementById('screenshot').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const preview = document.getElementById('screenshotPreview');
+                    preview.src = event.target.result;
+                    preview.style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // ========== FORM SUBMIT ==========
+        document.getElementById('paymentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const customerName = document.getElementById('customerName').value;
+            const customerPhone = document.getElementById('customerPhone').value;
+            const customerEmail = document.getElementById('customerEmail').value;
+            const transactionId = document.getElementById('transactionId').value;
+
+            if (!customerName || !customerPhone || !transactionId) {
+                showToast("Please fill all required fields! ⚠️");
+                return;
+            }
+
+            // Get order items
+            const orderItems = [];
+            document.querySelectorAll('.order-item').forEach(item => {
+                const text = item.innerText;
+                orderItems.push(text);
+            });
+
+            const orderData = {
+                id: 'ORD' + Date.now(),
+                name: customerName,
+                phone: customerPhone,
+                email: customerEmail || 'Not provided',
+                transactionId: transactionId,
+                orderSummary: orderItems.join(', '),
+                totalAmount: document.getElementById('totalAmount').innerText,
+                timestamp: new Date().toLocaleString(),
+                status: 'Pending'
+            };
+
+            // Save to localStorage
+            let orders = JSON.parse(localStorage.getItem('billzest_orders') || '[]');
+            orders.push(orderData);
+            localStorage.setItem('billzest_orders', JSON.stringify(orders));
+
+            // Send WhatsApp message
+            const message = `🆕 *NEW ORDER* 🆕%0A%0A` +
+                `🆔 Order ID: ${orderData.id}%0A` +
+                `👤 Name: ${customerName}%0A` +
+                `📞 Phone: ${customerPhone}%0A` +
+                `📧 Email: ${customerEmail || 'Not provided'}%0A` +
+                `🔖 Transaction ID: ${transactionId}%0A` +
+                `📦 Order: ${orderItems.join(', ')}%0A` +
+                `💰 Total: ${document.getElementById('totalAmount').innerText}%0A` +
+                `🕐 Time: ${new Date().toLocaleString()}%0A%0A` +
+                `✅ Please verify payment in Al Rajhi app and confirm order.`;
+
+            window.open(`https://wa.me/966550898978?text=${message}`, '_blank');
+            showToast("Order sent! We'll verify shortly ✅");
+
+            setTimeout(() => {
+                window.location.href = 'payment-success.html?id=' + orderData.id;
+            }, 2000);
+        });
+
+        function openWhatsApp() {
+            window.open('https://wa.me/966550898978?text=Hello%21%20I%20need%20help%20with%20my%20payment', '_blank');
+        }
+
+        loadOrderFromURL();
+    </script>
+</body>
+</html>
