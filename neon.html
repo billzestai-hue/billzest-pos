@@ -3,100 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>BillZestPOS | Neon Corporate Premium Edition</title>
+    <title>BillZestPOS | Neon Corporate Edition</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; background: #0a0c10; color: #e0e0e0; }
         
-        .btn-neon, .btn-exit-neon, .login-btn-neon {
-            padding: 12px 24px; font-size: 14px; font-weight: 600; border: none; border-radius: 28px;
-            cursor: pointer; transition: all 0.3s ease; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-        }
-        .login-btn-neon { width: 100%; background: linear-gradient(135deg, #00ffff, #ff00ff); color: white; }
-        .btn-neon { background: linear-gradient(135deg, #00ffff, #ff00ff); color: white; }
-        .btn-exit-neon { background: rgba(239, 68, 68, 0.9); color: white; }
-        
+        /* LOGIN */
         .login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0a0c10; display: flex; align-items: center; justify-content: center; z-index: 1000; }
-        .login-container { background: #0f1117; border-radius: 40px; padding: 50px; width: 90%; max-width: 440px; text-align: center; border: 1px solid #00ffff22; box-shadow: 0 0 40px rgba(0, 255, 255, 0.1); }
+        .login-container { background: #0f1117; border-radius: 40px; padding: 50px; width: 90%; max-width: 440px; text-align: center; border: 1px solid #00ffff22; box-shadow: 0 0 40px rgba(0,255,255,0.1); }
         .neon-icon { width: 80px; height: 80px; background: linear-gradient(135deg, #00ffff, #ff00ff); border-radius: 28px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; }
+        .login-container h2 { font-size: 28px; margin: 10px 0; background: linear-gradient(135deg, #00ffff, #ff00ff); -webkit-background-clip: text; background-clip: text; color: transparent; }
         .login-container input { width: 100%; padding: 14px; margin: 10px 0; background: #1a1d24; border: 1px solid #2a2e38; border-radius: 24px; color: white; }
+        .login-btn-neon { width: 100%; padding: 14px; background: linear-gradient(135deg, #00ffff, #ff00ff); border: none; border-radius: 28px; color: white; font-weight: 600; cursor: pointer; }
         
         /* SUCCESS POPUP */
-        .success-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.9); backdrop-filter: blur(15px);
-            display: flex; justify-content: center; align-items: center; z-index: 2000; opacity: 0; visibility: hidden; transition: all 0.4s ease;
-        }
-        .success-overlay.active { opacity: 1; visibility: visible; }
-        .success-card {
-            background: linear-gradient(145deg, #0f1117, #0a0c10); border-radius: 60px; padding: 50px 60px; text-align: center;
-            border: 1px solid rgba(0, 255, 255, 0.3); box-shadow: 0 0 60px rgba(0, 255, 255, 0.2); animation: successPop 0.5s ease;
-        }
-        @keyframes successPop { 0% { transform: scale(0.7); opacity: 0; } 80% { transform: scale(1.05); } 100% { transform: scale(1); opacity: 1; } }
-        .success-icon { width: 100px; height: 100px; background: linear-gradient(135deg, #00ffff, #10b981); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 25px; animation: iconPulse 0.8s infinite; }
-        @keyframes iconPulse { 0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); } 70% { box-shadow: 0 0 0 20px rgba(16, 185, 129, 0); } 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); } }
-        .success-icon i { font-size: 55px; color: white; }
-        .success-card h2 { color: white; font-size: 32px; margin-bottom: 12px; }
-        .order-details { background: rgba(255, 255, 255, 0.05); border-radius: 30px; padding: 20px; margin: 25px 0; text-align: left; }
-        .order-details p { margin: 8px 0; color: #cbd5e1; }
-        .close-success { padding: 14px 35px; background: linear-gradient(135deg, #00ffff, #ff00ff); border: none; border-radius: 40px; color: white; font-size: 16px; font-weight: 600; cursor: pointer; }
+        .success-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); backdrop-filter: blur(15px); display: flex; justify-content: center; align-items: center; z-index: 2000; opacity: 0; visibility: hidden; transition: 0.3s; }
+        .success-overlay.show { opacity: 1; visibility: visible; }
+        .success-card-neon { background: linear-gradient(145deg, #0f1117, #0a0c10); border-radius: 50px; padding: 40px; text-align: center; border: 1px solid #00ffff; max-width: 450px; width: 90%; }
+        .success-icon { width: 80px; height: 80px; background: linear-gradient(135deg, #00ffff, #10b981); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; }
+        .close-success-neon { padding: 12px 30px; background: linear-gradient(135deg, #00ffff, #ff00ff); border: none; border-radius: 40px; color: white; cursor: pointer; }
         
+        /* MAIN APP */
         .app-dash { display: none; }
-        .sidebar-neon { position: fixed; left: 0; top: 0; width: 280px; height: 100%; background: #0f1117; border-right: 1px solid #00ffff22; padding: 30px 20px; }
+        .sidebar-neon { position: fixed; left: 0; top: 0; width: 260px; height: 100%; background: #0f1117; border-right: 1px solid #00ffff22; padding: 30px 20px; }
         .sidebar-header { text-align: center; margin-bottom: 40px; }
-        .nav-neon { padding: 14px 18px; margin: 6px 0; border-radius: 16px; display: flex; align-items: center; gap: 14px; cursor: pointer; transition: 0.2s; }
+        .nav-neon { padding: 12px 18px; margin: 6px 0; border-radius: 16px; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: 0.2s; color: #9ca3af; }
         .nav-neon:hover, .nav-neon.active { background: #00ffff15; border-left: 3px solid #00ffff; color: #00ffff; }
-        .main-neon { margin-left: 280px; padding: 30px; }
-        .top-bar-neon { display: flex; justify-content: flex-end; align-items: center; gap: 20px; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #2a2e38; }
-        .user-badge-neon { padding: 10px 20px; background: #1a1d24; border-radius: 28px; font-size: 14px; color: #00ffff; display: flex; align-items: center; gap: 8px; }
-        .stats-neon { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 25px; margin-bottom: 30px; }
-        .stat-neon-card { background: #0f1117; border-radius: 24px; padding: 25px; border: 1px solid #2a2e38; }
-        .pos-neon-layout { display: grid; grid-template-columns: 1fr 400px; gap: 30px; }
+        .main-neon { margin-left: 260px; padding: 25px; }
+        .top-bar-neon { display: flex; justify-content: flex-end; align-items: center; gap: 20px; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #2a2e38; }
+        .user-badge-neon { padding: 8px 18px; background: #1a1d24; border-radius: 28px; font-size: 13px; color: #00ffff; }
+        .btn-exit-neon { background: #ef4444; border: none; padding: 8px 20px; border-radius: 28px; color: white; cursor: pointer; }
+        
+        .stats-neon { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 25px; }
+        .stat-neon-card { background: #0f1117; border-radius: 24px; padding: 20px; border: 1px solid #2a2e38; }
+        
+        .pos-neon-layout { display: grid; grid-template-columns: 1fr 380px; gap: 25px; }
         .menu-neon { background: #0f1117; border-radius: 28px; padding: 25px; }
-        .cat-neon-group { display: flex; gap: 12px; margin-bottom: 25px; flex-wrap: wrap; }
-        .neon-cat { padding: 8px 22px; background: #1a1d24; border: none; border-radius: 30px; cursor: pointer; font-size: 13px; color: #9ca3af; }
+        .cat-neon-group { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        .neon-cat { padding: 8px 20px; background: #1a1d24; border: none; border-radius: 30px; cursor: pointer; font-size: 12px; color: #9ca3af; }
         .neon-cat.active { background: linear-gradient(135deg, #00ffff, #ff00ff); color: white; }
-        .items-neon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(135px, 1fr)); gap: 15px; }
+        .items-neon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; }
         .item-neon-card { background: #1a1d24; border-radius: 20px; padding: 15px; text-align: center; cursor: pointer; transition: 0.2s; border: 1px solid #2a2e38; }
         .item-neon-card:hover { border-color: #00ffff; transform: translateY(-2px); }
         .cart-neon { background: #0f1117; border-radius: 28px; padding: 25px; position: sticky; top: 20px; }
         .cart-neon input, .cart-neon select { width: 100%; padding: 12px; background: #1a1d24; border: 1px solid #2a2e38; border-radius: 20px; color: white; margin: 8px 0; }
-        .cart-buttons-neon { display: flex; gap: 12px; margin-top: 15px; }
+        .cart-buttons-neon { display: flex; gap: 10px; margin-top: 15px; }
+        .btn-neon { flex: 1; padding: 12px; background: linear-gradient(135deg, #00ffff, #ff00ff); border: none; border-radius: 28px; color: white; font-weight: 600; cursor: pointer; }
+        .btn-whatsapp-neon { flex: 1; padding: 12px; background: #25D366; border: none; border-radius: 28px; color: white; font-weight: 600; cursor: pointer; }
+        
         @media (max-width: 900px) { .sidebar-neon { display: none; } .main-neon { margin-left: 0; } .pos-neon-layout { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
 
+<!-- LOGIN -->
 <div class="login-overlay" id="loginNeon">
     <div class="login-container">
         <div class="neon-icon"><i class="fas fa-crown" style="font-size: 40px; color:white;"></i></div>
-        <h2 style="font-size: 28px; margin: 10px 0;">BillZestPOS</h2>
-        <p style="margin-bottom: 30px;">Neon Corporate Premium</p>
+        <h2>BillZestPOS</h2>
+        <p style="margin-bottom: 20px;">Neon Corporate Edition</p>
         <input type="text" id="loginUserN" placeholder="Username" autocomplete="off">
-        <input type="password" id="loginPassN" placeholder="Password" onkeypress="if(event.key==='Enter') handleLoginN()">
+        <input type="password" id="loginPassN" placeholder="Password" autocomplete="off" onkeypress="if(event.key==='Enter') handleLoginN()">
         <button class="login-btn-neon" onclick="handleLoginN()"><i class="fas fa-arrow-right"></i> Login</button>
         <div style="margin-top: 20px; font-size: 12px;">🔐 billzest / billzest123 | cashier / 123</div>
     </div>
 </div>
 
+<!-- SUCCESS POPUP -->
 <div class="success-overlay" id="successOverlayN">
-    <div class="success-card">
-        <div class="success-icon"><i class="fas fa-check-circle"></i></div>
-        <h2>✨ Order Completed! ✨</h2>
-        <p>Your bill has been printed successfully</p>
-        <div class="order-details">
-            <p><i class="fas fa-receipt"></i> <strong>Order #</strong> <span id="successOrderIdN">12345</span></p>
-            <p><i class="fas fa-user"></i> <strong>Customer:</strong> <span id="successCustomerNameN">Guest</span></p>
-            <p><i class="fas fa-money-bill"></i> <strong>Total Amount:</strong> <span id="successTotalN">0</span> SAR</p>
-            <p><i class="fas fa-clock"></i> <strong>Time:</strong> <span id="successTimeN">Just now</span></p>
+    <div class="success-card-neon">
+        <div class="success-icon"><i class="fas fa-check" style="font-size: 40px; color:white;"></i></div>
+        <h2 style="color:white; font-size:28px;">✓ Order Complete!</h2>
+        <p style="color:#9ca3af; margin:10px 0;">Bill printed successfully</p>
+        <div style="background:rgba(255,255,255,0.05); border-radius:20px; padding:15px; margin:15px 0; text-align:left;">
+            <p><strong>Order #:</strong> <span id="popupOrderIdN">12345</span></p>
+            <p><strong>Customer:</strong> <span id="popupCustomerN">Guest</span></p>
+            <p><strong>Total:</strong> <span id="popupTotalN">0</span> SAR</p>
+            <p><strong>Time:</strong> <span id="popupTimeN">Now</span></p>
         </div>
-        <p style="color: #10b981;">🎉 Thank you for choosing BillZestPOS!</p>
-        <button class="close-success" onclick="closeSuccessMessageN()"><i class="fas fa-check"></i> Continue</button>
+        <p style="color:#10b981;">🎉 Thank you for choosing BillZestPOS!</p>
+        <button class="close-success-neon" onclick="closePopupN()">Continue</button>
     </div>
 </div>
 
+<!-- MAIN APP -->
 <div class="app-dash" id="mainNeon">
     <div class="sidebar-neon">
         <div class="sidebar-header"><i class="fas fa-crown" style="font-size: 40px; color:#00ffff;"></i><h3 style="margin-top: 10px;">BillZestPOS</h3></div>
@@ -109,18 +101,18 @@
 
     <div class="main-neon">
         <div class="top-bar-neon">
-            <span class="user-badge-neon" id="userBadgeN"><i class="fas fa-user-astronaut"></i> admin</span>
-            <button class="btn-exit-neon" onclick="logoutN()"><i class="fas fa-sign-out-alt"></i> Exit</button>
+            <span class="user-badge-neon" id="userBadgeN"><i class="fas fa-user"></i> admin</span>
+            <button class="btn-exit-neon" onclick="logoutN()">Exit</button>
         </div>
 
         <div id="dashNeon">
             <div class="stats-neon">
-                <div class="stat-neon-card"><h4>Today's Sales</h4><h2 id="nsales">0 SAR</h2></div>
-                <div class="stat-neon-card"><h4>Total Orders</h4><h2 id="norders">0</h2></div>
-                <div class="stat-neon-card"><h4>Pending Kitchen</h4><h2 id="nkitchen">0</h2></div>
-                <div class="stat-neon-card"><h4>Customers</h4><h2 id="ncustomers">0</h2></div>
+                <div class="stat-neon-card"><h4 style="color:#9ca3af;">Today's Sales</h4><h2 id="nsales" style="color:white;">0 SAR</h2></div>
+                <div class="stat-neon-card"><h4 style="color:#9ca3af;">Total Orders</h4><h2 id="norders" style="color:white;">0</h2></div>
+                <div class="stat-neon-card"><h4 style="color:#9ca3af;">Kitchen Queue</h4><h2 id="nkitchen" style="color:white;">0</h2></div>
+                <div class="stat-neon-card"><h4 style="color:#9ca3af;">Customers</h4><h2 id="ncustomers" style="color:white;">0</h2></div>
             </div>
-            <div class="stat-neon-card"><canvas id="neonChart" height="120"></canvas></div>
+            <div class="stat-neon-card"><canvas id="neonChart" height="100"></canvas></div>
         </div>
 
         <div id="posNeon" style="display:none;">
@@ -136,105 +128,174 @@
                 </div>
                 <div class="cart-neon">
                     <h3 style="margin-bottom: 15px;"><i class="fas fa-shopping-cart"></i> Current Order</h3>
-                    <input type="text" id="cnameN" placeholder="Customer Name">
-                    <input type="tel" id="cphoneN" placeholder="Phone Number">
+                    <input type="text" id="cnameN" placeholder="Customer Name" autocomplete="off">
+                    <input type="tel" id="cphoneN" placeholder="Phone Number" autocomplete="off">
                     <div id="cartNeonList" style="max-height: 250px; overflow: auto; margin: 15px 0;"></div>
-                    <div class="stat-neon-card" style="margin: 10px 0; padding: 15px;">Total: <strong id="cartNeonTotal">0 SAR</strong></div>
-                    <select id="payNeon"><option>💵 Cash</option><option>💳 Card</option><option>📱 QR Code</option></select>
+                    <div class="stat-neon-card" style="margin: 10px 0; padding: 15px;"><strong>Total:</strong> <span id="cartNeonTotal" style="color:#00ffff; font-size:20px;">0 SAR</span></div>
+                    <select id="payNeon" style="width:100%; padding:12px; background:#1a1d24; border:1px solid #2a2e38; border-radius:20px; color:white;">
+                        <option>💵 Cash</option><option>💳 Card</option><option>📱 QR Code</option>
+                    </select>
                     <div class="cart-buttons-neon">
-                        <button class="btn-neon" onclick="placeOrderN()" style="flex:1;"><i class="fas fa-print"></i> Print Bill</button>
-                        <button class="btn-neon" onclick="sendWhatsappN()" style="flex:1; background: linear-gradient(135deg, #25D366, #128C7E);"><i class="fab fa-whatsapp"></i> WhatsApp</button>
+                        <button class="btn-neon" onclick="placeOrderN()"><i class="fas fa-print"></i> Print Bill</button>
+                        <button class="btn-whatsapp-neon" onclick="sendWhatsappN()"><i class="fab fa-whatsapp"></i> WhatsApp</button>
                     </div>
                 </div>
             </div>
         </div>
 
         <div id="kitchenNeon" style="display:none;"><div id="kitchenNeonGrid" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:20px;"></div></div>
-        <div id="reportsNeon" style="display:none;"><div class="stat-neon-card"><button class="btn-neon" onclick="exportReportN()" style="width:100%;"><i class="fas fa-download"></i> Export CSV Report</button></div></div>
+        <div id="reportsNeon" style="display:none;"><div class="stat-neon-card"><button class="btn-neon" onclick="exportReportN()" style="width:100%;"><i class="fas fa-download"></i> Export CSV</button></div></div>
         <div id="customersNeon" style="display:none;"><div id="customersNeonList"></div></div>
     </div>
 </div>
 
 <script>
-    function showSuccessMessageN(orderId, customerName, total) {
-        document.getElementById("successOrderIdN").innerText = orderId;
-        document.getElementById("successCustomerNameN").innerText = customerName;
-        document.getElementById("successTotalN").innerText = total;
-        document.getElementById("successTimeN").innerText = new Date().toLocaleTimeString();
-        document.getElementById("successOverlayN").classList.add("active");
-        setTimeout(() => closeSuccessMessageN(), 5000);
-    }
-    function closeSuccessMessageN() { document.getElementById("successOverlayN").classList.remove("active"); }
-
+    // MENU DATA
     const menuN = [
-        {id:1,name:"Signature Steak",price:95,cat:"main"},{id:2,name:"Grilled Lobster",price:120,cat:"main"},{id:3,name:"Lamb Chops",price:75,cat:"main"},
-        {id:4,name:"Truffle Pasta",price:58,cat:"main"},{id:5,name:"Fresh Juice",price:16,cat:"beverage"},{id:6,name:"Special Coffee",price:22,cat:"beverage"},
-        {id:7,name:"Tiramisu",price:24,cat:"dessert"},{id:8,name:"Brownie",price:18,cat:"dessert"}
+        {id:1, name:"Signature Steak", price:95, cat:"main", emoji:"🥩"},
+        {id:2, name:"Grilled Lobster", price:120, cat:"main", emoji:"🦞"},
+        {id:3, name:"Lamb Chops", price:75, cat:"main", emoji:"🍖"},
+        {id:4, name:"Truffle Pasta", price:58, cat:"main", emoji:"🍝"},
+        {id:5, name:"Fresh Juice", price:16, cat:"beverage", emoji:"🧃"},
+        {id:6, name:"Special Coffee", price:22, cat:"beverage", emoji:"☕"},
+        {id:7, name:"Tiramisu", price:24, cat:"dessert", emoji:"🍰"},
+        {id:8, name:"Brownie", price:18, cat:"dessert", emoji:"🍫"}
     ];
-    let cartN = [], ordersN = JSON.parse(localStorage.getItem("billzest_v4_orders")) || [], kitchenN = JSON.parse(localStorage.getItem("billzest_v4_kitchen")) || [], customersN = JSON.parse(localStorage.getItem("billzest_v4_customers")) || [], currentCatN = "all";
 
-    function renderMenuN(){
-        let f = currentCatN==="all"? menuN : menuN.filter(m=>m.cat===currentCatN);
+    let cartN = [];
+    let ordersN = JSON.parse(localStorage.getItem("billzest_orders_v4")) || [];
+    let kitchenN = JSON.parse(localStorage.getItem("billzest_kitchen_v4")) || [];
+    let customersN = JSON.parse(localStorage.getItem("billzest_customers_v4")) || [];
+    let currentCatN = "all";
+
+    function renderMenuN() {
+        let f = currentCatN === "all" ? menuN : menuN.filter(m => m.cat === currentCatN);
         let html = "";
-        f.forEach(i=>{ html+=`<div class="item-neon-card" onclick="addCartN(${i.id},'${i.name}',${i.price})"><div style="font-size:28px;">🍽️</div><div><b>${i.name}</b></div><div>${i.price} SAR</div></div>`; });
+        f.forEach(i => {
+            html += `<div class="item-neon-card" onclick="addCartN(${i.id},'${i.name}',${i.price})">
+                        <div style="font-size: 38px;">${i.emoji}</div>
+                        <div style="font-weight:600; font-size:13px;">${i.name}</div>
+                        <div style="color:#00ffff;">${i.price} SAR</div>
+                    </div>`;
+        });
         document.getElementById("menuNeonGrid").innerHTML = html;
     }
-    
-    window.addCartN = function(id,name,price){ let e=cartN.find(i=>i.id===id); if(e) e.qty++; else cartN.push({id,name,price,qty:1}); renderCartN(); };
-    
-    function renderCartN(){
-        if(cartN.length===0){ document.getElementById("cartNeonList").innerHTML="<div style='text-align:center;padding:30px;'>Empty Cart</div>"; document.getElementById("cartNeonTotal").innerText="0 SAR"; return; }
-        let html="", total=0; cartN.forEach((it,idx)=>{ total+=it.price*it.qty; html+=`<div style="display:flex; justify-content:space-between; padding:10px; background:#1a1d24; border-radius:16px; margin:8px 0;"><div><b>${it.name}</b> x${it.qty}</div><div>${it.price*it.qty} SAR <button onclick="upQtyN(${idx},-1)" style="background:#00ffff; border:none; width:26px; border-radius:12px;">-</button> ${it.qty} <button onclick="upQtyN(${idx},1)" style="background:#00ffff; border:none; width:26px; border-radius:12px;">+</button> <button onclick="remQtyN(${idx})" style="background:#ef4444; border:none; width:26px; border-radius:12px;">✕</button></div></div>`; });
-        document.getElementById("cartNeonList").innerHTML=html; document.getElementById("cartNeonTotal").innerText=total+" SAR";
+
+    window.addCartN = function(id, name, price) {
+        let e = cartN.find(i => i.id === id);
+        if(e) e.qty++;
+        else cartN.push({ id, name, price, qty: 1 });
+        renderCartN();
+    };
+
+    function renderCartN() {
+        if(cartN.length === 0) {
+            document.getElementById("cartNeonList").innerHTML = "<div style='text-align:center;padding:30px;color:#6b7280;'>✨ Empty Cart</div>";
+            document.getElementById("cartNeonTotal").innerText = "0 SAR";
+            return;
+        }
+        let html = "", total = 0;
+        cartN.forEach((it, idx) => {
+            total += it.price * it.qty;
+            html += `<div style="display:flex; justify-content:space-between; padding:10px; background:#1a1d24; border-radius:16px; margin:8px 0;">
+                        <div><strong>${it.name}</strong><br><small>${it.price} × ${it.qty}</small></div>
+                        <div>
+                            <button onclick="upQtyN(${idx},-1)" style="background:#00ffff; border:none; width:26px; border-radius:8px;">-</button>
+                            <span style="margin:0 6px;">${it.qty}</span>
+                            <button onclick="upQtyN(${idx},1)" style="background:#00ffff; border:none; width:26px; border-radius:8px;">+</button>
+                            <button onclick="remQtyN(${idx})" style="background:#ef4444; border:none; width:26px; border-radius:8px;">✕</button>
+                        </div>
+                    </div>`;
+        });
+        document.getElementById("cartNeonList").innerHTML = html;
+        document.getElementById("cartNeonTotal").innerText = total + " SAR";
     }
-    
-    window.upQtyN=function(idx,d){ let n=cartN[idx].qty+d; if(n<=0) cartN.splice(idx,1); else cartN[idx].qty=n; renderCartN(); };
-    window.remQtyN=function(idx){ cartN.splice(idx,1); renderCartN(); };
-    
-    window.placeOrderN = function(){
-        if(cartN.length===0) return alert("Cart empty!");
+
+    window.upQtyN = function(idx, d) {
+        let n = cartN[idx].qty + d;
+        if(n <= 0) cartN.splice(idx, 1);
+        else cartN[idx].qty = n;
+        renderCartN();
+    };
+    window.remQtyN = function(idx) { cartN.splice(idx, 1); renderCartN(); };
+
+    function showPopupN(orderId, name, total) {
+        document.getElementById("popupOrderIdN").innerText = orderId;
+        document.getElementById("popupCustomerN").innerText = name;
+        document.getElementById("popupTotalN").innerText = total;
+        document.getElementById("popupTimeN").innerText = new Date().toLocaleTimeString();
+        document.getElementById("successOverlayN").classList.add("show");
+        setTimeout(() => closePopupN(), 4000);
+    }
+    function closePopupN() { document.getElementById("successOverlayN").classList.remove("show"); }
+
+    // PERFECTLY ALIGNED BILL FUNCTION
+    window.placeOrderN = function() {
+        if(cartN.length === 0) { alert("Cart empty!"); return; }
+        
         let name = document.getElementById("cnameN").value.trim() || "Guest";
-        let phone = document.getElementById("cphoneN").value.trim();
-        let subtotal = cartN.reduce((s,i)=>s+(i.price*i.qty),0);
+        let phone = document.getElementById("cphoneN").value.trim() || "N/A";
+        let subtotal = cartN.reduce((s, i) => s + (i.price * i.qty), 0);
         let vat = subtotal * 0.15;
         let total = subtotal + vat;
         let orderId = Date.now();
-        let order = { id: orderId, customer: name, phone, items: [...cartN], subtotal, vat, total, payment: document.getElementById("payNeon").value, date: new Date().toISOString() };
+        
+        let order = { id: orderId, customer: name, phone: phone, items: [...cartN], subtotal, vat, total, payment: document.getElementById("payNeon").value, date: new Date().toISOString() };
         ordersN.unshift(order);
-        kitchenN.unshift({ id: order.id, customer: name, items: cartN.map(i=>`${i.name} x${i.qty}`).join(", "), time: new Date().toLocaleTimeString() });
-        if(phone && !customersN.find(c=>c.phone===phone)) customersN.unshift({ name, phone, last: new Date().toLocaleString() });
-        saveAllN(); renderKitchenN(); updateStatsN();
+        kitchenN.unshift({ id: order.id, customer: name, items: cartN.map(i => `${i.name} x${i.qty}`).join(", "), time: new Date().toLocaleTimeString() });
+        if(phone !== "N/A" && !customersN.find(c => c.phone === phone)) customersN.unshift({ name, phone, last: new Date().toLocaleString() });
+        saveAllN();
+        renderKitchenN();
+        updateStatsN();
+        
+        // ========== PERFECT BILL ALIGNMENT ==========
+        const W = 52;
+        function line() { return "╔" + "═".repeat(W) + "╗"; }
+        function line2() { return "╠" + "═".repeat(W) + "╣"; }
+        function line3() { return "║" + "─".repeat(W) + "║"; }
+        function bottom() { return "╚" + "═".repeat(W) + "╝"; }
+        function center(t) { let s = W - t.length; let l = Math.floor(s/2); return " ".repeat(l) + t + " ".repeat(s-l); }
+        function leftRight(l, r) { return l + " ".repeat(W - l.length - r.length) + r; }
         
         let date = new Date();
-        let formattedDate = date.toLocaleDateString('en-GB');
-        let formattedTime = date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+        let bill = [];
+        bill.push(line());
+        bill.push("║" + center("🏆 BILLZESTPOS 🏆") + "║");
+        bill.push("║" + center("Neon Corporate Edition") + "║");
+        bill.push(line2());
+        bill.push("║" + leftRight("📍 Order #:", orderId.toString()) + "║");
+        bill.push("║" + leftRight("📅 Date:", date.toLocaleDateString('en-GB') + "  🕐 Time: " + date.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})) + "║");
+        bill.push("║" + leftRight("👤 Customer:", name) + "║");
+        bill.push("║" + leftRight("📞 Phone:", phone) + "║");
+        bill.push(line2());
+        bill.push("║" + center("🍽️ ORDER SUMMARY 🍽️") + "║");
         
-        let invoice = `
-╔════════════════════════════════════════╗
-║            🏆 BILLZESTPOS 🏆           ║
-║         Neon Corporate Edition         ║
-╠════════════════════════════════════════╣
-║  📍 Order #: ${orderId}                  ║
-║  📅 Date: ${formattedDate}  🕐 Time: ${formattedTime}    ║
-║  👤 Customer: ${name.padEnd(25)}║
-║  📞 Phone: ${(phone || "N/A").padEnd(26)}║
-╠════════════════════════════════════════╣
-║           🍽️ ORDER SUMMARY 🍽️          ║
-${cartN.map((item, idx) => `║  ${(idx+1).toString().padStart(2)}. ${item.name.padEnd(25)} ${item.qty} x ${item.price} SAR = ${(item.price * item.qty)} SAR║`).join('\n')}
-╠════════════════════════════════════════╣
-║  💰 SUBTOTAL: ${subtotal.toFixed(2).toString().padStart(34)} SAR ║
-║  🧾 VAT (15%): ${vat.toFixed(2).toString().padStart(34)} SAR ║
-║  💎 GRAND TOTAL: ${total.toFixed(2).toString().padStart(33)} SAR ║
-║  💳 Payment: ${order.payment.padEnd(28)}║
-╠════════════════════════════════════════╣
-║         🙏 THANK YOU! 🙏               ║
-║         ⭐⭐⭐⭐⭐ 5 Star Service         ║
-╚════════════════════════════════════════╝`;
+        cartN.forEach((item, idx) => {
+            let lineText = `  ${(idx+1).toString().padStart(2)}. ${item.name.padEnd(22)} ${item.qty} x ${item.price} SAR = ${item.price * item.qty} SAR`;
+            bill.push("║" + lineText.padEnd(W) + "║");
+        });
         
-        showSuccessMessageN(order.id, name, total.toFixed(2));
+        bill.push(line2());
+        bill.push("║" + leftRight("💰 SUBTOTAL:", subtotal.toFixed(2) + " SAR") + "║");
+        bill.push("║" + leftRight("🧾 VAT (15%):", vat.toFixed(2) + " SAR") + "║");
+        bill.push(line3());
+        bill.push("║" + leftRight("💎 GRAND TOTAL:", total.toFixed(2) + " SAR") + "║");
+        bill.push("║" + leftRight("💳 Payment:", order.payment) + "║");
+        bill.push(line2());
+        bill.push("║" + center("🙏 THANK YOU! 🙏") + "║");
+        bill.push("║" + center("Visit Again at BillZestPOS") + "║");
+        bill.push("║" + center("⭐⭐⭐⭐⭐ 5 Star Service") + "║");
+        bill.push(bottom());
+        
+        let invoice = bill.join("\n");
+        showPopupN(order.id, name, total.toFixed(2));
         
         let win = window.open('', '_blank');
-        win.document.write(`<!DOCTYPE html><html><head><title>BillZestPOS Invoice #${orderId}</title><style>body{font-family:'Courier New',monospace;background:#0a0c10;display:flex;justify-content:center;align-items:center;min-height:100vh;padding:20px;}pre{font-family:'Courier New',monospace;font-size:13px;background:#1a1d24;color:#e0e0e0;padding:20px;border-radius:12px;border:1px solid #00ffff33;}@media print{body{background:white;}pre{background:white;color:black;}}</style></head><body><pre>${invoice}</pre><script>setTimeout(()=>window.print(),500);<\/script></body></html>`);
+        win.document.write(`
+            <html><head><title>BillZestPOS #${orderId}</title>
+            <style>body{font-family:'Courier New',monospace;background:#0a0c10;display:flex;justify-content:center;align-items:center;min-height:100vh;padding:20px;}pre{background:#1a1d24;color:#e0e0e0;padding:20px;border-radius:12px;border:1px solid #00ffff33;}@media print{body{background:white;}pre{background:white;color:black;border:none;}}</style>
+            </head><body><pre>${invoice}</pre><script>setTimeout(()=>window.print(),500);<\/script></body></html>
+        `);
         
         cartN = [];
         document.getElementById("cnameN").value = "";
@@ -242,32 +303,127 @@ ${cartN.map((item, idx) => `║  ${(idx+1).toString().padStart(2)}. ${item.name.
         renderCartN();
         updateStatsN();
     };
-    
-    window.sendWhatsappN = function(){
+
+    window.sendWhatsappN = function() {
+        if(cartN.length === 0) { alert("Cart empty!"); return; }
         let p = document.getElementById("cphoneN").value.trim();
-        if(cartN.length===0) return alert("Cart empty!");
-        if(!p) return alert("Enter phone!");
-        let total = cartN.reduce((s,i)=>s+(i.price*i.qty),0);
-        let msg = `🛎️ *BillZestPOS Order* 🛎️\n\n${cartN.map(i=>`✅ ${i.name} x${i.qty} = ${i.price*i.qty} SAR`).join("\n")}\n\n📌 *TOTAL: ${total} SAR*`;
+        if(!p) { alert("Enter phone number!"); return; }
+        let total = cartN.reduce((s, i) => s + (i.price * i.qty), 0);
+        let msg = `🛎️ *BillZestPOS Order* 🛎️\n\n${cartN.map(i => `✅ ${i.name} x${i.qty} = ${i.price * i.qty} SAR`).join("\n")}\n\n📌 *TOTAL: ${total} SAR*`;
         window.open(`https://wa.me/${p}?text=${encodeURIComponent(msg)}`, '_blank');
     };
+
+    function renderKitchenN() {
+        let html = "";
+        kitchenN.forEach(k => {
+            html += `<div style="background:#0f1117; border-radius:20px; padding:18px; margin-bottom:15px; border-left:3px solid #00ffff;">
+                        <b>🔥 Order #${k.id}</b> | ${k.time}<br>👤 ${k.customer}<br>🍽️ ${k.items}<br>
+                        <button onclick="completeKitchenN(${k.id})" style="background:#10b981; border:none; padding:8px 16px; border-radius:20px; margin-top:10px; cursor:pointer;">✓ Prepared</button>
+                    </div>`;
+        });
+        document.getElementById("kitchenNeonGrid").innerHTML = html || "<div style='text-align:center;padding:40px;'>No orders</div>";
+    }
+    window.completeKitchenN = function(id) { kitchenN = kitchenN.filter(k => k.id !== id); saveAllN(); renderKitchenN(); updateStatsN(); };
     
-    function renderKitchenN(){ let html=""; kitchenN.forEach(k=>{ html+=`<div style="background:#0f1117; border-radius:24px; padding:20px;"><b>🔥 Order #${k.id}</b><br>👤 ${k.customer}<br>🍽️ ${k.items}<br><button onclick="completeKitchenN(${k.id})" style="background:#10b981; border:none; padding:8px 16px; border-radius:20px; margin-top:10px;">✓ Prepared</button></div>`; }); document.getElementById("kitchenNeonGrid").innerHTML=html||"<div style='text-align:center;padding:50px;'>No orders</div>"; }
-    window.completeKitchenN=function(id){ kitchenN=kitchenN.filter(k=>k.id!==id); saveAllN(); renderKitchenN(); updateStatsN(); };
-    function renderCustomersN(){ let html=""; customersN.forEach(c=>{ html+=`<div style="background:#0f1117; border-radius:20px; padding:15px; margin:10px 0;"><b>${c.name}</b><br>📞 ${c.phone}<br>📅 ${c.last}</div>`; }); document.getElementById("customersNeonList").innerHTML=html; }
-    function updateStatsN(){ let today=new Date().toDateString(); let t=ordersN.filter(o=>new Date(o.date).toDateString()===today).reduce((s,o)=>s+o.total,0); document.getElementById("nsales").innerText=t.toFixed(2)+" SAR"; document.getElementById("norders").innerText=ordersN.length; document.getElementById("nkitchen").innerText=kitchenN.length; document.getElementById("ncustomers").innerText=customersN.length; if(window.nc) window.nc.destroy(); let ctx=document.getElementById('neonChart').getContext('2d'); window.nc=new Chart(ctx,{ type:'line', data:{ labels:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'], datasets:[{ label:'Sales (SAR)', data:[1800,2200,1950,2700,3100,3600,3400], borderColor:'#00ffff', tension:0.4 }] } }); }
-    function saveAllN(){ localStorage.setItem("billzest_v4_orders",JSON.stringify(ordersN)); localStorage.setItem("billzest_v4_kitchen",JSON.stringify(kitchenN)); localStorage.setItem("billzest_v4_customers",JSON.stringify(customersN)); }
-    function exportReportN(){ let csv="ID,Customer,Subtotal,VAT,Total,Date\n"+ordersN.map(o=>`${o.id},${o.customer},${o.subtotal},${o.vat},${o.total},${new Date(o.date).toLocaleString()}`).join("\n"); let a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([csv])); a.download="billzest_report.csv"; a.click(); }
+    function renderCustomersN() {
+        let html = "";
+        customersN.forEach(c => {
+            html += `<div style="background:#0f1117; border-radius:16px; padding:15px; margin-bottom:10px;">
+                        <b>${c.name}</b><br>📞 ${c.phone}<br>📅 ${c.last}
+                    </div>`;
+        });
+        document.getElementById("customersNeonList").innerHTML = html || "<div style='text-align:center;padding:40px;'>No customers</div>";
+    }
     
-    document.querySelectorAll(".nav-neon").forEach(n=>{ n.addEventListener("click",function(){ document.querySelectorAll(".nav-neon").forEach(x=>x.classList.remove("active")); this.classList.add("active"); let p=this.dataset.page; document.getElementById("dashNeon").style.display=p==="dash"?"block":"none"; document.getElementById("posNeon").style.display=p==="pos"?"block":"none"; document.getElementById("kitchenNeon").style.display=p==="kitchen"?"block":"none"; document.getElementById("reportsNeon").style.display=p==="reports"?"block":"none"; document.getElementById("customersNeon").style.display=p==="customers"?"block":"none"; if(p==="pos") renderMenuN(); if(p==="kitchen") renderKitchenN(); if(p==="customers") renderCustomersN(); if(p==="dash") updateStatsN(); }); });
-    document.querySelectorAll(".neon-cat").forEach(btn=>{ btn.addEventListener("click",function(){ document.querySelectorAll(".neon-cat").forEach(b=>b.classList.remove("active")); this.classList.add("active"); currentCatN=this.dataset.cat; renderMenuN(); }); });
+    function updateStatsN() {
+        let today = new Date().toDateString();
+        let t = ordersN.filter(o => new Date(o.date).toDateString() === today).reduce((s, o) => s + o.total, 0);
+        document.getElementById("nsales").innerText = t.toFixed(2) + " SAR";
+        document.getElementById("norders").innerText = ordersN.length;
+        document.getElementById("nkitchen").innerText = kitchenN.length;
+        document.getElementById("ncustomers").innerText = customersN.length;
+        if(window.nc) window.nc.destroy();
+        let ctx = document.getElementById('neonChart').getContext('2d');
+        window.nc = new Chart(ctx, {
+            type: 'line',
+            data: { labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'], datasets: [{ label: 'Sales (SAR)', data: [1800,2200,1950,2700,3100,3600,3400], borderColor: '#00ffff', tension: 0.4 }] }
+        });
+    }
     
-    function handleLoginN(){ let u=document.getElementById("loginUserN").value, p=document.getElementById("loginPassN").value; if((u==="billzest" && p==="billzest123")||(u==="cashier" && p==="123")){ document.getElementById("loginNeon").style.display="none"; document.getElementById("mainNeon").style.display="block"; document.getElementById("userBadgeN").innerHTML=`<i class="fas fa-user-astronaut"></i> ${u}`; renderMenuN(); renderKitchenN(); renderCustomersN(); updateStatsN(); } else alert("Invalid! Use billzest/billzest123 or cashier/123"); }
-    function logoutN(){ document.getElementById("loginNeon").style.display="flex"; document.getElementById("mainNeon").style.display="none"; cartN=[]; }
+    function saveAllN() {
+        localStorage.setItem("billzest_orders_v4", JSON.stringify(ordersN));
+        localStorage.setItem("billzest_kitchen_v4", JSON.stringify(kitchenN));
+        localStorage.setItem("billzest_customers_v4", JSON.stringify(customersN));
+    }
     
-    if(!localStorage.getItem("billzest_v4_orders")){ ordersN=[{id:4001,customer:"Sultan",items:[],subtotal:95,vat:14.25,total:109.25,payment:"Cash",date:new Date().toISOString()}]; customersN=[{name:"Sultan",phone:"0501234567",last:new Date().toLocaleString()}]; saveAllN(); }
+    function exportReportN() {
+        let csv = "ID,Customer,Subtotal,VAT,Total,Payment,Date\n" + ordersN.map(o => `${o.id},${o.customer},${o.subtotal},${o.vat},${o.total},${o.payment},${new Date(o.date).toLocaleString()}`).join("\n");
+        let a = document.createElement("a");
+        a.href = URL.createObjectURL(new Blob([csv]));
+        a.download = "billzest_report.csv";
+        a.click();
+    }
     
-    window.handleLoginN=handleLoginN; window.logoutN=logoutN; window.exportReportN=exportReportN; window.closeSuccessMessageN = closeSuccessMessageN;
+    // Navigation
+    document.querySelectorAll(".nav-neon").forEach(nav => {
+        nav.addEventListener("click", function() {
+            document.querySelectorAll(".nav-neon").forEach(n => n.classList.remove("active"));
+            this.classList.add("active");
+            let page = this.dataset.page;
+            document.getElementById("dashNeon").style.display = page === "dash" ? "block" : "none";
+            document.getElementById("posNeon").style.display = page === "pos" ? "block" : "none";
+            document.getElementById("kitchenNeon").style.display = page === "kitchen" ? "block" : "none";
+            document.getElementById("reportsNeon").style.display = page === "reports" ? "block" : "none";
+            document.getElementById("customersNeon").style.display = page === "customers" ? "block" : "none";
+            if(page === "pos") renderMenuN();
+            if(page === "kitchen") renderKitchenN();
+            if(page === "customers") renderCustomersN();
+            if(page === "dash") updateStatsN();
+        });
+    });
+    
+    document.querySelectorAll(".neon-cat").forEach(btn => {
+        btn.addEventListener("click", function() {
+            document.querySelectorAll(".neon-cat").forEach(b => b.classList.remove("active"));
+            this.classList.add("active");
+            currentCatN = this.dataset.cat;
+            renderMenuN();
+        });
+    });
+    
+    function handleLoginN() {
+        let u = document.getElementById("loginUserN").value;
+        let p = document.getElementById("loginPassN").value;
+        if((u === "billzest" && p === "billzest123") || (u === "cashier" && p === "123")) {
+            document.getElementById("loginNeon").style.display = "none";
+            document.getElementById("mainNeon").style.display = "block";
+            document.getElementById("userBadgeN").innerHTML = `<i class="fas fa-user"></i> ${u}`;
+            renderMenuN();
+            renderKitchenN();
+            renderCustomersN();
+            updateStatsN();
+        } else {
+            alert("Invalid! Use billzest/billzest123 or cashier/123");
+        }
+    }
+    
+    function logoutN() {
+        document.getElementById("loginNeon").style.display = "flex";
+        document.getElementById("mainNeon").style.display = "none";
+        cartN = [];
+    }
+    
+    if(!localStorage.getItem("billzest_orders_v4")) {
+        ordersN = [];
+        kitchenN = [];
+        customersN = [];
+        saveAllN();
+    }
+    
+    window.handleLoginN = handleLoginN;
+    window.logoutN = logoutN;
+    window.exportReportN = exportReportN;
+    window.closePopupN = closePopupN;
 </script>
 </body>
 </html>
