@@ -18,6 +18,7 @@
         /* Left Side - Branding */
         .login-brand { flex: 1; background: linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(67, 56, 202, 0.9)), url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1000&q=80') center/cover; padding: 60px; display: flex; flex-direction: column; justify-content: space-between; color: white; position: relative; overflow: hidden; }
         .brand-logo { font-size: 2rem; font-weight: 800; display: flex; align-items: center; gap: 10px; z-index: 2; }
+        .brand-logo img { width: 45px; height: 45px; border-radius: 12px; object-fit: cover; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); }
         .brand-text { z-index: 2; }
         .brand-text h1 { font-size: 3.5rem; font-weight: 800; line-height: 1.1; margin-bottom: 20px; letter-spacing: -1px; }
         .brand-text p { font-size: 1.2rem; color: #cbd5e1; max-width: 400px; }
@@ -103,11 +104,9 @@
             <div class="circle-decor circle-1"></div>
             <div class="circle-decor circle-2"></div>
             
-            <div class="brand-logo" style="display:flex; align-items:center; gap:10px;">
-                <div style="background: white; color: var(--primary); width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);">
-                    <i data-lucide="store" size="26"></i>
-                </div>
-                <span style="color: white; font-weight: 800; font-size: 2rem;">Billzestpos</span>
+            <div class="brand-logo">
+                <img src="logo.png" alt="Billzestpos Logo" onerror="this.src='https://via.placeholder.com/45x45?text=Logo'">
+                <span>Billzestpos</span>
             </div>
 
             <div class="brand-text">
@@ -137,7 +136,7 @@
                     <label>Email Address</label>
                     <div class="input-wrapper">
                         <i data-lucide="mail" size="18"></i>
-                        <input type="email" id="emailInput" class="form-control" required placeholder="admin@restaurant.com" value="admin@restaurant.com">
+                        <input type="email" id="emailInput" class="form-control" required placeholder="admin@restaurant.com">
                     </div>
                 </div>
 
@@ -145,16 +144,16 @@
                     <label>Password</label>
                     <div class="input-wrapper">
                         <i data-lucide="lock" size="18"></i>
-                        <input type="password" id="passwordInput" class="form-control" required placeholder="••••••••" value="password123">
+                        <input type="password" id="passwordInput" class="form-control" required placeholder="••••••••">
                     </div>
                 </div>
 
                 <div class="form-options">
                     <label class="remember-me">
-                        <input type="checkbox" checked>
+                        <input type="checkbox" id="rememberCheckbox">
                         Remember me
                     </label>
-                    <a href="#" class="forgot-pass" id="forgotPasswordLink">Forgot Password?</a>
+                    <a href="#" id="forgotPasswordLink" class="forgot-pass">Forgot Password?</a>
                 </div>
 
                 <button type="submit" class="btn-login" id="loginBtn">
@@ -171,30 +170,16 @@
             </form>
 
             <div class="signup-prompt">
-                Don't have an account? <a href="contact.html">Request a Demo</a>
+                Don't have an account? <a href="#" id="createAccountLink">Create an account</a>
             </div>
         </div>
     </div>
 
-    <!-- UI and Demo Logic (kept as is) -->
-    <script>
-        lucide.createIcons();
-
-        function showAlert(message, isSuccess = false) {
-            const alertDiv = document.getElementById('alertMsg');
-            alertDiv.textContent = message;
-            alertDiv.className = 'alert-message ' + (isSuccess ? 'success' : '');
-            alertDiv.style.display = 'block';
-            setTimeout(() => {
-                alertDiv.style.display = 'none';
-            }, 5000);
-        }
-    </script>
-
-    <!-- Firebase Authentication Logic - FULLY WORKING -->
+    <!-- Firebase Authentication Full Script -->
     <script type="module">
-        import { auth, googleProvider, signInWithPopup, signInWithEmailAndPassword, sendPasswordResetEmail } from './firebase-config.js';
-
+        import { auth, googleProvider, signInWithPopup, signInWithEmailAndPassword, sendPasswordResetEmail, createUserWithEmailAndPassword } from './firebase-config.js';
+        
+        // DOM Elements
         const loginForm = document.getElementById('loginForm');
         const loginBtn = document.getElementById('loginBtn');
         const btnText = document.getElementById('btnText');
@@ -203,6 +188,19 @@
         const passwordInput = document.getElementById('passwordInput');
         const googleBtn = document.getElementById('googleBtn');
         const forgotLink = document.getElementById('forgotPasswordLink');
+        const createAccountLink = document.getElementById('createAccountLink');
+        const alertMsg = document.getElementById('alertMsg');
+        const rememberCheckbox = document.getElementById('rememberCheckbox');
+
+        // Helper Functions
+        function showAlert(message, isSuccess = false) {
+            alertMsg.textContent = message;
+            alertMsg.className = 'alert-message ' + (isSuccess ? 'success' : '');
+            alertMsg.style.display = 'block';
+            setTimeout(() => {
+                alertMsg.style.display = 'none';
+            }, 5000);
+        }
 
         function setLoading(isLoading) {
             if (isLoading) {
@@ -216,82 +214,173 @@
             }
         }
 
+        // Save/Load Remember Me
+        function loadSavedEmail() {
+            const savedEmail = localStorage.getItem('rememberedEmail');
+            if (savedEmail) {
+                emailInput.value = savedEmail;
+                if (rememberCheckbox) rememberCheckbox.checked = true;
+            }
+        }
+
+        function saveEmail(email) {
+            if (rememberCheckbox && rememberCheckbox.checked) {
+                localStorage.setItem('rememberedEmail', email);
+            } else {
+                localStorage.removeItem('rememberedEmail');
+            }
+        }
+
+        // Load saved email on page load
+        loadSavedEmail();
+
         // Email/Password Login
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const email = emailInput.value.trim();
-            const password = passwordInput.value;
-            
-            if (!email || !password) {
-                showAlert("Please enter both email and password");
-                return;
-            }
-            
-            setLoading(true);
-            
-            try {
-                await signInWithEmailAndPassword(auth, email, password);
-                window.location.href = 'dashboard.html';
-            } catch (error) {
-                setLoading(false);
-                if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found') {
-                    showAlert("Invalid email or password. Please try again.");
-                } else if (error.code === 'auth/wrong-password') {
-                    showAlert("Incorrect password. Please try again.");
-                } else if (error.code === 'auth/too-many-requests') {
-                    showAlert("Too many failed attempts. Please try again later.");
-                } else {
-                    showAlert("Login failed: " + error.message);
+        if (loginForm) {
+            loginForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const email = emailInput.value.trim();
+                const password = passwordInput.value;
+                
+                if (!email || !password) {
+                    showAlert("Please enter both email and password");
+                    return;
                 }
-            }
-        });
+                
+                setLoading(true);
+                saveEmail(email);
+                
+                try {
+                    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                    console.log("Login successful:", userCredential.user.email);
+                    window.location.href = 'dashboard.html';
+                } catch (error) {
+                    setLoading(false);
+                    console.error("Login error:", error.code, error.message);
+                    
+                    if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found') {
+                        showAlert("Invalid email or password. Please try again.");
+                    } else if (error.code === 'auth/wrong-password') {
+                        showAlert("Incorrect password. Please try again.");
+                    } else if (error.code === 'auth/too-many-requests') {
+                        showAlert("Too many failed attempts. Please try again later.");
+                    } else {
+                        showAlert("Login failed: " + error.message);
+                    }
+                }
+            });
+        }
+
+        // Create Account / Sign Up
+        if (createAccountLink) {
+            createAccountLink.addEventListener('click', async (e) => {
+                e.preventDefault();
+                
+                const email = emailInput.value.trim();
+                const password = passwordInput.value;
+                
+                if (!email || !password) {
+                    showAlert("Please enter email and password to create account");
+                    return;
+                }
+                
+                if (password.length < 6) {
+                    showAlert("Password should be at least 6 characters");
+                    return;
+                }
+                
+                setLoading(true);
+                
+                try {
+                    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                    console.log("Account created:", userCredential.user.email);
+                    showAlert("Account created successfully! Redirecting...", true);
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 1500);
+                } catch (error) {
+                    setLoading(false);
+                    console.error("Signup error:", error.code);
+                    
+                    if (error.code === 'auth/email-already-in-use') {
+                        showAlert("Email already registered. Please login instead.");
+                    } else if (error.code === 'auth/weak-password') {
+                        showAlert("Password should be at least 6 characters");
+                    } else {
+                        showAlert("Signup failed: " + error.message);
+                    }
+                }
+            });
+        }
 
         // Google Login
-        googleBtn.addEventListener('click', async (e) => {
-            e.preventDefault();
-            setLoading(true);
-            
-            try {
-                const result = await signInWithPopup(auth, googleProvider);
-                window.location.href = 'dashboard.html';
-            } catch (error) {
-                setLoading(false);
-                if (error.code === 'auth/popup-closed-by-user') {
-                    showAlert("Google sign-in was cancelled. Please try again.");
-                } else if (error.code === 'auth/popup-blocked') {
-                    showAlert("Pop-up blocked. Please allow pop-ups for this site.");
-                } else {
-                    showAlert("Google sign-in failed: " + error.message);
+        if (googleBtn) {
+            googleBtn.addEventListener('click', async (e) => {
+                e.preventDefault();
+                setLoading(true);
+                
+                try {
+                    const result = await signInWithPopup(auth, googleProvider);
+                    console.log("Google login success:", result.user.email);
+                    window.location.href = 'dashboard.html';
+                } catch (error) {
+                    setLoading(false);
+                    console.error("Google error:", error.code);
+                    
+                    if (error.code === 'auth/popup-closed-by-user') {
+                        showAlert("Google sign-in was cancelled. Please try again.");
+                    } else if (error.code === 'auth/popup-blocked') {
+                        showAlert("Pop-up blocked. Please allow pop-ups for this site.");
+                    } else if (error.code === 'auth/unauthorized-domain') {
+                        showAlert("Domain not authorized. Add it in Firebase Console.");
+                    } else {
+                        showAlert("Google sign-in failed: " + error.message);
+                    }
                 }
+            });
+        }
+
+        // Forgot Password
+        if (forgotLink) {
+            forgotLink.addEventListener('click', async (e) => {
+                e.preventDefault();
+                const email = emailInput.value.trim();
+                
+                if (!email) {
+                    showAlert("Please enter your email address to reset password.");
+                    return;
+                }
+                
+                setLoading(true);
+                
+                try {
+                    await sendPasswordResetEmail(auth, email);
+                    setLoading(false);
+                    showAlert("Password reset email sent! Check your inbox.", true);
+                } catch (error) {
+                    setLoading(false);
+                    console.error("Reset error:", error.code);
+                    
+                    if (error.code === 'auth/user-not-found') {
+                        showAlert("No account found with this email address.");
+                    } else {
+                        showAlert("Failed to send reset email: " + error.message);
+                    }
+                }
+            });
+        }
+
+        // Check if already logged in
+        import { onAuthStateChanged } from './firebase-config.js';
+        onAuthStateChanged(auth, (user) => {
+            if (user && window.location.pathname.includes('login.html')) {
+                console.log("Already logged in, redirecting to dashboard...");
+                window.location.href = 'dashboard.html';
             }
         });
 
-        // Forgot Password
-        forgotLink.addEventListener('click', async (e) => {
-            e.preventDefault();
-            const email = emailInput.value.trim();
-            
-            if (!email) {
-                showAlert("Please enter your email address to reset password.");
-                return;
-            }
-            
-            setLoading(true);
-            
-            try {
-                await sendPasswordResetEmail(auth, email);
-                setLoading(false);
-                showAlert("Password reset email sent! Check your inbox.", true);
-            } catch (error) {
-                setLoading(false);
-                if (error.code === 'auth/user-not-found') {
-                    showAlert("No account found with this email address.");
-                } else {
-                    showAlert("Failed to send reset email: " + error.message);
-                }
-            }
-        });
+        // Initialize Lucide Icons
+        lucide.createIcons();
     </script>
 </body>
 </html>
