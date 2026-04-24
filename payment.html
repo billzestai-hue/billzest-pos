@@ -115,6 +115,10 @@
             margin-bottom: 25px;
         }
 
+        .bank-logo i {
+            font-size: 24px;
+        }
+
         .bank-info {
             margin-top: 20px;
         }
@@ -293,18 +297,18 @@
                 <div class="bank-info">
                     <div class="bank-row">
                         <span class="bank-label">Account Name</span>
-                        <span class="bank-value" id="bankAccountName">[ENTER YOUR NAME]</span>
-                        <button class="copy-btn" onclick="copyText(document.getElementById('bankAccountName').innerText)">Copy</button>
+                        <span class="bank-value" id="bankAccountName">MOHAMMAD ASIM-KASIM</span>
+                        <button class="copy-btn" onclick="copyText('MOHAMMAD ASIM-KASIM')">Copy</button>
                     </div>
                     <div class="bank-row">
                         <span class="bank-label">Account Number</span>
-                        <span class="bank-value" id="bankAccountNo">[ENTER ACCOUNT NUMBER]</span>
-                        <button class="copy-btn" onclick="copyText(document.getElementById('bankAccountNo').innerText)">Copy</button>
+                        <span class="bank-value" id="bankAccountNo">136000010006086313972</span>
+                        <button class="copy-btn" onclick="copyText('136000010006086313972')">Copy</button>
                     </div>
                     <div class="bank-row">
                         <span class="bank-label">IBAN</span>
-                        <span class="bank-value" id="bankIban">[ENTER IBAN]</span>
-                        <button class="copy-btn" onclick="copyText(document.getElementById('bankIban').innerText)">Copy</button>
+                        <span class="bank-value" id="bankIban">SA8680000136608016313972</span>
+                        <button class="copy-btn" onclick="copyText('SA8680000136608016313972')">Copy</button>
                     </div>
                 </div>
             </div>
@@ -357,7 +361,6 @@
     <script>
         lucide.createIcons();
 
-        // ========== LOAD ORDER FROM URL PARAMETERS ==========
         function loadOrderFromURL() {
             const urlParams = new URLSearchParams(window.location.search);
             const itemsStr = urlParams.get('items');
@@ -405,7 +408,6 @@
             });
         }
 
-        // ========== COPY FUNCTION ==========
         window.copyText = function(text) {
             navigator.clipboard.writeText(text);
             showToast("Copied to clipboard! ✅");
@@ -420,7 +422,6 @@
             }, 2000);
         }
 
-        // ========== SCREENSHOT PREVIEW ==========
         document.getElementById('screenshot').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (file) {
@@ -434,7 +435,6 @@
             }
         });
 
-        // ========== FORM SUBMIT ==========
         document.getElementById('paymentForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
@@ -448,7 +448,6 @@
                 return;
             }
 
-            // Get order items
             const orderItems = [];
             document.querySelectorAll('.order-item').forEach(item => {
                 const text = item.innerText;
@@ -467,12 +466,10 @@
                 status: 'Pending'
             };
 
-            // Save to localStorage
             let orders = JSON.parse(localStorage.getItem('billzest_orders') || '[]');
             orders.push(orderData);
             localStorage.setItem('billzest_orders', JSON.stringify(orders));
 
-            // Send WhatsApp message
             const message = `🆕 *NEW ORDER* 🆕%0A%0A` +
                 `🆔 Order ID: ${orderData.id}%0A` +
                 `👤 Name: ${customerName}%0A` +
@@ -482,6 +479,10 @@
                 `📦 Order: ${orderItems.join(', ')}%0A` +
                 `💰 Total: ${document.getElementById('totalAmount').innerText}%0A` +
                 `🕐 Time: ${new Date().toLocaleString()}%0A%0A` +
+                `🏦 Bank: Al Rajhi%0A` +
+                `👤 Account: MOHAMMAD ASIM-KASIM%0A` +
+                `🔢 Account No: 136000010006086313972%0A` +
+                `🌍 IBAN: SA8680000136608016313972%0A%0A` +
                 `✅ Please verify payment in Al Rajhi app and confirm order.`;
 
             window.open(`https://wa.me/966550898978?text=${message}`, '_blank');
@@ -493,7 +494,7 @@
         });
 
         function openWhatsApp() {
-            window.open('https://wa.me/966550898978?text=Hello%21%20I%20need%20help%20with%20my%20payment', '_blank');
+            window.open('https://wa.me/966550898978?text=Hello! I need help with my payment', '_blank');
         }
 
         loadOrderFromURL();
