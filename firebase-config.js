@@ -1,4 +1,3 @@
-// Firebase Configuration - REAL VALUES
 const firebaseConfig = {
   apiKey: "AIzaSyCN0akvFXOHM6WPHv9ve9noqqmauO3TJRY",
   authDomain: "billzest-pos.firebaseapp.com",
