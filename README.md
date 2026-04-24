@@ -1,78 +1,119 @@
-# 🍽️ BillZest POS — Complete Restaurant Management System
+<div align="center">
+  
+  <img src="https://img.shields.io/badge/Version-2.0.0-blue.svg" alt="Version">
+  <img src="https://img.shields.io/badge/Status-Production-green.svg" alt="Status">
+  <img src="https://img.shields.io/badge/License-All%20Rights%20Reserved-red.svg" alt="License">
+  <img src="https://img.shields.io/badge/PRs-Welcome-brightgreen.svg" alt="PRs Welcome">
 
-> The Smartest Restaurant Management System in The Middle East 🌙
+  <br>
+  <br>
 
-[![Live Demo](https://img.shields.io/badge/Live-billzestpos.com-4f2d91?style=for-the-badge)](https://www.billzestpos.com)
-[![HTML](https://img.shields.io/badge/HTML-100%25-orange?style=for-the-badge)](https://www.billzestpos.com)
-[![Files](https://img.shields.io/badge/Files-14-green?style=for-the-badge)](https://www.billzestpos.com)
+  <h1>🍽️ BillZest POS</h1>
+  <h3>The Smartest Restaurant Management System in The Middle East 🌙</h3>
+  
+  <p>
+    <strong>Complete Restaurant Management Solution | Point of Sale | Kitchen Display | Analytics</strong>
+  </p>
+
+  <br>
+
+  <a href="https://billzestpos.com">
+    <img src="https://img.shields.io/badge/🌐%20Live%20Demo-billzestpos.com-orange?style=for-the-badge&logo=google-chrome&logoColor=white" alt="Live Demo">
+  </a>
+
+  <br>
+  <br>
+
+  <img src="https://via.placeholder.com/800x400?text=BillZest+POS+Screenshot" alt="BillZest POS Dashboard" width="800">
+  
+</div>
 
 ---
 
-## 🌐 Live Website
-**[www.billzestpos.com](https://www.billzestpos.com)**
-
----
-
-## 📁 All Pages
-
-| File | Description | Link |
-|------|-------------|------|
-| `index.html` | 🏠 Main Landing Page | [Open](https://www.billzestpos.com/) |
-| `billzest-complete-pos.html` | 🛒 Complete POS System | [Open](https://www.billzestpos.com/billzest-complete-pos.html) |
-| `billzest-sales-dashboard.html` | 📊 Sales Dashboard | [Open](https://www.billzestpos.com/billzest-sales-dashboard.html) |
-| `billzest-advanced.html` | 🚀 Advanced System | [Open](https://www.billzestpos.com/billzest-advanced.html) |
-| `billzest-mega.html` | 🔥 Mega System | [Open](https://www.billzestpos.com/billzest-mega.html) |
-| `billzest-ultimate.html` | 💎 Ultimate System | [Open](https://www.billzestpos.com/billzest-ultimate.html) |
-| `billzest-marketplace.html` | 🛍️ App Marketplace | [Open](https://www.billzestpos.com/billzest-marketplace.html) |
-| `billzest-website.html` | 🌟 Website Pages | [Open](https://www.billzestpos.com/billzest-website.html) |
-| `billzest-setup.html` | ⚙️ Setup & Integration | [Open](https://www.billzestpos.com/billzest-setup.html) |
-| `billzest-product-manager.html` | 📦 Product Manager | [Open](https://www.billzestpos.com/billzest-product-manager.html) |
-| `billzest-customer-portal.html` | 👤 Customer Portal | [Open](https://www.billzestpos.com/billzest-customer-portal.html) |
-| `billzest-products.html` | 📋 Products Page | [Open](https://www.billzestpos.com/billzest-products.html) |
-| `billzest-summary.html` | 📄 Project Summary | [Open](https://www.billzestpos.com/billzest-summary.html) |
+## 📋 Table of Contents
+- [✨ Features](#-features)
+- [📁 Project Files](#-project-files)
+- [🚀 Quick Start](#-quick-start)
+- [🛠️ Tech Stack](#️-tech-stack)
+- [📱 Live URLs](#-live-urls)
+- [🔐 Login Credentials](#-login-credentials)
+- [📞 Contact](#-contact)
+- [📄 License](#-license)
 
 ---
 
 ## ✨ Features
 
-- 🛒 **Complete POS** — 66+ menu items, cart, VAT 15%, receipts
-- 📊 **Analytics** — Real-time charts, revenue tracking, reports
-- 👨‍🍳 **Kitchen Display (KDS)** — Live order management
-- 🏪 **Multi-Branch** — Manage multiple locations
-- 📱 **Online Ordering** — Delivery & pickup
-- ⭐ **Loyalty Points** — Customer rewards program
-- 📲 **Notifications** — SMS & WhatsApp alerts
-- 🤖 **AI Chatbot** — Smart customer support
-- 📸 **QR Menu** — Digital menu generator
-- 💰 **Coupons** — Discount management
-- 🗓️ **Reservations** — Table booking system
-- 🗺️ **Live Delivery Map** — GPS tracking
-- 💹 **Financial Reports** — P&L, VAT, payroll
-- 👨‍💼 **HR & Payroll** — Staff management
-- 🌍 **Arabic + English** — Full bilingual support
-- 🌙 **Dark Mode** — Eye-friendly interface
-- 📱 **PWA Ready** — Install as mobile app
+### 🛒 Core POS Features
+| Feature | Description |
+|---------|-------------|
+| **Complete POS System** | 66+ menu items, cart management, VAT 15% calculation |
+| **Bill Printing** | Professional invoice generation with print support |
+| **Payment Methods** | Cash, Card, QR Code integration |
+| **Order History** | Date filter + customer search |
+| **Kitchen Display (KDS)** | Live order management with prepared status |
+
+### 📊 Analytics & Reports
+| Feature | Description |
+|---------|-------------|
+| **Real-time Charts** | Visual revenue tracking and analytics |
+| **Sales Dashboard** | Daily, weekly, monthly reports |
+| **Financial Reports** | P&L statements, VAT reports |
+| **Performance Metrics** | Staff and branch performance |
+
+### 👨‍🍳 Kitchen Management
+| Feature | Description |
+|---------|-------------|
+| **Live Order Queue** | Real-time order display |
+| **Preparation Status** | Mark orders as prepared |
+| **Order Prioritization** | Manage rush hours efficiently |
+
+### 🌍 Multi-Language Support
+| Language | Status |
+|----------|--------|
+| English | ✅ Complete |
+| العربية (Arabic) | ✅ Complete with RTL support |
+
+### 🏪 Advanced Features
+- 👥 **Multi-Branch Management** - Handle multiple locations
+- 📱 **Online Ordering** - Delivery & pickup integration
+- ⭐ **Loyalty Points** - Customer rewards program
+- 📲 **WhatsApp Alerts** - Order confirmation via WhatsApp
+- 🤖 **AI Chatbot** - Smart customer support assistant
+- 📸 **QR Menu** - Digital menu generator
+- 💰 **Coupon System** - Discount management
+- 🗓️ **Table Reservations** - Online booking system
+- 🗺️ **Live Delivery Map** - GPS tracking for deliveries
+- 👨‍💼 **HR & Payroll** - Staff management system
+- 🌙 **Dark Mode** - Eye-friendly interface
+- 📱 **PWA Ready** - Install as mobile app
 
 ---
 
-## 🛠️ Tech Stack
+## 📁 Project Files
 
-- **Frontend:** HTML5, CSS3, Vanilla JavaScript
-- **Fonts:** Poppins, Sora, Tajawal (Arabic)
-- **Hosting:** Vercel + GitHub
-- **Domain:** billzestpos.com
+| File | Description | Status |
+|------|-------------|--------|
+| `index.html` | 🏠 Main Landing Page | ✅ Live |
+| `billzest-complete-pos.html` | 🛒 Complete POS System | ✅ Live |
+| `billzest-sales-dashboard.html` | 📊 Sales Dashboard | ✅ Live |
+| `billzest-advanced.html` | 🚀 Advanced System | ✅ Live |
+| `billzest-mega.html` | 🔥 Mega System | ✅ Live |
+| `billzest-ultimate.html` | 💎 Ultimate System | ✅ Live |
+| `billzest-marketplace.html` | 🛍️ App Marketplace | ✅ Live |
+| `billzest-website.html` | 🌟 Website Pages | ✅ Live |
+| `billzest-setup.html` | ⚙️ Setup & Integration | ✅ Live |
+| `billzest-product-manager.html` | 📦 Product Manager | ✅ Live |
+| `billzest-customer-portal.html` | 👤 Customer Portal | ✅ Live |
+| `billzest-products.html` | 📋 Products Page | ✅ Live |
+| `billzest-summary.html` | 📄 Project Summary | ✅ Live |
 
 ---
 
-## 📞 Contact +966550898978
+## 🚀 Quick Start
 
-- 📧 Email: info@billzestpos.com
-- 🌐 Website: [billzestpos.com](https://www.billzestpos.com)
-
----
-
-## 📄 License
-
-© 2026 BillZest. All Rights Reserved.
-
-Built with ❤️ using billzestPos
+### Option 1: Direct Download
+```bash
+git clone https://github.com/your-username/billzest-pos.git
+cd billzest-pos
+# Open any .html file in your browser
