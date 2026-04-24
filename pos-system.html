@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Billzest POS - Complete System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .login-container {
+            max-width: 450px;
+            margin: 80px auto;
+            background: white;
+            border-radius: 30px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        .login-container input {
+            width: 100%;
+            padding: 14px;
+            margin: 10px 0;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+        }
+
+        .login-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 14px;
+            width: 100%;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .app-container {
+            display: none;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 20px;
+            padding: 20px 30px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .logo h2 {
+            color: #667eea;
+            font-size: 24px;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+            display: inline-block;
+        }
+
+        .category-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 10px;
+            margin: 15px 0 10px 0;
+            font-weight: 600;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .menu-item {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 12px 5px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid #e9ecef;
+        }
+
+        .menu-item:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: #f8f9fa;
+            margin-bottom: 10px;
+            border-radius: 10px;
+        }
+
+        .qty-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .remove-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .total-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 12px;
+            margin: 15px 0;
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .payment-methods {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .payment-btn {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #667eea;
+            background: white;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .payment-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary { background: #28a745; color: white; }
+        .btn-warning { background: #ffc107; color: #333; }
+        .btn-danger { background: #dc3545; color: white; }
+        .btn-info { background: #17a2b8; color: white; }
+
+        .customer-input {
+            background: #f0f4ff;
+            padding: 15px;
+            border-radius: 12px;
+            margin: 15px 0;
+        }
+
+        .customer-input input {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .history-item {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 12px;
+            border-left: 4px solid #667eea;
+        }
+
+        .kitchen-order {
+            background: #fff3cd;
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 12px;
+            border-left: 4px solid #ffc107;
+        }
+
+        .feedback-item {
+            background: #e7f3ff;
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 10px;
+        }
+
+        .scroll-area {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .badge-cash { background: #28a745; color: white; }
+        .badge-card { background: #17a2b8; color: white; }
+        .badge-qr { background: #ffc107; color: #333; }
+
+        .customer-detail {
+            font-size: 12px;
+            color: #667eea;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div id="loginScreen" class="login-container">
+    <i class="fas fa-utensils" style="font-size: 60px; color: #667eea;"></i>
+    <h2>Billzest POS System</h2>
+    <input type="text" id="loginUsername" placeholder="Username">
+    <input type="password" id="loginPassword" placeholder="Password">
+    <button class="login-btn" onclick="attemptLogin()">Login</button>
+    <p style="margin-top: 20px; font-size: 12px;">Demo: cashier/123 | admin/admin123</p>
+</div>
+
+<!-- MAIN APP -->
+<div id="mainApp" class="app-container">
+    <div class="header">
+        <div class="logo">
+            <h2><i class="fas fa-receipt"></i> Billzest POS</h2>
+            <p>Restaurant Management System</p>
+        </div>
+        <div>
+            <span id="userRoleSpan" style="margin-right: 15px; color: #667eea; font-weight: 600;"></span>
+            <button class="action-btn btn-danger" onclick="logout()" style="padding: 8px 20px;">Logout</button>
+        </div>
+    </div>
+
+    <div class="dashboard-grid">
+        <!-- POS PANEL -->
+        <div class="card">
+            <div class="card-title"><i class="fas fa-cash-register"></i> Point of Sale / Billing</div>
+            
+            <!-- Customer Details Section -->
+            <div class="customer-input">
+                <div style="font-weight: 600; margin-bottom: 10px;"><i class="fas fa-user"></i> Customer Details</div>
+                <input type="text" id="customerName" placeholder="Customer Name *" autocomplete="off">
+                <input type="tel" id="customerPhone" placeholder="Phone Number (eg: 966512345678)" autocomplete="off">
+                <small style="color: #666;">📱 Phone number for WhatsApp order confirmation</small>
+            </div>
+
+            <div class="category-header"><i class="fas fa-hamburger"></i> Main Course</div>
+            <div class="menu-grid" id="mainCourseMenu"></div>
+
+            <div class="category-header"><i class="fas fa-mug-hot"></i> Beverages & Desserts</div>
+            <div class="menu-grid" id="beveragesMenu"></div>
+
+            <div style="margin-top: 20px;">
+                <div class="category-header" style="background: #28a745;"><i class="fas fa-shopping-cart"></i> Current Order - Table 04</div>
+                <div id="cartItems" class="scroll-area" style="max-height: 250px;"></div>
+                
+                <div class="total-section">
+                    <span>Total Amount:</span>
+                    <span><span id="cartTotal">0</span> SAR</span>
+                </div>
+
+                <div class="payment-methods">
+                    <button class="payment-btn active" onclick="selectPayment('Cash')" id="payCash">💵 Cash</button>
+                    <button class="payment-btn" onclick="selectPayment('Card')" id="payCard">💳 Card</button>
+                    <button class="payment-btn" onclick="selectPayment('QR')" id="payQR">📱 QR Code</button>
+                </div>
+
+                <div class="action-buttons" style="display: flex; gap: 10px;">
+                    <button class="action-btn btn-primary" onclick="generateBill()"><i class="fas fa-print"></i> Print Bill</button>
+                    <button class="action-btn btn-info" onclick="sendWhatsApp()"><i class="fab fa-whatsapp"></i> WhatsApp</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ORDER HISTORY PANEL -->
+        <div class="card">
+            <div class="card-title"><i class="fas fa-history"></i> Order History</div>
+            <input type="date" id="historyDateFilter" style="width: 100%; padding: 10px; border-radius: 10px; border: 1px solid #ddd; margin-bottom: 15px;">
+            <input type="text" id="searchCustomer" placeholder="🔍 Search by customer name or phone..." style="width: 100%; padding: 10px; border-radius: 10px; border: 1px solid #ddd; margin-bottom: 15px;">
+            <div id="historyList" class="scroll-area" style="max-height: 450px;"></div>
+        </div>
+
+        <!-- KITCHEN + FEEDBACK PANEL -->
+        <div class="card">
+            <div class="card-title"><i class="fas fa-fire"></i> Kitchen Queue</div>
+            <div id="kitchenOrdersList" class="scroll-area" style="max-height: 200px;"></div>
+
+            <div style="margin-top: 25px;">
+                <div class="card-title"><i class="fas fa-star"></i> Customer Feedback</div>
+                <textarea id="feedbackText" rows="2" placeholder="Write your feedback here..." style="width: 100%; padding: 10px; border-radius: 10px; border: 1px solid #ddd; margin: 10px 0;"></textarea>
+                <button class="action-btn btn-primary" onclick="submitFeedback()" style="width: 100%;"><i class="fas fa-paper-plane"></i> Submit Feedback</button>
+                <div id="feedbackList" class="scroll-area" style="max-height: 200px; margin-top: 15px;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // MENU ITEMS
+    const mainCourseItems = [
+        { name: "🍕 Pizza", price: 25 },
+        { name: "🍔 Burger", price: 18 },
+        { name: "🥗 Pasta", price: 22 },
+        { name: "🍛 Kabsa", price: 35 },
+        { name: "🍜 Noodles", price: 20 }
+    ];
+
+    const beverageItems = [
+        { name: "☕ Coffee", price: 8 },
+        { name: "🧃 Juice", price: 10 },
+        { name: "🍰 Cake", price: 15 },
+        { name: "🥤 Soft Drink", price: 5 },
+        { name: "🍦 Ice Cream", price: 12 }
+    ];
+
+    let cart = [];
+    let selectedPayment = "Cash";
+    let orders = JSON.parse(localStorage.getItem("billzest_orders_complete")) || [];
+    let feedbacks = JSON.parse(localStorage.getItem("billzest_feedbacks_complete")) || [];
+    let kitchenQueue = JSON.parse(localStorage.getItem("billzest_kitchen_complete")) || [];
+
+    function renderMenus() {
+        let mainHtml = "";
+        mainCourseItems.forEach(item => {
+            mainHtml += `<div class="menu-item" onclick="addToCart('${item.name}', ${item.price})">
+                            <div class="item-name">${item.name}</div>
+                            <div class="item-price">${item.price} SAR</div>
+                         </div>`;
+        });
+        document.getElementById("mainCourseMenu").innerHTML = mainHtml;
+
+        let bevHtml = "";
+        beverageItems.forEach(item => {
+            bevHtml += `<div class="menu-item" onclick="addToCart('${item.name}', ${item.price})">
+                            <div class="item-name">${item.name}</div>
+                            <div class="item-price">${item.price} SAR</div>
+                        </div>`;
+        });
+        document.getElementById("beveragesMenu").innerHTML = bevHtml;
+    }
+
+    window.addToCart = function(name, price) {
+        let existing = cart.find(item => item.name === name);
+        if (existing) existing.qty++;
+        else cart.push({ name, price, qty: 1 });
+        renderCart();
+    };
+
+    function renderCart() {
+        let cartDiv = document.getElementById("cartItems");
+        if (cart.length === 0) {
+            cartDiv.innerHTML = '<div style="text-align: center; padding: 40px; color: #999;"><i class="fas fa-shopping-cart" style="font-size: 48px;"></i><br>Cart is empty</div>';
+            document.getElementById("cartTotal").innerText = "0";
+            return;
+        }
+
+        let html = "";
+        let total = 0;
+        cart.forEach((item, idx) => {
+            let itemTotal = item.price * item.qty;
+            total += itemTotal;
+            html += `<div class="cart-item">
+                        <div><strong>${item.name}</strong><br><small>${item.price} SAR × ${item.qty}</small></div>
+                        <div>
+                            <button class="qty-btn" onclick="updateQty(${idx}, -1)">-</button>
+                            <span style="margin: 0 10px;">${item.qty}</span>
+                            <button class="qty-btn" onclick="updateQty(${idx}, 1)">+</button>
+                            <button class="remove-btn" onclick="removeItem(${idx})">×</button>
+                        </div>
+                     </div>`;
+        });
+        cartDiv.innerHTML = html;
+        document.getElementById("cartTotal").innerText = total;
+    }
+
+    window.updateQty = function(idx, delta) {
+        let newQty = cart[idx].qty + delta;
+        if (newQty <= 0) cart.splice(idx, 1);
+        else cart[idx].qty = newQty;
+        renderCart();
+    };
+
+    window.removeItem = function(idx) {
+        cart.splice(idx, 1);
+        renderCart();
+    };
+
+    window.selectPayment = function(method) {
+        selectedPayment = method;
+        document.querySelectorAll('.payment-btn').forEach(btn => btn.classList.remove('active'));
+        if (method === 'Cash') document.getElementById('payCash').classList.add('active');
+        if (method === 'Card') document.getElementById('payCard').classList.add('active');
+        if (method === 'QR') document.getElementById('payQR').classList.add('active');
+    };
+
+    function validateCustomer() {
+        let name = document.getElementById("customerName").value.trim();
+        let phone = document.getElementById("customerPhone").value.trim();
+        
+        if (!name) {
+            alert("⚠️ Please enter customer name!");
+            return null;
+        }
+        
+        return { name, phone };
+    }
+
+    window.generateBill = function() {
+        if (cart.length === 0) {
+            alert("Cart is empty!");
+            return;
+        }
+
+        let customer = validateCustomer();
+        if (!customer) return;
+
+        let total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+        let orderObj = {
+            id: Date.now(),
+            customerName: customer.name,
+            customerPhone: customer.phone || "Not provided",
+            items: JSON.parse(JSON.stringify(cart)),
+            total: total,
+            date: new Date().toISOString(),
+            payment: selectedPayment,
+            status: "Completed"
+        };
+
+        orders.unshift(orderObj);
+        
+        kitchenQueue.unshift({
+            id: orderObj.id,
+            customerName: customer.name,
+            items: cart.map(i => `${i.name} x${i.qty}`).join(", "),
+            time: new Date().toLocaleTimeString()
+        });
+
+        saveAll();
+        renderHistory();
+        renderKitchen();
+
+        // Invoice
+        let invoiceHtml = `
+╔═══════════════════════════════════╗
+║         BILLZEST RESTAURANT        ║
+╠═══════════════════════════════════╣
+║ Order #: ${orderObj.id}
+║ Date: ${new Date().toLocaleString()}
+║ Table: 04
+║ Customer: ${customer.name}
+║ Phone: ${customer.phone || "N/A"}
+╠═══════════════════════════════════╣
+║ ITEMS:
+${cart.map(i => `║   ${i.name} x${i.qty} = ${i.price * i.qty} SAR`).join('\n')}
+╠═══════════════════════════════════╣
+║ TOTAL: ${total} SAR
+║ PAYMENT: ${selectedPayment}
+╚═══════════════════════════════════╝
+║     Thank you! Visit Again        ║
+╚═══════════════════════════════════╝
+        `;
+        
+        alert("🧾 Invoice Generated!\n\n" + invoiceHtml);
+        
+        let printWindow = window.open('', '_blank');
+        printWindow.document.write(`
+            <html><head><title>Billzest Invoice #${orderObj.id}</title>
+            <style>body{font-family: monospace; padding: 20px;} pre{font-size: 14px;}</style>
+            </head><body onload="window.print()"><pre>${invoiceHtml}</pre></body></html>
+        `);
+        
+        cart = [];
+        document.getElementById("customerName").value = "";
+        document.getElementById("customerPhone").value = "";
+        renderCart();
+    };
+
+    window.sendWhatsApp = function() {
+        if (cart.length === 0) {
+            alert("Cart is empty!");
+            return;
+        }
+        
+        let customer = validateCustomer();
+        if (!customer) return;
+        
+        let phone = customer.phone;
+        if (!phone) {
+            alert("⚠️ Please enter customer phone number for WhatsApp!");
+            return;
+        }
+        
+        // Format phone number (remove any non-digits)
+        let cleanPhone = phone.replace(/\D/g, '');
+        if (!cleanPhone.startsWith('966') && !cleanPhone.startsWith('05')) {
+            alert("⚠️ Please enter valid Saudi number (05XXXXXXXX or 9665XXXXXXXX)");
+            return;
+        }
+        
+        let total = cart.reduce((s, i) => s + (i.price * i.qty), 0);
+        let itemsList = cart.map(i => `✅ ${i.name} x${i.qty} = ${i.price * i.qty} SAR`).join("%0A");
+        
+        let msg = `🛎️ *BILLZEST RESTAURANT* 🛎️%0A%0A`;
+        msg += `👤 *Customer:* ${customer.name}%0A`;
+        msg += `📋 *Order:*%0A${itemsList}%0A%0A`;
+        msg += `💰 *Total:* ${total} SAR%0A`;
+        msg += `💳 *Payment:* ${selectedPayment}%0A`;
+        msg += `📍 *Table:* 04%0A%0A`;
+        msg += `🙏 *Thank you for dining with us!*`;
+        
+        let whatsappUrl = `https://wa.me/${cleanPhone}?text=${msg}`;
+        window.open(whatsappUrl, '_blank');
+        
+        alert(`✅ WhatsApp message prepared for ${customer.name} (${phone})`);
+    };
+
+    function renderHistory() {
+        let filterDate = document.getElementById("historyDateFilter").value;
+        let searchTerm = document.getElementById("searchCustomer").value.toLowerCase();
+        
+        let filtered = [...orders];
+        if (filterDate) filtered = filtered.filter(o => o.date.startsWith(filterDate));
+        if (searchTerm) {
+            filtered = filtered.filter(o => 
+                o.customerName.toLowerCase().includes(searchTerm) || 
+                (o.customerPhone && o.customerPhone.includes(searchTerm))
+            );
+        }
+
+        let historyDiv = document.getElementById("historyList");
+        if (filtered.length === 0) {
+            historyDiv.innerHTML = '<div style="text-align: center; padding: 40px; color: #999;">No orders found</div>';
+            return;
+        }
+
+        let html = "";
+        filtered.forEach(order => {
+            let badgeClass = order.payment === 'Cash' ? 'badge-cash' : (order.payment === 'Card' ? 'badge-card' : 'badge-qr');
+            html += `
+                <div class="history-item">
+                    <div style="display: flex; justify-content: space-between; flex-wrap: wrap;">
+                        <strong><i class="fas fa-receipt"></i> Order #${order.id}</strong>
+                        <span class="badge ${badgeClass}">${order.payment}</span>
+                    </div>
+                    <div class="customer-detail">
+                        <i class="fas fa-user"></i> ${order.customerName} 
+                        ${order.customerPhone !== "Not provided" ? `<i class="fas fa-phone"></i> ${order.customerPhone}` : ''}
+                    </div>
+                    <div style="font-size: 13px; margin: 8px 0;">
+                        ${order.items.map(i => `${i.name} x${i.qty}`).join(' • ')}
+                    </div>
+                    <div style="font-size: 11px; color: #999;">
+                        <i class="fas fa-clock"></i> ${new Date(order.date).toLocaleString()} | 
+                        <strong>Total: ${order.total} SAR</strong>
+                    </div>
+                </div>
+            `;
+        });
+        historyDiv.innerHTML = html;
+    }
+
+    function renderKitchen() {
+        let kitchenDiv = document.getElementById("kitchenOrdersList");
+        if (kitchenQueue.length === 0) {
+            kitchenDiv.innerHTML = '<div style="text-align: center; padding: 30px; color: #999;"><i class="fas fa-egg" style="font-size: 48px;"></i><br>Kitchen is idle</div>';
+            return;
+        }
+
+        let html = "";
+        kitchenQueue.forEach(order => {
+            html += `
+                <div class="kitchen-order">
+                    <div style="display: flex; justify-content: space-between;">
+                        <strong><i class="fas fa-fire"></i> Order #${order.id}</strong>
+                        <span style="font-size: 11px;">${order.time}</span>
+                    </div>
+                    <div class="customer-detail"><i class="fas fa-user"></i> ${order.customerName}</div>
+                    <div style="margin: 8px 0; font-size: 13px;">🍽️ ${order.items}</div>
+                    <button class="action-btn btn-primary" onclick="completeKitchenOrder(${order.id})" style="width: 100%; padding: 8px;">✓ Prepared</button>
+                </div>
+            `;
+        });
+        kitchenDiv.innerHTML = html;
+    }
+
+    window.completeKitchenOrder = function(id) {
+        kitchenQueue = kitchenQueue.filter(o => o.id !== id);
+        saveAll();
+        renderKitchen();
+    };
+
+    window.submitFeedback = function() {
+        let text = document.getElementById("feedbackText").value.trim();
+        if (!text) {
+            alert("Please write feedback!");
+            return;
+        }
+        feedbacks.unshift({
+            text: text,
+            date: new Date().toLocaleString()
+        });
+        saveAll();
+        document.getElementById("feedbackText").value = "";
+        renderFeedback();
+    };
+
+    function renderFeedback() {
+        let fbDiv = document.getElementById("feedbackList");
+        if (feedbacks.length === 0) {
+            fbDiv.innerHTML = '<div style="text-align: center; padding: 30px; color: #999;">No feedback yet</div>';
+            return;
+        }
+
+        let html = "";
+        feedbacks.forEach(fb => {
+            html += `
+                <div class="feedback-item">
+                    <i class="fas fa-user-circle" style="color: #667eea;"></i>
+                    <strong> Customer</strong>
+                    <p style="margin: 8px 0;">"${fb.text}"</p>
+                    <small style="color: #999;"><i class="fas fa-clock"></i> ${fb.date}</small>
+                </div>
+            `;
+        });
+        fbDiv.innerHTML = html;
+    }
+
+    function saveAll() {
+        localStorage.setItem("billzest_orders_complete", JSON.stringify(orders));
+        localStorage.setItem("billzest_feedbacks_complete", JSON.stringify(feedbacks));
+        localStorage.setItem("billzest_kitchen_complete", JSON.stringify(kitchenQueue));
+    }
+
+    window.attemptLogin = function() {
+        let user = document.getElementById("loginUsername").value;
+        let pass = document.getElementById("loginPassword").value;
+        
+        if ((user === "cashier" && pass === "123") || (user === "admin" && pass === "admin123")) {
+            document.getElementById("loginScreen").style.display = "none";
+            document.getElementById("mainApp").style.display = "block";
+            document.getElementById("userRoleSpan").innerHTML = `<i class="fas fa-user-check"></i> ${user}`;
+            
+            renderMenus();
+            renderCart();
+            renderHistory();
+            renderKitchen();
+            renderFeedback();
+        } else {
+            alert("Invalid credentials!\nUse: cashier/123 or admin/admin123");
+        }
+    };
+
+    window.logout = function() {
+        document.getElementById("loginScreen").style.display = "block";
+        document.getElementById("mainApp").style.display = "none";
+        cart = [];
+    };
+
+    if (!localStorage.getItem("billzest_orders_complete")) {
+        let sampleOrder = {
+            id: 1001,
+            customerName: "Ahmed Al-Rajhi",
+            customerPhone: "0551234567",
+            items: [{ name: "🍕 Pizza", price: 25, qty: 2 }, { name: "☕ Coffee", price: 8, qty: 2 }],
+            total: 66,
+            date: new Date().toISOString(),
+            payment: "Cash"
+        };
+        orders = [sampleOrder];
+        feedbacks = [{ text: "Amazing service! Food was delicious 😋", date: new Date().toLocaleString() }];
+        kitchenQueue = [];
+        saveAll();
+    }
+
+    document.getElementById("historyDateFilter").addEventListener("change", renderHistory);
+    document.getElementById("searchCustomer").addEventListener("keyup", renderHistory);
+</script>
+</body>
+</html>
