@@ -47,7 +47,7 @@
             font-size: 0.9rem;
         }
 
-        /* Pricing Plans Section - NEW */
+        /* Pricing Plans Section */
         .pricing-section {
             padding: 25px;
             background: #f8fafc;
@@ -134,10 +134,6 @@
             margin-top: 8px;
         }
 
-        .enterprise-card .plan-price {
-            font-size: 1rem;
-        }
-
         /* Selected Amount Display */
         .selected-amount {
             background: white;
@@ -159,79 +155,67 @@
             color: #4f46e5;
         }
 
-        .bank-details {
+        /* Payment Instructions - Without Bank Details */
+        .payment-instructions {
             padding: 25px;
             background: white;
             border-bottom: 1px solid #e2e8f0;
+            text-align: center;
         }
 
-        .bank-details h3 {
-            font-size: 1rem;
-            color: #64748b;
-            margin-bottom: 15px;
+        .instruction-card {
+            background: #f8fafc;
+            border-radius: 20px;
+            padding: 30px 25px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .instruction-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #4f46e5, #ec4899);
+            border-radius: 50%;
             display: flex;
             align-items: center;
-            gap: 8px;
+            justify-content: center;
+            margin: 0 auto 20px;
         }
 
-        .bank-card {
-            background: linear-gradient(145deg, #0f172a, #1e293b);
+        .instruction-icon i {
             color: white;
-            border-radius: 20px;
-            padding: 25px;
-            position: relative;
-            overflow: hidden;
+            width: 32px;
+            height: 32px;
         }
 
-        .bank-card::before {
-            content: "✦✦✦";
-            position: absolute;
-            top: -20px;
-            right: -20px;
-            font-size: 80px;
-            opacity: 0.1;
+        .instruction-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 10px;
         }
 
-        .bank-logo {
-            display: flex;
+        .instruction-text {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+
+        .whatsapp-contact {
+            display: inline-flex;
             align-items: center;
             gap: 10px;
-            margin-bottom: 25px;
-        }
-
-        .bank-info {
-            margin-top: 20px;
-        }
-
-        .bank-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 12px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .bank-label {
-            font-size: 0.8rem;
-            opacity: 0.7;
-        }
-
-        .bank-value {
-            font-weight: 600;
-            letter-spacing: 1px;
-            word-break: break-all;
-        }
-
-        .copy-btn {
-            background: rgba(255,255,255,0.1);
-            border: none;
+            background: #25D366;
             color: white;
-            padding: 4px 12px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 0.7rem;
+            padding: 12px 24px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 10px;
+            transition: all 0.3s;
+        }
+
+        .whatsapp-contact:hover {
+            transform: scale(1.05);
         }
 
         .payment-form {
@@ -313,23 +297,6 @@
             box-shadow: 0 15px 30px rgba(79,70,229,0.3);
         }
 
-        .whatsapp-btn {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: #25D366;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            border: none;
-            color: white;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-
         .toast {
             position: fixed;
             bottom: 100px;
@@ -346,8 +313,6 @@
         @media (max-width: 500px) {
             .pricing-cards { flex-direction: column; }
             .payment-container { margin: 15px; border-radius: 24px; }
-            .bank-card { padding: 20px; }
-            .bank-row { flex-direction: column; }
         }
     </style>
 </head>
@@ -363,19 +328,16 @@
         <div class="pricing-section">
             <h3><i data-lucide="crown"></i> Select Subscription Plan</h3>
             <div class="pricing-cards">
-                <!-- Starter Plan -->
                 <div class="pricing-card" data-plan="Starter" data-amount="39" onclick="selectPlan(this, 'Starter', 39)">
                     <div class="plan-name">Starter</div>
-                    <div class="plan-price">$39<span class="plan-price"><small>/mo</small></span></div>
+                    <div class="plan-price">$39<span><small>/mo</small></span></div>
                     <div class="plan-feature">Basic features for small restaurants</div>
                 </div>
-                <!-- Professional Plan -->
                 <div class="pricing-card selected" data-plan="Professional" data-amount="79" onclick="selectPlan(this, 'Professional', 79)">
                     <div class="plan-name">Professional</div>
-                    <div class="plan-price">$79<span class="plan-price"><small>/mo</small></span></div>
+                    <div class="plan-price">$79<span><small>/mo</small></span></div>
                     <div class="plan-feature">Advanced features + Analytics</div>
                 </div>
-                <!-- Enterprise Plan -->
                 <div class="pricing-card" data-plan="Enterprise" data-amount="0" onclick="selectPlan(this, 'Enterprise', 0)">
                     <div class="plan-name">Enterprise</div>
                     <div class="plan-price">Custom</div>
@@ -384,40 +346,27 @@
             </div>
         </div>
 
-        <!-- Selected Amount Display -->
         <div class="selected-amount">
             <span class="selected-label">Selected Plan Amount:</span>
             <span class="selected-value" id="selectedAmount">$79 USD</span>
         </div>
 
-        <div class="bank-details">
-            <h3><i data-lucide="building-2"></i> Bank Transfer Details</h3>
-            <div class="bank-card">
-                <div class="bank-logo">
-                    <i data-lucide="bank"></i>
-                    <span style="font-weight: 700;">AL RAJHI BANK</span>
+        <!-- Payment Instructions - No Bank Details Shown -->
+        <div class="payment-instructions">
+            <div class="instruction-card">
+                <div class="instruction-icon">
+                    <i data-lucide="message-circle"></i>
                 </div>
-                <div class="bank-info">
-                    <div class="bank-row">
-                        <span class="bank-label">Account Name</span>
-                        <span class="bank-value">MOHAMMAD ASIM-KASIM</span>
-                        <button class="copy-btn" onclick="copyText('MOHAMMAD ASIM-KASIM')">Copy</button>
-                    </div>
-                    <div class="bank-row">
-                        <span class="bank-label">Account Number</span>
-                        <span class="bank-value">136000010006086313972</span>
-                        <button class="copy-btn" onclick="copyText('136000010006086313972')">Copy</button>
-                    </div>
-                    <div class="bank-row">
-                        <span class="bank-label">IBAN</span>
-                        <span class="bank-value">SA8680000136608016313972</span>
-                        <button class="copy-btn" onclick="copyText('SA8680000136608016313972')">Copy</button>
-                    </div>
+                <div class="instruction-title">How to Complete Payment?</div>
+                <div class="instruction-text">
+                    After submitting this form, you will receive our bank details on WhatsApp.<br>
+                    Please transfer the amount and send us the screenshot.
                 </div>
+                <a href="https://wa.me/966550898978" class="whatsapp-contact" target="_blank">
+                    <i data-lucide="message-circle" size="18"></i>
+                    Contact on WhatsApp
+                </a>
             </div>
-            <p style="font-size: 0.8rem; color: #64748b; margin-top: 15px; text-align: center;">
-                <i data-lucide="shield-check" size="14"></i> SAMA approved • Secure transfer
-            </p>
         </div>
 
         <div class="payment-form">
@@ -436,29 +385,27 @@
                 </div>
                 <div class="form-group">
                     <label>Reference / Transaction ID <span style="color: #ef4444;">*</span></label>
-                    <input type="text" id="transactionId" placeholder="e.g., TRF-123456789" required>
-                    <small>From your Al Rajhi app after transfer</small>
+                    <input type="text" id="transactionId" placeholder="After transfer, enter transaction ID" required>
+                    <small>You will get this after bank transfer</small>
                 </div>
                 <div class="form-group">
-                    <label>Screenshot (Optional)</label>
+                    <label>Screenshot of Payment</label>
                     <div class="upload-area" onclick="document.getElementById('screenshot').click()">
                         <i data-lucide="upload-cloud"></i>
                         <p>Click to upload screenshot</p>
+                        <p style="font-size: 0.7rem;">PNG, JPG up to 5MB</p>
                     </div>
                     <input type="file" id="screenshot" accept="image/*" style="display: none;">
                     <img id="screenshotPreview" alt="Preview">
                 </div>
                 <button type="submit" class="btn-submit">
                     <i data-lucide="check-circle"></i>
-                    Confirm Payment
+                    Submit Payment Info
                 </button>
             </form>
         </div>
     </div>
 
-    <button class="whatsapp-btn" onclick="openWhatsApp()">
-        <i data-lucide="message-circle"></i>
-    </button>
     <div id="toast" class="toast"></div>
 
     <script>
@@ -468,11 +415,9 @@
         let selectedPlanAmount = 79;
 
         function selectPlan(element, planName, amount) {
-            // Remove selected class from all cards
             document.querySelectorAll('.pricing-card').forEach(card => {
                 card.classList.remove('selected');
             });
-            // Add selected class to clicked card
             element.classList.add('selected');
             
             selectedPlanName = planName;
@@ -485,18 +430,13 @@
             }
         }
 
-        window.copyText = function(text) {
-            navigator.clipboard.writeText(text);
-            showToast("Copied to clipboard! ✅");
-        }
-
         function showToast(message) {
             const toast = document.getElementById('toast');
             toast.textContent = message;
             toast.style.display = 'block';
             setTimeout(() => {
                 toast.style.display = 'none';
-            }, 2000);
+            }, 3000);
         }
 
         document.getElementById('screenshot').addEventListener('change', function(e) {
@@ -526,7 +466,7 @@
             }
 
             if (selectedPlanAmount === 0) {
-                showToast("Please contact us for Enterprise plan pricing");
+                showToast("Please contact us via WhatsApp for Enterprise plan");
                 return;
             }
 
@@ -547,6 +487,7 @@
             orders.push(orderData);
             localStorage.setItem('billzest_orders', JSON.stringify(orders));
 
+            // Message with bank details (only sent to you via WhatsApp)
             const message = `🆕 *NEW SUBSCRIPTION ORDER* 🆕%0A%0A` +
                 `🆔 Order ID: ${orderData.id}%0A` +
                 `👤 Name: ${customerName}%0A` +
@@ -556,23 +497,20 @@
                 `💰 Amount: $${selectedPlanAmount} USD%0A` +
                 `🔖 Transaction ID: ${transactionId}%0A` +
                 `🕐 Time: ${new Date().toLocaleString()}%0A%0A` +
-                `🏦 Bank: Al Rajhi%0A` +
-                `👤 Account: MOHAMMAD ASIM-KASIM%0A` +
-                `🔢 Account No: 136000010006086313972%0A` +
-                `🌍 IBAN: SA8680000136608016313972%0A%0A` +
-                `✅ Please verify payment in Al Rajhi app and activate subscription.`;
+                `🏦 *Bank Details for Verification*%0A` +
+                `Bank: Al Rajhi%0A` +
+                `Account Name: MOHAMMAD ASIM-KASIM%0A` +
+                `Account Number: 136000010006086313972%0A` +
+                `IBAN: SA8680000136608016313972%0A%0A` +
+                `✅ Please verify payment and activate subscription.`;
 
             window.open(`https://wa.me/966550898978?text=${message}`, '_blank');
-            showToast("Order sent! We'll verify shortly ✅");
+            showToast("Request sent! You will receive bank details on WhatsApp ✅");
 
             setTimeout(() => {
                 window.location.href = 'payment-success.html?id=' + orderData.id;
             }, 2000);
         });
-
-        function openWhatsApp() {
-            window.open('https://wa.me/966550898978?text=Hello! I need help with subscription payment', '_blank');
-        }
     </script>
 </body>
 </html>
