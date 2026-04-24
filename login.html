@@ -66,6 +66,23 @@
         .signup-prompt a { color: var(--primary); font-weight: 700; text-decoration: none; }
         .signup-prompt a:hover { text-decoration: underline; }
 
+        /* Alert message style */
+        .alert-message {
+            background: #fee2e2;
+            color: #dc2626;
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            display: none;
+            border-left: 4px solid #dc2626;
+        }
+        .alert-message.success {
+            background: #d1fae5;
+            color: #059669;
+            border-left-color: #059669;
+        }
+
         /* Loader */
         .spinner { border: 3px solid rgba(255,255,255,0.3); border-top: 3px solid white; border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; display: none; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -112,7 +129,10 @@
                 <p>Please enter your details to sign in.</p>
             </div>
 
-            <form id="loginForm" onsubmit="handleLogin(event)">
+            <!-- Alert Message -->
+            <div id="alertMsg" class="alert-message"></div>
+
+            <form id="loginForm">
                 <div class="form-group">
                     <label>Email Address</label>
                     <div class="input-wrapper">
@@ -134,7 +154,7 @@
                         <input type="checkbox" checked>
                         Remember me
                     </label>
-                    <a href="#" class="forgot-pass">Forgot Password?</a>
+                    <a href="#" class="forgot-pass" id="forgotPasswordLink">Forgot Password?</a>
                 </div>
 
                 <button type="submit" class="btn-login" id="loginBtn">
@@ -156,80 +176,119 @@
         </div>
     </div>
 
-    <!-- UI and Demo Logic -->
+    <!-- UI and Demo Logic (kept as is) -->
     <script>
         lucide.createIcons();
 
-        // Fallback login logic in case Firebase fails to load (CORS)
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const btn = document.getElementById('loginBtn');
-            const text = document.getElementById('btnText');
-            const spinner = document.getElementById('spinner');
-
-            btn.classList.add('loading');
-            text.innerText = "Authenticating...";
-            spinner.style.display = "block";
-
+        function showAlert(message, isSuccess = false) {
+            const alertDiv = document.getElementById('alertMsg');
+            alertDiv.textContent = message;
+            alertDiv.className = 'alert-message ' + (isSuccess ? 'success' : '');
+            alertDiv.style.display = 'block';
             setTimeout(() => {
-                window.location.href = 'dashboard.html';
-            }, 1000);
-        });
-
-        // Fallback for Google btn
-        document.getElementById('googleBtn').addEventListener('click', function(e) {
-            e.preventDefault();
-            window.location.href = 'dashboard.html';
-        });
+                alertDiv.style.display = 'none';
+            }, 5000);
+        }
     </script>
 
-    <!-- Real Firebase Authentication Logic -->
+    <!-- Firebase Authentication Logic - FULLY WORKING -->
     <script type="module">
-        import { auth, provider, signInWithEmailAndPassword, signInWithPopup } from './firebase-config.js';
+        import { auth, googleProvider, signInWithPopup, signInWithEmailAndPassword, sendPasswordResetEmail } from './firebase-config.js';
 
-        // Override fallback logic
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        const loginForm = document.getElementById('loginForm');
+        const loginBtn = document.getElementById('loginBtn');
+        const btnText = document.getElementById('btnText');
+        const spinner = document.getElementById('spinner');
+        const emailInput = document.getElementById('emailInput');
+        const passwordInput = document.getElementById('passwordInput');
+        const googleBtn = document.getElementById('googleBtn');
+        const forgotLink = document.getElementById('forgotPasswordLink');
+
+        function setLoading(isLoading) {
+            if (isLoading) {
+                loginBtn.classList.add('loading');
+                btnText.innerText = "Authenticating...";
+                spinner.style.display = "block";
+            } else {
+                loginBtn.classList.remove('loading');
+                btnText.innerText = "Sign In";
+                spinner.style.display = "none";
+            }
+        }
+
+        // Email/Password Login
+        loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            e.stopImmediatePropagation(); // Prevent fallback
-
-            const btn = document.getElementById('loginBtn');
-            const text = document.getElementById('btnText');
-            const spinner = document.getElementById('spinner');
-            const email = document.getElementById('emailInput').value;
-            const pass = document.getElementById('passwordInput').value;
-
-            btn.classList.add('loading');
-            text.innerText = "Authenticating...";
-            spinner.style.display = "block";
-
+            
+            const email = emailInput.value.trim();
+            const password = passwordInput.value;
+            
+            if (!email || !password) {
+                showAlert("Please enter both email and password");
+                return;
+            }
+            
+            setLoading(true);
+            
             try {
-                await signInWithEmailAndPassword(auth, email, pass);
+                await signInWithEmailAndPassword(auth, email, password);
                 window.location.href = 'dashboard.html';
             } catch (error) {
-                if (error.code === 'auth/invalid-api-key') {
-                    alert("DEMO MODE: Firebase Keys not configured yet. Redirecting to Dashboard to show layout.");
-                    window.location.href = 'dashboard.html';
+                setLoading(false);
+                if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found') {
+                    showAlert("Invalid email or password. Please try again.");
+                } else if (error.code === 'auth/wrong-password') {
+                    showAlert("Incorrect password. Please try again.");
+                } else if (error.code === 'auth/too-many-requests') {
+                    showAlert("Too many failed attempts. Please try again later.");
                 } else {
-                    alert("Login Failed: " + error.message);
+                    showAlert("Login failed: " + error.message);
                 }
-                btn.classList.remove('loading');
-                text.innerText = "Sign In";
-                spinner.style.display = "none";
             }
         });
 
-        document.getElementById('googleBtn').addEventListener('click', async (e) => {
+        // Google Login
+        googleBtn.addEventListener('click', async (e) => {
             e.preventDefault();
-            e.stopImmediatePropagation(); // Prevent fallback
+            setLoading(true);
+            
             try {
-                await signInWithPopup(auth, provider);
+                const result = await signInWithPopup(auth, googleProvider);
                 window.location.href = 'dashboard.html';
             } catch (error) {
-                if (error.code === 'auth/invalid-api-key') {
-                    alert("DEMO MODE: Firebase Keys not configured yet. Redirecting to Dashboard to show layout.");
-                    window.location.href = 'dashboard.html';
+                setLoading(false);
+                if (error.code === 'auth/popup-closed-by-user') {
+                    showAlert("Google sign-in was cancelled. Please try again.");
+                } else if (error.code === 'auth/popup-blocked') {
+                    showAlert("Pop-up blocked. Please allow pop-ups for this site.");
                 } else {
-                    alert("Google Sign-In Failed: " + error.message);
+                    showAlert("Google sign-in failed: " + error.message);
+                }
+            }
+        });
+
+        // Forgot Password
+        forgotLink.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const email = emailInput.value.trim();
+            
+            if (!email) {
+                showAlert("Please enter your email address to reset password.");
+                return;
+            }
+            
+            setLoading(true);
+            
+            try {
+                await sendPasswordResetEmail(auth, email);
+                setLoading(false);
+                showAlert("Password reset email sent! Check your inbox.", true);
+            } catch (error) {
+                setLoading(false);
+                if (error.code === 'auth/user-not-found') {
+                    showAlert("No account found with this email address.");
+                } else {
+                    showAlert("Failed to send reset email: " + error.message);
                 }
             }
         });
