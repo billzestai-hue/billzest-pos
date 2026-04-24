@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>BillZestPOS | Premium Restaurant Management System</title>
+    <title>BillZestPOS | Elegant Restaurant Management</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * {
             margin: 0;
@@ -15,514 +15,231 @@
         }
 
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background: #0a0c15;
-            min-height: 100vh;
+            font-family: 'Space Grotesk', sans-serif;
+            background: #f5f7fe;
         }
 
-        /* LOGIN SCREEN */
-        .login-overlay {
+        /* LOGIN */
+        .login-screen {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(145deg, #0f1119 0%, #0a0c15 100%);
+            background: linear-gradient(145deg, #667eea, #764ba2);
             display: flex;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
             z-index: 1000;
         }
 
-        .login-box {
-            background: rgba(18, 22, 35, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 40px;
-            padding: 50px 45px;
+        .login-card {
+            background: white;
+            border-radius: 48px;
+            padding: 50px;
             width: 90%;
-            max-width: 450px;
+            max-width: 460px;
             text-align: center;
-            border: 1px solid rgba(255,255,255,0.08);
-            box-shadow: 0 30px 50px rgba(0,0,0,0.5);
+            box-shadow: 0 30px 50px rgba(0,0,0,0.2);
         }
 
-        .login-box .logo-icon {
+        .login-card .icon-circle {
             width: 80px;
             height: 80px;
-            background: linear-gradient(145deg, #ff6b6b, #ee5a24);
-            border-radius: 25px;
+            background: linear-gradient(145deg, #667eea, #764ba2);
+            border-radius: 30px;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 20px;
         }
 
-        .login-box .logo-icon i {
-            font-size: 42px;
-            color: white;
-        }
-
-        .login-box h2 {
-            font-size: 28px;
-            font-weight: 800;
-            background: linear-gradient(135deg, #fff, #ff6b6b);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        .login-box input {
-            width: 100%;
-            padding: 16px 18px;
-            margin: 10px 0;
-            background: #1a1e2f;
-            border: 1.5px solid #2a2f45;
-            border-radius: 20px;
-            font-size: 14px;
-            color: white;
-            transition: 0.2s;
-        }
-
-        .login-box input:focus {
-            border-color: #ff6b6b;
-            outline: none;
-        }
-
         .login-btn {
             width: 100%;
             padding: 16px;
-            background: linear-gradient(145deg, #ff6b6b, #ee5a24);
+            background: linear-gradient(145deg, #667eea, #764ba2);
             border: none;
-            border-radius: 25px;
-            font-size: 16px;
-            font-weight: 700;
+            border-radius: 30px;
+            font-weight: 600;
             color: white;
             cursor: pointer;
-            margin-top: 15px;
-            transition: 0.3s;
         }
 
-        /* MAIN APP */
-        .app-wrapper {
-            display: none;
-        }
-
-        /* HEADER */
+        /* APP HEADER */
         .app-header {
-            background: #0f1119;
+            background: white;
             padding: 0 35px;
             height: 80px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid #1a1e2f;
-            position: sticky;
-            top: 0;
-            z-index: 99;
-        }
-
-        .logo-area {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .logo-area .logo-badge {
-            width: 45px;
-            height: 45px;
-            background: linear-gradient(145deg, #ff6b6b, #ee5a24);
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .logo-area h1 {
-            font-size: 22px;
-            font-weight: 800;
-            background: linear-gradient(135deg, #fff, #ff6b6b);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        /* MAIN LAYOUT */
-        .main-flex {
-            display: flex;
-            min-height: calc(100vh - 80px);
-        }
-
-        /* SIDEBAR */
-        .side-nav {
-            width: 280px;
-            background: #0f1119;
-            border-right: 1px solid #1a1e2f;
-            padding: 30px 20px;
-        }
-
-        .nav-item {
-            padding: 14px 18px;
-            margin: 6px 0;
-            border-radius: 18px;
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            color: #8b92b0;
-            cursor: pointer;
-            transition: 0.2s;
-            font-weight: 500;
-        }
-
-        .nav-item i {
-            width: 24px;
-            font-size: 18px;
-        }
-
-        .nav-item:hover, .nav-item.active {
-            background: linear-gradient(145deg, #ff6b6b20, #ee5a2420);
-            color: #ff6b6b;
-        }
-
-        /* CONTENT */
-        .content-area {
-            flex: 1;
-            padding: 30px;
-            background: #0a0c15;
-            overflow-y: auto;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
         }
 
         /* STATS */
-        .stats-row {
+        .stats-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 25px;
-            margin-bottom: 35px;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
         }
 
-        .stat-item {
-            background: #0f1119;
+        .stat-card {
+            background: white;
             border-radius: 28px;
-            padding: 25px;
-            border: 1px solid #1a1e2f;
-            transition: 0.2s;
+            padding: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            border: 1px solid #eef2ff;
         }
 
-        /* POS LAYOUT */
-        .pos-layout {
+        /* POS */
+        .pos-container {
             display: grid;
-            grid-template-columns: 1fr 400px;
-            gap: 30px;
+            grid-template-columns: 1fr 420px;
+            gap: 28px;
         }
 
-        .menu-panel {
-            background: #0f1119;
+        .menu-area {
+            background: white;
             border-radius: 32px;
-            padding: 25px;
-            border: 1px solid #1a1e2f;
-        }
-
-        .cat-buttons {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 25px;
-            flex-wrap: wrap;
-        }
-
-        .cat-btn {
-            padding: 8px 20px;
-            background: #1a1e2f;
-            border-radius: 30px;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 500;
-            color: #8b92b0;
-        }
-
-        .cat-btn.active {
-            background: linear-gradient(145deg, #ff6b6b, #ee5a24);
-            color: white;
-        }
-
-        .items-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 15px;
+            padding: 28px;
         }
 
         .item-card {
-            background: #1a1e2f;
+            background: #f8faff;
             border-radius: 20px;
-            padding: 15px;
+            padding: 16px;
             text-align: center;
             cursor: pointer;
             transition: 0.2s;
-            border: 1px solid #252a3f;
         }
 
-        .item-card:hover {
-            background: linear-gradient(145deg, #ff6b6b, #ee5a24);
-            transform: translateY(-3px);
-        }
-
-        /* CART PANEL */
-        .cart-panel {
-            background: #0f1119;
+        .cart-area {
+            background: white;
             border-radius: 32px;
-            padding: 25px;
-            border: 1px solid #1a1e2f;
+            padding: 28px;
             position: sticky;
             top: 100px;
         }
 
-        .cart-item-row {
+        .cart-item {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            padding: 12px;
-            background: #1a1e2f;
-            border-radius: 16px;
+            padding: 14px;
+            background: #f8faff;
+            border-radius: 18px;
             margin-bottom: 10px;
         }
 
-        /* KITCHEN */
-        .kitchen-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 20px;
-        }
-
-        .kitchen-card {
-            background: #0f1119;
-            border-radius: 24px;
-            padding: 20px;
-            border: 1px solid #1a1e2f;
-            border-left: 4px solid #ff6b6b;
-        }
-
-        @media (max-width: 1000px) {
-            .pos-layout { grid-template-columns: 1fr; }
-            .side-nav { display: none; }
+        @media (max-width: 950px) {
+            .pos-container { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
 <!-- LOGIN -->
-<div class="login-overlay" id="loginScreen">
-    <div class="login-box">
-        <div class="logo-icon"><i class="fas fa-crown"></i></div>
-        <h2>BillZestPOS</h2>
-        <p style="color:#8b92b0; margin:10px 0 25px;">Premium Restaurant OS</p>
-        <input type="text" id="loginUser" placeholder="Username">
-        <input type="password" id="loginPass" placeholder="Password">
-        <button class="login-btn" onclick="handleLogin()">Login →</button>
-        <div style="margin-top: 20px; font-size: 12px; color:#5a6278;">billzest / billzest123 | cashier / 123</div>
+<div class="login-screen" id="loginScreen">
+    <div class="login-card">
+        <div class="icon-circle"><i class="fas fa-crown" style="font-size: 40px; color:white;"></i></div>
+        <h2 style="font-size: 32px; margin-bottom: 8px;">BillZestPOS</h2>
+        <p style="color: #6b7280; margin-bottom: 32px;">Elegant Restaurant OS</p>
+        <input type="text" id="loginUser2" placeholder="Username" style="width:100%; padding:14px; border:2px solid #eef2ff; border-radius:24px; margin:8px 0;">
+        <input type="password" id="loginPass2" placeholder="Password" style="width:100%; padding:14px; border:2px solid #eef2ff; border-radius:24px; margin:8px 0;">
+        <button class="login-btn" onclick="handleLogin2()">Sign In →</button>
+        <div style="margin-top: 20px; font-size: 13px;">billzest / billzest123 | cashier / 123</div>
     </div>
 </div>
 
 <!-- MAIN APP -->
-<div class="app-wrapper" id="mainApp">
+<div id="mainApp2" style="display:none;">
     <div class="app-header">
-        <div class="logo-area">
-            <div class="logo-badge"><i class="fas fa-crown" style="color:white;"></i></div>
-            <h1>BillZestPOS</h1>
-        </div>
-        <div style="display:flex; gap:15px;">
-            <span id="userBadge" style="color:#ff6b6b;">👑 admin</span>
-            <button class="login-btn" onclick="logout()" style="width:auto; padding:10px 25px; background:#2a2f45;">Exit</button>
-        </div>
+        <div><i class="fas fa-crown" style="color:#667eea; font-size:28px;"></i> <strong style="font-size:24px;">BillZestPOS</strong></div>
+        <div><span id="userSpan2" style="margin-right:20px;">Admin</span><button onclick="logout2()" style="background:#ef4444; border:none; padding:10px 24px; border-radius:40px; color:white;">Logout</button></div>
     </div>
-    <div class="main-flex">
-        <div class="side-nav">
-            <div class="nav-item active" data-page="dashboard"><i class="fas fa-chart-line"></i> Dashboard</div>
-            <div class="nav-item" data-page="pos"><i class="fas fa-cash-register"></i> POS System</div>
-            <div class="nav-item" data-page="kitchen"><i class="fas fa-utensils"></i> Kitchen Display</div>
-            <div class="nav-item" data-page="orders"><i class="fas fa-receipt"></i> Order History</div>
-            <div class="nav-item" data-page="customers"><i class="fas fa-users"></i> Customers</div>
+    <div style="padding: 30px;">
+        <!-- DASHBOARD -->
+        <div id="dashPanel2">
+            <div class="stats-container">
+                <div class="stat-card"><h3 style="color:#6b7280;">Today Sales</h3><h2 id="dashSales2">0 SAR</h2></div>
+                <div class="stat-card"><h3 style="color:#6b7280;">Total Orders</h3><h2 id="dashOrders2">0</h2></div>
+                <div class="stat-card"><h3 style="color:#6b7280;">Kitchen</h3><h2 id="dashKitchen2">0</h2></div>
+                <div class="stat-card"><h3 style="color:#6b7280;">Customers</h3><h2 id="dashCust2">0</h2></div>
+            </div>
+            <div class="stat-card"><canvas id="chart2" height="100"></canvas></div>
         </div>
 
-        <div class="content-area">
-            <!-- DASHBOARD -->
-            <div id="dashboardPanel" class="page-panel">
-                <div class="stats-row">
-                    <div class="stat-item"><div><h4 style="color:#8b92b0;">Today's Revenue</h4><h2 style="color:white;" id="statRevenue">0 SAR</h2></div></div>
-                    <div class="stat-item"><div><h4 style="color:#8b92b0;">Orders Today</h4><h2 style="color:white;" id="statOrders">0</h2></div></div>
-                    <div class="stat-item"><div><h4 style="color:#8b92b0;">Kitchen Pending</h4><h2 style="color:white;" id="statPending">0</h2></div></div>
-                    <div class="stat-item"><div><h4 style="color:#8b92b0;">Total Customers</h4><h2 style="color:white;" id="statCustomers">0</h2></div></div>
-                </div>
-                <div class="stat-item"><canvas id="salesGraph" height="120"></canvas></div>
-            </div>
-
-            <!-- POS -->
-            <div id="posPanel" class="page-panel" style="display:none;">
-                <div class="pos-layout">
-                    <div class="menu-panel">
-                        <div class="cat-buttons">
-                            <div class="cat-btn active" data-cat="all">All</div>
-                            <div class="cat-btn" data-cat="main">Main Course</div>
-                            <div class="cat-btn" data-cat="beverage">Beverages</div>
-                            <div class="cat-btn" data-cat="dessert">Desserts</div>
-                        </div>
-                        <div class="items-grid" id="menuGrid"></div>
+        <!-- POS -->
+        <div id="posPanel2" style="display:none;">
+            <div class="pos-container">
+                <div class="menu-area">
+                    <div style="display:flex; gap:12px; margin-bottom:24px;">
+                        <button class="catBtn2 active" data-cat="all">All</button>
+                        <button class="catBtn2" data-cat="main">Main</button>
+                        <button class="catBtn2" data-cat="beverage">Drinks</button>
+                        <button class="catBtn2" data-cat="dessert">Dessert</button>
                     </div>
-                    <div class="cart-panel">
-                        <h3 style="color:white;">🧾 Current Order</h3>
-                        <input type="text" id="custName" placeholder="Customer Name" style="width:100%; background:#1a1e2f; border:none; padding:12px; border-radius:16px; margin:12px 0; color:white;">
-                        <input type="tel" id="custPhone" placeholder="Phone Number" style="width:100%; background:#1a1e2f; border:none; padding:12px; border-radius:16px; margin:8px 0; color:white;">
-                        <div id="cartList" style="max-height:280px; overflow-y:auto; margin:15px 0;"></div>
-                        <div class="stat-item" style="padding:15px; margin:10px 0;"><span>Total:</span> <strong id="cartTotal">0 SAR</strong></div>
-                        <select id="payMethod" style="width:100%; background:#1a1e2f; border:none; padding:12px; border-radius:16px; color:white;">
-                            <option>💵 Cash</option><option>💳 Card</option><option>📱 QR</option>
-                        </select>
-                        <div style="display:flex; gap:10px; margin-top:15px;">
-                            <button class="login-btn" onclick="placeOrder()" style="flex:1;">Print Bill</button>
-                            <button class="login-btn" onclick="sendWhatsapp()" style="flex:1; background:#25D366;">WhatsApp</button>
-                        </div>
+                    <div class="items-grid" id="menuGrid2" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:16px;"></div>
+                </div>
+                <div class="cart-area">
+                    <h3>🛒 Current Order</h3>
+                    <input type="text" id="custName2" placeholder="Customer name" style="width:100%; padding:12px; border:1px solid #eef2ff; border-radius:20px; margin:12px 0;">
+                    <input type="tel" id="custPhone2" placeholder="Phone" style="width:100%; padding:12px; border:1px solid #eef2ff; border-radius:20px; margin:8px 0;">
+                    <div id="cartList2" style="max-height:260px; overflow:auto; margin:15px 0;"></div>
+                    <div style="background:#f8faff; padding:15px; border-radius:20px; margin:10px 0;"><span>Total:</span> <strong id="cartTotal2">0 SAR</strong></div>
+                    <select id="payMethod2" style="width:100%; padding:12px; border-radius:20px; border:1px solid #eef2ff;"><option>Cash</option><option>Card</option><option>QR</option></select>
+                    <div style="display:flex; gap:12px; margin-top:15px;">
+                        <button class="login-btn" onclick="placeOrder2()">Print Bill</button>
+                        <button class="login-btn" onclick="sendWhatsapp2()" style="background:#25D366;">WhatsApp</button>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- KITCHEN -->
-            <div id="kitchenPanel" class="page-panel" style="display:none;">
-                <div class="kitchen-grid" id="kitchenGrid"></div>
-            </div>
+        <!-- KITCHEN -->
+        <div id="kitchenPanel2" style="display:none;"><div id="kitchenGrid2" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:20px;"></div></div>
+        <div id="ordersPanel2" style="display:none;"><div id="ordersList2"></div></div>
+        <div id="customersPanel2" style="display:none;"><div id="customersList2"></div></div>
 
-            <!-- ORDERS -->
-            <div id="ordersPanel" class="page-panel" style="display:none;">
-                <div class="stat-item" style="padding:20px;">
-                    <input type="date" id="orderFilter" style="background:#1a1e2f; border:none; padding:10px; border-radius:16px; color:white; margin-bottom:20px;">
-                    <div id="ordersList"></div>
-                </div>
-            </div>
-
-            <!-- CUSTOMERS -->
-            <div id="customersPanel" class="page-panel" style="display:none;">
-                <div class="stat-item" style="padding:20px;">
-                    <div id="customersList"></div>
-                </div>
-            </div>
+        <!-- NAV BUTTONS -->
+        <div style="position:fixed; bottom:20px; left:20px; right:20px; background:white; border-radius:60px; padding:12px 20px; display:flex; justify-content:space-around; box-shadow:0 4px 20px rgba(0,0,0,0.1);">
+            <i class="fas fa-chart-line nav-icon2" data-page="dash" style="font-size:22px; cursor:pointer; color:#667eea;"></i>
+            <i class="fas fa-cash-register nav-icon2" data-page="pos" style="font-size:22px; cursor:pointer;"></i>
+            <i class="fas fa-utensils nav-icon2" data-page="kitchen" style="font-size:22px; cursor:pointer;"></i>
+            <i class="fas fa-receipt nav-icon2" data-page="orders" style="font-size:22px; cursor:pointer;"></i>
+            <i class="fas fa-users nav-icon2" data-page="customers" style="font-size:22px; cursor:pointer;"></i>
         </div>
     </div>
 </div>
 
 <script>
-    const menuDB = [
-        { id:1, name:"Grilled Chicken", price:32, cat:"main", emoji:"🍗" }, { id:2, name:"Beef Steak", price:55, cat:"main", emoji:"🥩" },
-        { id:3, name:"Lamb Chops", price:48, cat:"main", emoji:"🍖" }, { id:4, name:"Seafood Pasta", price:42, cat:"main", emoji:"🍝" },
-        { id:5, name:"Margherita Pizza", price:35, cat:"main", emoji:"🍕" }, { id:6, name:"Truffle Burger", price:29, cat:"main", emoji:"🍔" },
-        { id:7, name:"Fresh Orange", price:12, cat:"beverage", emoji:"🍊" }, { id:8, name:"Iced Latte", price:16, cat:"beverage", emoji:"☕" },
-        { id:9, name:"Mocktail", price:22, cat:"beverage", emoji:"🍹" }, { id:10, name:"Sparkling Water", price:8, cat:"beverage", emoji:"💧" },
-        { id:11, name:"Cheesecake", price:18, cat:"dessert", emoji:"🍰" }, { id:12, name:"Chocolate Mousse", price:16, cat:"dessert", emoji:"🍫" }
-    ];
-    let cart = [];
-    let orders = JSON.parse(localStorage.getItem("billzest_v1_orders")) || [];
-    let kitchen = JSON.parse(localStorage.getItem("billzest_v1_kitchen")) || [];
-    let customers = JSON.parse(localStorage.getItem("billzest_v1_customers")) || [];
+    const menu2 = [{id:1,name:"Grilled Chicken",price:32,cat:"main"},{id:2,name:"Beef Steak",price:55,cat:"main"},{id:3,name:"Lamb Chops",price:48,cat:"main"},{id:4,name:"Seafood Pasta",price:42,cat:"main"},{id:5,name:"Fresh Juice",price:12,cat:"beverage"},{id:6,name:"Iced Latte",price:16,cat:"beverage"},{id:7,name:"Cheesecake",price:18,cat:"dessert"},{id:8,name:"Chocolate Cake",price:16,cat:"dessert"}];
+    let cart2 = [], orders2 = JSON.parse(localStorage.getItem("billzest_v2_orders")) || [], kitchen2 = JSON.parse(localStorage.getItem("billzest_v2_kitchen")) || [], customers2 = JSON.parse(localStorage.getItem("billzest_v2_customers")) || [];
+    let currentCat2 = "all";
 
-    function renderMenu() {
-        let cat = currentCat;
-        let filtered = cat === "all" ? menuDB : menuDB.filter(m=>m.cat===cat);
-        let html = "";
-        filtered.forEach(item=>{
-            html += `<div class="item-card" onclick="addToCart(${item.id},'${item.name}',${item.price})">
-                        <div style="font-size:32px;">${item.emoji}</div>
-                        <div style="font-weight:600;">${item.name}</div>
-                        <div style="color:#ff6b6b;">${item.price} SAR</div>
-                    </div>`;
-        });
-        document.getElementById("menuGrid").innerHTML = html;
+    function renderMenu2(){
+        let filtered = currentCat2==="all"? menu2 : menu2.filter(m=>m.cat===currentCat2);
+        let html=""; filtered.forEach(i=>{ html+=`<div class="item-card" onclick="addToCart2(${i.id},'${i.name}',${i.price})"><div style="font-size:28px;">🍽️</div><div><b>${i.name}</b></div><div>${i.price} SAR</div></div>`; });
+        document.getElementById("menuGrid2").innerHTML=html;
     }
-
-    window.addToCart = function(id,name,price){
-        let exist = cart.find(i=>i.id===id);
-        if(exist) exist.qty++;
-        else cart.push({id,name,price,qty:1});
-        renderCart();
-    };
-
-    function renderCart(){
-        if(cart.length===0){ document.getElementById("cartList").innerHTML="<div style='text-align:center;padding:30px;color:#8b92b0;'>Empty Cart</div>"; document.getElementById("cartTotal").innerText="0 SAR"; return; }
-        let html="", total=0;
-        cart.forEach((item,idx)=>{
-            total += item.price*item.qty;
-            html += `<div class="cart-item-row"><div><b>${item.name}</b><br><small>${item.price} × ${item.qty}</small></div>
-                    <div><button onclick="updateQty(${idx},-1)" style="background:#ff6b6b; border:none; width:28px; border-radius:10px;">-</button>
-                    <span style="margin:0 8px;">${item.qty}</span>
-                    <button onclick="updateQty(${idx},1)" style="background:#ff6b6b; border:none; width:28px; border-radius:10px;">+</button>
-                    <button onclick="removeItem(${idx})" style="background:#ff4444; border:none; width:28px; border-radius:10px;">✕</button></div></div>`;
-        });
-        document.getElementById("cartList").innerHTML = html;
-        document.getElementById("cartTotal").innerText = total+" SAR";
-    }
-
-    window.updateQty = function(idx,d){ let n=cart[idx].qty+d; if(n<=0) cart.splice(idx,1); else cart[idx].qty=n; renderCart(); };
-    window.removeItem = function(idx){ cart.splice(idx,1); renderCart(); };
-
-    window.placeOrder = function(){
-        if(cart.length===0) return alert("Cart empty!");
-        let name = document.getElementById("custName").value.trim() || "Walk-in";
-        let phone = document.getElementById("custPhone").value.trim();
-        let total = cart.reduce((s,i)=>s+(i.price*i.qty),0);
-        let order = { id:Date.now(), customer:name, phone, items:[...cart], total, payment:document.getElementById("payMethod").value, date:new Date().toISOString() };
-        orders.unshift(order);
-        kitchen.unshift({ id:order.id, customer:name, items:cart.map(i=>`${i.name} x${i.qty}`).join(", "), time:new Date().toLocaleTimeString() });
-        if(phone && !customers.find(c=>c.phone===phone)) customers.unshift({ name, phone, visits:1, last:new Date().toLocaleString() });
-        saveAll();
-        renderKitchen();
-        updateDashboard();
-        let inv = `BILLZESTPOS\n${"=".repeat(25)}\nOrder #${order.id}\n${cart.map(i=>`${i.name} x${i.qty} = ${i.price*i.qty} SAR`).join("\n")}\nTotal: ${total} SAR\nPayment: ${order.payment}\nThank you!`;
-        alert(inv);
-        let win = window.open('','_blank'); win.document.write(`<pre>${inv}</pre><button onclick="window.print()">Print</button>`);
-        cart=[]; document.getElementById("custName").value=""; document.getElementById("custPhone").value=""; renderCart();
-        renderOrders(); renderCustomers();
-    };
-
-    window.sendWhatsapp = function(){
-        if(cart.length===0 || !document.getElementById("custPhone").value.trim()) return alert("Cart empty or no phone!");
-        let total = cart.reduce((s,i)=>s+(i.price*i.qty),0);
-        let msg = `🛎️ BillZestPOS Order 🛎️\n${cart.map(i=>`✅ ${i.name} x${i.qty} = ${i.price*i.qty} SAR`).join("\n")}\nTotal: ${total} SAR`;
-        window.open(`https://wa.me/${document.getElementById("custPhone").value}?text=${encodeURIComponent(msg)}`,'_blank');
-    };
-
-    function renderKitchen(){
-        let html = "";
-        kitchen.forEach(k=>{ html+=`<div class="kitchen-card"><div>🔥 Order #${k.id}</div><div>👤 ${k.customer}</div><div>🍽️ ${k.items}</div><div>⏰ ${k.time}</div><button onclick="completeKitchen(${k.id})" style="margin-top:12px; background:#28a745; border:none; padding:8px; border-radius:12px;">✓ Prepared</button></div>`; });
-        document.getElementById("kitchenGrid").innerHTML = html || "<div style='text-align:center;padding:40px;'>No orders</div>";
-    }
-    window.completeKitchen = function(id){ kitchen = kitchen.filter(k=>k.id!==id); saveAll(); renderKitchen(); updateDashboard(); };
-
-    function renderOrders(){ let f = document.getElementById("orderFilter").value; let filtered = f ? orders.filter(o=>o.date.startsWith(f)) : orders; let h=""; filtered.forEach(o=>{ h+=`<div style="background:#1a1e2f; border-radius:20px; padding:15px; margin:10px 0;"><div><b>#${o.id}</b> | ${o.total} SAR</div><div>${o.customer}</div><div style="font-size:12px;">${new Date(o.date).toLocaleString()}</div></div>`; }); document.getElementById("ordersList").innerHTML = h || "<div>No orders</div>"; }
-    function renderCustomers(){ let h=""; customers.forEach(c=>{ h+=`<div style="background:#1a1e2f; border-radius:20px; padding:15px; margin:10px 0;"><b>${c.name}</b><br>📞 ${c.phone}<br>📅 ${c.last}</div>`; }); document.getElementById("customersList").innerHTML = h || "<div>No customers</div>"; }
-    function updateDashboard(){
-        let today = new Date().toDateString();
-        let todayTotal = orders.filter(o=>new Date(o.date).toDateString()===today).reduce((s,o)=>s+o.total,0);
-        document.getElementById("statRevenue").innerHTML = todayTotal+" SAR";
-        document.getElementById("statOrders").innerHTML = orders.length;
-        document.getElementById("statPending").innerHTML = kitchen.length;
-        document.getElementById("statCustomers").innerHTML = customers.length;
-        if(window.chart) window.chart.destroy();
-        let ctx = document.getElementById('salesGraph').getContext('2d');
-        window.chart = new Chart(ctx, { type:'line', data:{ labels:['M','T','W','T','F','S','S'], datasets:[{ label:'Sales', data:[1200,1900,2100,1800,2600,3100,2900], borderColor:'#ff6b6b', tension:0.4 }] } });
-    }
-    function saveAll(){ localStorage.setItem("billzest_v1_orders",JSON.stringify(orders)); localStorage.setItem("billzest_v1_kitchen",JSON.stringify(kitchen)); localStorage.setItem("billzest_v1_customers",JSON.stringify(customers)); }
-
-    let currentCat = "all";
-    document.querySelectorAll(".cat-btn").forEach(btn=>{ btn.addEventListener("click",function(){ document.querySelectorAll(".cat-btn").forEach(b=>b.classList.remove("active")); this.classList.add("active"); currentCat=this.dataset.cat; renderMenu(); }); });
-    document.querySelectorAll(".nav-item").forEach(nav=>{ nav.addEventListener("click",function(){ document.querySelectorAll(".nav-item").forEach(n=>n.classList.remove("active")); this.classList.add("active"); let page=this.dataset.page; document.querySelectorAll(".page-panel").forEach(p=>p.style.display="none"); document.getElementById(`${page}Panel`).style.display="block"; if(page==="pos") renderMenu(); if(page==="orders") renderOrders(); if(page==="customers") renderCustomers(); if(page==="kitchen") renderKitchen(); if(page==="dashboard") updateDashboard(); }); });
-    document.getElementById("orderFilter")?.addEventListener("change",renderOrders);
-
-    function handleLogin(){
-        let u = document.getElementById("loginUser").value, p = document.getElementById("loginPass").value;
-        if((u==="billzest" && p==="billzest123") || (u==="cashier" && p==="123")){
-            document.getElementById("loginScreen").style.display="none";
-            document.getElementById("mainApp").style.display="block";
-            document.getElementById("userBadge").innerHTML = u==="billzest"?"👑 admin":"💼 cashier";
-            renderMenu(); renderKitchen(); renderOrders(); renderCustomers(); updateDashboard();
-        } else alert("Invalid! billzest/billzest123 | cashier/123");
-    }
-    function logout(){ document.getElementById("loginScreen").style.display="flex"; document.getElementById("mainApp").style.display="none"; cart=[]; }
-    if(!localStorage.getItem("billzest_v1_orders")){ orders=[{ id:1001, customer:"Ali", items:[], total:45, payment:"Cash", date:new Date().toISOString() }]; customers=[{ name:"Ali", phone:"0551234567", visits:1, last:new Date().toLocaleString() }]; saveAll(); }
-    window.handleLogin=handleLogin; window.logout=logout;
+    window.addToCart2 = function(id,name,price){ let e=cart2.find(i=>i.id===id); if(e) e.qty++; else cart2.push({id,name,price,qty:1}); renderCart2(); };
+    function renderCart2(){ if(cart2.length===0){ document.getElementById("cartList2").innerHTML="<div style='text-align:center;padding:40px;'>Empty</div>"; document.getElementById("cartTotal2").innerText="0 SAR"; return; } let html="", total=0; cart2.forEach((item,idx)=>{ total+=item.price*item.qty; html+=`<div class="cart-item"><div><b>${item.name}</b> x${item.qty}</div><div>${item.price*item.qty} SAR <button onclick="updateQty2(${idx},-1)">-</button> ${item.qty} <button onclick="updateQty2(${idx},1)">+</button> <button onclick="removeItem2(${idx})">✕</button></div></div>`; }); document.getElementById("cartList2").innerHTML=html; document.getElementById("cartTotal2").innerText=total+" SAR"; }
+    window.updateQty2=function(idx,d){ let n=cart2[idx].qty+d; if(n<=0) cart2.splice(idx,1); else cart2[idx].qty=n; renderCart2(); };
+    window.removeItem2=function(idx){ cart2.splice(idx,1); renderCart2(); };
+    window.placeOrder2=function(){ if(cart2.length===0) return; let name=document.getElementById("custName2").value.trim()||"Guest", phone=document.getElementById("custPhone2").value.trim(), total=cart2.reduce((s,i)=>s+(i.price*i.qty),0); let order={id:Date.now(),customer:name,phone,items:[...cart2],total,payment:document.getElementById("payMethod2").value,date:new Date().toISOString()}; orders2.unshift(order); kitchen2.unshift({id:order.id,customer:name,items:cart2.map(i=>`${i.name} x${i.qty}`).join(", "),time:new Date().toLocaleTimeString()}); if(phone && !customers2.find(c=>c.phone===phone)) customers2.unshift({name,phone,last:new Date().toLocaleString()}); saveAll2(); renderKitchen2(); updateDashboard2(); alert(`🧾 Order #${order.id}\nTotal: ${total} SAR`); let win=window.open('','_blank'); win.document.write(`<pre>BillZestPOS\nOrder #${order.id}\nTotal: ${total} SAR\nThank you!</pre><button onclick="window.print()">Print</button>`); cart2=[]; document.getElementById("custName2").value=""; document.getElementById("custPhone2").value=""; renderCart2(); renderOrders2(); renderCustomers2(); };
+    window.sendWhatsapp2=function(){ let phone=document.getElementById("custPhone2").value.trim(); if(!phone) return; let total=cart2.reduce((s,i)=>s+(i.price*i.qty),0); let msg=`BillZest Order\n${cart2.map(i=>`${i.name} x${i.qty} = ${i.price*i.qty} SAR`).join("\n")}\nTotal: ${total} SAR`; window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`,'_blank'); };
+    function renderKitchen2(){ let html=""; kitchen2.forEach(k=>{ html+=`<div style="background:white; border-radius:24px; padding:20px;"><b>Order #${k.id}</b><br>👤 ${k.customer}<br>🍽️ ${k.items}<br><button onclick="completeKitchen2(${k.id})" style="background:#10b981; border:none; padding:8px; border-radius:16px;">✓ Prepared</button></div>`; }); document.getElementById("kitchenGrid2").innerHTML=html||"No orders"; }
+    window.completeKitchen2=function(id){ kitchen2=kitchen2.filter(k=>k.id!==id); saveAll2(); renderKitchen2(); updateDashboard2(); };
+    function renderOrders2(){ let html=""; orders2.forEach(o=>{ html+=`<div style="background:white; border-radius:24px; padding:18px; margin:10px 0;"><b>#${o.id}</b> | ${o.total} SAR<br>${o.customer}<br>${new Date(o.date).toLocaleString()}</div>`; }); document.getElementById("ordersList2").innerHTML=html; }
+    function renderCustomers2(){ let html=""; customers2.forEach(c=>{ html+=`<div style="background:white; border-radius:24px; padding:18px; margin:10px 0;"><b>${c.name}</b><br>${c.phone}<br>Last: ${c.last}</div>`; }); document.getElementById("customersList2").innerHTML=html; }
+    function updateDashboard2(){ let today=new Date().toDateString(); let t=orders2.filter(o=>new Date(o.date).toDateString()===today).reduce((s,o)=>s+o.total,0); document.getElementById("dashSales2").innerText=t+" SAR"; document.getElementById("dashOrders2").innerText=orders2.length; document.getElementById("dashKitchen2").innerText=kitchen2.length; document.getElementById("dashCust2").innerText=customers2.length; if(window.c2) window.c2.destroy(); let ctx=document.getElementById('chart2').getContext('2d'); window.c2=new Chart(ctx,{ type:'bar', data:{ labels:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'], datasets:[{ label:'Sales', data:[1500,2100,1800,2400,2900,3400,3100], backgroundColor:'#667eea' }] } }); }
+    function saveAll2(){ localStorage.setItem("billzest_v2_orders",JSON.stringify(orders2)); localStorage.setItem("billzest_v2_kitchen",JSON.stringify(kitchen2)); localStorage.setItem("billzest_v2_customers",JSON.stringify(customers2)); }
+    document.querySelectorAll(".catBtn2").forEach(btn=>{ btn.addEventListener("click",function(){ document.querySelectorAll(".catBtn2").forEach(b=>b.classList.remove("active")); this.classList.add("active"); currentCat2=this.dataset.cat; renderMenu2(); }); });
+    function handleLogin2(){ let u=document.getElementById("loginUser2").value, p=document.getElementById("loginPass2").value; if((u==="billzest" && p==="billzest123")||(u==="cashier" && p==="123")){ document.getElementById("loginScreen").style.display="none"; document.getElementById("mainApp2").style.display="block"; document.getElementById("userSpan2").innerText=u; renderMenu2(); renderKitchen2(); renderOrders2(); renderCustomers2(); updateDashboard2(); } else alert("Invalid!"); }
+    function logout2(){ document.getElementById("loginScreen").style.display="flex"; document.getElementById("mainApp2").style.display="none"; cart2=[]; }
+    document.querySelectorAll(".nav-icon2").forEach(icon=>{ icon.addEventListener("click",function(){ let page=this.dataset.page; document.getElementById("dashPanel2").style.display=page==="dash"?"block":"none"; document.getElementById("posPanel2").style.display=page==="pos"?"block":"none"; document.getElementById("kitchenPanel2").style.display=page==="kitchen"?"block":"none"; document.getElementById("ordersPanel2").style.display=page==="orders"?"block":"none"; document.getElementById("customersPanel2").style.display=page==="customers"?"block":"none"; if(page==="pos") renderMenu2(); if(page==="orders") renderOrders2(); if(page==="customers") renderCustomers2(); if(page==="kitchen") renderKitchen2(); if(page==="dash") updateDashboard2(); }); });
+    if(!localStorage.getItem("billzest_v2_orders")){ orders2=[{id:2001,customer:"Omar",items:[],total:55,payment:"Cash",date:new Date().toISOString()}]; customers2=[{name:"Omar",phone:"0559876543",last:new Date().toLocaleString()}]; saveAll2(); }
+    window.handleLogin2=handleLogin2; window.logout2=logout2;
 </script>
 </body>
 </html>
