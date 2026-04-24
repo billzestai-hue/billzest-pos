@@ -3,503 +3,393 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>BillZestPOS | Glass Morphism Premium Edition</title>
+    <title>BillZestPOS | Glass Premium Edition</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Outfit', sans-serif;
-            background: radial-gradient(circle at 0% 0%, #1a1a2e, #0f0f1a);
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        .glass {
-            background: rgba(255, 255, 255, 0.07);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        /* LOGIN SCREEN */
-        .login-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at 20% 30%, #1a1a2e, #0a0a15);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .login-card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            border-radius: 48px;
-            padding: 50px 45px;
-            width: 90%;
-            max-width: 460px;
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 30px 50px rgba(0, 0, 0, 0.3);
-        }
-
-        .login-card .glow-icon {
-            width: 85px;
-            height: 85px;
-            background: linear-gradient(135deg, #00d4ff, #7c3aed);
-            border-radius: 28px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.3);
-        }
-
-        .login-card h2 {
-            font-size: 32px;
-            font-weight: 800;
-            background: linear-gradient(135deg, #fff, #00d4ff);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        .login-card input {
-            width: 100%;
-            padding: 15px 18px;
-            margin: 10px 0;
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 28px;
-            font-size: 14px;
-            color: white;
-            transition: 0.2s;
-        }
-
-        .login-card input:focus {
-            border-color: #00d4ff;
-            outline: none;
-            background: rgba(255, 255, 255, 0.12);
-        }
-
-        .btn-primary, .btn-exit, .login-btn, .cart-action-btn {
-            padding: 14px 28px;
-            font-size: 15px;
-            font-weight: 600;
-            border: none;
-            border-radius: 32px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: center;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            font-family: 'Outfit', sans-serif;
-        }
-
-        .login-btn {
-            width: 100%;
-            background: linear-gradient(135deg, #00d4ff, #7c3aed);
-            color: white;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #00d4ff, #7c3aed);
-            color: white;
-        }
-
-        .btn-exit {
-            background: rgba(239, 68, 68, 0.9);
-            color: white;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Outfit', sans-serif; background: radial-gradient(circle at 0% 0%, #1a1a2e, #0f0f1a); min-height: 100vh; }
+        .glass { background: rgba(255,255,255,0.07); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
+        
+        /* LOGIN */
+        .login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at 20% 30%, #1a1a2e, #0a0a15); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+        .login-card { background: rgba(255,255,255,0.05); backdrop-filter: blur(20px); border-radius: 48px; padding: 50px 45px; width: 90%; max-width: 460px; text-align: center; border: 1px solid rgba(255,255,255,0.15); }
+        .login-card .glow-icon { width: 85px; height: 85px; background: linear-gradient(135deg, #00d4ff, #7c3aed); border-radius: 28px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; }
+        .login-card h2 { font-size: 32px; font-weight: 800; background: linear-gradient(135deg, #fff, #00d4ff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .login-card input { width: 100%; padding: 15px; margin: 10px 0; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 28px; color: white; font-size: 14px; }
+        .login-btn { width: 100%; padding: 14px; background: linear-gradient(135deg, #00d4ff, #7c3aed); border: none; border-radius: 32px; color: white; font-weight: 600; cursor: pointer; font-size: 15px; }
+        .demo-text { margin-top: 20px; font-size: 12px; color: #6b7280; }
+        
         /* SUCCESS POPUP */
-        .success-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(15px);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.4s ease;
-        }
-
-        .success-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .success-card {
-            background: linear-gradient(145deg, #1a1a2e, #0f0f1a);
-            border-radius: 60px;
-            padding: 50px 60px;
-            text-align: center;
-            border: 1px solid rgba(0, 212, 255, 0.3);
-            box-shadow: 0 0 60px rgba(0, 212, 255, 0.2);
-            animation: successPop 0.5s cubic-bezier(0.34, 1.2, 0.64, 1);
-        }
-
-        @keyframes successPop {
-            0% { transform: scale(0.7); opacity: 0; }
-            80% { transform: scale(1.05); }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        .success-icon {
-            width: 100px;
-            height: 100px;
-            background: linear-gradient(135deg, #00d4ff, #10b981);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 25px;
-            animation: iconPulse 0.8s ease infinite;
-        }
-
-        @keyframes iconPulse {
-            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
-            70% { box-shadow: 0 0 0 20px rgba(16, 185, 129, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
-        }
-
-        .success-icon i { font-size: 55px; color: white; }
-        .success-card h2 { color: white; font-size: 32px; margin-bottom: 12px; }
-        .success-card p { color: #a0aec0; font-size: 16px; margin-bottom: 8px; }
+        .success-popup { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(15px); display: flex; justify-content: center; align-items: center; z-index: 2000; opacity: 0; visibility: hidden; transition: 0.3s; }
+        .success-popup.show { opacity: 1; visibility: visible; }
+        .success-card { background: #1a1a2e; border-radius: 50px; padding: 40px; text-align: center; border: 1px solid #00d4ff; max-width: 450px; width: 90%; }
+        .success-card .check-icon { width: 80px; height: 80px; background: linear-gradient(135deg, #00d4ff, #10b981); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; }
+        .success-card h2 { color: white; font-size: 28px; }
+        .success-card p { color: #a0aec0; margin: 10px 0; }
+        .close-success { padding: 12px 30px; background: linear-gradient(135deg, #00d4ff, #7c3aed); border: none; border-radius: 40px; color: white; cursor: pointer; margin-top: 15px; font-size: 14px; }
         
-        .order-details {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 30px;
-            padding: 20px;
-            margin: 25px 0;
-            text-align: left;
-        }
-        .order-details p { margin: 8px 0; color: #cbd5e1; }
+        /* MAIN APP */
+        .app-container { display: none; }
+        .header { padding: 20px 35px; display: flex; justify-content: space-between; align-items: center; }
+        .pos-layout { display: grid; grid-template-columns: 1fr 380px; gap: 25px; padding: 20px 35px; }
+        .menu-panel { background: rgba(255,255,255,0.04); backdrop-filter: blur(10px); border-radius: 36px; padding: 25px; }
+        .cart-panel { background: rgba(255,255,255,0.04); backdrop-filter: blur(10px); border-radius: 36px; padding: 25px; position: sticky; top: 20px; }
+        .cats { display: flex; gap: 12px; margin-bottom: 25px; flex-wrap: wrap; }
+        .cat { padding: 8px 22px; background: rgba(255,255,255,0.06); border-radius: 40px; cursor: pointer; font-size: 13px; }
+        .cat.active { background: linear-gradient(135deg, #00d4ff, #7c3aed); color: white; }
+        .items-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; }
+        .item { background: rgba(255,255,255,0.06); border-radius: 24px; padding: 15px; text-align: center; cursor: pointer; transition: 0.2s; }
+        .item:hover { background: linear-gradient(135deg, #00d4ff, #7c3aed); transform: translateY(-3px); }
+        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 18px; margin-bottom: 8px; }
+        .qty-btn { background: #00d4ff; border: none; width: 26px; height: 26px; border-radius: 8px; cursor: pointer; color: white; font-weight: bold; }
+        .input-field { width: 100%; padding: 12px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; color: white; margin: 8px 0; }
+        .total-box { background: rgba(255,255,255,0.08); padding: 12px; border-radius: 20px; margin: 15px 0; text-align: center; }
+        .action-btns { display: flex; gap: 10px; margin-top: 15px; }
+        .btn { flex: 1; padding: 12px; border: none; border-radius: 28px; font-weight: 600; cursor: pointer; color: white; font-size: 13px; }
+        .btn-primary { background: linear-gradient(135deg, #00d4ff, #7c3aed); }
+        .btn-whatsapp { background: #25D366; }
+        .btn-exit { background: #ef4444; padding: 10px 25px; border-radius: 30px; border: none; color: white; cursor: pointer; font-size: 13px; }
         
-        .close-success {
-            padding: 14px 35px;
-            background: linear-gradient(135deg, #00d4ff, #7c3aed);
-            border: none;
-            border-radius: 40px;
-            color: white;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 10px;
-            transition: 0.2s;
-        }
-        .close-success:hover { transform: scale(1.05); }
-
-        .app-wrapper { display: none; }
-        .app-header { padding: 20px 35px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 99; }
-        .header-actions { display: flex; gap: 15px; align-items: center; }
-        .user-badge { padding: 10px 20px; background: rgba(255, 255, 255, 0.08); border-radius: 32px; font-size: 14px; color: #00d4ff; display: flex; align-items: center; gap: 8px; }
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 25px; padding: 25px 35px; }
-        .stat-card-glow { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border-radius: 32px; padding: 25px; border: 1px solid rgba(255, 255, 255, 0.1); transition: 0.3s; }
-        .stat-card-glow:hover { border-color: #00d4ff; transform: translateY(-3px); }
-        .pos-main { display: grid; grid-template-columns: 1fr 420px; gap: 25px; padding: 0 35px 35px; }
-        .menu-section-glass { background: rgba(255, 255, 255, 0.04); backdrop-filter: blur(10px); border-radius: 36px; padding: 28px; border: 1px solid rgba(255, 255, 255, 0.08); }
-        .cat-chips { display: flex; gap: 12px; margin-bottom: 28px; flex-wrap: wrap; }
-        .chip { padding: 8px 22px; background: rgba(255, 255, 255, 0.06); border-radius: 40px; cursor: pointer; font-size: 13px; font-weight: 500; transition: 0.2s; }
-        .chip.active { background: linear-gradient(135deg, #00d4ff, #7c3aed); color: white; }
-        .items-glass-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 16px; }
-        .menu-glass-item { background: rgba(255, 255, 255, 0.06); border-radius: 24px; padding: 16px; text-align: center; cursor: pointer; transition: 0.2s; border: 1px solid rgba(255, 255, 255, 0.05); }
-        .menu-glass-item:hover { background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(124, 58, 237, 0.2)); transform: translateY(-3px); border-color: #00d4ff; }
-        .cart-glass { background: rgba(255, 255, 255, 0.04); backdrop-filter: blur(10px); border-radius: 36px; padding: 28px; border: 1px solid rgba(255, 255, 255, 0.08); position: sticky; top: 100px; height: fit-content; }
-        .cart-glass input, .cart-glass select { width: 100%; padding: 14px; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 24px; color: white; margin: 8px 0; }
-        .cart-action-buttons { display: flex; gap: 12px; margin-top: 18px; }
-        .cart-action-btn { flex: 1; padding: 14px 20px; }
-        @media (max-width: 950px) { .pos-main { grid-template-columns: 1fr; } .stats-grid { padding: 20px; } .pos-main { padding: 20px; } .app-header { padding: 15px 20px; } }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; padding: 20px 35px; }
+        .stat-card { background: rgba(255,255,255,0.04); backdrop-filter: blur(10px); border-radius: 28px; padding: 20px; }
+        .stat-card h3 { color: #9ca3af; font-size: 14px; margin-bottom: 8px; }
+        .stat-card h2 { color: white; font-size: 28px; }
+        
+        @media (max-width: 900px) { .pos-layout { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
 
-<div class="login-screen" id="loginScreenV3">
+<!-- LOGIN SCREEN -->
+<div class="login-screen" id="loginScreen">
     <div class="login-card">
-        <div class="glow-icon"><i class="fas fa-crown" style="font-size: 42px; color: white;"></i></div>
+        <div class="glow-icon"><i class="fas fa-crown" style="font-size: 42px; color:white;"></i></div>
         <h2>BillZestPOS</h2>
-        <p style="color: #a0aec0; margin: 8px 0 25px;">Glass Morphism Premium</p>
-        <input type="text" id="loginUserV3" placeholder="Username" autocomplete="off">
-        <input type="password" id="loginPassV3" placeholder="Password" onkeypress="if(event.key==='Enter') handleLoginV3()">
-        <button class="login-btn" onclick="handleLoginV3()"><i class="fas fa-arrow-right"></i> Login</button>
-        <div style="margin-top: 20px; font-size: 12px; color: #6b7280;">🔐 billzest / billzest123 | cashier / 123</div>
+        <p style="color:#a0aec0; margin:10px 0 20px;">Glass Premium Edition</p>
+        <input type="text" id="loginUser" placeholder="Username" autocomplete="off">
+        <input type="password" id="loginPass" placeholder="Password" autocomplete="off" onkeypress="if(event.key==='Enter') doLogin()">
+        <button class="login-btn" onclick="doLogin()"><i class="fas fa-arrow-right"></i> Login</button>
+        <div class="demo-text">🔐 billzest / billzest123 | cashier / 123</div>
     </div>
 </div>
 
-<div class="success-overlay" id="successOverlay">
+<!-- SUCCESS POPUP -->
+<div class="success-popup" id="successPopup">
     <div class="success-card">
-        <div class="success-icon"><i class="fas fa-check-circle"></i></div>
-        <h2>✨ Order Completed! ✨</h2>
-        <p>Your bill has been printed successfully</p>
-        <div class="order-details">
-            <p><i class="fas fa-receipt"></i> <strong>Order #</strong> <span id="successOrderId">12345</span></p>
-            <p><i class="fas fa-user"></i> <strong>Customer:</strong> <span id="successCustomerName">Guest</span></p>
-            <p><i class="fas fa-money-bill"></i> <strong>Total Amount:</strong> <span id="successTotal">0</span> SAR</p>
-            <p><i class="fas fa-clock"></i> <strong>Time:</strong> <span id="successTime">Just now</span></p>
+        <div class="check-icon"><i class="fas fa-check" style="font-size: 40px; color:white;"></i></div>
+        <h2>✓ Order Complete!</h2>
+        <p>Bill printed successfully</p>
+        <div style="background:rgba(255,255,255,0.05); border-radius:20px; padding:15px; margin:15px 0; text-align:left;">
+            <p><strong>Order #:</strong> <span id="popupOrderId">12345</span></p>
+            <p><strong>Customer:</strong> <span id="popupCustomer">Guest</span></p>
+            <p><strong>Total:</strong> <span id="popupTotal">0</span> SAR</p>
+            <p><strong>Time:</strong> <span id="popupTime">Now</span></p>
         </div>
-        <p style="color: #10b981;">🎉 Thank you for choosing BillZestPOS!</p>
-        <button class="close-success" onclick="closeSuccessMessage()"><i class="fas fa-check"></i> Continue</button>
+        <p style="color:#10b981;">🎉 Thank you for choosing BillZestPOS!</p>
+        <button class="close-success" onclick="closePopup()">Continue</button>
     </div>
 </div>
 
-<div class="app-wrapper" id="mainAppV3">
-    <div class="app-header glass">
-        <div style="display: flex; align-items: center; gap: 12px;">
-            <div class="glow-icon" style="width: 45px; height: 45px; border-radius: 16px;"><i class="fas fa-crown" style="font-size: 22px;"></i></div>
-            <h2 style="color: white; font-size: 22px;">BillZestPOS <span style="font-size: 12px; color: #00d4ff;">| Premium Glass</span></h2>
+<!-- MAIN APP -->
+<div class="app-container" id="mainApp">
+    <div class="header glass">
+        <div style="display:flex; align-items:center; gap:12px;">
+            <div class="glow-icon" style="width:45px; height:45px; border-radius:16px;"><i class="fas fa-crown" style="font-size:22px;"></i></div>
+            <h2 style="color:white;">BillZestPOS <span style="font-size:12px; color:#00d4ff;">| Premium</span></h2>
         </div>
-        <div class="header-actions">
-            <span class="user-badge" id="userBadgeV3"><i class="fas fa-user-astronaut"></i> admin</span>
-            <button class="btn-exit" onclick="logoutV3()"><i class="fas fa-sign-out-alt"></i> Exit</button>
+        <div>
+            <span id="userBadge" style="color:#00d4ff; margin-right:15px;"><i class="fas fa-user"></i> admin</span>
+            <button class="btn-exit" onclick="doLogout()">Exit</button>
         </div>
     </div>
 
-    <div class="stats-grid" id="statsPanelV3">
-        <div class="stat-card-glow"><div><h3 style="color: #9ca3af;">Today's Revenue</h3><h2 style="color: white; font-size: 32px;" id="statRevV3">0 SAR</h2></div></div>
-        <div class="stat-card-glow"><div><h3 style="color: #9ca3af;">Orders</h3><h2 style="color: white; font-size: 32px;" id="statOrdV3">0</h2></div></div>
-        <div class="stat-card-glow"><div><h3 style="color: #9ca3af;">Kitchen Queue</h3><h2 style="color: white; font-size: 32px;" id="statKitV3">0</h2></div></div>
-        <div class="stat-card-glow"><div><h3 style="color: #9ca3af;">Customers</h3><h2 style="color: white; font-size: 32px;" id="statCustV3">0</h2></div></div>
+    <div class="stats-grid">
+        <div class="stat-card"><h3>Today's Sales</h3><h2 id="todaySales">0 SAR</h2></div>
+        <div class="stat-card"><h3>Total Orders</h3><h2 id="totalOrders">0</h2></div>
+        <div class="stat-card"><h3>Kitchen Queue</h3><h2 id="kitchenCount">0</h2></div>
+        <div class="stat-card"><h3>Customers</h3><h2 id="customerCount">0</h2></div>
     </div>
 
-    <div class="pos-main">
-        <div class="menu-section-glass">
-            <div class="cat-chips">
-                <div class="chip active" data-cat="all">🍽️ All</div>
-                <div class="chip" data-cat="main">🍖 Main Course</div>
-                <div class="chip" data-cat="beverage">🥤 Beverages</div>
-                <div class="chip" data-cat="dessert">🍰 Desserts</div>
+    <div class="pos-layout">
+        <div class="menu-panel">
+            <div class="cats">
+                <div class="cat active" data-cat="all">🍽️ All</div>
+                <div class="cat" data-cat="main">🍖 Main Course</div>
+                <div class="cat" data-cat="beverage">🥤 Beverages</div>
+                <div class="cat" data-cat="dessert">🍰 Desserts</div>
             </div>
-            <div class="items-glass-grid" id="menuGridV3"></div>
+            <div class="items-grid" id="menuGrid"></div>
         </div>
 
-        <div class="cart-glass">
-            <h3 style="color: white; margin-bottom: 15px;"><i class="fas fa-bag-shopping"></i> Current Order</h3>
-            <input type="text" id="custNameV3" placeholder="Customer Name">
-            <input type="tel" id="custPhoneV3" placeholder="Phone Number">
-            <div id="cartListV3" style="max-height: 280px; overflow-y: auto; margin: 15px 0;"></div>
-            <div class="stat-card-glow" style="padding: 18px; margin: 12px 0;"><span style="color:white;">Grand Total:</span> <strong id="cartTotalV3" style="color:#00d4ff; font-size:22px;">0 SAR</strong></div>
-            <select id="payMethodV3">
+        <div class="cart-panel">
+            <h3 style="color:white; margin-bottom:15px;"><i class="fas fa-shopping-cart"></i> Current Order</h3>
+            <input type="text" id="custName" class="input-field" placeholder="Customer Name" autocomplete="off">
+            <input type="tel" id="custPhone" class="input-field" placeholder="Phone Number" autocomplete="off">
+            <div id="cartList" style="max-height: 250px; overflow-y: auto; margin: 15px 0;"></div>
+            <div class="total-box"><strong style="color:white;">Total:</strong> <span id="cartTotal" style="color:#00d4ff; font-size:22px;">0 SAR</span></div>
+            <select id="payMethod" class="input-field">
                 <option>💵 Cash</option>
-                <option>💳 Credit Card</option>
+                <option>💳 Card</option>
                 <option>📱 QR Code</option>
             </select>
-            <div class="cart-action-buttons">
-                <button class="cart-action-btn btn-primary" onclick="placeOrderV3()"><i class="fas fa-print"></i> Print Bill</button>
-                <button class="cart-action-btn btn-primary" onclick="sendWhatsappV3()" style="background: linear-gradient(135deg, #25D366, #128C7E);"><i class="fab fa-whatsapp"></i> WhatsApp</button>
+            <div class="action-btns">
+                <button class="btn btn-primary" onclick="placeOrder()"><i class="fas fa-print"></i> Print Bill</button>
+                <button class="btn btn-whatsapp" onclick="sendWhatsApp()"><i class="fab fa-whatsapp"></i> WhatsApp</button>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    function showSuccessMessage(orderId, customerName, total) {
-        document.getElementById("successOrderId").innerText = orderId;
-        document.getElementById("successCustomerName").innerText = customerName;
-        document.getElementById("successTotal").innerText = total;
-        document.getElementById("successTime").innerText = new Date().toLocaleTimeString();
-        document.getElementById("successOverlay").classList.add("active");
-        setTimeout(() => closeSuccessMessage(), 5000);
-    }
-
-    function closeSuccessMessage() { document.getElementById("successOverlay").classList.remove("active"); }
-
-    const menuV3 = [
-        { id:1, name:"Wagyu Steak", price:89, cat:"main", emoji:"🥩" }, { id:2, name:"Lobster Pasta", price:75, cat:"main", emoji:"🦞" },
-        { id:3, name:"Lamb Rack", price:68, cat:"main", emoji:"🍖" }, { id:4, name:"Truffle Risotto", price:52, cat:"main", emoji:"🍚" },
-        { id:5, name:"Margherita Pizza", price:38, cat:"main", emoji:"🍕" }, { id:6, name:"Black Angus Burger", price:45, cat:"main", emoji:"🍔" },
-        { id:7, name:"Mocktail", price:22, cat:"beverage", emoji:"🍹" }, { id:8, name:"Fresh Juice", price:14, cat:"beverage", emoji:"🧃" },
-        { id:9, name:"Iced Latte", price:18, cat:"beverage", emoji:"☕" }, { id:10, name:"Sparkling Water", price:10, cat:"beverage", emoji:"💧" },
-        { id:11, name:"Cheesecake", price:22, cat:"dessert", emoji:"🍰" }, { id:12, name:"Chocolate Fondant", price:19, cat:"dessert", emoji:"🍫" },
-        { id:13, name:"Gelato", price:15, cat:"dessert", emoji:"🍦" }, { id:14, name:"Crème Brûlée", price:18, cat:"dessert", emoji:"🍮" }
+    // MENU DATA
+    const menuItems = [
+        { id:1, name:"Wagyu Steak", price:89, cat:"main", emoji:"🥩" },
+        { id:2, name:"Lobster Pasta", price:75, cat:"main", emoji:"🦞" },
+        { id:3, name:"Lamb Rack", price:68, cat:"main", emoji:"🍖" },
+        { id:4, name:"Truffle Pasta", price:52, cat:"main", emoji:"🍝" },
+        { id:5, name:"Margherita Pizza", price:38, cat:"main", emoji:"🍕" },
+        { id:6, name:"Angus Burger", price:45, cat:"main", emoji:"🍔" },
+        { id:7, name:"Fresh Juice", price:14, cat:"beverage", emoji:"🧃" },
+        { id:8, name:"Mocktail", price:22, cat:"beverage", emoji:"🍹" },
+        { id:9, name:"Iced Latte", price:18, cat:"beverage", emoji:"☕" },
+        { id:10, name:"Cheesecake", price:22, cat:"dessert", emoji:"🍰" },
+        { id:11, name:"Chocolate Cake", price:19, cat:"dessert", emoji:"🍫" },
+        { id:12, name:"Ice Cream", price:15, cat:"dessert", emoji:"🍦" }
     ];
-    let cartV3 = [], ordersV3 = JSON.parse(localStorage.getItem("billzest_v3_orders")) || [], kitchenV3 = JSON.parse(localStorage.getItem("billzest_v3_kitchen")) || [], customersV3 = JSON.parse(localStorage.getItem("billzest_v3_customers")) || [], currentCatV3 = "all";
 
-    function renderMenuV3(){
-        let filtered = currentCatV3==="all" ? menuV3 : menuV3.filter(m=>m.cat===currentCatV3);
+    let cart = [];
+    let allOrders = JSON.parse(localStorage.getItem("billzest_orders_v3")) || [];
+    let kitchenOrders = JSON.parse(localStorage.getItem("billzest_kitchen_v3")) || [];
+    let allCustomers = JSON.parse(localStorage.getItem("billzest_customers_v3")) || [];
+    let currentCat = "all";
+
+    function renderMenu() {
+        let filtered = currentCat === "all" ? menuItems : menuItems.filter(m => m.cat === currentCat);
         let html = "";
-        filtered.forEach(item=>{
-            html += `<div class="menu-glass-item" onclick="addToCartV3(${item.id},'${item.name}',${item.price})">
-                        <div style="font-size: 42px;">${item.emoji}</div>
-                        <div style="font-weight: 600; margin: 8px 0;">${item.name}</div>
-                        <div style="color: #00d4ff; font-weight: 700;">${item.price} SAR</div>
+        filtered.forEach(item => {
+            html += `<div class="item" onclick="addToCart(${item.id}, '${item.name}', ${item.price})">
+                        <div style="font-size: 38px;">${item.emoji}</div>
+                        <div style="font-weight:600; font-size:14px;">${item.name}</div>
+                        <div style="color:#00d4ff; font-weight:bold;">${item.price} SAR</div>
                     </div>`;
         });
-        document.getElementById("menuGridV3").innerHTML = html;
+        document.getElementById("menuGrid").innerHTML = html;
     }
 
-    window.addToCartV3 = function(id,name,price){
-        let existing = cartV3.find(i=>i.id===id);
+    window.addToCart = function(id, name, price) {
+        let existing = cart.find(i => i.id === id);
         if(existing) existing.qty++;
-        else cartV3.push({id,name,price,qty:1});
-        renderCartV3();
+        else cart.push({ id, name, price, qty: 1 });
+        renderCart();
     };
 
-    function renderCartV3(){
-        if(cartV3.length===0){
-            document.getElementById("cartListV3").innerHTML = "<div style='text-align:center;padding:40px;color:#6b7280;'>✨ Cart is empty</div>";
-            document.getElementById("cartTotalV3").innerText = "0 SAR";
+    function renderCart() {
+        if(cart.length === 0) {
+            document.getElementById("cartList").innerHTML = "<div style='text-align:center;padding:40px;color:#6b7280;'>✨ Cart is empty</div>";
+            document.getElementById("cartTotal").innerText = "0 SAR";
             return;
         }
         let html = "", total = 0;
-        cartV3.forEach((item,idx)=>{
+        cart.forEach((item, idx) => {
             total += item.price * item.qty;
-            html += `<div style="background:rgba(255,255,255,0.05); border-radius:20px; padding:12px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
+            html += `<div class="cart-item">
                         <div><strong style="color:white;">${item.name}</strong><br><small style="color:#9ca3af;">${item.price} × ${item.qty}</small></div>
-                        <div style="display:flex; gap:8px;">
-                            <button onclick="updateQtyV3(${idx},-1)" style="background:#00d4ff; border:none; width:28px; height:28px; border-radius:12px; cursor:pointer;">-</button>
-                            <span style="color:white;">${item.qty}</span>
-                            <button onclick="updateQtyV3(${idx},1)" style="background:#00d4ff; border:none; width:28px; height:28px; border-radius:12px; cursor:pointer;">+</button>
-                            <button onclick="removeItemV3(${idx})" style="background:#ef4444; border:none; width:28px; height:28px; border-radius:12px; cursor:pointer;">✕</button>
+                        <div>
+                            <button class="qty-btn" onclick="updateQty(${idx}, -1)">-</button>
+                            <span style="color:white; margin:0 6px;">${item.qty}</span>
+                            <button class="qty-btn" onclick="updateQty(${idx}, 1)">+</button>
+                            <button class="qty-btn" onclick="removeItem(${idx})" style="background:#ef4444;">✕</button>
                         </div>
-                     </div>`;
+                    </div>`;
         });
-        document.getElementById("cartListV3").innerHTML = html;
-        document.getElementById("cartTotalV3").innerText = total + " SAR";
+        document.getElementById("cartList").innerHTML = html;
+        document.getElementById("cartTotal").innerText = total + " SAR";
     }
 
-    window.updateQtyV3 = function(idx,d){ let n = cartV3[idx].qty + d; if(n<=0) cartV3.splice(idx,1); else cartV3[idx].qty = n; renderCartV3(); };
-    window.removeItemV3 = function(idx){ cartV3.splice(idx,1); renderCartV3(); };
+    window.updateQty = function(idx, delta) {
+        let newQty = cart[idx].qty + delta;
+        if(newQty <= 0) cart.splice(idx, 1);
+        else cart[idx].qty = newQty;
+        renderCart();
+    };
 
-    window.placeOrderV3 = function(){
-        if(cartV3.length===0) return alert("Please add items to cart!");
-        let name = document.getElementById("custNameV3").value.trim() || "Guest";
-        let phone = document.getElementById("custPhoneV3").value.trim();
-        let subtotal = cartV3.reduce((s,i)=>s+(i.price*i.qty),0);
+    window.removeItem = function(idx) {
+        cart.splice(idx, 1);
+        renderCart();
+    };
+
+    function showSuccessPopup(orderId, customerName, total) {
+        document.getElementById("popupOrderId").innerText = orderId;
+        document.getElementById("popupCustomer").innerText = customerName;
+        document.getElementById("popupTotal").innerText = total;
+        document.getElementById("popupTime").innerText = new Date().toLocaleTimeString();
+        document.getElementById("successPopup").classList.add("show");
+        setTimeout(() => closePopup(), 4000);
+    }
+
+    function closePopup() {
+        document.getElementById("successPopup").classList.remove("show");
+    }
+
+    // PERFECTLY ALIGNED BILL FUNCTION
+    window.placeOrder = function() {
+        if(cart.length === 0) {
+            alert("Please add items to cart!");
+            return;
+        }
+        
+        let customerName = document.getElementById("custName").value.trim();
+        if(customerName === "") customerName = "Guest";
+        let customerPhone = document.getElementById("custPhone").value.trim();
+        if(customerPhone === "") customerPhone = "N/A";
+        
+        let subtotal = cart.reduce((s, i) => s + (i.price * i.qty), 0);
         let vat = subtotal * 0.15;
         let total = subtotal + vat;
         let orderId = Date.now();
-        let order = { id: orderId, customer: name, phone, items: [...cartV3], subtotal, vat, total, payment: document.getElementById("payMethodV3").value, date: new Date().toISOString() };
-        ordersV3.unshift(order);
-        kitchenV3.unshift({ id: order.id, customer: name, items: cartV3.map(i=>`${i.name} x${i.qty}`).join(", "), time: new Date().toLocaleTimeString() });
-        if(phone && !customersV3.find(c=>c.phone===phone)) customersV3.unshift({ name, phone, orders: 1, last: new Date().toLocaleString() });
-        saveAllV3();
-        updateStatsV3();
+        
+        let order = {
+            id: orderId, customer: customerName, phone: customerPhone,
+            items: JSON.parse(JSON.stringify(cart)),
+            subtotal: subtotal, vat: vat, total: total,
+            payment: document.getElementById("payMethod").value,
+            date: new Date().toISOString()
+        };
+        
+        allOrders.unshift(order);
+        kitchenOrders.unshift({
+            id: orderId, customer: customerName,
+            items: cart.map(i => `${i.name} x${i.qty}`).join(", "),
+            time: new Date().toLocaleTimeString()
+        });
+        
+        if(customerPhone !== "N/A" && !allCustomers.find(c => c.phone === customerPhone)) {
+            allCustomers.unshift({ name: customerName, phone: customerPhone, lastVisit: new Date().toLocaleString() });
+        }
+        
+        saveData();
+        updateDashboard();
+        
+        // ========== PERFECT BILL ALIGNMENT ==========
+        const W = 52;
+        function line() { return "╔" + "═".repeat(W) + "╗"; }
+        function line2() { return "╠" + "═".repeat(W) + "╣"; }
+        function line3() { return "║" + "─".repeat(W) + "║"; }
+        function bottom() { return "╚" + "═".repeat(W) + "╝"; }
+        function center(t) { let s = W - t.length; let l = Math.floor(s/2); return " ".repeat(l) + t + " ".repeat(s-l); }
+        function leftRight(l, r) { return l + " ".repeat(W - l.length - r.length) + r; }
         
         let date = new Date();
-        let formattedDate = date.toLocaleDateString('en-GB');
-        let formattedTime = date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+        let bill = [];
+        bill.push(line());
+        bill.push("║" + center("🏆 BILLZESTPOS 🏆") + "║");
+        bill.push("║" + center("Premium Restaurant OS") + "║");
+        bill.push(line2());
+        bill.push("║" + leftRight("📍 Order #:", orderId.toString()) + "║");
+        bill.push("║" + leftRight("📅 Date:", date.toLocaleDateString('en-GB') + "  🕐 Time: " + date.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})) + "║");
+        bill.push("║" + leftRight("👤 Customer:", customerName) + "║");
+        bill.push("║" + leftRight("📞 Phone:", customerPhone) + "║");
+        bill.push(line2());
+        bill.push("║" + center("🍽️ ORDER SUMMARY 🍽️") + "║");
         
-        let invoice = `
-╔════════════════════════════════════════╗
-║                                        ║
-║            🏆 BILLZESTPOS 🏆           ║
-║         Premium Restaurant OS          ║
-║                                        ║
-╠════════════════════════════════════════╣
-║  📍 Order #: ${orderId}                  ║
-║  📅 Date: ${formattedDate}  🕐 Time: ${formattedTime}    ║
-║  👤 Customer: ${name.padEnd(25)}║
-║  📞 Phone: ${(phone || "N/A").padEnd(26)}║
-╠════════════════════════════════════════╣
-║                                        ║
-║           🍽️ ORDER SUMMARY 🍽️          ║
-║                                        ║
-${cartV3.map((item, idx) => `║  ${(idx+1).toString().padStart(2)}. ${item.name.padEnd(25)} ${item.qty} x ${item.price} SAR = ${(item.price * item.qty)} SAR║`).join('\n')}
-║                                        ║
-╠════════════════════════════════════════╣
-║  💰 SUBTOTAL: ${subtotal.toFixed(2).toString().padStart(34)} SAR ║
-║  🧾 VAT (15%): ${vat.toFixed(2).toString().padStart(34)} SAR ║
-║  ────────────────────────────────────  ║
-║  💎 GRAND TOTAL: ${total.toFixed(2).toString().padStart(33)} SAR ║
-║                                        ║
-║  💳 Payment: ${order.payment.padEnd(28)}║
-║                                        ║
-╠════════════════════════════════════════╣
-║         🙏 THANK YOU! 🙏               ║
-║      Visit Again at BillZestPOS        ║
-║         ⭐⭐⭐⭐⭐ 5 Star Service         ║
-╚════════════════════════════════════════╝`;
+        cart.forEach((item, idx) => {
+            let line = `  ${(idx+1).toString().padStart(2)}. ${item.name.padEnd(22)} ${item.qty} x ${item.price} SAR = ${item.price * item.qty} SAR`;
+            bill.push("║" + line.padEnd(W) + "║");
+        });
         
-        showSuccessMessage(order.id, name, total.toFixed(2));
+        bill.push(line2());
+        bill.push("║" + leftRight("💰 SUBTOTAL:", subtotal.toFixed(2) + " SAR") + "║");
+        bill.push("║" + leftRight("🧾 VAT (15%):", vat.toFixed(2) + " SAR") + "║");
+        bill.push(line3());
+        bill.push("║" + leftRight("💎 GRAND TOTAL:", total.toFixed(2) + " SAR") + "║");
+        bill.push("║" + leftRight("💳 Payment:", order.payment) + "║");
+        bill.push(line2());
+        bill.push("║" + center("🙏 THANK YOU! 🙏") + "║");
+        bill.push("║" + center("Visit Again at BillZestPOS") + "║");
+        bill.push("║" + center("⭐⭐⭐⭐⭐ 5 Star Service") + "║");
+        bill.push(bottom());
         
-        let win = window.open('', '_blank');
-        win.document.write(`<!DOCTYPE html><html><head><title>BillZestPOS Invoice #${orderId}</title><style>body{font-family:'Courier New',monospace;background:#f5f5f5;display:flex;justify-content:center;align-items:center;min-height:100vh;padding:20px;}pre{font-family:'Courier New',monospace;font-size:13px;background:white;padding:20px;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.15);}@media print{body{background:white;}pre{box-shadow:none;}}</style></head><body><pre>${invoice}</pre><script>setTimeout(()=>window.print(),500);<\/script></body></html>`);
+        let invoice = bill.join("\n");
+        showSuccessPopup(orderId, customerName, total.toFixed(2));
         
-        cartV3 = [];
-        document.getElementById("custNameV3").value = "";
-        document.getElementById("custPhoneV3").value = "";
-        renderCartV3();
-        updateStatsV3();
+        let printWin = window.open('', '_blank');
+        printWin.document.write(`
+            <html><head><title>BillZestPOS #${orderId}</title>
+            <style>body{font-family:'Courier New',monospace;background:#f5f5f5;display:flex;justify-content:center;align-items:center;min-height:100vh;padding:20px;}pre{background:white;padding:20px;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.1);}@media print{body{background:white;}pre{box-shadow:none;padding:0;}}</style>
+            </head><body><pre>${invoice}</pre><script>setTimeout(()=>window.print(),500);<\/script></body></html>
+        `);
+        
+        cart = [];
+        document.getElementById("custName").value = "";
+        document.getElementById("custPhone").value = "";
+        renderCart();
     };
 
-    window.sendWhatsappV3 = function(){
-        if(cartV3.length===0) return alert("Cart empty!");
-        let phone = document.getElementById("custPhoneV3").value.trim();
-        if(!phone) return alert("Enter phone number!");
-        let total = cartV3.reduce((s,i)=>s+(i.price*i.qty),0);
-        let msg = `🛎️ *BillZestPOS Order* 🛎️\n\n${cartV3.map(i=>`✅ ${i.name} x${i.qty} = ${i.price*i.qty} SAR`).join("\n")}\n\n📌 *TOTAL: ${total} SAR*`;
+    window.sendWhatsApp = function() {
+        if(cart.length === 0) { alert("Cart is empty!"); return; }
+        let phone = document.getElementById("custPhone").value.trim();
+        if(!phone) { alert("Please enter customer phone number!"); return; }
+        let total = cart.reduce((s, i) => s + (i.price * i.qty), 0);
+        let msg = `🛎️ *BillZestPOS Order* 🛎️\n\n${cart.map(i => `✅ ${i.name} x${i.qty} = ${i.price * i.qty} SAR`).join("\n")}\n\n📌 *TOTAL: ${total} SAR*`;
         window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank');
     };
 
-    function updateStatsV3(){
+    function updateDashboard() {
         let today = new Date().toDateString();
-        let todayTotal = ordersV3.filter(o=>new Date(o.date).toDateString()===today).reduce((s,o)=>s+o.total,0);
-        document.getElementById("statRevV3").innerText = todayTotal.toFixed(2) + " SAR";
-        document.getElementById("statOrdV3").innerText = ordersV3.length;
-        document.getElementById("statKitV3").innerText = kitchenV3.length;
-        document.getElementById("statCustV3").innerText = customersV3.length;
+        let todayTotal = allOrders.filter(o => new Date(o.date).toDateString() === today).reduce((s, o) => s + o.total, 0);
+        document.getElementById("todaySales").innerText = todayTotal.toFixed(2) + " SAR";
+        document.getElementById("totalOrders").innerText = allOrders.length;
+        document.getElementById("kitchenCount").innerText = kitchenOrders.length;
+        document.getElementById("customerCount").innerText = allCustomers.length;
     }
 
-    function saveAllV3(){
-        localStorage.setItem("billzest_v3_orders", JSON.stringify(ordersV3));
-        localStorage.setItem("billzest_v3_kitchen", JSON.stringify(kitchenV3));
-        localStorage.setItem("billzest_v3_customers", JSON.stringify(customersV3));
+    function saveData() {
+        localStorage.setItem("billzest_orders_v3", JSON.stringify(allOrders));
+        localStorage.setItem("billzest_kitchen_v3", JSON.stringify(kitchenOrders));
+        localStorage.setItem("billzest_customers_v3", JSON.stringify(allCustomers));
     }
 
-    document.querySelectorAll(".chip").forEach(chip=>{
-        chip.addEventListener("click", function(){
-            document.querySelectorAll(".chip").forEach(c=>c.classList.remove("active"));
+    // Category click
+    document.querySelectorAll(".cat").forEach(cat => {
+        cat.addEventListener("click", function() {
+            document.querySelectorAll(".cat").forEach(c => c.classList.remove("active"));
             this.classList.add("active");
-            currentCatV3 = this.dataset.cat;
-            renderMenuV3();
+            currentCat = this.dataset.cat;
+            renderMenu();
         });
     });
 
-    function handleLoginV3(){
-        let u = document.getElementById("loginUserV3").value;
-        let p = document.getElementById("loginPassV3").value;
-        if((u==="billzest" && p==="billzest123") || (u==="cashier" && p==="123")){
-            document.getElementById("loginScreenV3").style.display = "none";
-            document.getElementById("mainAppV3").style.display = "block";
-            document.getElementById("userBadgeV3").innerHTML = `<i class="fas fa-user-astronaut"></i> ${u}`;
-            renderMenuV3();
-            updateStatsV3();
-        } else alert("Invalid! Use billzest/billzest123 or cashier/123");
+    function doLogin() {
+        let u = document.getElementById("loginUser").value;
+        let p = document.getElementById("loginPass").value;
+        if((u === "billzest" && p === "billzest123") || (u === "cashier" && p === "123")) {
+            document.getElementById("loginScreen").style.display = "none";
+            document.getElementById("mainApp").style.display = "block";
+            document.getElementById("userBadge").innerHTML = `<i class="fas fa-user"></i> ${u}`;
+            renderMenu();
+            updateDashboard();
+        } else {
+            alert("Invalid! Use billzest/billzest123 or cashier/123");
+        }
     }
 
-    function logoutV3(){
-        document.getElementById("loginScreenV3").style.display = "flex";
-        document.getElementById("mainAppV3").style.display = "none";
-        cartV3 = [];
+    function doLogout() {
+        document.getElementById("loginScreen").style.display = "flex";
+        document.getElementById("mainApp").style.display = "none";
+        cart = [];
     }
 
-    if(!localStorage.getItem("billzest_v3_orders")){
-        ordersV3 = [{ id: 3001, customer: "Khalid", items: [], subtotal: 68, vat: 10.2, total: 78.2, payment: "Card", date: new Date().toISOString() }];
-        customersV3 = [{ name: "Khalid", phone: "0551234567", orders: 1, last: new Date().toLocaleString() }];
-        saveAllV3();
+    if(!localStorage.getItem("billzest_orders_v3")) {
+        allOrders = [];
+        kitchenOrders = [];
+        allCustomers = [];
+        saveData();
     }
 
-    window.handleLoginV3 = handleLoginV3;
-    window.logoutV3 = logoutV3;
-    window.closeSuccessMessage = closeSuccessMessage;
+    window.doLogin = doLogin;
+    window.doLogout = doLogout;
+    window.closePopup = closePopup;
 </script>
 </body>
 </html>
