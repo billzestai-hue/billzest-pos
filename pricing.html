@@ -79,7 +79,7 @@
         .popular-badge { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: linear-gradient(to right, var(--primary), var(--secondary)); color: white; padding: 6px 20px; border-radius: 20px; font-weight: 600; font-size: 0.9rem; letter-spacing: 1px; }
 
         .price-card h3 { font-size: 1.5rem; color: #0f172a; margin-bottom: 15px; }
-        .price { font-size: 3.5rem; font-weight: 800; color: #0f172a; margin-bottom: 20px; display: flex; justify-content: center; align-items: flex-start; transition: opacity 0.3s ease; }
+        .price { font-size: 3.5rem; font-weight: 800; color: #0f172a; margin-bottom: 20px; display: flex; justify-content: center; align-items: flex-start; }
         .price-currency { font-size: 1.5rem; margin-top: 10px; }
         .price-amount { font-size: 3.5rem; font-weight: 800; }
         .price-period { font-size: 1rem; color: var(--text-gray); font-weight: 500; align-self: flex-end; margin-bottom: 10px; margin-left: 5px; }
@@ -88,10 +88,10 @@
         .features-list li { margin-bottom: 15px; display: flex; align-items: center; gap: 10px; color: #334155; font-size: 1rem; }
         .features-list li i { color: var(--primary); flex-shrink: 0; }
 
-        .btn-plan { display: block; width: 100%; padding: 15px; border-radius: 12px; font-weight: 600; font-size: 1.1rem; text-decoration: none; transition: all 0.3s; cursor: pointer; border: none; text-align: center; }
+        .btn-plan { display: block; width: 100%; padding: 15px; border-radius: 12px; font-weight: 600; font-size: 1.1rem; text-decoration: none; transition: all 0.3s; cursor: pointer; border: none; text-align: center; background: linear-gradient(to right, var(--primary), var(--secondary)); color: white; }
         .btn-plan.outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
         .btn-plan.outline:hover { background: rgba(79, 70, 229, 0.05); transform: translateY(-2px); }
-        .btn-plan.solid { background: linear-gradient(to right, var(--primary), var(--secondary)); color: white; border: none; box-shadow: 0 10px 20px rgba(236, 72, 153, 0.2); }
+        .btn-plan.solid { background: linear-gradient(to right, var(--primary), var(--secondary)); color: white; }
         .btn-plan.solid:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(236, 72, 153, 0.3); }
 
         footer { background: #020617; color: #94a3b8; padding: 60px 5% 30px; text-align: center; }
@@ -166,7 +166,7 @@
 
     <section class="pricing-grid">
         <!-- Starter Plan -->
-        <div class="price-card" data-plan="Starter" data-price-monthly="39" data-price-yearly="31" onclick="selectPlan('Starter', this)">
+        <div class="price-card" id="planStarter" data-plan="Starter" data-price-monthly="39" data-price-yearly="31">
             <h3>Starter</h3>
             <div class="price">
                 <span class="price-currency">$</span>
@@ -174,7 +174,7 @@
                 <span class="price-period">/mo</span>
             </div>
             <p style="color: var(--text-gray); margin-bottom: 20px;">Perfect for small cafes and food trucks.</p>
-            <button class="btn-plan outline">Choose Plan</button>
+            <button class="btn-plan outline" onclick="selectPlan('Starter', this.parentElement)">Choose Plan</button>
             
             <ul class="features-list">
                 <li><i data-lucide="check-circle-2" size="16"></i> 1 POS Register</li>
@@ -185,7 +185,7 @@
         </div>
 
         <!-- Professional Plan -->
-        <div class="price-card popular" data-plan="Professional" data-price-monthly="79" data-price-yearly="63" onclick="selectPlan('Professional', this)">
+        <div class="price-card popular" id="planProfessional" data-plan="Professional" data-price-monthly="79" data-price-yearly="63">
             <div class="popular-badge">MOST POPULAR</div>
             <h3>Professional</h3>
             <div class="price">
@@ -194,7 +194,7 @@
                 <span class="price-period">/mo</span>
             </div>
             <p style="color: var(--text-gray); margin-bottom: 20px;">Ideal for growing restaurants and chains.</p>
-            <button class="btn-plan solid">Choose Plan</button>
+            <button class="btn-plan solid" onclick="selectPlan('Professional', this.parentElement)">Choose Plan</button>
             
             <ul class="features-list">
                 <li><i data-lucide="check-circle-2" size="16"></i> 3 POS Registers</li>
@@ -206,13 +206,13 @@
         </div>
 
         <!-- Enterprise Plan -->
-        <div class="price-card" data-plan="Enterprise" data-price-monthly="custom" data-price-yearly="custom" onclick="selectPlan('Enterprise', this)">
+        <div class="price-card" id="planEnterprise" data-plan="Enterprise" data-price="custom">
             <h3>Enterprise</h3>
             <div class="price">
                 <span class="price-amount" style="font-size: 2rem;">Custom</span>
             </div>
             <p style="color: var(--text-gray); margin-bottom: 20px;">For large franchises with custom needs.</p>
-            <button class="btn-plan outline">Contact Sales</button>
+            <button class="btn-plan outline" onclick="selectPlan('Enterprise', this.parentElement)">Contact Sales</button>
             
             <ul class="features-list">
                 <li><i data-lucide="check-circle-2" size="16"></i> Unlimited Registers</li>
@@ -241,7 +241,6 @@
             const toggle = document.getElementById('toggle-switch');
             const monthlyLabel = document.getElementById('monthly-label');
             const yearlyLabel = document.getElementById('yearly-label');
-            const amounts = document.querySelectorAll('.price-amount');
             
             isYearly = !isYearly;
             
@@ -249,32 +248,27 @@
                 toggle.classList.add('active');
                 monthlyLabel.style.color = '#1e293b';
                 yearlyLabel.style.color = 'var(--primary)';
-                amounts.forEach(el => {
-                    if(el.getAttribute('data-yearly') !== 'custom') {
-                        el.style.opacity = '0';
-                        setTimeout(() => {
-                            el.innerText = el.getAttribute('data-yearly');
-                            el.style.opacity = '1';
-                        }, 150);
-                    }
-                });
+                
+                // Update prices for Starter & Professional only
+                const starterAmount = document.querySelector('#planStarter .price-amount');
+                const profAmount = document.querySelector('#planProfessional .price-amount');
+                
+                if(starterAmount) starterAmount.innerText = starterAmount.getAttribute('data-yearly');
+                if(profAmount) profAmount.innerText = profAmount.getAttribute('data-yearly');
+                
             } else {
                 toggle.classList.remove('active');
                 monthlyLabel.style.color = 'var(--primary)';
                 yearlyLabel.style.color = '#1e293b';
-                amounts.forEach(el => {
-                    if(el.getAttribute('data-monthly') !== 'custom') {
-                        el.style.opacity = '0';
-                        setTimeout(() => {
-                            el.innerText = el.getAttribute('data-monthly');
-                            el.style.opacity = '1';
-                        }, 150);
-                    }
-                });
+                
+                const starterAmount = document.querySelector('#planStarter .price-amount');
+                const profAmount = document.querySelector('#planProfessional .price-amount');
+                
+                if(starterAmount) starterAmount.innerText = starterAmount.getAttribute('data-monthly');
+                if(profAmount) profAmount.innerText = profAmount.getAttribute('data-monthly');
             }
         }
 
-        // Updated: Payment Request Page pe redirect
         function selectPlan(planName, element) {
             let price;
             if (planName === 'Enterprise') {
@@ -299,8 +293,8 @@
             container.innerHTML += `<div class="msg user-msg">${text}</div>`;
             input.value = '';
             setTimeout(() => {
-                let reply = "Thanks for your message! Can I help you choose a plan?";
-                if(text.toLowerCase().includes('price')) reply = "💰 Our Starter plan is $39/mo, Professional is $79/mo. Save 20% with yearly billing!";
+                let reply = "Thanks for your message! Can I help you choose a plan? 💰 Our Starter plan is $39/mo, Professional is $79/mo. Save 20% with yearly billing!";
+                if(text.toLowerCase().includes('price')) reply = "💰 Starter: $39/mo | Professional: $79/mo | Save 20% with yearly billing!";
                 if(text.toLowerCase().includes('demo')) reply = "🎉 Click 'Book Demo' button at the top to schedule a free demo!";
                 container.innerHTML += `<div class="msg bot-msg">${reply}</div>`;
                 container.scrollTop = container.scrollHeight;
