@@ -101,13 +101,20 @@
 
         /* Modal Styles */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center; }
-        .modal-content { background: white; border-radius: 24px; padding: 30px; width: 90%; max-width: 500px; position: relative; }
+        .modal-content { background: white; border-radius: 24px; padding: 35px; width: 90%; max-width: 550px; position: relative; max-height: 85vh; overflow-y: auto; }
         .modal-content h3 { font-size: 1.5rem; margin-bottom: 20px; color: #0f172a; }
-        .modal-content input, .modal-content select, .modal-content textarea { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #e2e8f0; border-radius: 12px; font-size: 1rem; }
-        .modal-buttons { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+        .modal-content h4 { font-size: 1rem; margin: 15px 0 10px; color: var(--primary); }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 500; color: #334155; font-size: 0.85rem; }
+        .form-group label .required { color: #ef4444; }
+        .form-control { width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 12px; font-size: 0.9rem; transition: all 0.3s; }
+        .form-control:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79,70,229,0.1); }
+        textarea.form-control { resize: vertical; min-height: 80px; }
+        .modal-buttons { display: flex; gap: 10px; justify-content: flex-end; margin-top: 25px; }
         .modal-buttons button { padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; }
-        .btn-submit-modal { background: var(--primary); color: white; border: none; }
+        .btn-submit-modal { background: linear-gradient(to right, var(--primary), var(--secondary)); color: white; border: none; }
         .btn-cancel-modal { background: #e2e8f0; border: none; color: #334155; }
+        .divider { height: 1px; background: #e2e8f0; margin: 20px 0; }
 
         .success-message, .error-message { position: fixed; top: 20px; right: 20px; padding: 15px 20px; border-radius: 12px; z-index: 2001; display: none; align-items: center; gap: 10px; animation: slideIn 0.3s ease; }
         .success-message { background: #d1fae5; color: #065f46; }
@@ -243,21 +250,41 @@
         </div>
     </section>
 
-    <!-- Subscription Modal -->
+    <!-- Subscription Modal with GST and Business Details -->
     <div id="subscriptionModal" class="modal">
         <div class="modal-content">
-            <h3 id="modalTitle">Subscribe to <span id="planName"></span></h3>
+            <h3>Subscribe to <span id="planName"></span></h3>
             <form id="subscriptionForm">
                 <input type="hidden" id="selectedPlan">
                 <input type="hidden" id="selectedPrice">
                 <input type="hidden" id="billingCycle" value="monthly">
-                <div class="form-group"><label>Full Name *</label><input type="text" id="fullName" required placeholder="John Doe"></div>
-                <div class="form-group"><label>Email *</label><input type="email" id="email" required placeholder="john@example.com"></div>
-                <div class="form-group"><label>Phone *</label><input type="tel" id="phone" required placeholder="+1 234 567 890"></div>
-                <div class="form-group"><label>Restaurant Name *</label><input type="text" id="restaurantName" required placeholder="Your Restaurant"></div>
+                
+                <!-- Personal Information -->
+                <h4>Personal Information</h4>
+                <div class="form-group"><label>Full Name <span class="required">*</span></label><input type="text" id="fullName" class="form-control" required placeholder="John Doe"></div>
+                <div class="form-group"><label>Email Address <span class="required">*</span></label><input type="email" id="email" class="form-control" required placeholder="john@example.com"></div>
+                <div class="form-group"><label>Phone Number <span class="required">*</span></label><input type="tel" id="phone" class="form-control" required placeholder="+1 234 567 890"></div>
+                
+                <div class="divider"></div>
+                
+                <!-- Business Details -->
+                <h4>Business Details</h4>
+                <div class="form-group"><label>Restaurant Name <span class="required">*</span></label><input type="text" id="restaurantName" class="form-control" required placeholder="My Restaurant"></div>
+                <div class="form-group"><label>GST Number (if registered)</label><input type="text" id="gstNumber" class="form-control" placeholder="22AAAAA0000A1Z"></div>
+                <div class="form-group"><label>PAN Number</label><input type="text" id="panNumber" class="form-control" placeholder="AAAAA1234A"></div>
+                <div class="form-group"><label>Business Address <span class="required">*</span></label><textarea id="address" class="form-control" required placeholder="Full business address with city, state, pincode"></textarea></div>
+                
+                <div class="divider"></div>
+                
+                <!-- Subscription Details -->
+                <h4>Subscription Details</h4>
                 <div class="form-group"><label>Number of Locations</label><select id="locations"><option value="1">1 Location</option><option value="2">2 Locations</option><option value="3">3-5 Locations</option><option value="5">5+ Locations</option></select></div>
-                <div class="form-group"><label>Additional Notes</label><textarea id="notes" placeholder="Any special requirements?"></textarea></div>
-                <div class="modal-buttons"><button type="submit" class="btn-submit-modal">Submit Request</button><button type="button" class="btn-cancel-modal" onclick="closeModal()">Cancel</button></div>
+                <div class="form-group"><label>Additional Requirements</label><textarea id="notes" class="form-control" placeholder="Any specific requirements or questions?"></textarea></div>
+                
+                <div class="modal-buttons">
+                    <button type="submit" class="btn-submit-modal">Submit & Proceed</button>
+                    <button type="button" class="btn-cancel-modal" onclick="closeModal()">Cancel</button>
+                </div>
             </form>
         </div>
     </div>
@@ -381,13 +408,16 @@
             const email = document.getElementById('email').value;
             const phone = document.getElementById('phone').value;
             const restaurantName = document.getElementById('restaurantName').value;
+            const gstNumber = document.getElementById('gstNumber').value;
+            const panNumber = document.getElementById('panNumber').value;
+            const address = document.getElementById('address').value;
             const locations = document.getElementById('locations').value;
             const notes = document.getElementById('notes').value;
             const plan = document.getElementById('selectedPlan').value;
             const price = document.getElementById('selectedPrice').value;
             const billing = document.getElementById('billingCycle').value;
 
-            if (!fullName || !email || !phone || !restaurantName) {
+            if (!fullName || !email || !phone || !restaurantName || !address) {
                 showError('Please fill all required fields');
                 return;
             }
@@ -398,11 +428,15 @@
             submitBtn.innerText = 'Submitting...';
 
             try {
+                // Save to Firebase
                 const docRef = await addDoc(collection(db, "subscriptions"), {
                     fullName: fullName,
                     email: email,
                     phone: phone,
                     restaurantName: restaurantName,
+                    gstNumber: gstNumber || 'Not provided',
+                    panNumber: panNumber || 'Not provided',
+                    businessAddress: address,
                     plan: plan,
                     price: price,
                     billingCycle: billing,
@@ -413,8 +447,32 @@
                     read: false
                 });
 
+                // Also save to localStorage for customer dashboard
+                const customerData = {
+                    name: fullName,
+                    email: email,
+                    phone: phone,
+                    restaurantName: restaurantName,
+                    gst: gstNumber || 'Not registered',
+                    pan: panNumber || 'Not provided',
+                    address: address,
+                    plan: plan,
+                    price: plan === 'Enterprise' ? 0 : (isYearly ? (plan === 'Starter' ? 31 : 63) : (plan === 'Starter' ? 39 : 79)),
+                    billingCycle: billing,
+                    subscriptionStart: new Date().toISOString().split('T')[0],
+                    subscriptionEnd: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+                };
+                localStorage.setItem('customerData', JSON.stringify(customerData));
+                localStorage.setItem('user', JSON.stringify({ name: fullName, email: email, loggedIn: true }));
+
                 console.log("Subscription saved with ID: ", docRef.id);
-                showSuccess(`Thank you ${fullName}! Our sales team will contact you within 24 hours to complete your ${plan} plan subscription.`);
+                showSuccess(`Thank you ${fullName}! Your subscription request has been received. Our team will contact you within 24 hours to complete the process.`);
+                
+                // Reset form and close modal
+                setTimeout(() => {
+                    window.location.href = 'customer-dashboard.html';
+                }, 2000);
+                
                 closeModal();
                 subscriptionForm.reset();
                 
@@ -441,8 +499,8 @@
             setTimeout(() => {
                 let reply = "Thanks for your message! Can I help you choose a plan?";
                 if(text.toLowerCase().includes('price')) reply = "💰 Our Starter plan is $39/mo, Professional is $79/mo. Save 20% with yearly billing!";
-                if(text.toLowerCase().includes('demo')) reply = "🎉 Click 'Book Demo' button at the top to schedule a free demo!";
-                if(text.toLowerCase().includes('compare')) reply = "📊 Starter: 1 register, basic features. Professional: 3 registers, KDS, BI, priority support.";
+                if(text.toLowerCase().includes('gst')) reply = "🏢 Yes! We collect GST details for tax invoices. All our invoices are GST compliant.";
+                if(text.toLowerCase().includes('demo')) reply = "🎉 Fill out the subscription form and our team will schedule a free demo!";
                 container.innerHTML += `<div class="msg bot-msg">${reply}</div>`;
                 container.scrollTop = container.scrollHeight;
             }, 500);
@@ -452,7 +510,6 @@
         window.onclick = (e) => {
             const modal = document.getElementById('subscriptionModal');
             if (e.target === modal) closeModal();
-            if (!e.target.closest('.user-profile')) document.getElementById('profileDropdown')?.classList.remove('show');
         };
 
         window.togglePricing = togglePricing;
