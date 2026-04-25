@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Billzestpos - Restaurant Management System</title>
+    <title>Billzestpos - Restaurant POS</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -71,6 +71,7 @@
         .hero-image { flex: 1; position: relative; display: flex; justify-content: center; width: 100%; }
         .glass-mockup { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,1); border-radius: 24px; padding: 20px; width: 100%; max-width: 550px; box-shadow: 0 25px 50px rgba(0,0,0,0.15); }
         .mockup-header { display: flex; justify-content: space-between; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid rgba(0,0,0,0.05); }
+        .shop-name-header { font-weight: 700; color: var(--primary); font-size: 0.9rem; background: rgba(79,70,229,0.1); padding: 5px 12px; border-radius: 20px; }
         .mockup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .mockup-items { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .menu-btn { height: 100px; background: white; border: 1px solid #e2e8f0; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; padding: 10px; }
@@ -196,7 +197,13 @@
         </div>
         <div class="hero-image" data-aos="zoom-in">
             <div class="glass-mockup">
-                <div class="mockup-header"><div style="display:flex; gap:10px;"><div style="width:40px; height:40px; background:rgba(79,70,229,0.2); border-radius:50%; display:flex; align-items:center; justify-content:center;"><i data-lucide="user" size="20" color="#4f46e5"></i></div><div style="font-weight:700;">Cashier #1</div></div><div style="background:rgba(0,0,0,0.05); padding:5px 15px; border-radius:20px;">Table 04</div></div>
+                <div class="mockup-header">
+                    <div style="display:flex; gap:10px;">
+                        <div style="width:40px; height:40px; background:rgba(79,70,229,0.2); border-radius:50%; display:flex; align-items:center; justify-content:center;"><i data-lucide="user" size="20" color="#4f46e5"></i></div>
+                        <div style="font-weight:700;">Cashier #1</div>
+                    </div>
+                    <div class="shop-name-header" id="shopNameHeader">🏪 Loading...</div>
+                </div>
                 <div class="mockup-grid">
                     <div class="mockup-items">
                         <button class="menu-btn" onclick="addToCart('Burger', 8.50, '🍔')">
@@ -265,6 +272,19 @@
 
         let cart = [];
         const TAX = 0.05;
+        let shopName = "Billzestpos Restaurant";
+
+        // Load shop name from localStorage (set by dashboard settings)
+        function loadShopName() {
+            const settings = localStorage.getItem('settings');
+            if (settings) {
+                const parsed = JSON.parse(settings);
+                if (parsed.restaurantName) {
+                    shopName = parsed.restaurantName;
+                }
+            }
+            document.getElementById('shopNameHeader').innerHTML = `🏪 ${shopName}`;
+        }
 
         function addToCart(name, price, emoji) {
             const existing = cart.find(item => item.name === name);
@@ -309,14 +329,39 @@
 
         function checkout() {
             if(cart.length === 0) { alert('❌ Please add items to cart first!'); return; }
-            let receipt = '🏪 BILLZESTPOS 🏪\n================================\n';
-            cart.forEach(item => receipt += `${item.emoji} ${item.name} x${item.qty} = $${(item.price * item.qty).toFixed(2)}\n`);
-            receipt += '================================\n';
-            receipt += `Subtotal: ${document.getElementById('subtotal').innerText}\n`;
-            receipt += `Tax: ${document.getElementById('tax').innerText}\n`;
-            receipt += `TOTAL: ${document.getElementById('total').innerText}\n`;
-            receipt += '================================\n';
-            receipt += 'Thank you! 🍔 Have a great day!';
+            
+            const subtotal = parseFloat(document.getElementById('subtotal').innerText.replace('$', ''));
+            const taxAmount = parseFloat(document.getElementById('tax').innerText.replace('$', ''));
+            const totalAmount = parseFloat(document.getElementById('total').innerText.replace('$', ''));
+            const date = new Date();
+            const dateStr = date.toLocaleDateString();
+            const timeStr = date.toLocaleTimeString();
+            
+            let receipt = `🏪 ${shopName} 🏪\n`;
+            receipt += `================================\n`;
+            receipt += `Date: ${dateStr}  Time: ${timeStr}\n`;
+            receipt += `Cashier: #001 | Table: 04\n`;
+            receipt += `================================\n`;
+            receipt += `ITEM          QTY     AMOUNT\n`;
+            receipt += `--------------------------------\n`;
+            cart.forEach(item => {
+                const itemTotal = item.price * item.qty;
+                receipt += `${item.emoji} ${item.name.padEnd(12)} ${item.qty} x     $${itemTotal.toFixed(2)}\n`;
+            });
+            receipt += `================================\n`;
+            receipt += `Subtotal:               $${subtotal.toFixed(2)}\n`;
+            receipt += `Tax (5%):               $${taxAmount.toFixed(2)}\n`;
+            receipt += `--------------------------------\n`;
+            receipt += `TOTAL:                  $${totalAmount.toFixed(2)}\n`;
+            receipt += `================================\n`;
+            receipt += `Payment Method: Cash\n`;
+            receipt += `--------------------------------\n`;
+            receipt += `Thank you for dining with us!\n`;
+            receipt += `📍 ${shopName}\n`;
+            receipt += `📞 For feedback: +966550898978\n`;
+            receipt += `================================\n`;
+            receipt += `🍔 Have a great day! 🍕\n`;
+            
             alert(receipt);
             clearCart();
         }
@@ -339,6 +384,8 @@
                 container.scrollTop = container.scrollHeight;
             }, 500);
         }
+
+        loadShopName();
 
         window.addToCart = addToCart; window.updateQty = updateQty; window.removeItem = removeItem;
         window.clearCart = clearCart; window.checkout = checkout; window.toggleMobileMenu = toggleMobileMenu;
