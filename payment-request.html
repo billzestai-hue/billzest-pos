@@ -110,18 +110,28 @@
     <script>
         lucide.createIcons();
 
-        // ========== 🔥 YAHAN APNI EMAILJS DETAILS DAALO ==========
+        // ========== 🔥🔴🔥 YAHAN APNI VALUES DAALO 🔥🔴🔥 ==========
+        // Step 1: EmailJS pe account banao: https://www.emailjs.com
+        // Step 2: Email Service connect karo (Gmail)
+        // Step 3: Email Template banao
+        // Step 4: API Keys copy karo
+        
         const EMAILJS_CONFIG = {
-            PUBLIC_KEY: "YOUR_EMAILJS_PUBLIC_KEY",     // Step 4 se copy karo
-            SERVICE_ID: "YOUR_SERVICE_ID",              // Step 2 se copy karo
-            TEMPLATE_ID: "YOUR_TEMPLATE_ID"             // Step 3 se copy karo
+            PUBLIC_KEY: "YOUR_EMAILJS_PUBLIC_KEY",     // 🔴 YAHAN PUBLIC KEY DAALO
+            SERVICE_ID: "YOUR_SERVICE_ID",              // 🔴 YAHAN SERVICE ID DAALO
+            TEMPLATE_ID: "YOUR_TEMPLATE_ID"             // 🔴 YAHAN TEMPLATE ID DAALO
         };
         
-        const ADMIN_WHATSAPP = "919876543210";  // Apna WhatsApp number
+        // Apna WhatsApp number (country code ke saath)
+        // India: 91XXXXXXXXXX (example: 919876543210)
+        // Saudi: 966XXXXXXXXX (example: 966550898978)
+        const ADMIN_WHATSAPP = "919876543210";  // 🔴 YAHAN APNA NUMBER DAALO
         // ==========================================================
 
         // Initialize EmailJS
-        emailjs.init(EMAILJS_CONFIG.PUBLIC_KEY);
+        if (EMAILJS_CONFIG.PUBLIC_KEY !== "YOUR_EMAILJS_PUBLIC_KEY") {
+            emailjs.init(EMAILJS_CONFIG.PUBLIC_KEY);
+        }
 
         // Get plan info from URL
         const urlParams = new URLSearchParams(window.location.search);
@@ -185,6 +195,12 @@
 
         // Send email invoice via EmailJS
         async function sendEmailInvoice(customerData, subscriptionData) {
+            // Check if EmailJS is configured
+            if (EMAILJS_CONFIG.PUBLIC_KEY === "YOUR_EMAILJS_PUBLIC_KEY") {
+                console.log("EmailJS not configured yet - skipping email");
+                return false;
+            }
+            
             const subtotal = parseFloat(subscriptionData.amount);
             const gstPercent = 18;
             const gstAmount = (subtotal * gstPercent) / 100;
@@ -265,7 +281,7 @@
             payBtn.innerHTML = 'Processing...';
 
             try {
-                // 1. Send email invoice
+                // 1. Send email invoice (if configured)
                 const emailSent = await sendEmailInvoice(customerData, {
                     plan: planName,
                     amount: planPrice,
@@ -280,10 +296,10 @@
                 saveToLocal(customerData);
                 saveCustomerData(customerData);
                 
-                if (emailSent) {
+                if (emailSent && EMAILJS_CONFIG.PUBLIC_KEY !== "YOUR_EMAILJS_PUBLIC_KEY") {
                     successText.innerHTML = `✅ Invoice sent to ${email}! Our team will contact you on WhatsApp within 5 minutes.`;
                 } else {
-                    successText.innerHTML = `✅ Request sent! Our team will contact you on WhatsApp. Invoice will be sent after payment.`;
+                    successText.innerHTML = `✅ Request sent! Our team will contact you on WhatsApp.`;
                 }
                 successMsg.style.display = 'flex';
                 
