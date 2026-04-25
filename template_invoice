@@ -1,0 +1,17 @@
+<h2>🏪 {{restaurant_name}}</h2>
+<p><strong>Tax Invoice</strong></p>
+<p>Invoice #: {{invoice_no}}</p>
+<p>Date: {{date}}</p>
+
+<h3>Bill To:</h3>
+<p>{{customer_name}}<br>{{customer_email}}</p>
+<p>GST: {{customer_gst}}</p>
+
+<table border="1" cellpadding="5" style="border-collapse: collapse; width: 100%;">
+    <tr><th>Description</th><th>Amount</th></tr>
+    <tr><td>{{plan_name}} Plan ({{billing_cycle}})</td><td>${{amount}}</td></tr>
+    <tr><td><strong>GST ({{gst_percent}}%)</strong></td><td><strong>${{gst_amount}}</strong></td></tr>
+    <tr><td><strong>TOTAL</strong></td><td><strong>${{total_amount}}</strong></td></tr>
+</table>
+
+<p>Thank you for choosing BillzestPOS!</p>
