@@ -45,7 +45,8 @@
 
         /* Header Navigation */
         header { padding: 20px 5%; display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255, 255, 255, 0.5); position: sticky; top: 0; z-index: 100; }
-        .logo { font-size: 1.5rem; font-weight: 800; background: linear-gradient(to right, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-decoration: none; }
+        .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .logo span { background: linear-gradient(to right, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; font-size: 1.5rem; }
         .desktop-nav { display: flex; gap: 30px; align-items: center; }
         .desktop-nav a { text-decoration: none; color: #334155; font-weight: 500; transition: color 0.3s; }
         .desktop-nav a:hover, .desktop-nav a.active { color: var(--primary); }
@@ -58,12 +59,9 @@
         .mobile-nav-overlay.open { right: 0; }
         .mobile-nav-overlay a { font-size: 1.8rem; font-weight: 700; color: #0f172a; text-decoration: none; transition: color 0.3s; }
         .mobile-nav-overlay a:hover, .mobile-nav-overlay a.active { color: var(--primary); }
-        .close-menu-btn { position: absolute; top: 30px; right: 5%; background: none; border: none; color: #0f172a; cursor: pointer; }
+        .close-menu-btn { position: absolute; top: 30px; right: 5%; background: none; border: none; color: #0f172a; cursor: pointer; font-size: 2rem; }
 
-        @media (max-width: 900px) {
-            .desktop-nav { display: none; }
-            .mobile-menu-btn { display: block; }
-        }
+        @media (max-width: 900px) { .desktop-nav { display: none; } .mobile-menu-btn { display: block; } }
 
         .hero { text-align: center; padding: 80px 5% 40px; }
         .hero h1 { font-size: 3.5rem; font-weight: 800; margin-bottom: 20px; background: linear-gradient(to right, #1e293b, #4f46e5); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1.2; }
@@ -85,88 +83,79 @@
         .specs { display: flex; gap: 15px; margin-bottom: 25px; flex-wrap: wrap; }
         .spec-item { background: #f1f5f9; padding: 6px 12px; border-radius: 10px; font-size: 0.85rem; font-weight: 600; color: #334155; display: flex; align-items: center; gap: 5px; }
         
-        .btn-buy { width: 100%; padding: 14px; background: white; border: 2px solid var(--primary); color: var(--primary); border-radius: 12px; font-weight: 700; text-align: center; text-decoration: none; transition: all 0.3s; }
+        .btn-buy { width: 100%; padding: 14px; background: white; border: 2px solid var(--primary); color: var(--primary); border-radius: 12px; font-weight: 700; text-align: center; text-decoration: none; transition: all 0.3s; cursor: pointer; display: block; }
         .btn-buy:hover { background: var(--primary); color: white; }
 
+        /* Modal Styles */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center; }
+        .modal-content { background: white; border-radius: 24px; padding: 30px; width: 90%; max-width: 500px; position: relative; }
+        .modal-content h3 { font-size: 1.5rem; margin-bottom: 20px; color: #0f172a; }
+        .modal-content input, .modal-content select, .modal-content textarea { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #e2e8f0; border-radius: 12px; font-size: 1rem; }
+        .modal-content textarea { min-height: 100px; resize: vertical; }
+        .modal-buttons { display: flex; gap: 10px; justify-content: flex-end; margin-top: 15px; }
+        .modal-buttons button { padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; }
+        .btn-submit-modal { background: var(--primary); color: white; border: none; }
+        .btn-cancel-modal { background: #e2e8f0; border: none; color: #334155; }
+
+        .success-message, .error-message { position: fixed; top: 20px; right: 20px; padding: 15px 20px; border-radius: 12px; z-index: 2001; display: none; align-items: center; gap: 10px; animation: slideIn 0.3s ease; }
+        .success-message { background: #d1fae5; color: #065f46; }
+        .error-message { background: #fee2e2; color: #dc2626; }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
         footer { background: #020617; color: #94a3b8; padding: 60px 5% 30px; text-align: center; }
-        .footer-logo { font-size: 2rem; font-weight: 800; background: linear-gradient(to right, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 15px; display: inline-block; }
+        .footer-logo { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 25px; }
+        .footer-logo span { background: linear-gradient(to right, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; font-size: 2rem; }
         .footer-contact { display: flex; justify-content: center; gap: 30px; margin-bottom: 30px; flex-wrap: wrap; }
-        .footer-contact a { color: #f8fafc; text-decoration: none; display: flex; align-items: center; gap: 8px; font-weight: 500; font-size: 1.1rem; transition: color 0.3s ease; background: rgba(255, 255, 255, 0.05); padding: 10px 20px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1); }
-        .footer-contact a:hover { color: var(--secondary); border-color: var(--secondary); background: rgba(236, 72, 153, 0.1); }
+        .footer-contact a { color: #f8fafc; text-decoration: none; display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.05); padding: 10px 20px; border-radius: 30px; font-size: 0.9rem; transition: all 0.3s; }
+        .footer-contact a:hover { color: var(--secondary); background: rgba(236,72,153,0.1); }
         .footer-links { display: flex; justify-content: center; gap: 30px; margin-bottom: 40px; flex-wrap: wrap; }
-        .footer-links a { color: #64748b; text-decoration: none; transition: color 0.3s ease; font-weight: 500; }
+        .footer-links a { color: #94a3b8; text-decoration: none; transition: color 0.3s; }
         .footer-links a:hover { color: white; }
-        .copyright { border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 20px; font-size: 0.9rem; color: #475569; }
+        .copyright { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; font-size: 0.8rem; color: #475569; }
+
         @media (max-width: 768px) { .hero h1 { font-size: 2.5rem; } }
     </style>
 </head>
 <body>
 
-    <!-- Floating Actions -->
     <div class="floating-actions">
-        <button class="ai-float" onclick="toggleChat()">
-            <i data-lucide="bot" size="28"></i>
-        </button>
+        <button class="ai-float" onclick="toggleChat()"><i data-lucide="bot" size="28"></i></button>
         <a href="https://wa.me/966550898978" target="_blank" class="whatsapp-float">
-            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
         </a>
     </div>
 
-    <!-- AI Chatbot Widget -->
     <div class="chatbot-container" id="chatbot">
-        <div class="chatbot-header">
-            <div class="bot-info">
-                <div class="bot-avatar"><i data-lucide="bot" size="20"></i></div>
-                <div>
-                    <h4 style="color:white; margin:0; font-size:1rem;">Billzest AI</h4>
-                    <p style="color:rgba(255,255,255,0.8); margin:0; font-size:0.8rem;">Online & Ready</p>
-                </div>
-            </div>
-            <button onclick="toggleChat()" style="background:none; border:none; color:white; cursor:pointer;"><i data-lucide="x"></i></button>
-        </div>
-        <div class="chatbot-messages" id="chatMessages">
-            <div class="msg bot-msg">Hi there! 👋 I am Billzest AI. How can I help you grow your restaurant today?</div>
-        </div>
-        <div class="chatbot-input">
-            <input type="text" id="chatInput" placeholder="Type your message..." onkeypress="handleChat(event)">
-            <button onclick="sendMsg()"><i data-lucide="send" size="18"></i></button>
-        </div>
+        <div class="chatbot-header"><div class="bot-info"><div class="bot-avatar"><i data-lucide="bot" size="20"></i></div><div><h4 style="color:white;">Billzest AI</h4><p style="color:rgba(255,255,255,0.8); font-size:0.7rem;">Online</p></div></div><button onclick="toggleChat()" style="background:none; border:none; color:white; cursor:pointer;"><i data-lucide="x"></i></button></div>
+        <div class="chatbot-messages" id="chatMessages"><div class="msg bot-msg">👋 Hi! I'm Billzest AI. How can I help you with hardware?</div></div>
+        <div class="chatbot-input"><input type="text" id="chatInput" placeholder="Type message..." onkeypress="handleChat(event)"><button onclick="sendMsg()"><i data-lucide="send" size="18"></i></button></div>
     </div>
 
-    <div class="bg-shapes">
-        <div class="shape shape-1"></div>
-        <div class="shape shape-2"></div>
-    </div>
+    <div class="bg-shapes"><div class="shape shape-1"></div><div class="shape shape-2"></div></div>
 
     <header>
-        <a href="index.html" class="logo" style="display:flex; align-items:center; gap:10px; text-decoration:none;">
-            <div style="background: linear-gradient(135deg, var(--primary), var(--secondary)); width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);">
-                <i data-lucide="store" size="22"></i>
-            </div>
-            <span style="background: linear-gradient(to right, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; font-size: 1.5rem;">Billzestpos</span>
-        </a>
+        <a href="index.html" class="logo"><div style="background: linear-gradient(135deg, var(--primary), var(--secondary)); width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white;"><i data-lucide="store" size="22"></i></div><span>Billzestpos</span></a>
         <nav class="desktop-nav">
             <a href="index.html">Home</a>
             <a href="solutions.html">Solutions</a>
             <a href="hardware.html" class="active">Hardware</a>
             <a href="pricing.html">Pricing</a>
             <a href="contact.html">Contact Us</a>
-            <a href="login.html" style="font-weight: 700; color: #334155;">Login</a>
+            <a href="login.html">Login</a>
             <a href="solutions.html" class="nav-btn">Book Demo</a>
         </nav>
         <button class="mobile-menu-btn" onclick="toggleMobileMenu()"><i data-lucide="menu" size="28"></i></button>
     </header>
 
-    <!-- Mobile Nav Overlay -->
     <div class="mobile-nav-overlay" id="mobileNav">
-        <button class="close-menu-btn" onclick="toggleMobileMenu()"><i data-lucide="x" size="32"></i></button>
+        <button class="close-menu-btn" onclick="toggleMobileMenu()">✕</button>
         <a href="index.html">Home</a>
         <a href="solutions.html">Solutions</a>
         <a href="hardware.html" class="active">Hardware</a>
         <a href="pricing.html">Pricing</a>
         <a href="contact.html">Contact Us</a>
-        <a href="login.html" style="font-weight: 700; color: #0f172a;">Login</a>
-        <a href="solutions.html" style="color: var(--primary);">Book Demo</a>
+        <a href="login.html">Login</a>
+        <a href="solutions.html">Book Demo</a>
     </div>
 
     <section class="hero" data-aos="fade-down">
@@ -175,134 +164,204 @@
     </section>
 
     <section class="hardware-grid">
-        
         <div class="hard-card" data-aos="fade-up" data-aos-delay="100">
             <div class="hard-img-wrapper">
                 <div class="badge-premium">Best Seller</div>
-                <img src="https://images.pexels.com/photos/4199094/pexels-photo-4199094.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Main Register" class="hard-img">
+                <img src="https://images.pexels.com/photos/4199094/pexels-photo-4199094.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Main Register" class="hard-img" onerror="this.src='https://placehold.co/600x400?text=POS+Terminal'">
             </div>
             <div class="hard-content">
                 <h3>Dual-Screen POS Terminal</h3>
                 <p>A beautiful 15.6" merchant touch screen with a 10" customer-facing display. Perfect for taking orders efficiently while showing customers their cart.</p>
-                <div class="specs">
-                    <div class="spec-item"><i data-lucide="monitor" size="16"></i> 15.6" HD</div>
-                    <div class="spec-item"><i data-lucide="wifi" size="16"></i> WiFi 6</div>
-                </div>
-                <a href="contact.html" class="btn-buy">Request Quote</a>
+                <div class="specs"><div class="spec-item"><i data-lucide="monitor" size="16"></i> 15.6" HD</div><div class="spec-item"><i data-lucide="wifi" size="16"></i> WiFi 6</div><div class="spec-item"><i data-lucide="cpu" size="16"></i> Intel Core</div></div>
+                <button class="btn-buy" onclick="openQuoteModal('Dual-Screen POS Terminal', '$899')">Request Quote</button>
             </div>
         </div>
 
         <div class="hard-card" data-aos="fade-up" data-aos-delay="200">
             <div class="hard-img-wrapper">
-                <img src="https://images.unsplash.com/photo-1556742044-3c52d4e8e018?w=600&q=80" alt="Printer" class="hard-img">
+                <img src="https://images.unsplash.com/photo-1556742044-3c52d4e8e018?w=600&q=80" alt="Printer" class="hard-img" onerror="this.src='https://placehold.co/600x400?text=Receipt+Printer'">
             </div>
             <div class="hard-content">
                 <h3>Smart Receipt Printer</h3>
                 <p>Lightning fast thermal printing. Auto-cutter included and seamless wireless connectivity directly to your POS terminal and kitchen displays.</p>
-                <div class="specs">
-                    <div class="spec-item"><i data-lucide="printer" size="16"></i> Thermal</div>
-                    <div class="spec-item"><i data-lucide="bluetooth" size="16"></i> BT/LAN</div>
-                </div>
-                <a href="contact.html" class="btn-buy">Request Quote</a>
+                <div class="specs"><div class="spec-item"><i data-lucide="printer" size="16"></i> Thermal</div><div class="spec-item"><i data-lucide="bluetooth" size="16"></i> BT/LAN</div><div class="spec-item"><i data-lucide="zap" size="16"></i> 250mm/s</div></div>
+                <button class="btn-buy" onclick="openQuoteModal('Smart Receipt Printer', '$249')">Request Quote</button>
             </div>
         </div>
 
         <div class="hard-card" data-aos="fade-up" data-aos-delay="300">
             <div class="hard-img-wrapper">
-                <img src="https://images.unsplash.com/photo-1542744094-3a31f272c490?w=600&q=80" alt="Tablet" class="hard-img">
+                <img src="https://images.unsplash.com/photo-1542744094-3a31f272c490?w=600&q=80" alt="Tablet" class="hard-img" onerror="this.src='https://placehold.co/600x400?text=Waiter+Tablet'">
             </div>
             <div class="hard-content">
                 <h3>Waiter Order Tablet</h3>
                 <p>Rugged, spill-proof 8" tablet for table-side ordering. Instantly fires orders to the kitchen to reduce wait times and improve accuracy.</p>
-                <div class="specs">
-                    <div class="spec-item"><i data-lucide="battery-charging" size="16"></i> 12h Battery</div>
-                    <div class="spec-item"><i data-lucide="droplet" size="16"></i> Spill-proof</div>
-                </div>
-                <a href="contact.html" class="btn-buy">Request Quote</a>
+                <div class="specs"><div class="spec-item"><i data-lucide="battery-charging" size="16"></i> 12h Battery</div><div class="spec-item"><i data-lucide="droplet" size="16"></i> Spill-proof</div><div class="spec-item"><i data-lucide="fingerprint" size="16"></i> Biometric</div></div>
+                <button class="btn-buy" onclick="openQuoteModal('Waiter Order Tablet', '$349')">Request Quote</button>
             </div>
         </div>
-
     </section>
 
+    <!-- Quote Modal -->
+    <div id="quoteModal" class="modal">
+        <div class="modal-content">
+            <h3>Request Hardware Quote</h3>
+            <form id="quoteForm">
+                <input type="hidden" id="productName">
+                <input type="hidden" id="productPrice">
+                <div class="form-group"><label>Full Name *</label><input type="text" id="fullName" required placeholder="John Doe"></div>
+                <div class="form-group"><label>Email *</label><input type="email" id="email" required placeholder="john@example.com"></div>
+                <div class="form-group"><label>Phone *</label><input type="tel" id="phone" required placeholder="+1 234 567 890"></div>
+                <div class="form-group"><label>Restaurant Name</label><input type="text" id="restaurantName" placeholder="Your Restaurant"></div>
+                <div class="form-group"><label>Quantity</label><select id="quantity"><option value="1">1 Unit</option><option value="2">2 Units</option><option value="3">3 Units</option><option value="4">4 Units</option><option value="5">5+ Units</option></select></div>
+                <div class="form-group"><label>Additional Message</label><textarea id="message" placeholder="Any specific requirements?"></textarea></div>
+                <div class="modal-buttons"><button type="submit" class="btn-submit-modal">Submit Request</button><button type="button" class="btn-cancel-modal" onclick="closeQuoteModal()">Cancel</button></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Messages -->
+    <div id="successMsg" class="success-message"><i data-lucide="check-circle" size="18"></i> <span id="successText"></span></div>
+    <div id="errorMsg" class="error-message"><i data-lucide="alert-circle" size="18"></i> <span id="errorText"></span></div>
+
     <footer>
-        <div class="footer-logo" style="display:flex; align-items:center; justify-content:center; gap:10px;">
-            <div style="background: linear-gradient(135deg, var(--primary), var(--secondary)); width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);">
-                <i data-lucide="store" size="26"></i>
-            </div>
-            <span style="background: linear-gradient(to right, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; font-size: 2rem;">Billzestpos</span>
-        </div>
-        <div class="footer-contact">
-            <a href="mailto:billzestai@gmail.com"><i data-lucide="mail"></i> billzestai@gmail.com</a>
-            <a href="tel:+966550898978"><i data-lucide="phone"></i> +966550898978</a>
-        </div>
-        <div class="footer-links">
-            <a href="index.html">Home</a>
-            <a href="solutions.html">Solutions</a>
-            <a href="hardware.html">Hardware</a>
-            <a href="pricing.html">Pricing</a>
-            <a href="contact.html">Contact Us</a>
-        </div>
-        <p class="copyright">&copy; 2026 Billzestpos. All rights reserved.</p>
+        <div class="footer-logo"><div style="background: linear-gradient(135deg, var(--primary), var(--secondary)); width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white;"><i data-lucide="store" size="26"></i></div><span>Billzestpos</span></div>
+        <div class="footer-contact"><a href="mailto:billzestai@gmail.com"><i data-lucide="mail"></i> billzestai@gmail.com</a><a href="tel:+966550898978"><i data-lucide="phone"></i> +966550898978</a></div>
+        <div class="footer-links"><a href="index.html">Home</a><a href="solutions.html">Solutions</a><a href="hardware.html">Hardware</a><a href="pricing.html">Pricing</a><a href="contact.html">Contact Us</a></div>
+        <div class="copyright">© 2026 Billzestpos. All rights reserved.</div>
     </footer>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // Firebase Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyCN0akvFXOHM6WPHv9ve9noqqmauO3TJRY",
+            authDomain: "billzest-pos.firebaseapp.com",
+            projectId: "billzest-pos",
+            storageBucket: "billzest-pos.firebasestorage.app",
+            messagingSenderId: "946546876429",
+            appId: "1:946546876429:web:9b4a7aa3cecbf3aea83544",
+            measurementId: "G-69WEHH9X5D"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
         lucide.createIcons();
         AOS.init({ once: true });
 
-        // Mobile Menu Logic
-        function toggleMobileMenu() {
-            const menu = document.getElementById('mobileNav');
-            menu.classList.toggle('open');
+        let currentProduct = { name: '', price: '' };
+
+        function openQuoteModal(productName, productPrice) {
+            currentProduct = { name: productName, price: productPrice };
+            document.getElementById('productName').value = productName;
+            document.getElementById('productPrice').value = productPrice;
+            document.getElementById('fullName').value = '';
+            document.getElementById('email').value = '';
+            document.getElementById('phone').value = '';
+            document.getElementById('restaurantName').value = '';
+            document.getElementById('quantity').value = '1';
+            document.getElementById('message').value = '';
+            document.getElementById('quoteModal').style.display = 'flex';
         }
 
-        // AI Chatbot Logic
-        function toggleChat() {
-            const chat = document.getElementById('chatbot');
-            chat.classList.toggle('active');
+        function closeQuoteModal() {
+            document.getElementById('quoteModal').style.display = 'none';
         }
 
-        function handleChat(e) {
-            if (e.key === 'Enter') sendMsg();
+        function showSuccess(message) {
+            const successDiv = document.getElementById('successMsg');
+            document.getElementById('successText').innerText = message;
+            successDiv.style.display = 'flex';
+            setTimeout(() => { successDiv.style.display = 'none'; }, 5000);
         }
 
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMsg');
+            document.getElementById('errorText').innerText = message;
+            errorDiv.style.display = 'flex';
+            setTimeout(() => { errorDiv.style.display = 'none'; }, 5000);
+        }
+
+        document.getElementById('quoteForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const fullName = document.getElementById('fullName').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const restaurantName = document.getElementById('restaurantName').value;
+            const quantity = document.getElementById('quantity').value;
+            const message = document.getElementById('message').value;
+            const productName = document.getElementById('productName').value;
+            const productPrice = document.getElementById('productPrice').value;
+
+            if (!fullName || !email || !phone) {
+                showError('Please fill all required fields');
+                return;
+            }
+
+            const submitBtn = document.querySelector('#quoteForm .btn-submit-modal');
+            const originalText = submitBtn.innerText;
+            submitBtn.disabled = true;
+            submitBtn.innerText = 'Submitting...';
+
+            try {
+                const docRef = await addDoc(collection(db, "hardwareInquiries"), {
+                    fullName: fullName,
+                    email: email,
+                    phone: phone,
+                    restaurantName: restaurantName || 'Not specified',
+                    productName: productName,
+                    productPrice: productPrice,
+                    quantity: quantity,
+                    message: message || 'No additional message',
+                    status: 'new',
+                    createdAt: serverTimestamp(),
+                    read: false
+                });
+
+                console.log("Hardware inquiry saved with ID: ", docRef.id);
+                showSuccess(`Thank you ${fullName}! Our hardware team will contact you within 24 hours.`);
+                closeQuoteModal();
+                
+            } catch (error) {
+                console.error("Error saving inquiry:", error);
+                showError('Something went wrong. Please try again.');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerText = originalText;
+            }
+        });
+
+        // Mobile Menu & Chat Functions
+        function toggleMobileMenu() { document.getElementById('mobileNav').classList.toggle('open'); }
+        function toggleChat() { document.getElementById('chatbot').classList.toggle('active'); }
+        function handleChat(e) { if(e.key === 'Enter') sendMsg(); }
         function sendMsg() {
             const input = document.getElementById('chatInput');
             const text = input.value.trim();
-            if (!text) return;
-
-            const chatMessages = document.getElementById('chatMessages');
-            
-            // Add user message
-            const userMsg = document.createElement('div');
-            userMsg.className = 'msg user-msg';
-            userMsg.innerText = text;
-            chatMessages.appendChild(userMsg);
-            
+            if(!text) return;
+            const container = document.getElementById('chatMessages');
+            container.innerHTML += `<div class="msg user-msg">${text}</div>`;
             input.value = '';
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-
-            // Simulate AI typing delay
             setTimeout(() => {
-                const aiMsg = document.createElement('div');
-                aiMsg.className = 'msg bot-msg';
-                
-                // Simple Mock AI Logic
-                const lower = text.toLowerCase();
-                if (lower.includes('price') || lower.includes('cost')) {
-                    aiMsg.innerText = "Our plans start at just $39/mo! You can visit our Pricing page to see more details.";
-                } else if (lower.includes('demo')) {
-                    aiMsg.innerText = "Awesome! You can book a free demo by clicking the 'Book Demo' button at the top of the page.";
-                } else if (lower.includes('contact') || lower.includes('phone')) {
-                    aiMsg.innerText = "You can reach us directly on WhatsApp or call +966550898978.";
-                } else {
-                    aiMsg.innerText = "Thanks for your message! Our team will get back to you shortly. You can also book a demo to see Billzestpos in action.";
-                }
-                
-                chatMessages.appendChild(aiMsg);
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-            }, 1000);
+                let reply = "Thanks for your message! Our hardware team will get back to you shortly.";
+                if(text.toLowerCase().includes('price')) reply = "💰 Our POS terminal starts at $899, printer at $249, and tablet at $349.";
+                if(text.toLowerCase().includes('quote')) reply = "📋 Click 'Request Quote' on any hardware to get a personalized quote!";
+                container.innerHTML += `<div class="msg bot-msg">${reply}</div>`;
+                container.scrollTop = container.scrollHeight;
+            }, 500);
         }
+
+        window.openQuoteModal = openQuoteModal;
+        window.closeQuoteModal = closeQuoteModal;
+        window.toggleMobileMenu = toggleMobileMenu;
+        window.toggleChat = toggleChat;
+        window.handleChat = handleChat;
+        window.sendMsg = sendMsg;
     </script>
 </body>
 </html>
