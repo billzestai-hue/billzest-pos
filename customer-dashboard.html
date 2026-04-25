@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Account - Billzestpos</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root { --primary: #4f46e5; --primary-dark: #4338ca; --secondary: #ec4899; --dark: #0f172a; --bg-color: #f1f5f9; --text-gray: #64748b; --border-color: #e2e8f0; --success: #10b981; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: var(--bg-color); color: var(--dark); min-height: 100vh; }
+
+        /* Navigation */
+        .navbar { background: white; border-bottom: 1px solid var(--border-color); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+        .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 800; font-size: 1.3rem; background: linear-gradient(to right, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-links { display: flex; gap: 25px; align-items: center; }
+        .nav-links a { text-decoration: none; color: #475569; font-weight: 500; transition: color 0.3s; }
+        .nav-links a:hover, .nav-links a.active { color: var(--primary); }
+        .logout-btn { background: #ef4444; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 500; }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 40px 5%; }
+
+        /* Profile Header */
+        .profile-header { background: white; border-radius: 20px; padding: 30px; margin-bottom: 30px; display: flex; align-items: center; gap: 25px; flex-wrap: wrap; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .profile-avatar { width: 80px; height: 80px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; }
+        .profile-info h2 { font-size: 1.5rem; margin-bottom: 5px; }
+        .profile-info p { color: var(--text-gray); }
+        .plan-badge { background: var(--success); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; display: inline-block; margin-top: 8px; }
+
+        /* Cards Grid */
+        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 25px; margin-bottom: 30px; }
+        .card { background: white; border-radius: 20px; padding: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .card h3 { font-size: 1.2rem; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; color: #0f172a; }
+        .info-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border-color); }
+        .info-label { font-weight: 500; color: var(--text-gray); }
+        .info-value { font-weight: 600; color: #0f172a; }
+
+        /* Subscription Card */
+        .subscription-card { background: linear-gradient(135deg, #0f172a, #1e293b); color: white; }
+        .subscription-card h3 { color: white; }
+        .price { font-size: 2rem; font-weight: 800; margin: 15px 0; }
+        .price small { font-size: 0.8rem; font-weight: 400; color: #94a3b8; }
+        .renewal-date { color: #94a3b8; font-size: 0.85rem; margin: 10px 0; }
+        .btn-renew { background: var(--primary); color: white; border: none; padding: 12px; width: 100%; border-radius: 10px; font-weight: 600; cursor: pointer; margin-top: 15px; }
+
+        /* Invoices Table */
+        .table-container { overflow-x: auto; }
+        .invoice-table { width: 100%; border-collapse: collapse; }
+        .invoice-table th, .invoice-table td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); }
+        .invoice-table th { color: var(--text-gray); font-weight: 600; }
+        .invoice-status { background: #d1fae5; color: #065f46; padding: 4px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: 600; display: inline-block; }
+        .btn-download { background: none; border: none; color: var(--primary); cursor: pointer; }
+
+        /* Modal */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; }
+        .modal-content { background: white; border-radius: 24px; padding: 30px; width: 90%; max-width: 500px; max-height: 80vh; overflow-y: auto; }
+        .modal-content h3 { margin-bottom: 20px; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 500; color: #334155; }
+        .form-control { width: 100%; padding: 10px 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.9rem; }
+        .modal-buttons { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+        .btn-save { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; }
+        .btn-cancel { background: #e2e8f0; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; }
+
+        @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } .profile-header { flex-direction: column; text-align: center; } }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="index.html" class="logo"><i data-lucide="store" size="22"></i> Billzestpos</a>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="customer-dashboard.html" class="active">My Account</a>
+            <a href="#" id="editProfileBtn">Edit Profile</a>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Profile Header -->
+        <div class="profile-header">
+            <div class="profile-avatar"><i data-lucide="user" size="40"></i></div>
+            <div class="profile-info">
+                <h2 id="customerName">John Doe</h2>
+                <p id="customerEmail">john@restaurant.com</p>
+                <p id="customerGST">GST: 22AAAAA0000A1Z</p>
+                <div class="plan-badge" id="planBadge">Active Plan: Professional</div>
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <!-- Business Details Card -->
+            <div class="card">
+                <h3><i data-lucide="building-2" size="18"></i> Business Details</h3>
+                <div class="info-row"><span class="info-label">Restaurant Name</span><span class="info-value" id="restaurantName">My Restaurant</span></div>
+                <div class="info-row"><span class="info-label">GST Number</span><span class="info-value" id="gstNumber">22AAAAA0000A1Z</span></div>
+                <div class="info-row"><span class="info-label">PAN Number</span><span class="info-value" id="panNumber">AAAAA1234A</span></div>
+                <div class="info-row"><span class="info-label">Business Address</span><span class="info-value" id="businessAddress">123 Business Street, City</span></div>
+                <div class="info-row"><span class="info-label">Phone</span><span class="info-value" id="businessPhone">+1 234 567 8900</span></div>
+            </div>
+
+            <!-- Subscription Card -->
+            <div class="card subscription-card">
+                <h3><i data-lucide="crown" size="18"></i> Current Subscription</h3>
+                <div class="price" id="planPrice">$79 <small>/month</small></div>
+                <div class="info-row"><span class="info-label">Plan Name</span><span class="info-value" id="planName">Professional Plan</span></div>
+                <div class="info-row"><span class="info-label">Billing Cycle</span><span class="info-value" id="billingCycle">Monthly</span></div>
+                <div class="renewal-date" id="renewalDate">Next renewal: May 15, 2026</div>
+                <button class="btn-renew" onclick="renewSubscription()">Renew Subscription →</button>
+            </div>
+        </div>
+
+        <!-- Invoices Section -->
+        <div class="card" style="margin-top: 20px;">
+            <h3><i data-lucide="file-text" size="18"></i> Invoice History</h3>
+            <div class="table-container">
+                <table class="invoice-table">
+                    <thead>
+                        <tr><th>Invoice #</th><th>Date</th><th>Plan</th><th>Amount</th><th>GST</th><th>Total</th><th>Status</th><th></th></tr>
+                    </thead>
+                    <tbody id="invoiceList"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <div id="profileModal" class="modal">
+        <div class="modal-content">
+            <h3>Edit Business Details</h3>
+            <form id="profileForm">
+                <div class="form-group"><label>Restaurant Name</label><input type="text" id="editRestaurantName" class="form-control" required></div>
+                <div class="form-group"><label>GST Number</label><input type="text" id="editGST" class="form-control" placeholder="22AAAAA0000A1Z"></div>
+                <div class="form-group"><label>PAN Number</label><input type="text" id="editPAN" class="form-control" placeholder="AAAAA1234A"></div>
+                <div class="form-group"><label>Business Address</label><input type="text" id="editAddress" class="form-control" placeholder="Full address"></div>
+                <div class="form-group"><label>Phone Number</label><input type="tel" id="editPhone" class="form-control" placeholder="Phone number"></div>
+                <div class="modal-buttons"><button type="submit" class="btn-save">Save Changes</button><button type="button" class="btn-cancel" onclick="closeProfileModal()">Cancel</button></div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // Customer Data (from localStorage/registration)
+        let customerData = JSON.parse(localStorage.getItem('customerData')) || {
+            name: 'John Doe',
+            email: 'customer@restaurant.com',
+            restaurantName: 'My Pizza Palace',
+            gst: '22AAAAA0000A1Z',
+            pan: 'AAAAA1234A',
+            address: '123 Business Street, City, 400001',
+            phone: '+1 234 567 8900',
+            plan: 'Professional',
+            price: 79,
+            billingCycle: 'Monthly',
+            subscriptionStart: '2026-04-15',
+            subscriptionEnd: '2026-05-15'
+        };
+
+        // Invoices Data
+        let invoices = JSON.parse(localStorage.getItem('invoices')) || [
+            { id: 'INV-001', date: '2026-04-15', plan: 'Professional', subtotal: 79, gst: 3.95, total: 82.95, status: 'Paid' },
+            { id: 'INV-002', date: '2026-03-15', plan: 'Professional', subtotal: 79, gst: 3.95, total: 82.95, status: 'Paid' },
+            { id: 'INV-003', date: '2026-02-15', plan: 'Starter', subtotal: 39, gst: 1.95, total: 40.95, status: 'Paid' }
+        ];
+
+        function loadCustomerData() {
+            document.getElementById('customerName').innerText = customerData.name;
+            document.getElementById('customerEmail').innerText = customerData.email;
+            document.getElementById('customerGST').innerHTML = `GST: ${customerData.gst}`;
+            document.getElementById('restaurantName').innerText = customerData.restaurantName;
+            document.getElementById('gstNumber').innerText = customerData.gst;
+            document.getElementById('panNumber').innerText = customerData.pan;
+            document.getElementById('businessAddress').innerText = customerData.address;
+            document.getElementById('businessPhone').innerText = customerData.phone;
+            document.getElementById('planName').innerText = customerData.plan + ' Plan';
+            document.getElementById('planPrice').innerHTML = `$${customerData.price} <small>/${customerData.billingCycle.toLowerCase()}</small>`;
+            document.getElementById('billingCycle').innerText = customerData.billingCycle;
+            document.getElementById('planBadge').innerHTML = `Active Plan: ${customerData.plan}`;
+            
+            const renewalDate = new Date(customerData.subscriptionEnd);
+            document.getElementById('renewalDate').innerHTML = `Next renewal: ${renewalDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}`;
+        }
+
+        function loadInvoices() {
+            const container = document.getElementById('invoiceList');
+            container.innerHTML = invoices.map(inv => `
+                <tr>
+                    <td>${inv.id}</td>
+                    <td>${inv.date}</td>
+                    <td>${inv.plan}</td>
+                    <td>$${inv.subtotal}</td>
+                    <td>$${inv.gst}</td>
+                    <td><strong>$${inv.total}</strong></td>
+                    <td><span class="invoice-status">${inv.status}</span></td>
+                    <td><button class="btn-download" onclick="downloadInvoice('${inv.id}')"><i data-lucide="download" size="16"></i></button></td>
+                </tr>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        function downloadInvoice(invoiceId) {
+            const invoice = invoices.find(i => i.id === invoiceId);
+            if (!invoice) return;
+            
+            const gstPercent = ((invoice.gst / invoice.subtotal) * 100).toFixed(2);
+            const invoiceHTML = `
+                <div style="font-family: monospace; padding: 20px; max-width: 400px; margin: auto;">
+                    <div style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 10px;">
+                        <h2>${customerData.restaurantName}</h2>
+                        <p>GST: ${customerData.gst}</p>
+                        <p>${customerData.address}</p>
+                        <p>${customerData.phone}</p>
+                    </div>
+                    <div style="text-align: center; margin-bottom: 10px;">
+                        <h3>TAX INVOICE</h3>
+                        <p>Invoice #: ${invoice.id}</p>
+                        <p>Date: ${invoice.date}</p>
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <p><strong>Bill To:</strong></p>
+                        <p>${customerData.name}</p>
+                        <p>${customerData.email}</p>
+                        <p>GST: ${customerData.gst}</p>
+                    </div>
+                    <hr>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                        <span><strong>Description</strong></span>
+                        <span><strong>Amount</strong></span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>${invoice.plan} Plan (${customerData.billingCycle})</span>
+                        <span>$${invoice.subtotal}</span>
+                    </div>
+                    <hr>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>Subtotal</span>
+                        <span>$${invoice.subtotal}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>GST (${gstPercent}%)</span>
+                        <span>$${invoice.gst}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-weight: bold; border-top: 1px solid #000; padding-top: 5px; margin-top: 5px;">
+                        <span>TOTAL</span>
+                        <span>$${invoice.total}</span>
+                    </div>
+                    <hr>
+                    <div style="text-align: center; margin-top: 20px; font-size: 12px;">
+                        <p>Thank you for your business!</p>
+                        <p>This is a computer generated invoice</p>
+                    </div>
+                </div>
+            `;
+            
+            const win = window.open();
+            win.document.write(invoiceHTML);
+            win.document.close();
+            win.print();
+        }
+
+        // Edit Profile
+        document.getElementById('editProfileBtn').addEventListener('click', () => {
+            document.getElementById('editRestaurantName').value = customerData.restaurantName;
+            document.getElementById('editGST').value = customerData.gst;
+            document.getElementById('editPAN').value = customerData.pan;
+            document.getElementById('editAddress').value = customerData.address;
+            document.getElementById('editPhone').value = customerData.phone;
+            document.getElementById('profileModal').style.display = 'flex';
+        });
+
+        document.getElementById('profileForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            customerData.restaurantName = document.getElementById('editRestaurantName').value;
+            customerData.gst = document.getElementById('editGST').value;
+            customerData.pan = document.getElementById('editPAN').value;
+            customerData.address = document.getElementById('editAddress').value;
+            customerData.phone = document.getElementById('editPhone').value;
+            localStorage.setItem('customerData', JSON.stringify(customerData));
+            loadCustomerData();
+            closeProfileModal();
+            alert('Profile updated successfully!');
+        });
+
+        function closeProfileModal() { document.getElementById('profileModal').style.display = 'none'; }
+        function renewSubscription() { alert('Renewal request sent! Our team will contact you.'); }
+        function logout() { localStorage.removeItem('customerData'); window.location.href = 'login.html'; }
+
+        loadCustomerData();
+        loadInvoices();
+    </script>
+</body>
+</html>
