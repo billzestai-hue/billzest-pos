@@ -1,119 +1,127 @@
+# 🏪 BillzestPOS - Complete Restaurant Management System
+
 <div align="center">
-  
-  <img src="https://img.shields.io/badge/Version-2.0.0-blue.svg" alt="Version">
-  <img src="https://img.shields.io/badge/Status-Production-green.svg" alt="Status">
-  <img src="https://img.shields.io/badge/License-All%20Rights%20Reserved-red.svg" alt="License">
-  <img src="https://img.shields.io/badge/PRs-Welcome-brightgreen.svg" alt="PRs Welcome">
 
-  <br>
-  <br>
+![BillzestPOS Logo](https://via.placeholder.com/200x100?text=BillzestPOS)
 
-  <h1>🍽️ BillZest POS</h1>
-  <h3>The Smartest Restaurant Management System in The Middle East 🌙</h3>
-  
-  <p>
-    <strong>Complete Restaurant Management Solution | Point of Sale | Kitchen Display | Analytics</strong>
-  </p>
+**Complete Restaurant POS System with Admin Panel, Kitchen Display, and Subscription Management**
 
-  <br>
+[![Firebase](https://img.shields.io/badge/Firebase-039BE5?style=for-the-badge&logo=Firebase&logoColor=white)](https://firebase.google.com)
+[![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)](https://html.com)
+[![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)](https://css3.com)
+[![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://javascript.com)
 
-  <a href="https://billzestpos.com">
-    <img src="https://img.shields.io/badge/🌐%20Live%20Demo-billzestpos.com-orange?style=for-the-badge&logo=google-chrome&logoColor=white" alt="Live Demo">
-  </a>
-
-  <br>
-  <br>
-
-  <img src="https://via.placeholder.com/800x400?text=BillZest+POS+Screenshot" alt="BillZest POS Dashboard" width="800">
-  
 </div>
 
 ---
 
 ## 📋 Table of Contents
-- [✨ Features](#-features)
-- [📁 Project Files](#-project-files)
-- [🚀 Quick Start](#-quick-start)
-- [🛠️ Tech Stack](#️-tech-stack)
-- [📱 Live URLs](#-live-urls)
-- [🔐 Login Credentials](#-login-credentials)
-- [📞 Contact](#-contact)
-- [📄 License](#-license)
+
+- [Overview](#overview)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Installation](#installation)
+- [Firebase Setup](#firebase-setup)
+- [File Structure](#file-structure)
+- [Usage Guide](#usage-guide)
+- [Payment Gateway Setup](#payment-gateway-setup)
+- [Email Invoice Setup](#email-invoice-setup)
+- [Deployment](#deployment)
+- [Screenshots](#screenshots)
+- [License](#license)
+
+---
+
+## 🎯 Overview
+
+**BillzestPOS** is a complete, feature-rich Restaurant Management System that helps restaurants manage orders, inventory, staff, customers, and subscriptions. The system includes:
+
+- ✅ **Point of Sale (POS)** - Interactive ordering system
+- ✅ **Admin Dashboard** - Complete business control
+- ✅ **Customer Portal** - Manage subscriptions & invoices
+- ✅ **Kitchen Display System** - Real-time order tracking
+- ✅ **Super Admin Panel** - Full system control
+- ✅ **Subscription Management** - Monthly/Yearly plans
+- ✅ **GST Invoice Generation** - Tax-compliant invoices
+- ✅ **WhatsApp Integration** - Instant payment notifications
+- ✅ **Email Invoicing** - Automatic email invoices
+- ✅ **PWA Ready** - Install as mobile app
 
 ---
 
 ## ✨ Features
 
-### 🛒 Core POS Features
+### 🏪 Point of Sale (POS)
 | Feature | Description |
 |---------|-------------|
-| **Complete POS System** | 66+ menu items, cart management, VAT 15% calculation |
-| **Bill Printing** | Professional invoice generation with print support |
-| **Payment Methods** | Cash, Card, QR Code integration |
-| **Order History** | Date filter + customer search |
-| **Kitchen Display (KDS)** | Live order management with prepared status |
+| Interactive Menu | Clickable items with real photos |
+| Cart Management | Add/Remove items, adjust quantity |
+| Tax Calculation | Automatic GST/tax calculation |
+| Receipt Printing | Beautiful digital receipts with restaurant name |
+| Shop Name Customization | Restaurant name from settings |
 
-### 📊 Analytics & Reports
+### 👨‍💼 Admin Dashboard
 | Feature | Description |
 |---------|-------------|
-| **Real-time Charts** | Visual revenue tracking and analytics |
-| **Sales Dashboard** | Daily, weekly, monthly reports |
-| **Financial Reports** | P&L statements, VAT reports |
-| **Performance Metrics** | Staff and branch performance |
+| Overview Stats | Sales, orders, revenue metrics |
+| Orders Management | View and manage all orders |
+| Menu CRUD | Add/Edit/Delete menu items |
+| Customer Management | View and manage customers |
+| Staff Management | Add/Edit/Delete staff members |
+| Settings | Restaurant name, tax rate, currency |
 
-### 👨‍🍳 Kitchen Management
+### 👤 Customer Portal
 | Feature | Description |
 |---------|-------------|
-| **Live Order Queue** | Real-time order display |
-| **Preparation Status** | Mark orders as prepared |
-| **Order Prioritization** | Manage rush hours efficiently |
+| Profile Management | Update business details |
+| Subscription View | View current plan and renewal date |
+| Invoice History | Download GST invoices |
+| GST Details | Save GST number, PAN, address |
 
-### 🌍 Multi-Language Support
-| Language | Status |
-|----------|--------|
-| English | ✅ Complete |
-| العربية (Arabic) | ✅ Complete with RTL support |
+### 🍳 Kitchen Display System (KDS)
+| Feature | Description |
+|---------|-------------|
+| Real-time Orders | Live order updates |
+| Status Updates | Pending → Cooking → Ready |
+| Sound Alerts | New order notifications |
+| Multi-tab View | Filter by status |
 
-### 🏪 Advanced Features
-- 👥 **Multi-Branch Management** - Handle multiple locations
-- 📱 **Online Ordering** - Delivery & pickup integration
-- ⭐ **Loyalty Points** - Customer rewards program
-- 📲 **WhatsApp Alerts** - Order confirmation via WhatsApp
-- 🤖 **AI Chatbot** - Smart customer support assistant
-- 📸 **QR Menu** - Digital menu generator
-- 💰 **Coupon System** - Discount management
-- 🗓️ **Table Reservations** - Online booking system
-- 🗺️ **Live Delivery Map** - GPS tracking for deliveries
-- 👨‍💼 **HR & Payroll** - Staff management system
-- 🌙 **Dark Mode** - Eye-friendly interface
-- 📱 **PWA Ready** - Install as mobile app
+### 👑 Super Admin Panel
+| Feature | Description |
+|---------|-------------|
+| All Customers | View, manage, delete customers |
+| All Subscriptions | Track all subscriptions |
+| Payment Requests | Mark payments as completed |
+| Contact Forms | View all inquiries |
+| Analytics Dashboard | Revenue and customer stats |
 
 ---
 
-## 📁 Project Files
+## 🛠️ Tech Stack
 
-| File | Description | Status |
-|------|-------------|--------|
-| `index.html` | 🏠 Main Landing Page | ✅ Live |
-| `billzest-complete-pos.html` | 🛒 Complete POS System | ✅ Live |
-| `billzest-sales-dashboard.html` | 📊 Sales Dashboard | ✅ Live |
-| `billzest-advanced.html` | 🚀 Advanced System | ✅ Live |
-| `billzest-mega.html` | 🔥 Mega System | ✅ Live |
-| `billzest-ultimate.html` | 💎 Ultimate System | ✅ Live |
-| `billzest-marketplace.html` | 🛍️ App Marketplace | ✅ Live |
-| `billzest-website.html` | 🌟 Website Pages | ✅ Live |
-| `billzest-setup.html` | ⚙️ Setup & Integration | ✅ Live |
-| `billzest-product-manager.html` | 📦 Product Manager | ✅ Live |
-| `billzest-customer-portal.html` | 👤 Customer Portal | ✅ Live |
-| `billzest-products.html` | 📋 Products Page | ✅ Live |
-| `billzest-summary.html` | 📄 Project Summary | ✅ Live |
+| Technology | Purpose |
+|------------|---------|
+| **HTML5** | Structure |
+| **CSS3** | Styling & Animations |
+| **JavaScript** | Functionality |
+| **Firebase** | Authentication & Database |
+| **EmailJS** | Email Invoicing |
+| **Chart.js** | Analytics Charts |
+| **Lucide Icons** | Modern Icons |
+| **AOS** | Scroll Animations |
 
 ---
 
-## 🚀 Quick Start
+## 📥 Installation
 
-### Option 1: Direct Download
+### Prerequisites
+- Any modern web browser (Chrome, Firefox, Edge)
+- Code editor (VS Code recommended)
+- Firebase account (free)
+
+### Steps
+
+1. **Download/Clone the repository**
 ```bash
-git clone https://github.com/your-username/billzest-pos.git
-cd billzest-pos
-# Open any .html file in your browser
+git clone https://github.com/your-repo/billzestpos.git
+cd billzestpos
