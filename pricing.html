@@ -45,7 +45,8 @@
 
         /* Header Navigation */
         header { padding: 20px 5%; display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255, 255, 255, 0.5); position: sticky; top: 0; z-index: 100; }
-        .logo { font-size: 1.5rem; font-weight: 800; background: linear-gradient(to right, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-decoration: none; }
+        .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .logo span { background: linear-gradient(to right, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; font-size: 1.5rem; }
         .desktop-nav { display: flex; gap: 30px; align-items: center; }
         .desktop-nav a { text-decoration: none; color: #334155; font-weight: 500; transition: color 0.3s; }
         .desktop-nav a:hover, .desktop-nav a.active { color: var(--primary); }
@@ -58,12 +59,9 @@
         .mobile-nav-overlay.open { right: 0; }
         .mobile-nav-overlay a { font-size: 1.8rem; font-weight: 700; color: #0f172a; text-decoration: none; transition: color 0.3s; }
         .mobile-nav-overlay a:hover, .mobile-nav-overlay a.active { color: var(--primary); }
-        .close-menu-btn { position: absolute; top: 30px; right: 5%; background: none; border: none; color: #0f172a; cursor: pointer; }
+        .close-menu-btn { position: absolute; top: 30px; right: 5%; background: none; border: none; color: #0f172a; cursor: pointer; font-size: 2rem; }
 
-        @media (max-width: 900px) {
-            .desktop-nav { display: none; }
-            .mobile-menu-btn { display: block; }
-        }
+        @media (max-width: 900px) { .desktop-nav { display: none; } .mobile-menu-btn { display: block; } }
 
         .hero { text-align: center; padding: 80px 5% 40px; }
         .hero h1 { font-size: 3.5rem; font-weight: 800; margin-bottom: 20px; background: linear-gradient(to right, #1e293b, #4f46e5); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1.2; }
@@ -80,106 +78,97 @@
 
         .pricing-grid { padding: 0 5% 80px; max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; align-items: center; }
 
-        .price-card { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,1); border-radius: 24px; padding: 40px; text-align: center; transition: all 0.4s ease; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); position: relative; }
+        .price-card { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,1); border-radius: 24px; padding: 40px; text-align: center; transition: all 0.4s ease; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); position: relative; cursor: pointer; }
         .price-card.popular { background: white; border: 2px solid var(--primary); transform: scale(1.05); box-shadow: 0 20px 40px rgba(79, 70, 229, 0.15); z-index: 10; }
+        .price-card:hover { transform: translateY(-5px); }
         .popular-badge { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: linear-gradient(to right, var(--primary), var(--secondary)); color: white; padding: 6px 20px; border-radius: 20px; font-weight: 600; font-size: 0.9rem; letter-spacing: 1px; }
 
         .price-card h3 { font-size: 1.5rem; color: #0f172a; margin-bottom: 15px; }
         .price { font-size: 3.5rem; font-weight: 800; color: #0f172a; margin-bottom: 20px; display: flex; justify-content: center; align-items: flex-start; transition: opacity 0.3s ease; }
         .price-currency { font-size: 1.5rem; margin-top: 10px; }
+        .price-amount { font-size: 3.5rem; font-weight: 800; }
         .price-period { font-size: 1rem; color: var(--text-gray); font-weight: 500; align-self: flex-end; margin-bottom: 10px; margin-left: 5px; }
 
         .features-list { list-style: none; margin: 30px 0; text-align: left; }
         .features-list li { margin-bottom: 15px; display: flex; align-items: center; gap: 10px; color: #334155; font-size: 1rem; }
         .features-list li i { color: var(--primary); flex-shrink: 0; }
 
-        .btn-plan { display: block; width: 100%; padding: 15px; border-radius: 12px; font-weight: 600; font-size: 1.1rem; text-decoration: none; transition: all 0.3s; }
+        .btn-plan { display: block; width: 100%; padding: 15px; border-radius: 12px; font-weight: 600; font-size: 1.1rem; text-decoration: none; transition: all 0.3s; cursor: pointer; border: none; text-align: center; }
         .btn-plan.outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
-        .btn-plan.outline:hover { background: rgba(79, 70, 229, 0.05); }
+        .btn-plan.outline:hover { background: rgba(79, 70, 229, 0.05); transform: translateY(-2px); }
         .btn-plan.solid { background: linear-gradient(to right, var(--primary), var(--secondary)); color: white; border: none; box-shadow: 0 10px 20px rgba(236, 72, 153, 0.2); }
         .btn-plan.solid:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(236, 72, 153, 0.3); }
 
+        /* Modal Styles */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center; }
+        .modal-content { background: white; border-radius: 24px; padding: 30px; width: 90%; max-width: 500px; position: relative; }
+        .modal-content h3 { font-size: 1.5rem; margin-bottom: 20px; color: #0f172a; }
+        .modal-content input, .modal-content select, .modal-content textarea { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #e2e8f0; border-radius: 12px; font-size: 1rem; }
+        .modal-buttons { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+        .modal-buttons button { padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; }
+        .btn-submit-modal { background: var(--primary); color: white; border: none; }
+        .btn-cancel-modal { background: #e2e8f0; border: none; color: #334155; }
+
+        .success-message, .error-message { position: fixed; top: 20px; right: 20px; padding: 15px 20px; border-radius: 12px; z-index: 2001; display: none; align-items: center; gap: 10px; animation: slideIn 0.3s ease; }
+        .success-message { background: #d1fae5; color: #065f46; }
+        .error-message { background: #fee2e2; color: #dc2626; }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
         footer { background: #020617; color: #94a3b8; padding: 60px 5% 30px; text-align: center; }
-        .footer-logo { font-size: 2rem; font-weight: 800; background: linear-gradient(to right, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 25px; display: inline-block; }
+        .footer-logo { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 25px; }
+        .footer-logo span { background: linear-gradient(to right, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; font-size: 2rem; }
         .footer-contact { display: flex; justify-content: center; gap: 30px; margin-bottom: 30px; flex-wrap: wrap; }
-        .footer-contact a { color: #f8fafc; text-decoration: none; display: flex; align-items: center; gap: 8px; font-weight: 500; font-size: 1.1rem; transition: color 0.3s ease; background: rgba(255, 255, 255, 0.05); padding: 10px 20px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1); }
-        .footer-contact a:hover { color: var(--secondary); border-color: var(--secondary); background: rgba(236, 72, 153, 0.1); }
+        .footer-contact a { color: #f8fafc; text-decoration: none; display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.05); padding: 10px 20px; border-radius: 30px; font-size: 0.9rem; transition: all 0.3s; }
+        .footer-contact a:hover { color: var(--secondary); background: rgba(236,72,153,0.1); }
         .footer-links { display: flex; justify-content: center; gap: 30px; margin-bottom: 40px; flex-wrap: wrap; }
-        .footer-links a { color: #94a3b8; text-decoration: none; transition: color 0.3s ease; font-weight: 500; }
+        .footer-links a { color: #94a3b8; text-decoration: none; transition: color 0.3s; }
         .footer-links a:hover { color: white; }
-        .copyright { border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 20px; font-size: 0.9rem; color: #475569; }
+        .copyright { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; font-size: 0.8rem; color: #475569; }
 
         @media (max-width: 900px) { .price-card.popular { transform: none; } }
-        @media (max-width: 768px) { .hero h1 { font-size: 2.8rem; } }
+        @media (max-width: 768px) { .hero h1 { font-size: 2.5rem; } }
     </style>
 </head>
 <body>
 
-    <!-- Floating Actions -->
     <div class="floating-actions">
-        <button class="ai-float" onclick="toggleChat()">
-            <i data-lucide="bot" size="28"></i>
-        </button>
+        <button class="ai-float" onclick="toggleChat()"><i data-lucide="bot" size="28"></i></button>
         <a href="https://wa.me/966550898978" target="_blank" class="whatsapp-float">
-            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
         </a>
     </div>
 
-    <!-- AI Chatbot Widget -->
     <div class="chatbot-container" id="chatbot">
-        <div class="chatbot-header">
-            <div class="bot-info">
-                <div class="bot-avatar"><i data-lucide="bot" size="20"></i></div>
-                <div>
-                    <h4 style="color:white; margin:0; font-size:1rem;">Billzest AI</h4>
-                    <p style="color:rgba(255,255,255,0.8); margin:0; font-size:0.8rem;">Online & Ready</p>
-                </div>
-            </div>
-            <button onclick="toggleChat()" style="background:none; border:none; color:white; cursor:pointer;"><i data-lucide="x"></i></button>
-        </div>
-        <div class="chatbot-messages" id="chatMessages">
-            <div class="msg bot-msg">Hi there! 👋 I am Billzest AI. How can I help you grow your restaurant today?</div>
-        </div>
-        <div class="chatbot-input">
-            <input type="text" id="chatInput" placeholder="Type your message..." onkeypress="handleChat(event)">
-            <button onclick="sendMsg()"><i data-lucide="send" size="18"></i></button>
-        </div>
+        <div class="chatbot-header"><div class="bot-info"><div class="bot-avatar"><i data-lucide="bot" size="20"></i></div><div><h4 style="color:white;">Billzest AI</h4><p style="color:rgba(255,255,255,0.8); font-size:0.7rem;">Online</p></div></div><button onclick="toggleChat()" style="background:none; border:none; color:white; cursor:pointer;"><i data-lucide="x"></i></button></div>
+        <div class="chatbot-messages" id="chatMessages"><div class="msg bot-msg">👋 Hi! I'm Billzest AI. Need help choosing a plan?</div></div>
+        <div class="chatbot-input"><input type="text" id="chatInput" placeholder="Type message..." onkeypress="handleChat(event)"><button onclick="sendMsg()"><i data-lucide="send" size="18"></i></button></div>
     </div>
 
-    <div class="bg-shapes">
-        <div class="shape shape-1"></div>
-        <div class="shape shape-2"></div>
-    </div>
+    <div class="bg-shapes"><div class="shape shape-1"></div><div class="shape shape-2"></div></div>
 
     <header>
-        <a href="index.html" class="logo" style="display:flex; align-items:center; gap:10px; text-decoration:none;">
-            <div style="background: linear-gradient(135deg, var(--primary), var(--secondary)); width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);">
-                <i data-lucide="store" size="22"></i>
-            </div>
-            <span style="background: linear-gradient(to right, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; font-size: 1.5rem;">Billzestpos</span>
-        </a>
+        <a href="index.html" class="logo"><div style="background: linear-gradient(135deg, var(--primary), var(--secondary)); width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white;"><i data-lucide="store" size="22"></i></div><span>Billzestpos</span></a>
         <nav class="desktop-nav">
             <a href="index.html">Home</a>
             <a href="solutions.html">Solutions</a>
             <a href="hardware.html">Hardware</a>
             <a href="pricing.html" class="active">Pricing</a>
             <a href="contact.html">Contact Us</a>
-            <a href="login.html" style="font-weight: 700; color: #334155;">Login</a>
+            <a href="login.html">Login</a>
             <a href="solutions.html" class="nav-btn">Book Demo</a>
         </nav>
         <button class="mobile-menu-btn" onclick="toggleMobileMenu()"><i data-lucide="menu" size="28"></i></button>
     </header>
 
-    <!-- Mobile Nav Overlay -->
     <div class="mobile-nav-overlay" id="mobileNav">
-        <button class="close-menu-btn" onclick="toggleMobileMenu()"><i data-lucide="x" size="32"></i></button>
+        <button class="close-menu-btn" onclick="toggleMobileMenu()">✕</button>
         <a href="index.html">Home</a>
         <a href="solutions.html">Solutions</a>
         <a href="hardware.html">Hardware</a>
         <a href="pricing.html" class="active">Pricing</a>
         <a href="contact.html">Contact Us</a>
-        <a href="login.html" style="font-weight: 700; color: #0f172a;">Login</a>
-        <a href="solutions.html" style="color: var(--primary);">Book Demo</a>
+        <a href="login.html">Login</a>
+        <a href="solutions.html">Book Demo</a>
     </div>
 
     <section class="hero" data-aos="fade-down">
@@ -197,7 +186,7 @@
 
     <section class="pricing-grid">
         <!-- Starter Plan -->
-        <div class="price-card" data-aos="fade-right" data-aos-delay="100">
+        <div class="price-card" data-plan="Starter" data-price-monthly="39" data-price-yearly="31" onclick="selectPlan(this)">
             <h3>Starter</h3>
             <div class="price">
                 <span class="price-currency">$</span>
@@ -205,18 +194,18 @@
                 <span class="price-period">/mo</span>
             </div>
             <p style="color: var(--text-gray); margin-bottom: 20px;">Perfect for small cafes and food trucks.</p>
-            <a href="contact.html" class="btn-plan outline">Start Free Trial</a>
+            <button class="btn-plan outline">Choose Plan</button>
             
             <ul class="features-list">
-                <li><i data-lucide="check-circle-2"></i> 1 POS Register</li>
-                <li><i data-lucide="check-circle-2"></i> Basic Inventory</li>
-                <li><i data-lucide="check-circle-2"></i> Standard Reporting</li>
-                <li><i data-lucide="check-circle-2"></i> Email Support</li>
+                <li><i data-lucide="check-circle-2" size="16"></i> 1 POS Register</li>
+                <li><i data-lucide="check-circle-2" size="16"></i> Basic Inventory</li>
+                <li><i data-lucide="check-circle-2" size="16"></i> Standard Reporting</li>
+                <li><i data-lucide="check-circle-2" size="16"></i> Email Support</li>
             </ul>
         </div>
 
         <!-- Professional Plan -->
-        <div class="price-card popular" data-aos="fade-up">
+        <div class="price-card popular" data-plan="Professional" data-price-monthly="79" data-price-yearly="63" onclick="selectPlan(this)">
             <div class="popular-badge">MOST POPULAR</div>
             <h3>Professional</h3>
             <div class="price">
@@ -225,117 +214,91 @@
                 <span class="price-period">/mo</span>
             </div>
             <p style="color: var(--text-gray); margin-bottom: 20px;">Ideal for growing restaurants and chains.</p>
-            <a href="solutions.html" class="btn-plan solid">Book a Demo</a>
+            <button class="btn-plan solid">Choose Plan</button>
             
             <ul class="features-list">
-                <li><i data-lucide="check-circle-2"></i> 3 POS Registers</li>
-                <li><i data-lucide="check-circle-2"></i> Kitchen Display System</li>
-                <li><i data-lucide="check-circle-2"></i> Advanced Billzest BI</li>
-                <li><i data-lucide="check-circle-2"></i> Waiter App Integration</li>
-                <li><i data-lucide="check-circle-2"></i> 24/7 Priority Support</li>
+                <li><i data-lucide="check-circle-2" size="16"></i> 3 POS Registers</li>
+                <li><i data-lucide="check-circle-2" size="16"></i> Kitchen Display System</li>
+                <li><i data-lucide="check-circle-2" size="16"></i> Advanced Billzest BI</li>
+                <li><i data-lucide="check-circle-2" size="16"></i> Waiter App Integration</li>
+                <li><i data-lucide="check-circle-2" size="16"></i> 24/7 Priority Support</li>
             </ul>
         </div>
 
         <!-- Enterprise Plan -->
-        <div class="price-card" data-aos="fade-left" data-aos-delay="100">
+        <div class="price-card" data-plan="Enterprise" data-price="custom" onclick="selectPlan(this)">
             <h3>Enterprise</h3>
             <div class="price">
-                <span class="price-amount" style="font-size: 2.5rem; align-items:center;">Custom</span>
+                <span class="price-amount" style="font-size: 2rem;">Custom</span>
             </div>
             <p style="color: var(--text-gray); margin-bottom: 20px;">For large franchises with custom needs.</p>
-            <a href="contact.html" class="btn-plan outline">Contact Sales</a>
+            <button class="btn-plan outline">Contact Sales</button>
             
             <ul class="features-list">
-                <li><i data-lucide="check-circle-2"></i> Unlimited Registers</li>
-                <li><i data-lucide="check-circle-2"></i> Custom API Integrations</li>
-                <li><i data-lucide="check-circle-2"></i> Multi-branch Management</li>
-                <li><i data-lucide="check-circle-2"></i> Dedicated Account Manager</li>
+                <li><i data-lucide="check-circle-2" size="16"></i> Unlimited Registers</li>
+                <li><i data-lucide="check-circle-2" size="16"></i> Custom API Integrations</li>
+                <li><i data-lucide="check-circle-2" size="16"></i> Multi-branch Management</li>
+                <li><i data-lucide="check-circle-2" size="16"></i> Dedicated Account Manager</li>
             </ul>
         </div>
     </section>
 
+    <!-- Subscription Modal -->
+    <div id="subscriptionModal" class="modal">
+        <div class="modal-content">
+            <h3 id="modalTitle">Subscribe to <span id="planName"></span></h3>
+            <form id="subscriptionForm">
+                <input type="hidden" id="selectedPlan">
+                <input type="hidden" id="selectedPrice">
+                <input type="hidden" id="billingCycle" value="monthly">
+                <div class="form-group"><label>Full Name *</label><input type="text" id="fullName" required placeholder="John Doe"></div>
+                <div class="form-group"><label>Email *</label><input type="email" id="email" required placeholder="john@example.com"></div>
+                <div class="form-group"><label>Phone *</label><input type="tel" id="phone" required placeholder="+1 234 567 890"></div>
+                <div class="form-group"><label>Restaurant Name *</label><input type="text" id="restaurantName" required placeholder="Your Restaurant"></div>
+                <div class="form-group"><label>Number of Locations</label><select id="locations"><option value="1">1 Location</option><option value="2">2 Locations</option><option value="3">3-5 Locations</option><option value="5">5+ Locations</option></select></div>
+                <div class="form-group"><label>Additional Notes</label><textarea id="notes" placeholder="Any special requirements?"></textarea></div>
+                <div class="modal-buttons"><button type="submit" class="btn-submit-modal">Submit Request</button><button type="button" class="btn-cancel-modal" onclick="closeModal()">Cancel</button></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Messages -->
+    <div id="successMsg" class="success-message"><i data-lucide="check-circle" size="18"></i> <span id="successText"></span></div>
+    <div id="errorMsg" class="error-message"><i data-lucide="alert-circle" size="18"></i> <span id="errorText"></span></div>
+
     <footer>
-        <div class="footer-logo" style="display:flex; align-items:center; justify-content:center; gap:10px;">
-            <div style="background: linear-gradient(135deg, var(--primary), var(--secondary)); width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);">
-                <i data-lucide="store" size="26"></i>
-            </div>
-            <span style="background: linear-gradient(to right, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; font-size: 2rem;">Billzestpos</span>
-        </div>
-        <div class="footer-contact">
-            <a href="mailto:billzestai@gmail.com"><i data-lucide="mail"></i> billzestai@gmail.com</a>
-            <a href="tel:+966550898978"><i data-lucide="phone"></i> +966550898978</a>
-        </div>
-        <div class="footer-links">
-            <a href="index.html">Home</a>
-            <a href="solutions.html">Solutions</a>
-            <a href="hardware.html">Hardware</a>
-            <a href="pricing.html">Pricing</a>
-            <a href="contact.html">Contact Us</a>
-        </div>
-        <p class="copyright">&copy; 2026 Billzestpos. All rights reserved.</p>
+        <div class="footer-logo"><div style="background: linear-gradient(135deg, var(--primary), var(--secondary)); width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white;"><i data-lucide="store" size="26"></i></div><span>Billzestpos</span></div>
+        <div class="footer-contact"><a href="mailto:billzestai@gmail.com"><i data-lucide="mail"></i> billzestai@gmail.com</a><a href="tel:+966550898978"><i data-lucide="phone"></i> +966550898978</a></div>
+        <div class="footer-links"><a href="index.html">Home</a><a href="solutions.html">Solutions</a><a href="hardware.html">Hardware</a><a href="pricing.html">Pricing</a><a href="contact.html">Contact Us</a></div>
+        <div class="copyright">© 2026 Billzestpos. All rights reserved.</div>
     </footer>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // Firebase Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyCN0akvFXOHM6WPHv9ve9noqqmauO3TJRY",
+            authDomain: "billzest-pos.firebaseapp.com",
+            projectId: "billzest-pos",
+            storageBucket: "billzest-pos.firebasestorage.app",
+            messagingSenderId: "946546876429",
+            appId: "1:946546876429:web:9b4a7aa3cecbf3aea83544",
+            measurementId: "G-69WEHH9X5D"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
         lucide.createIcons();
         AOS.init({ once: true });
 
-        // Mobile Menu Logic
-        function toggleMobileMenu() {
-            const menu = document.getElementById('mobileNav');
-            menu.classList.toggle('open');
-        }
-
-        // AI Chatbot Logic
-        function toggleChat() {
-            const chat = document.getElementById('chatbot');
-            chat.classList.toggle('active');
-        }
-
-        function handleChat(e) {
-            if (e.key === 'Enter') sendMsg();
-        }
-
-        function sendMsg() {
-            const input = document.getElementById('chatInput');
-            const text = input.value.trim();
-            if (!text) return;
-
-            const chatMessages = document.getElementById('chatMessages');
-            
-            // Add user message
-            const userMsg = document.createElement('div');
-            userMsg.className = 'msg user-msg';
-            userMsg.innerText = text;
-            chatMessages.appendChild(userMsg);
-            
-            input.value = '';
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-
-            // Simulate AI typing delay
-            setTimeout(() => {
-                const aiMsg = document.createElement('div');
-                aiMsg.className = 'msg bot-msg';
-                
-                // Simple Mock AI Logic
-                const lower = text.toLowerCase();
-                if (lower.includes('price') || lower.includes('cost')) {
-                    aiMsg.innerText = "Our plans start at just $39/mo! You can visit our Pricing page to see more details.";
-                } else if (lower.includes('demo')) {
-                    aiMsg.innerText = "Awesome! You can book a free demo by clicking the 'Book Demo' button at the top of the page.";
-                } else if (lower.includes('contact') || lower.includes('phone')) {
-                    aiMsg.innerText = "You can reach us directly on WhatsApp or call +966550898978.";
-                } else {
-                    aiMsg.innerText = "Thanks for your message! Our team will get back to you shortly. You can also book a demo to see Billzestpos in action.";
-                }
-                
-                chatMessages.appendChild(aiMsg);
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-            }, 1000);
-        }
-
-        // Pricing Toggle Logic
         let isYearly = false;
+        let currentPlan = {};
+
+        // Pricing Toggle
         function togglePricing() {
             const toggle = document.getElementById('toggle-switch');
             const monthlyLabel = document.getElementById('monthly-label');
@@ -348,8 +311,6 @@
                 toggle.classList.add('active');
                 monthlyLabel.style.color = '#1e293b';
                 yearlyLabel.style.color = 'var(--primary)';
-                
-                // Fade effect
                 amounts.forEach(el => {
                     el.style.opacity = '0';
                     setTimeout(() => {
@@ -361,7 +322,6 @@
                 toggle.classList.remove('active');
                 monthlyLabel.style.color = 'var(--primary)';
                 yearlyLabel.style.color = '#1e293b';
-                
                 amounts.forEach(el => {
                     el.style.opacity = '0';
                     setTimeout(() => {
@@ -371,6 +331,137 @@
                 });
             }
         }
+
+        // Select Plan
+        window.selectPlan = (card) => {
+            const plan = card.getAttribute('data-plan');
+            let price = '';
+            let billing = isYearly ? 'yearly' : 'monthly';
+            
+            if (plan === 'Enterprise') {
+                price = 'Custom pricing';
+            } else {
+                const amount = isYearly ? card.getAttribute('data-price-yearly') : card.getAttribute('data-price-monthly');
+                price = `$${amount}/month${isYearly ? ' (billed annually)' : ''}`;
+            }
+            
+            currentPlan = { name: plan, price: price, billing: billing };
+            document.getElementById('planName').innerText = plan;
+            document.getElementById('selectedPlan').value = plan;
+            document.getElementById('selectedPrice').value = price;
+            document.getElementById('billingCycle').value = billing;
+            document.getElementById('subscriptionModal').style.display = 'flex';
+        };
+
+        function closeModal() {
+            document.getElementById('subscriptionModal').style.display = 'none';
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.getElementById('successMsg');
+            document.getElementById('successText').innerText = message;
+            successDiv.style.display = 'flex';
+            setTimeout(() => { successDiv.style.display = 'none'; }, 5000);
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMsg');
+            document.getElementById('errorText').innerText = message;
+            errorDiv.style.display = 'flex';
+            setTimeout(() => { errorDiv.style.display = 'none'; }, 5000);
+        }
+
+        // Submit Subscription Request to Firebase
+        const subscriptionForm = document.getElementById('subscriptionForm');
+        
+        subscriptionForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const fullName = document.getElementById('fullName').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const restaurantName = document.getElementById('restaurantName').value;
+            const locations = document.getElementById('locations').value;
+            const notes = document.getElementById('notes').value;
+            const plan = document.getElementById('selectedPlan').value;
+            const price = document.getElementById('selectedPrice').value;
+            const billing = document.getElementById('billingCycle').value;
+
+            if (!fullName || !email || !phone || !restaurantName) {
+                showError('Please fill all required fields');
+                return;
+            }
+
+            const submitBtn = document.querySelector('#subscriptionForm .btn-submit-modal');
+            const originalText = submitBtn.innerText;
+            submitBtn.disabled = true;
+            submitBtn.innerText = 'Submitting...';
+
+            try {
+                const docRef = await addDoc(collection(db, "subscriptions"), {
+                    fullName: fullName,
+                    email: email,
+                    phone: phone,
+                    restaurantName: restaurantName,
+                    plan: plan,
+                    price: price,
+                    billingCycle: billing,
+                    locations: locations,
+                    notes: notes || 'No additional notes',
+                    status: 'pending',
+                    createdAt: serverTimestamp(),
+                    read: false
+                });
+
+                console.log("Subscription saved with ID: ", docRef.id);
+                showSuccess(`Thank you ${fullName}! Our sales team will contact you within 24 hours to complete your ${plan} plan subscription.`);
+                closeModal();
+                subscriptionForm.reset();
+                
+            } catch (error) {
+                console.error("Error saving subscription:", error);
+                showError('Something went wrong. Please try again.');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerText = originalText;
+            }
+        });
+
+        // Mobile Menu & Chat Functions
+        function toggleMobileMenu() { document.getElementById('mobileNav').classList.toggle('open'); }
+        function toggleChat() { document.getElementById('chatbot').classList.toggle('active'); }
+        function handleChat(e) { if(e.key === 'Enter') sendMsg(); }
+        function sendMsg() {
+            const input = document.getElementById('chatInput');
+            const text = input.value.trim();
+            if(!text) return;
+            const container = document.getElementById('chatMessages');
+            container.innerHTML += `<div class="msg user-msg">${text}</div>`;
+            input.value = '';
+            setTimeout(() => {
+                let reply = "Thanks for your message! Can I help you choose a plan?";
+                if(text.toLowerCase().includes('price')) reply = "💰 Our Starter plan is $39/mo, Professional is $79/mo. Save 20% with yearly billing!";
+                if(text.toLowerCase().includes('demo')) reply = "🎉 Click 'Book Demo' button at the top to schedule a free demo!";
+                if(text.toLowerCase().includes('compare')) reply = "📊 Starter: 1 register, basic features. Professional: 3 registers, KDS, BI, priority support.";
+                container.innerHTML += `<div class="msg bot-msg">${reply}</div>`;
+                container.scrollTop = container.scrollHeight;
+            }, 500);
+        }
+
+        // Close modal on outside click
+        window.onclick = (e) => {
+            const modal = document.getElementById('subscriptionModal');
+            if (e.target === modal) closeModal();
+            if (!e.target.closest('.user-profile')) document.getElementById('profileDropdown')?.classList.remove('show');
+        };
+
+        window.togglePricing = togglePricing;
+        window.selectPlan = selectPlan;
+        window.closeModal = closeModal;
+        window.toggleMobileMenu = toggleMobileMenu;
+        window.toggleChat = toggleChat;
+        window.handleChat = handleChat;
+        window.sendMsg = sendMsg;
     </script>
 </body>
 </html>
