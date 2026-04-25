@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pricing - Billzestpos</title>
+    <title>Pricing - BillzestPOS</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -14,7 +14,6 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         body { background: linear-gradient(135deg, #f0f9ff 0%, #e0e7ff 100%); color: var(--dark); line-height: 1.6; overflow-x: hidden; }
 
-        /* Floating Actions Container */
         .floating-actions { position: fixed; bottom: 30px; right: 30px; display: flex; flex-direction: column; gap: 15px; z-index: 1000; }
         .whatsapp-float, .ai-float { width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; cursor: pointer; border: none; box-shadow: 0 10px 20px rgba(0,0,0,0.2); transition: transform 0.3s ease; }
         .whatsapp-float { background-color: #25d366; text-decoration: none; animation: pulse 2s infinite; }
@@ -22,7 +21,6 @@
         .whatsapp-float:hover, .ai-float:hover { transform: scale(1.1); animation: none; }
         @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); } 100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); } }
 
-        /* AI Chatbot Widget */
         .chatbot-container { position: fixed; bottom: 100px; right: 30px; width: 350px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,1); border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.15); z-index: 1001; display: flex; flex-direction: column; overflow: hidden; transform-origin: bottom right; transition: all 0.3s ease; opacity: 0; transform: scale(0.5); pointer-events: none; }
         .chatbot-container.active { opacity: 1; transform: scale(1); pointer-events: all; }
         .chatbot-header { background: linear-gradient(to right, var(--primary), var(--secondary)); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
@@ -33,7 +31,7 @@
         .bot-msg { background: white; color: #334155; align-self: flex-start; border-bottom-left-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;}
         .user-msg { background: var(--primary); color: white; align-self: flex-end; border-bottom-right-radius: 5px; box-shadow: 0 2px 5px rgba(79, 70, 229, 0.2); }
         .chatbot-input { padding: 15px; background: white; border-top: 1px solid #e2e8f0; display: flex; gap: 10px; }
-        .chatbot-input input { flex-grow: 1; padding: 10px 15px; border: 1px solid #cbd5e1; border-radius: 20px; outline: none; font-size: 0.95rem; transition: border-color 0.3s; }
+        .chatbot-input input { flex-grow: 1; padding: 10px 15px; border: 1px solid #cbd5e1; border-radius: 20px; outline: none; font-size: 0.95rem; }
         .chatbot-input input:focus { border-color: var(--primary); }
         .chatbot-input button { width: 40px; height: 40px; border-radius: 50%; background: var(--primary); color: white; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.3s; }
         .chatbot-input button:hover { background: var(--primary-dark); }
@@ -43,7 +41,6 @@
         .shape-1 { background: rgba(79, 70, 229, 0.2); width: 500px; height: 500px; top: -200px; right: -100px; }
         .shape-2 { background: rgba(236, 72, 153, 0.2); width: 400px; height: 400px; bottom: 100px; left: -150px; }
 
-        /* Header Navigation */
         header { padding: 20px 5%; display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255, 255, 255, 0.5); position: sticky; top: 0; z-index: 100; }
         .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
         .logo span { background: linear-gradient(to right, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; font-size: 1.5rem; }
@@ -53,7 +50,6 @@
         .nav-btn { background: var(--primary); color: white; padding: 10px 20px; border-radius: 10px; font-weight: 600; }
         .nav-btn:hover { color: white; background: var(--primary-dark); }
 
-        /* Mobile Hamburger Menu */
         .mobile-menu-btn { display: none; background: none; border: none; color: #0f172a; cursor: pointer; }
         .mobile-nav-overlay { position: fixed; top: 0; right: -100%; width: 100%; height: 100vh; background: rgba(255,255,255,0.98); backdrop-filter: blur(10px); z-index: 999; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 30px; transition: right 0.4s cubic-bezier(0.77, 0, 0.175, 1); }
         .mobile-nav-overlay.open { right: 0; }
@@ -67,7 +63,6 @@
         .hero h1 { font-size: 3.5rem; font-weight: 800; margin-bottom: 20px; background: linear-gradient(to right, #1e293b, #4f46e5); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1.2; }
         .hero p { font-size: 1.2rem; color: var(--text-gray); max-width: 600px; margin: 0 auto; }
 
-        /* Pricing Toggle */
         .pricing-toggle { display: flex; align-items: center; justify-content: center; gap: 15px; margin: 40px 0; }
         .pricing-toggle span { font-weight: 600; color: #1e293b; font-size: 1.1rem; }
         .toggle-switch { position: relative; width: 64px; height: 32px; background: #cbd5e1; border-radius: 32px; cursor: pointer; transition: background 0.3s; }
@@ -98,28 +93,6 @@
         .btn-plan.outline:hover { background: rgba(79, 70, 229, 0.05); transform: translateY(-2px); }
         .btn-plan.solid { background: linear-gradient(to right, var(--primary), var(--secondary)); color: white; border: none; box-shadow: 0 10px 20px rgba(236, 72, 153, 0.2); }
         .btn-plan.solid:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(236, 72, 153, 0.3); }
-
-        /* Modal Styles */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center; }
-        .modal-content { background: white; border-radius: 24px; padding: 35px; width: 90%; max-width: 550px; position: relative; max-height: 85vh; overflow-y: auto; }
-        .modal-content h3 { font-size: 1.5rem; margin-bottom: 20px; color: #0f172a; }
-        .modal-content h4 { font-size: 1rem; margin: 15px 0 10px; color: var(--primary); }
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 5px; font-weight: 500; color: #334155; font-size: 0.85rem; }
-        .form-group label .required { color: #ef4444; }
-        .form-control { width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 12px; font-size: 0.9rem; transition: all 0.3s; }
-        .form-control:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79,70,229,0.1); }
-        textarea.form-control { resize: vertical; min-height: 80px; }
-        .modal-buttons { display: flex; gap: 10px; justify-content: flex-end; margin-top: 25px; }
-        .modal-buttons button { padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; }
-        .btn-submit-modal { background: linear-gradient(to right, var(--primary), var(--secondary)); color: white; border: none; }
-        .btn-cancel-modal { background: #e2e8f0; border: none; color: #334155; }
-        .divider { height: 1px; background: #e2e8f0; margin: 20px 0; }
-
-        .success-message, .error-message { position: fixed; top: 20px; right: 20px; padding: 15px 20px; border-radius: 12px; z-index: 2001; display: none; align-items: center; gap: 10px; animation: slideIn 0.3s ease; }
-        .success-message { background: #d1fae5; color: #065f46; }
-        .error-message { background: #fee2e2; color: #dc2626; }
-        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
         footer { background: #020617; color: #94a3b8; padding: 60px 5% 30px; text-align: center; }
         .footer-logo { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 25px; }
@@ -154,7 +127,7 @@
     <div class="bg-shapes"><div class="shape shape-1"></div><div class="shape shape-2"></div></div>
 
     <header>
-        <a href="index.html" class="logo"><div style="background: linear-gradient(135deg, var(--primary), var(--secondary)); width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white;"><i data-lucide="store" size="22"></i></div><span>Billzestpos</span></a>
+        <a href="index.html" class="logo"><div style="background: linear-gradient(135deg, var(--primary), var(--secondary)); width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white;"><i data-lucide="store" size="22"></i></div><span>BillzestPOS</span></a>
         <nav class="desktop-nav">
             <a href="index.html">Home</a>
             <a href="solutions.html">Solutions</a>
@@ -193,7 +166,7 @@
 
     <section class="pricing-grid">
         <!-- Starter Plan -->
-        <div class="price-card" data-plan="Starter" data-price-monthly="39" data-price-yearly="31" onclick="selectPlan(this)">
+        <div class="price-card" data-plan="Starter" data-price-monthly="39" data-price-yearly="31" onclick="selectPlan('Starter', this)">
             <h3>Starter</h3>
             <div class="price">
                 <span class="price-currency">$</span>
@@ -212,7 +185,7 @@
         </div>
 
         <!-- Professional Plan -->
-        <div class="price-card popular" data-plan="Professional" data-price-monthly="79" data-price-yearly="63" onclick="selectPlan(this)">
+        <div class="price-card popular" data-plan="Professional" data-price-monthly="79" data-price-yearly="63" onclick="selectPlan('Professional', this)">
             <div class="popular-badge">MOST POPULAR</div>
             <h3>Professional</h3>
             <div class="price">
@@ -233,7 +206,7 @@
         </div>
 
         <!-- Enterprise Plan -->
-        <div class="price-card" data-plan="Enterprise" data-price="custom" onclick="selectPlan(this)">
+        <div class="price-card" data-plan="Enterprise" data-price-monthly="custom" data-price-yearly="custom" onclick="selectPlan('Enterprise', this)">
             <h3>Enterprise</h3>
             <div class="price">
                 <span class="price-amount" style="font-size: 2rem;">Custom</span>
@@ -250,82 +223,20 @@
         </div>
     </section>
 
-    <!-- Subscription Modal with GST and Business Details -->
-    <div id="subscriptionModal" class="modal">
-        <div class="modal-content">
-            <h3>Subscribe to <span id="planName"></span></h3>
-            <form id="subscriptionForm">
-                <input type="hidden" id="selectedPlan">
-                <input type="hidden" id="selectedPrice">
-                <input type="hidden" id="billingCycle" value="monthly">
-                
-                <!-- Personal Information -->
-                <h4>Personal Information</h4>
-                <div class="form-group"><label>Full Name <span class="required">*</span></label><input type="text" id="fullName" class="form-control" required placeholder="John Doe"></div>
-                <div class="form-group"><label>Email Address <span class="required">*</span></label><input type="email" id="email" class="form-control" required placeholder="john@example.com"></div>
-                <div class="form-group"><label>Phone Number <span class="required">*</span></label><input type="tel" id="phone" class="form-control" required placeholder="+1 234 567 890"></div>
-                
-                <div class="divider"></div>
-                
-                <!-- Business Details -->
-                <h4>Business Details</h4>
-                <div class="form-group"><label>Restaurant Name <span class="required">*</span></label><input type="text" id="restaurantName" class="form-control" required placeholder="My Restaurant"></div>
-                <div class="form-group"><label>GST Number (if registered)</label><input type="text" id="gstNumber" class="form-control" placeholder="22AAAAA0000A1Z"></div>
-                <div class="form-group"><label>PAN Number</label><input type="text" id="panNumber" class="form-control" placeholder="AAAAA1234A"></div>
-                <div class="form-group"><label>Business Address <span class="required">*</span></label><textarea id="address" class="form-control" required placeholder="Full business address with city, state, pincode"></textarea></div>
-                
-                <div class="divider"></div>
-                
-                <!-- Subscription Details -->
-                <h4>Subscription Details</h4>
-                <div class="form-group"><label>Number of Locations</label><select id="locations"><option value="1">1 Location</option><option value="2">2 Locations</option><option value="3">3-5 Locations</option><option value="5">5+ Locations</option></select></div>
-                <div class="form-group"><label>Additional Requirements</label><textarea id="notes" class="form-control" placeholder="Any specific requirements or questions?"></textarea></div>
-                
-                <div class="modal-buttons">
-                    <button type="submit" class="btn-submit-modal">Submit & Proceed</button>
-                    <button type="button" class="btn-cancel-modal" onclick="closeModal()">Cancel</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Toast Messages -->
-    <div id="successMsg" class="success-message"><i data-lucide="check-circle" size="18"></i> <span id="successText"></span></div>
-    <div id="errorMsg" class="error-message"><i data-lucide="alert-circle" size="18"></i> <span id="errorText"></span></div>
-
     <footer>
-        <div class="footer-logo"><div style="background: linear-gradient(135deg, var(--primary), var(--secondary)); width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white;"><i data-lucide="store" size="26"></i></div><span>Billzestpos</span></div>
+        <div class="footer-logo"><div style="background: linear-gradient(135deg, var(--primary), var(--secondary)); width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white;"><i data-lucide="store" size="26"></i></div><span>BillzestPOS</span></div>
         <div class="footer-contact"><a href="mailto:billzestai@gmail.com"><i data-lucide="mail"></i> billzestai@gmail.com</a><a href="tel:+966550898978"><i data-lucide="phone"></i> +966550898978</a></div>
         <div class="footer-links"><a href="index.html">Home</a><a href="solutions.html">Solutions</a><a href="hardware.html">Hardware</a><a href="pricing.html">Pricing</a><a href="contact.html">Contact Us</a></div>
-        <div class="copyright">© 2026 Billzestpos. All rights reserved.</div>
+        <div class="copyright">© 2026 BillzestPOS. All rights reserved.</div>
     </footer>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-        // Firebase Config
-        const firebaseConfig = {
-            apiKey: "AIzaSyCN0akvFXOHM6WPHv9ve9noqqmauO3TJRY",
-            authDomain: "billzest-pos.firebaseapp.com",
-            projectId: "billzest-pos",
-            storageBucket: "billzest-pos.firebasestorage.app",
-            messagingSenderId: "946546876429",
-            appId: "1:946546876429:web:9b4a7aa3cecbf3aea83544",
-            measurementId: "G-69WEHH9X5D"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
+    <script>
         lucide.createIcons();
         AOS.init({ once: true });
 
         let isYearly = false;
-        let currentPlan = {};
 
-        // Pricing Toggle
         function togglePricing() {
             const toggle = document.getElementById('toggle-switch');
             const monthlyLabel = document.getElementById('monthly-label');
@@ -339,153 +250,44 @@
                 monthlyLabel.style.color = '#1e293b';
                 yearlyLabel.style.color = 'var(--primary)';
                 amounts.forEach(el => {
-                    el.style.opacity = '0';
-                    setTimeout(() => {
-                        el.innerText = el.getAttribute('data-yearly');
-                        el.style.opacity = '1';
-                    }, 150);
+                    if(el.getAttribute('data-yearly') !== 'custom') {
+                        el.style.opacity = '0';
+                        setTimeout(() => {
+                            el.innerText = el.getAttribute('data-yearly');
+                            el.style.opacity = '1';
+                        }, 150);
+                    }
                 });
             } else {
                 toggle.classList.remove('active');
                 monthlyLabel.style.color = 'var(--primary)';
                 yearlyLabel.style.color = '#1e293b';
                 amounts.forEach(el => {
-                    el.style.opacity = '0';
-                    setTimeout(() => {
-                        el.innerText = el.getAttribute('data-monthly');
-                        el.style.opacity = '1';
-                    }, 150);
+                    if(el.getAttribute('data-monthly') !== 'custom') {
+                        el.style.opacity = '0';
+                        setTimeout(() => {
+                            el.innerText = el.getAttribute('data-monthly');
+                            el.style.opacity = '1';
+                        }, 150);
+                    }
                 });
             }
         }
 
-        // Select Plan
-        window.selectPlan = (card) => {
-            const plan = card.getAttribute('data-plan');
-            let price = '';
-            let billing = isYearly ? 'yearly' : 'monthly';
-            
-            if (plan === 'Enterprise') {
-                price = 'Custom pricing';
+        // Updated: Payment Request Page pe redirect
+        function selectPlan(planName, element) {
+            let price;
+            if (planName === 'Enterprise') {
+                price = 'custom';
             } else {
-                const amount = isYearly ? card.getAttribute('data-price-yearly') : card.getAttribute('data-price-monthly');
-                price = `$${amount}/month${isYearly ? ' (billed annually)' : ''}`;
+                price = isYearly ? element.getAttribute('data-price-yearly') : element.getAttribute('data-price-monthly');
             }
             
-            currentPlan = { name: plan, price: price, billing: billing };
-            document.getElementById('planName').innerText = plan;
-            document.getElementById('selectedPlan').value = plan;
-            document.getElementById('selectedPrice').value = price;
-            document.getElementById('billingCycle').value = billing;
-            document.getElementById('subscriptionModal').style.display = 'flex';
-        };
-
-        function closeModal() {
-            document.getElementById('subscriptionModal').style.display = 'none';
+            // Redirect to payment request page
+            window.location.href = `payment-request.html?plan=${encodeURIComponent(planName)}&price=${price}&billing=${isYearly ? 'yearly' : 'monthly'}`;
         }
 
-        function showSuccess(message) {
-            const successDiv = document.getElementById('successMsg');
-            document.getElementById('successText').innerText = message;
-            successDiv.style.display = 'flex';
-            setTimeout(() => { successDiv.style.display = 'none'; }, 5000);
-        }
-
-        function showError(message) {
-            const errorDiv = document.getElementById('errorMsg');
-            document.getElementById('errorText').innerText = message;
-            errorDiv.style.display = 'flex';
-            setTimeout(() => { errorDiv.style.display = 'none'; }, 5000);
-        }
-
-        // Submit Subscription Request to Firebase
-        const subscriptionForm = document.getElementById('subscriptionForm');
-        
-        subscriptionForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const fullName = document.getElementById('fullName').value;
-            const email = document.getElementById('email').value;
-            const phone = document.getElementById('phone').value;
-            const restaurantName = document.getElementById('restaurantName').value;
-            const gstNumber = document.getElementById('gstNumber').value;
-            const panNumber = document.getElementById('panNumber').value;
-            const address = document.getElementById('address').value;
-            const locations = document.getElementById('locations').value;
-            const notes = document.getElementById('notes').value;
-            const plan = document.getElementById('selectedPlan').value;
-            const price = document.getElementById('selectedPrice').value;
-            const billing = document.getElementById('billingCycle').value;
-
-            if (!fullName || !email || !phone || !restaurantName || !address) {
-                showError('Please fill all required fields');
-                return;
-            }
-
-            const submitBtn = document.querySelector('#subscriptionForm .btn-submit-modal');
-            const originalText = submitBtn.innerText;
-            submitBtn.disabled = true;
-            submitBtn.innerText = 'Submitting...';
-
-            try {
-                // Save to Firebase
-                const docRef = await addDoc(collection(db, "subscriptions"), {
-                    fullName: fullName,
-                    email: email,
-                    phone: phone,
-                    restaurantName: restaurantName,
-                    gstNumber: gstNumber || 'Not provided',
-                    panNumber: panNumber || 'Not provided',
-                    businessAddress: address,
-                    plan: plan,
-                    price: price,
-                    billingCycle: billing,
-                    locations: locations,
-                    notes: notes || 'No additional notes',
-                    status: 'pending',
-                    createdAt: serverTimestamp(),
-                    read: false
-                });
-
-                // Also save to localStorage for customer dashboard
-                const customerData = {
-                    name: fullName,
-                    email: email,
-                    phone: phone,
-                    restaurantName: restaurantName,
-                    gst: gstNumber || 'Not registered',
-                    pan: panNumber || 'Not provided',
-                    address: address,
-                    plan: plan,
-                    price: plan === 'Enterprise' ? 0 : (isYearly ? (plan === 'Starter' ? 31 : 63) : (plan === 'Starter' ? 39 : 79)),
-                    billingCycle: billing,
-                    subscriptionStart: new Date().toISOString().split('T')[0],
-                    subscriptionEnd: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
-                };
-                localStorage.setItem('customerData', JSON.stringify(customerData));
-                localStorage.setItem('user', JSON.stringify({ name: fullName, email: email, loggedIn: true }));
-
-                console.log("Subscription saved with ID: ", docRef.id);
-                showSuccess(`Thank you ${fullName}! Your subscription request has been received. Our team will contact you within 24 hours to complete the process.`);
-                
-                // Reset form and close modal
-                setTimeout(() => {
-                    window.location.href = 'customer-dashboard.html';
-                }, 2000);
-                
-                closeModal();
-                subscriptionForm.reset();
-                
-            } catch (error) {
-                console.error("Error saving subscription:", error);
-                showError('Something went wrong. Please try again.');
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.innerText = originalText;
-            }
-        });
-
-        // Mobile Menu & Chat Functions
+        // Chatbot Functions
         function toggleMobileMenu() { document.getElementById('mobileNav').classList.toggle('open'); }
         function toggleChat() { document.getElementById('chatbot').classList.toggle('active'); }
         function handleChat(e) { if(e.key === 'Enter') sendMsg(); }
@@ -499,22 +301,14 @@
             setTimeout(() => {
                 let reply = "Thanks for your message! Can I help you choose a plan?";
                 if(text.toLowerCase().includes('price')) reply = "💰 Our Starter plan is $39/mo, Professional is $79/mo. Save 20% with yearly billing!";
-                if(text.toLowerCase().includes('gst')) reply = "🏢 Yes! We collect GST details for tax invoices. All our invoices are GST compliant.";
-                if(text.toLowerCase().includes('demo')) reply = "🎉 Fill out the subscription form and our team will schedule a free demo!";
+                if(text.toLowerCase().includes('demo')) reply = "🎉 Click 'Book Demo' button at the top to schedule a free demo!";
                 container.innerHTML += `<div class="msg bot-msg">${reply}</div>`;
                 container.scrollTop = container.scrollHeight;
             }, 500);
         }
 
-        // Close modal on outside click
-        window.onclick = (e) => {
-            const modal = document.getElementById('subscriptionModal');
-            if (e.target === modal) closeModal();
-        };
-
         window.togglePricing = togglePricing;
         window.selectPlan = selectPlan;
-        window.closeModal = closeModal;
         window.toggleMobileMenu = toggleMobileMenu;
         window.toggleChat = toggleChat;
         window.handleChat = handleChat;
