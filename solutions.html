@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pricing - Billzestpos</title>
+    <title>Solutions - Billzestpos</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -67,52 +67,49 @@
         .hero h1 { font-size: 3.5rem; font-weight: 800; margin-bottom: 20px; background: linear-gradient(to right, #1e293b, #4f46e5); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1.2; }
         .hero p { font-size: 1.2rem; color: var(--text-gray); max-width: 600px; margin: 0 auto; }
 
-        /* Pricing Toggle */
-        .pricing-toggle { display: flex; align-items: center; justify-content: center; gap: 15px; margin: 40px 0; }
-        .pricing-toggle span { font-weight: 600; color: #1e293b; font-size: 1.1rem; }
-        .toggle-switch { position: relative; width: 64px; height: 32px; background: #cbd5e1; border-radius: 32px; cursor: pointer; transition: background 0.3s; }
-        .toggle-switch.active { background: var(--primary); }
-        .toggle-knob { position: absolute; top: 4px; left: 4px; width: 24px; height: 24px; background: white; border-radius: 50%; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        .toggle-switch.active .toggle-knob { transform: translateX(32px); }
-        .discount-badge { background: rgba(236, 72, 153, 0.1); color: var(--secondary); padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; margin-left: 10px; }
+        .solutions { padding: 40px 5% 80px; max-width: 1250px; margin: 0 auto; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 40px 30px; }
 
-        .pricing-grid { padding: 0 5% 80px; max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; align-items: center; }
+        .card { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,1); border-radius: 20px; overflow: hidden; transition: all 0.3s ease; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); display: flex; flex-direction: column; cursor: pointer; }
+        .card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12); }
+        .card-img-wrapper { width: 100%; height: 180px; overflow: hidden; background: #e2e8f0; }
+        .card-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+        .card:hover .card-img { transform: scale(1.08); }
+        .card-content { padding: 0 25px 30px; display: flex; flex-direction: column; flex-grow: 1; }
 
-        .price-card { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,1); border-radius: 24px; padding: 40px; text-align: center; transition: all 0.4s ease; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); position: relative; cursor: pointer; }
-        .price-card.popular { background: white; border: 2px solid var(--primary); transform: scale(1.05); box-shadow: 0 20px 40px rgba(79, 70, 229, 0.15); z-index: 10; }
-        .price-card:hover { transform: translateY(-5px); }
-        .popular-badge { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: linear-gradient(to right, var(--primary), var(--secondary)); color: white; padding: 6px 20px; border-radius: 20px; font-weight: 600; font-size: 0.9rem; letter-spacing: 1px; }
+        .icon-box { width: 54px; height: 54px; border-radius: 14px; background: white; display: flex; align-items: center; justify-content: center; margin-top: -27px; margin-bottom: 20px; color: var(--primary); box-shadow: 0 8px 16px rgba(0,0,0,0.1); position: relative; z-index: 2; border: 2px solid #f8fafc; }
+        .card h3 { font-size: 1.3rem; margin-bottom: 12px; font-weight: 700; color: #0f172a; }
+        .card p { color: var(--text-gray); font-size: 0.95rem; flex-grow: 1; line-height: 1.6; }
 
-        .price-card h3 { font-size: 1.5rem; color: #0f172a; margin-bottom: 15px; }
-        .price { font-size: 3.5rem; font-weight: 800; color: #0f172a; margin-bottom: 20px; display: flex; justify-content: center; align-items: flex-start; transition: opacity 0.3s ease; }
-        .price-currency { font-size: 1.5rem; margin-top: 10px; }
-        .price-amount { font-size: 3.5rem; font-weight: 800; }
-        .price-period { font-size: 1rem; color: var(--text-gray); font-weight: 500; align-self: flex-end; margin-bottom: 10px; margin-left: 5px; }
+        .demo-section { background: var(--dark); padding: 80px 5%; color: white; text-align: center; position: relative; }
+        .demo-container { max-width: 600px; margin: 0 auto; background: rgba(255, 255, 255, 0.05); padding: 40px; border-radius: 24px; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+        .demo-section h2 { font-size: 2rem; margin-bottom: 30px; font-weight: 700; }
+        .form-group { margin-bottom: 20px; text-align: left; }
+        .form-group label { display: block; margin-bottom: 8px; font-size: 0.9rem; color: #94a3b8; font-weight: 500; }
+        .form-control { width: 100%; padding: 14px 16px; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 12px; color: white; font-size: 1rem; transition: all 0.3s; }
+        .form-control:focus { outline: none; border-color: var(--primary); background: rgba(255, 255, 255, 0.12); }
+        .form-control::placeholder { color: rgba(255,255,255,0.4); }
+        .btn-submit { width: 100%; padding: 16px; background: linear-gradient(to right, var(--primary), var(--secondary)); color: white; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; margin-top: 10px; }
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(236, 72, 153, 0.3); }
+        .btn-submit:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
 
-        .features-list { list-style: none; margin: 30px 0; text-align: left; }
-        .features-list li { margin-bottom: 15px; display: flex; align-items: center; gap: 10px; color: #334155; font-size: 1rem; }
-        .features-list li i { color: var(--primary); flex-shrink: 0; }
-
-        .btn-plan { display: block; width: 100%; padding: 15px; border-radius: 12px; font-weight: 600; font-size: 1.1rem; text-decoration: none; transition: all 0.3s; cursor: pointer; border: none; text-align: center; }
-        .btn-plan.outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
-        .btn-plan.outline:hover { background: rgba(79, 70, 229, 0.05); transform: translateY(-2px); }
-        .btn-plan.solid { background: linear-gradient(to right, var(--primary), var(--secondary)); color: white; border: none; box-shadow: 0 10px 20px rgba(236, 72, 153, 0.2); }
-        .btn-plan.solid:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(236, 72, 153, 0.3); }
-
-        /* Modal Styles */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center; }
-        .modal-content { background: white; border-radius: 24px; padding: 30px; width: 90%; max-width: 500px; position: relative; }
-        .modal-content h3 { font-size: 1.5rem; margin-bottom: 20px; color: #0f172a; }
-        .modal-content input, .modal-content select, .modal-content textarea { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #e2e8f0; border-radius: 12px; font-size: 1rem; }
-        .modal-buttons { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
-        .modal-buttons button { padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; }
-        .btn-submit-modal { background: var(--primary); color: white; border: none; }
-        .btn-cancel-modal { background: #e2e8f0; border: none; color: #334155; }
-
-        .success-message, .error-message { position: fixed; top: 20px; right: 20px; padding: 15px 20px; border-radius: 12px; z-index: 2001; display: none; align-items: center; gap: 10px; animation: slideIn 0.3s ease; }
+        .success-message, .error-message { position: fixed; top: 20px; right: 20px; padding: 15px 20px; border-radius: 12px; z-index: 2000; display: none; align-items: center; gap: 10px; animation: slideIn 0.3s ease; }
         .success-message { background: #d1fae5; color: #065f46; }
         .error-message { background: #fee2e2; color: #dc2626; }
         @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+        /* Solution Detail Modal */
+        .solution-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; align-items: center; justify-content: center; }
+        .solution-modal-content { background: white; border-radius: 24px; padding: 40px; width: 90%; max-width: 600px; max-height: 80vh; overflow-y: auto; position: relative; }
+        .solution-modal-content h2 { font-size: 1.8rem; color: #0f172a; margin-bottom: 15px; }
+        .solution-modal-content .solution-icon { width: 70px; height: 70px; background: rgba(79,70,229,0.1); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; color: var(--primary); }
+        .solution-modal-content p { color: #475569; line-height: 1.7; margin-bottom: 20px; }
+        .solution-modal-content .features-list { list-style: none; margin: 20px 0; }
+        .solution-modal-content .features-list li { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; color: #334155; }
+        .solution-modal-content .features-list li i { color: var(--primary); }
+        .close-modal-btn { position: absolute; top: 20px; right: 20px; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #94a3b8; transition: color 0.3s; }
+        .close-modal-btn:hover { color: var(--primary); }
+        .demo-btn-modal { background: linear-gradient(to right, var(--primary), var(--secondary)); color: white; border: none; padding: 12px 24px; border-radius: 12px; font-weight: 600; cursor: pointer; width: 100%; margin-top: 20px; }
 
         footer { background: #020617; color: #94a3b8; padding: 60px 5% 30px; text-align: center; }
         .footer-logo { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 25px; }
@@ -125,8 +122,7 @@
         .footer-links a:hover { color: white; }
         .copyright { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; font-size: 0.8rem; color: #475569; }
 
-        @media (max-width: 900px) { .price-card.popular { transform: none; } }
-        @media (max-width: 768px) { .hero h1 { font-size: 2.5rem; } }
+        @media (max-width: 768px) { .hero h1 { font-size: 2.5rem; } .footer-contact { flex-direction: column; gap: 15px; align-items: center; } }
     </style>
 </head>
 <body>
@@ -140,7 +136,7 @@
 
     <div class="chatbot-container" id="chatbot">
         <div class="chatbot-header"><div class="bot-info"><div class="bot-avatar"><i data-lucide="bot" size="20"></i></div><div><h4 style="color:white;">Billzest AI</h4><p style="color:rgba(255,255,255,0.8); font-size:0.7rem;">Online</p></div></div><button onclick="toggleChat()" style="background:none; border:none; color:white; cursor:pointer;"><i data-lucide="x"></i></button></div>
-        <div class="chatbot-messages" id="chatMessages"><div class="msg bot-msg">👋 Hi! I'm Billzest AI. Need help choosing a plan?</div></div>
+        <div class="chatbot-messages" id="chatMessages"><div class="msg bot-msg">👋 Hi! I'm Billzest AI. How can I help you grow your restaurant?</div></div>
         <div class="chatbot-input"><input type="text" id="chatInput" placeholder="Type message..." onkeypress="handleChat(event)"><button onclick="sendMsg()"><i data-lucide="send" size="18"></i></button></div>
     </div>
 
@@ -150,9 +146,9 @@
         <a href="index.html" class="logo"><div style="background: linear-gradient(135deg, var(--primary), var(--secondary)); width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white;"><i data-lucide="store" size="22"></i></div><span>Billzestpos</span></a>
         <nav class="desktop-nav">
             <a href="index.html">Home</a>
-            <a href="solutions.html">Solutions</a>
+            <a href="solutions.html" class="active">Solutions</a>
             <a href="hardware.html">Hardware</a>
-            <a href="pricing.html" class="active">Pricing</a>
+            <a href="pricing.html">Pricing</a>
             <a href="contact.html">Contact Us</a>
             <a href="login.html">Login</a>
             <a href="solutions.html" class="nav-btn">Book Demo</a>
@@ -163,102 +159,48 @@
     <div class="mobile-nav-overlay" id="mobileNav">
         <button class="close-menu-btn" onclick="toggleMobileMenu()">✕</button>
         <a href="index.html">Home</a>
-        <a href="solutions.html">Solutions</a>
+        <a href="solutions.html" class="active">Solutions</a>
         <a href="hardware.html">Hardware</a>
-        <a href="pricing.html" class="active">Pricing</a>
+        <a href="pricing.html">Pricing</a>
         <a href="contact.html">Contact Us</a>
         <a href="login.html">Login</a>
         <a href="solutions.html">Book Demo</a>
     </div>
 
     <section class="hero" data-aos="fade-down">
-        <h1>Simple, Transparent Pricing</h1>
-        <p>No hidden fees. Choose the perfect plan that fits your restaurant's size and needs.</p>
-        
-        <div class="pricing-toggle">
-            <span id="monthly-label" style="color: var(--primary);">Monthly</span>
-            <div class="toggle-switch" id="toggle-switch" onclick="togglePricing()">
-                <div class="toggle-knob"></div>
-            </div>
-            <span id="yearly-label">Yearly <span class="discount-badge">Save 20%</span></span>
+        <h1>Solutions to Improve Your Business</h1>
+        <p>Discover our comprehensive suite of tools designed to streamline your restaurant operations, engage your customers, and boost overall profitability.</p>
+    </section>
+
+    <section class="solutions">
+        <div class="grid" id="solutionsGrid">
+            <!-- Solutions will be loaded dynamically -->
         </div>
     </section>
 
-    <section class="pricing-grid">
-        <!-- Starter Plan -->
-        <div class="price-card" data-plan="Starter" data-price-monthly="39" data-price-yearly="31" onclick="selectPlan(this)">
-            <h3>Starter</h3>
-            <div class="price">
-                <span class="price-currency">$</span>
-                <span class="price-amount" data-monthly="39" data-yearly="31">39</span>
-                <span class="price-period">/mo</span>
-            </div>
-            <p style="color: var(--text-gray); margin-bottom: 20px;">Perfect for small cafes and food trucks.</p>
-            <button class="btn-plan outline">Choose Plan</button>
-            
-            <ul class="features-list">
-                <li><i data-lucide="check-circle-2" size="16"></i> 1 POS Register</li>
-                <li><i data-lucide="check-circle-2" size="16"></i> Basic Inventory</li>
-                <li><i data-lucide="check-circle-2" size="16"></i> Standard Reporting</li>
-                <li><i data-lucide="check-circle-2" size="16"></i> Email Support</li>
-            </ul>
-        </div>
-
-        <!-- Professional Plan -->
-        <div class="price-card popular" data-plan="Professional" data-price-monthly="79" data-price-yearly="63" onclick="selectPlan(this)">
-            <div class="popular-badge">MOST POPULAR</div>
-            <h3>Professional</h3>
-            <div class="price">
-                <span class="price-currency">$</span>
-                <span class="price-amount" data-monthly="79" data-yearly="63">79</span>
-                <span class="price-period">/mo</span>
-            </div>
-            <p style="color: var(--text-gray); margin-bottom: 20px;">Ideal for growing restaurants and chains.</p>
-            <button class="btn-plan solid">Choose Plan</button>
-            
-            <ul class="features-list">
-                <li><i data-lucide="check-circle-2" size="16"></i> 3 POS Registers</li>
-                <li><i data-lucide="check-circle-2" size="16"></i> Kitchen Display System</li>
-                <li><i data-lucide="check-circle-2" size="16"></i> Advanced Billzest BI</li>
-                <li><i data-lucide="check-circle-2" size="16"></i> Waiter App Integration</li>
-                <li><i data-lucide="check-circle-2" size="16"></i> 24/7 Priority Support</li>
-            </ul>
-        </div>
-
-        <!-- Enterprise Plan -->
-        <div class="price-card" data-plan="Enterprise" data-price="custom" onclick="selectPlan(this)">
-            <h3>Enterprise</h3>
-            <div class="price">
-                <span class="price-amount" style="font-size: 2rem;">Custom</span>
-            </div>
-            <p style="color: var(--text-gray); margin-bottom: 20px;">For large franchises with custom needs.</p>
-            <button class="btn-plan outline">Contact Sales</button>
-            
-            <ul class="features-list">
-                <li><i data-lucide="check-circle-2" size="16"></i> Unlimited Registers</li>
-                <li><i data-lucide="check-circle-2" size="16"></i> Custom API Integrations</li>
-                <li><i data-lucide="check-circle-2" size="16"></i> Multi-branch Management</li>
-                <li><i data-lucide="check-circle-2" size="16"></i> Dedicated Account Manager</li>
-            </ul>
-        </div>
-    </section>
-
-    <!-- Subscription Modal -->
-    <div id="subscriptionModal" class="modal">
-        <div class="modal-content">
-            <h3 id="modalTitle">Subscribe to <span id="planName"></span></h3>
-            <form id="subscriptionForm">
-                <input type="hidden" id="selectedPlan">
-                <input type="hidden" id="selectedPrice">
-                <input type="hidden" id="billingCycle" value="monthly">
-                <div class="form-group"><label>Full Name *</label><input type="text" id="fullName" required placeholder="John Doe"></div>
-                <div class="form-group"><label>Email *</label><input type="email" id="email" required placeholder="john@example.com"></div>
-                <div class="form-group"><label>Phone *</label><input type="tel" id="phone" required placeholder="+1 234 567 890"></div>
-                <div class="form-group"><label>Restaurant Name *</label><input type="text" id="restaurantName" required placeholder="Your Restaurant"></div>
-                <div class="form-group"><label>Number of Locations</label><select id="locations"><option value="1">1 Location</option><option value="2">2 Locations</option><option value="3">3-5 Locations</option><option value="5">5+ Locations</option></select></div>
-                <div class="form-group"><label>Additional Notes</label><textarea id="notes" placeholder="Any special requirements?"></textarea></div>
-                <div class="modal-buttons"><button type="submit" class="btn-submit-modal">Submit Request</button><button type="button" class="btn-cancel-modal" onclick="closeModal()">Cancel</button></div>
+    <section class="demo-section" data-aos="fade-in">
+        <div class="demo-container">
+            <h2>📅 Book a Free Demo</h2>
+            <form id="demoForm">
+                <div class="form-group"><label>Full Name *</label><input type="text" id="demoName" class="form-control" placeholder="John Doe" required></div>
+                <div class="form-group"><label>Email Address *</label><input type="email" id="demoEmail" class="form-control" placeholder="john@example.com" required></div>
+                <div class="form-group"><label>Phone Number *</label><input type="tel" id="demoPhone" class="form-control" placeholder="+1 234 567 890" required></div>
+                <div class="form-group"><label>Restaurant Name *</label><input type="text" id="demoRestaurant" class="form-control" placeholder="Your Restaurant" required></div>
+                <div class="form-group"><label>Preferred Demo Date</label><input type="date" id="demoDate" class="form-control"></div>
+                <button type="submit" class="btn-submit" id="demoSubmitBtn">Request Demo</button>
             </form>
+        </div>
+    </section>
+
+    <!-- Solution Detail Modal -->
+    <div id="solutionModal" class="solution-modal">
+        <div class="solution-modal-content">
+            <button class="close-modal-btn" onclick="closeSolutionModal()">✕</button>
+            <div class="solution-icon" id="modalIcon"><i data-lucide="monitor" size="32"></i></div>
+            <h2 id="modalTitle">Kitchen Display Screen</h2>
+            <p id="modalDesc">Streamline kitchen communication. Reduce errors and speed up preparation times with smart digital tickets.</p>
+            <ul class="features-list" id="modalFeatures"></ul>
+            <button class="demo-btn-modal" onclick="scrollToDemo()">Book a Demo →</button>
         </div>
     </div>
 
@@ -295,68 +237,59 @@
         lucide.createIcons();
         AOS.init({ once: true });
 
-        let isYearly = false;
-        let currentPlan = {};
+        // Solutions Data
+        const solutions = [
+            { id: 1, name: "Kitchen Display Screen", icon: "monitor", img: "https://images.unsplash.com/photo-1556740738-b6a63e27c4df?w=600&q=80", desc: "Streamline kitchen communication. Reduce errors and speed up preparation times with smart digital tickets.", features: ["Real-time order updates", "Order timing tracking", "Ingredient modifiers", "Ready status alerts"] },
+            { id: 2, name: "Cloud-Based Call Center", icon: "phone-call", img: "https://images.unsplash.com/photo-1613909207039-6b173b755cc1?w=600&q=80", desc: "Accept orders over the phone seamlessly. Centralize your delivery and pickup operations in one place.", features: ["Caller ID integration", "Order history lookup", "Multiple location support", "Analytics dashboard"] },
+            { id: 3, name: "Customer Notifier App", icon: "bell-ring", img: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600&q=80", desc: "Notify customers exactly when their order is ready, improving their experience and reducing crowds.", features: ["SMS notifications", "App push alerts", "Estimated wait time", "Customer feedback"] },
+            { id: 4, name: "Multiple Cashiers", icon: "users", img: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&q=80", desc: "Reduce waiting lines by enabling multiple cashiers to operate simultaneously during peak restaurant hours.", features: ["Role-based access", "Shift management", "Sales per cashier", "Performance reports"] },
+            { id: 5, name: "Gift Cards", icon: "gift", img: "https://images.unsplash.com/photo-1513885535751-8b9238bd345a?w=600&q=80", desc: "Boost profit and encourage long-term customer loyalty with customizable digital and physical gift cards.", features: ["Digital & physical cards", "Balance tracking", "Expiry management", "Custom branding"] },
+            { id: 6, name: "Billzest BI", icon: "bar-chart-3", img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&q=80", desc: "Advanced analytics dashboard. Gain deep insights into your sales, inventory, and staff performance.", features: ["Sales analytics", "Inventory tracking", "Staff performance", "Custom reports"] },
+            { id: 7, name: "Customer Display Screen", icon: "smartphone-nfc", img: "https://images.pexels.com/photos/4199094/pexels-photo-4199094.jpeg?auto=compress&cs=tinysrgb&w=600", desc: "Enable contactless payment and show customers their order details in real-time for full transparency.", features: ["Order confirmation", "Loyalty points display", "Digital receipts", "Feedback collection"] },
+            { id: 8, name: "Waiter App", icon: "utensils-crossed", img: "https://images.pexels.com/photos/4350058/pexels-photo-4350058.jpeg?auto=compress&cs=tinysrgb&w=600", desc: "Empower your staff to submit orders and collect payments directly at the table, turning tables much faster.", features: ["Table-side ordering", "Split bills", "Payment processing", "Order status tracking"] }
+        ];
 
-        // Pricing Toggle
-        function togglePricing() {
-            const toggle = document.getElementById('toggle-switch');
-            const monthlyLabel = document.getElementById('monthly-label');
-            const yearlyLabel = document.getElementById('yearly-label');
-            const amounts = document.querySelectorAll('.price-amount');
-            
-            isYearly = !isYearly;
-            
-            if (isYearly) {
-                toggle.classList.add('active');
-                monthlyLabel.style.color = '#1e293b';
-                yearlyLabel.style.color = 'var(--primary)';
-                amounts.forEach(el => {
-                    el.style.opacity = '0';
-                    setTimeout(() => {
-                        el.innerText = el.getAttribute('data-yearly');
-                        el.style.opacity = '1';
-                    }, 150);
-                });
-            } else {
-                toggle.classList.remove('active');
-                monthlyLabel.style.color = 'var(--primary)';
-                yearlyLabel.style.color = '#1e293b';
-                amounts.forEach(el => {
-                    el.style.opacity = '0';
-                    setTimeout(() => {
-                        el.innerText = el.getAttribute('data-monthly');
-                        el.style.opacity = '1';
-                    }, 150);
-                });
-            }
+        // Load Solutions Grid
+        function loadSolutions() {
+            const container = document.getElementById('solutionsGrid');
+            container.innerHTML = solutions.map(solution => `
+                <div class="card" onclick="showSolutionDetail(${solution.id})">
+                    <div class="card-img-wrapper">
+                        <img src="${solution.img}" alt="${solution.name}" class="card-img" onerror="this.src='https://placehold.co/600x400?text=${solution.name}'">
+                    </div>
+                    <div class="card-content">
+                        <div class="icon-box"><i data-lucide="${solution.icon}" size="24"></i></div>
+                        <h3>${solution.name}</h3>
+                        <p>${solution.desc.substring(0, 80)}...</p>
+                    </div>
+                </div>
+            `).join('');
+            lucide.createIcons();
         }
 
-        // Select Plan
-        window.selectPlan = (card) => {
-            const plan = card.getAttribute('data-plan');
-            let price = '';
-            let billing = isYearly ? 'yearly' : 'monthly';
+        // Show Solution Detail Modal
+        window.showSolutionDetail = (id) => {
+            const solution = solutions.find(s => s.id === id);
+            if (!solution) return;
             
-            if (plan === 'Enterprise') {
-                price = 'Custom pricing';
-            } else {
-                const amount = isYearly ? card.getAttribute('data-price-yearly') : card.getAttribute('data-price-monthly');
-                price = `$${amount}/month${isYearly ? ' (billed annually)' : ''}`;
-            }
-            
-            currentPlan = { name: plan, price: price, billing: billing };
-            document.getElementById('planName').innerText = plan;
-            document.getElementById('selectedPlan').value = plan;
-            document.getElementById('selectedPrice').value = price;
-            document.getElementById('billingCycle').value = billing;
-            document.getElementById('subscriptionModal').style.display = 'flex';
+            document.getElementById('modalIcon').innerHTML = `<i data-lucide="${solution.icon}" size="32"></i>`;
+            document.getElementById('modalTitle').innerText = solution.name;
+            document.getElementById('modalDesc').innerText = solution.desc;
+            document.getElementById('modalFeatures').innerHTML = solution.features.map(f => `<li><i data-lucide="check-circle-2" size="16"></i> ${f}</li>`).join('');
+            document.getElementById('solutionModal').style.display = 'flex';
+            lucide.createIcons();
         };
 
-        function closeModal() {
-            document.getElementById('subscriptionModal').style.display = 'none';
-        }
+        window.closeSolutionModal = () => {
+            document.getElementById('solutionModal').style.display = 'none';
+        };
 
+        window.scrollToDemo = () => {
+            closeSolutionModal();
+            document.querySelector('.demo-section').scrollIntoView({ behavior: 'smooth' });
+        };
+
+        // Show Toast Messages
         function showSuccess(message) {
             const successDiv = document.getElementById('successMsg');
             document.getElementById('successText').innerText = message;
@@ -371,59 +304,49 @@
             setTimeout(() => { errorDiv.style.display = 'none'; }, 5000);
         }
 
-        // Submit Subscription Request to Firebase
-        const subscriptionForm = document.getElementById('subscriptionForm');
-        
-        subscriptionForm.addEventListener('submit', async (e) => {
+        // Demo Form Submit to Firebase
+        const demoForm = document.getElementById('demoForm');
+        const demoSubmitBtn = document.getElementById('demoSubmitBtn');
+
+        demoForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            const fullName = document.getElementById('fullName').value;
-            const email = document.getElementById('email').value;
-            const phone = document.getElementById('phone').value;
-            const restaurantName = document.getElementById('restaurantName').value;
-            const locations = document.getElementById('locations').value;
-            const notes = document.getElementById('notes').value;
-            const plan = document.getElementById('selectedPlan').value;
-            const price = document.getElementById('selectedPrice').value;
-            const billing = document.getElementById('billingCycle').value;
+            const name = document.getElementById('demoName').value;
+            const email = document.getElementById('demoEmail').value;
+            const phone = document.getElementById('demoPhone').value;
+            const restaurant = document.getElementById('demoRestaurant').value;
+            const demoDate = document.getElementById('demoDate').value;
 
-            if (!fullName || !email || !phone || !restaurantName) {
+            if (!name || !email || !phone || !restaurant) {
                 showError('Please fill all required fields');
                 return;
             }
 
-            const submitBtn = document.querySelector('#subscriptionForm .btn-submit-modal');
-            const originalText = submitBtn.innerText;
-            submitBtn.disabled = true;
-            submitBtn.innerText = 'Submitting...';
+            demoSubmitBtn.disabled = true;
+            demoSubmitBtn.innerHTML = 'Submitting...';
 
             try {
-                const docRef = await addDoc(collection(db, "subscriptions"), {
-                    fullName: fullName,
+                const docRef = await addDoc(collection(db, "demos"), {
+                    fullName: name,
                     email: email,
                     phone: phone,
-                    restaurantName: restaurantName,
-                    plan: plan,
-                    price: price,
-                    billingCycle: billing,
-                    locations: locations,
-                    notes: notes || 'No additional notes',
+                    restaurantName: restaurant,
+                    preferredDate: demoDate || 'Not specified',
                     status: 'pending',
                     createdAt: serverTimestamp(),
                     read: false
                 });
 
-                console.log("Subscription saved with ID: ", docRef.id);
-                showSuccess(`Thank you ${fullName}! Our sales team will contact you within 24 hours to complete your ${plan} plan subscription.`);
-                closeModal();
-                subscriptionForm.reset();
+                console.log("Demo request saved with ID: ", docRef.id);
+                showSuccess(`Thank you ${name}! We'll contact you within 24 hours to schedule your demo.`);
+                demoForm.reset();
                 
             } catch (error) {
-                console.error("Error saving subscription:", error);
+                console.error("Error saving demo request:", error);
                 showError('Something went wrong. Please try again.');
             } finally {
-                submitBtn.disabled = false;
-                submitBtn.innerText = originalText;
+                demoSubmitBtn.disabled = false;
+                demoSubmitBtn.innerHTML = 'Request Demo';
             }
         });
 
@@ -439,10 +362,10 @@
             container.innerHTML += `<div class="msg user-msg">${text}</div>`;
             input.value = '';
             setTimeout(() => {
-                let reply = "Thanks for your message! Can I help you choose a plan?";
-                if(text.toLowerCase().includes('price')) reply = "💰 Our Starter plan is $39/mo, Professional is $79/mo. Save 20% with yearly billing!";
-                if(text.toLowerCase().includes('demo')) reply = "🎉 Click 'Book Demo' button at the top to schedule a free demo!";
-                if(text.toLowerCase().includes('compare')) reply = "📊 Starter: 1 register, basic features. Professional: 3 registers, KDS, BI, priority support.";
+                let reply = "Thanks for your message! Our team will get back to you shortly.";
+                if(text.toLowerCase().includes('price')) reply = "💰 Our plans start at just $39/mo! Check Pricing page.";
+                if(text.toLowerCase().includes('demo')) reply = "🎉 Fill out the demo form above to schedule a free demo!";
+                if(text.toLowerCase().includes('kds') || text.toLowerCase().includes('kitchen')) reply = "🍳 Our Kitchen Display System (KDS) helps reduce order errors by 80%! Want a demo?";
                 container.innerHTML += `<div class="msg bot-msg">${reply}</div>`;
                 container.scrollTop = container.scrollHeight;
             }, 500);
@@ -450,14 +373,12 @@
 
         // Close modal on outside click
         window.onclick = (e) => {
-            const modal = document.getElementById('subscriptionModal');
-            if (e.target === modal) closeModal();
-            if (!e.target.closest('.user-profile')) document.getElementById('profileDropdown')?.classList.remove('show');
+            const modal = document.getElementById('solutionModal');
+            if (e.target === modal) closeSolutionModal();
         };
 
-        window.togglePricing = togglePricing;
-        window.selectPlan = selectPlan;
-        window.closeModal = closeModal;
+        loadSolutions();
+
         window.toggleMobileMenu = toggleMobileMenu;
         window.toggleChat = toggleChat;
         window.handleChat = handleChat;
