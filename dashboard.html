@@ -82,9 +82,7 @@
         .btn-save { background: var(--primary); color: white; border: none; }
         .btn-cancel { background: #e2e8f0; border: none; }
 
-        .menu-item-card, .customer-card, .setting-card { background: #f8fafc; border-radius: 12px; padding: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
-        .menu-item-info h4 { margin-bottom: 5px; }
-        .menu-item-price { color: var(--primary); font-weight: 700; }
+        .menu-item-card, .customer-card { background: #f8fafc; border-radius: 12px; padding: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
         .delete-btn { background: #ef4444; color: white; border: none; padding: 5px 12px; border-radius: 8px; cursor: pointer; }
         .edit-btn { background: var(--primary); color: white; border: none; padding: 5px 12px; border-radius: 8px; cursor: pointer; margin-right: 5px; }
         .add-btn { background: var(--primary); color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; }
@@ -108,9 +106,18 @@
             .setting-row { flex-direction: column; align-items: stretch; }
         }
         .sidebar-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 99; display: none; opacity: 0; transition: opacity 0.3s; }
+        
+        /* Loading Spinner */
+        .loading-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 9999; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 15px; }
+        .spinner { width: 50px; height: 50px; border: 4px solid #e2e8f0; border-top: 4px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
     </style>
 </head>
 <body>
+
+    <div class="loading-screen" id="loadingScreen">
+        <div class="spinner"></div>
+        <p>Authenticating...</p>
+    </div>
 
     <div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
 
@@ -130,7 +137,7 @@
             <div class="nav-item" data-section="settings"><i data-lucide="settings"></i> Settings</div>
         </div>
         <div class="sidebar-footer">
-            <div class="logout-btn" onclick="logout()"><i data-lucide="log-out"></i> Logout</div>
+            <div class="logout-btn" id="logoutBtn"><i data-lucide="log-out"></i> Logout</div>
         </div>
     </aside>
 
@@ -144,12 +151,12 @@
             <div class="header-actions">
                 <button class="action-btn"><i data-lucide="bell"></i><span class="badge">3</span></button>
                 <div class="user-profile" onclick="toggleProfileMenu()">
-                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&q=80" alt="Admin">
-                    <span id="userName">John Admin</span>
+                    <img id="userAvatar" src="https://ui-avatars.com/api/?background=4f46e5&color=fff&name=User" alt="User">
+                    <span id="userName">Loading...</span>
                     <i data-lucide="chevron-down" size="16"></i>
                     <div class="profile-dropdown" id="profileDropdown">
-                        <div onclick="showProfile()"><i data-lucide="user"></i> My Profile</div>
-                        <div onclick="logout()"><i data-lucide="log-out"></i> Logout</div>
+                        <div id="profileBtn"><i data-lucide="user"></i> My Profile</div>
+                        <div id="dropdownLogoutBtn"><i data-lucide="log-out"></i> Logout</div>
                     </div>
                 </div>
             </div>
@@ -159,9 +166,9 @@
         <div id="overview" class="dashboard-scroll section">
             <h1 class="page-title">Dashboard Overview</h1>
             <div class="metrics-grid">
-                <div class="metric-card"><div class="metric-info"><h3>Today's Sales</h3><div class="value" id="todaySales">$2,450</div><div class="trend up"><i data-lucide="trending-up" size="16"></i> +12.5%</div></div><div class="metric-icon c-primary"><i data-lucide="dollar-sign" size="32"></i></div></div>
-                <div class="metric-card"><div class="metric-info"><h3>Today's Orders</h3><div class="value" id="todayOrders">145</div><div class="trend up"><i data-lucide="trending-up" size="16"></i> +5.2%</div></div><div class="metric-icon c-success"><i data-lucide="shopping-cart" size="32"></i></div></div>
-                <div class="metric-card"><div class="metric-info"><h3>Total Orders</h3><div class="value" id="totalOrders">1,280</div></div><div class="metric-icon c-warning"><i data-lucide="receipt" size="32"></i></div></div>
+                <div class="metric-card"><div class="metric-info"><h3>Today's Sales</h3><div class="value">$2,450</div><div class="trend up"><i data-lucide="trending-up" size="16"></i> +12.5%</div></div><div class="metric-icon c-primary"><i data-lucide="dollar-sign" size="32"></i></div></div>
+                <div class="metric-card"><div class="metric-info"><h3>Today's Orders</h3><div class="value">145</div><div class="trend up"><i data-lucide="trending-up" size="16"></i> +5.2%</div></div><div class="metric-icon c-success"><i data-lucide="shopping-cart" size="32"></i></div></div>
+                <div class="metric-card"><div class="metric-info"><h3>Total Orders</h3><div class="value">1,280</div></div><div class="metric-icon c-warning"><i data-lucide="receipt" size="32"></i></div></div>
                 <div class="metric-card"><div class="metric-info"><h3>Menu Items</h3><div class="value" id="menuCount">24</div></div><div class="metric-icon c-pink"><i data-lucide="utensils" size="32"></i></div></div>
             </div>
             <div class="data-grid">
@@ -204,85 +211,89 @@
             <div class="panel" style="margin-top:20px;"><div class="panel-header"><h3>Export Reports</h3></div><button onclick="exportReport()" style="background:var(--primary); color:white; padding:10px 20px; border:none; border-radius:8px; cursor:pointer;">📊 Export as CSV</button></div>
         </div>
 
-        <!-- SETTINGS SECTION - LINE LEVEL (HORIZONTAL LAYOUT) -->
+        <!-- SETTINGS SECTION -->
         <div id="settings" class="dashboard-scroll section" style="display:none;">
             <h1 class="page-title">Settings</h1>
-            
-            <!-- General Settings - Horizontal Row -->
             <div class="panel">
                 <div class="panel-header"><h3>General Settings</h3></div>
                 <div class="setting-row">
-                    <div class="setting-field">
-                        <label>Restaurant Name</label>
-                        <input type="text" id="restaurantName" placeholder="Restaurant Name">
-                    </div>
-                    <div class="setting-field">
-                        <label>Tax Rate (%)</label>
-                        <input type="number" id="taxRate" step="0.1" placeholder="Tax Rate">
-                    </div>
-                    <div class="setting-field">
-                        <label>Currency Symbol</label>
-                        <select id="currencySymbol">
-                            <option value="$">$ USD</option>
-                            <option value="€">€ EUR</option>
-                            <option value="£">£ GBP</option>
-                            <option value="₹">₹ INR</option>
-                            <option value="﷼">﷼ SAR</option>
-                        </select>
-                    </div>
-                    <div>
-                        <button onclick="saveGeneralSettings()" style="background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; margin-top: 22px;">Save</button>
-                    </div>
+                    <div class="setting-field"><label>Restaurant Name</label><input type="text" id="restaurantName" placeholder="Restaurant Name"></div>
+                    <div class="setting-field"><label>Tax Rate (%)</label><input type="number" id="taxRate" step="0.1" placeholder="Tax Rate"></div>
+                    <div class="setting-field"><label>Currency Symbol</label><select id="currencySymbol"><option value="$">$ USD</option><option value="€">€ EUR</option><option value="£">£ GBP</option><option value="₹">₹ INR</option><option value="﷼">﷼ SAR</option></select></div>
+                    <div><button onclick="saveGeneralSettings()" style="background:var(--primary); color:white; border:none; padding:10px 20px; border-radius:8px; cursor:pointer;">Save</button></div>
                 </div>
-                <div class="setting-row">
-                    <div class="setting-field" style="flex: 2;">
-                        <label>Receipt Footer Message</label>
-                        <input type="text" id="receiptFooter" placeholder="Thank you for your visit!">
-                    </div>
-                    <div>
-                        <button onclick="saveReceiptFooter()" style="background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; margin-top: 22px;">Save</button>
-                    </div>
-                </div>
+                <div class="setting-row"><div class="setting-field" style="flex:2;"><label>Receipt Footer Message</label><input type="text" id="receiptFooter" placeholder="Thank you for your visit!"></div><div><button onclick="saveReceiptFooter()" style="background:var(--primary); color:white; border:none; padding:10px 20px; border-radius:8px; cursor:pointer;">Save</button></div></div>
             </div>
-
-            <!-- Notification Settings - Horizontal Row -->
-            <div class="panel" style="margin-top: 20px;">
-                <div class="panel-header"><h3>Notification Settings</h3></div>
-                <div class="inline-checkbox">
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="emailNotifications">
-                        <label>Email Notifications</label>
-                        <span style="font-size: 0.75rem; color: var(--text-gray);">Enable email alerts for new orders</span>
-                    </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="soundAlert">
-                        <label>Order Sound Alert</label>
-                        <span style="font-size: 0.75rem; color: var(--text-gray);">Play sound on new order</span>
-                    </div>
-                    <div>
-                        <button onclick="saveNotificationSettings()" style="background: var(--primary); color: white; border: none; padding: 8px 20px; border-radius: 8px; cursor: pointer;">Save</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Staff Management -->
-            <div class="panel" style="margin-top: 20px;">
-                <div class="panel-header"><h3>Staff Management</h3><button class="add-btn" onclick="openAddStaffModal()">+ Add Staff</button></div>
-                <div id="staffList"></div>
-            </div>
+            <div class="panel" style="margin-top:20px;"><div class="panel-header"><h3>Notification Settings</h3></div><div class="inline-checkbox"><div class="checkbox-item"><input type="checkbox" id="emailNotifications"><label>Email Notifications</label></div><div class="checkbox-item"><input type="checkbox" id="soundAlert"><label>Order Sound Alert</label></div><div><button onclick="saveNotificationSettings()" style="background:var(--primary); color:white; border:none; padding:8px 20px; border-radius:8px; cursor:pointer;">Save</button></div></div></div>
+            <div class="panel" style="margin-top:20px;"><div class="panel-header"><h3>Staff Management</h3><button class="add-btn" onclick="openAddStaffModal()">+ Add Staff</button></div><div id="staffList"></div></div>
         </div>
 
-        <!-- Modals -->
-        <div id="profileModal" class="modal"><div class="modal-content"><h3>My Profile</h3><p><strong>Name:</strong> <span id="profileName">John Admin</span></p><p><strong>Email:</strong> <span id="profileEmail">admin@billzestpos.com</span></p><p><strong>Role:</strong> Administrator</p><div class="modal-buttons"><button class="btn-cancel" onclick="closeProfileModal()">Close</button></div></div></div>
-        <div id="menuModal" class="modal"><div class="modal-content"><h3 id="menuModalTitle">Add Menu Item</h3><input type="text" id="menuName" placeholder="Item Name"><input type="number" id="menuPrice" placeholder="Price"><input type="text" id="menuCategory" placeholder="Category"><input type="text" id="menuImage" placeholder="Emoji or Image URL"><div class="modal-buttons"><button class="btn-save" onclick="saveMenuItem()">Save</button><button class="btn-cancel" onclick="closeMenuModal()">Cancel</button></div></div></div>
+        <!-- PROFILE MODAL -->
+        <div id="profileModal" class="modal"><div class="modal-content"><h3>My Profile</h3><div style="display:flex; gap:20px; align-items:center; margin-bottom:20px;"><img id="profileAvatar" src="" style="width:70px; height:70px; border-radius:50%; object-fit:cover;"><div><h4 id="profileName">Loading...</h4><p id="profileEmail">Loading...</p></div></div><div class="modal-buttons"><button class="btn-cancel" onclick="closeProfileModal()">Close</button></div></div></div>
+
+        <!-- MENU MODAL -->
+        <div id="menuModal" class="modal"><div class="modal-content"><h3 id="menuModalTitle">Add Menu Item</h3><input type="text" id="menuName" placeholder="Item Name"><input type="number" id="menuPrice" placeholder="Price"><input type="text" id="menuCategory" placeholder="Category"><input type="text" id="menuImage" placeholder="Emoji (🍔)"><div class="modal-buttons"><button class="btn-save" onclick="saveMenuItem()">Save</button><button class="btn-cancel" onclick="closeMenuModal()">Cancel</button></div></div></div>
+
+        <!-- CUSTOMER MODAL -->
         <div id="customerModal" class="modal"><div class="modal-content"><h3>Add Customer</h3><input type="text" id="customerName" placeholder="Full Name"><input type="email" id="customerEmail" placeholder="Email"><input type="text" id="customerPhone" placeholder="Phone"><div class="modal-buttons"><button class="btn-save" onclick="saveCustomer()">Save</button><button class="btn-cancel" onclick="closeCustomerModal()">Cancel</button></div></div></div>
+
+        <!-- STAFF MODAL -->
         <div id="staffModal" class="modal"><div class="modal-content"><h3 id="staffModalTitle">Add Staff Member</h3><input type="text" id="staffName" placeholder="Full Name"><input type="email" id="staffEmail" placeholder="Email"><select id="staffRole"><option value="Cashier">Cashier</option><option value="Waiter">Waiter</option><option value="Kitchen Staff">Kitchen Staff</option><option value="Manager">Manager</option></select><div class="modal-buttons"><button class="btn-save" onclick="saveStaffMember()">Save</button><button class="btn-cancel" onclick="closeStaffModal()">Cancel</button></div></div></div>
     </main>
 
-    <script>
-        lucide.createIcons();
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-        // ==================== DATA STORAGE ====================
+        // Firebase Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyCN0akvFXOHM6WPHv9ve9noqqmauO3TJRY",
+            authDomain: "billzest-pos.firebaseapp.com",
+            projectId: "billzest-pos",
+            storageBucket: "billzest-pos.firebasestorage.app",
+            messagingSenderId: "946546876429",
+            appId: "1:946546876429:web:9b4a7aa3cecbf3aea83544",
+            measurementId: "G-69WEHH9X5D"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // Check Auth State
+        onAuthStateChanged(auth, (user) => {
+            const loadingScreen = document.getElementById('loadingScreen');
+            if (user) {
+                loadingScreen.style.display = 'none';
+                // Update UI with user info
+                const displayName = user.displayName || user.email.split('@')[0];
+                document.getElementById('userName').innerText = displayName;
+                document.getElementById('profileName').innerText = displayName;
+                document.getElementById('profileEmail').innerText = user.email;
+                if (user.photoURL) {
+                    document.getElementById('userAvatar').src = user.photoURL;
+                    document.getElementById('profileAvatar').src = user.photoURL;
+                } else {
+                    document.getElementById('userAvatar').src = `https://ui-avatars.com/api/?background=4f46e5&color=fff&name=${displayName}`;
+                    document.getElementById('profileAvatar').src = `https://ui-avatars.com/api/?background=4f46e5&color=fff&name=${displayName}`;
+                }
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+
+        // Logout Function
+        async function handleLogout() {
+            try {
+                await signOut(auth);
+                localStorage.removeItem('user');
+                window.location.href = 'login.html';
+            } catch (error) {
+                console.error("Logout error:", error);
+                alert("Error logging out: " + error.message);
+            }
+        }
+
+        // Data Storage (localStorage for demo)
         let menuItems = JSON.parse(localStorage.getItem('menuItems')) || [
             { id: 1, name: 'Classic Burger', price: 8.50, category: 'Burgers', image: '🍔' },
             { id: 2, name: 'Margherita Pizza', price: 12.00, category: 'Pizza', image: '🍕' },
@@ -307,18 +318,12 @@
         ];
 
         let staff = JSON.parse(localStorage.getItem('staff')) || [
-            { id: 1, name: 'John Admin', email: 'admin@billzestpos.com', role: 'Manager' },
-            { id: 2, name: 'Sarah Cashier', email: 'sarah@billzestpos.com', role: 'Cashier' },
-            { id: 3, name: 'Mike Waiter', email: 'mike@billzestpos.com', role: 'Waiter' }
+            { id: 1, name: 'Admin User', email: 'admin@billzestpos.com', role: 'Manager' }
         ];
 
         let settings = JSON.parse(localStorage.getItem('settings')) || {
-            restaurantName: 'Billzestpos Restaurant',
-            taxRate: 5,
-            currencySymbol: '$',
-            receiptFooter: 'Thank you for your visit!',
-            emailNotifications: true,
-            soundAlert: true
+            restaurantName: 'Billzestpos Restaurant', taxRate: 5, currencySymbol: '$',
+            receiptFooter: 'Thank you for your visit!', emailNotifications: true, soundAlert: true
         };
 
         let nextMenuItemId = menuItems.length + 1;
@@ -336,7 +341,6 @@
             localStorage.setItem('settings', JSON.stringify(settings));
         }
 
-        // ==================== SETTINGS FUNCTIONS ====================
         function loadSettingsToUI() {
             document.getElementById('restaurantName').value = settings.restaurantName || '';
             document.getElementById('taxRate').value = settings.taxRate || 5;
@@ -351,87 +355,56 @@
             settings.taxRate = parseFloat(document.getElementById('taxRate').value);
             settings.currencySymbol = document.getElementById('currencySymbol').value;
             saveData();
-            alert('General settings saved successfully!');
-            loadMenuItems();
-            loadCustomers();
-            loadOrders();
+            alert('General settings saved!');
+            loadMenuItems(); loadCustomers(); loadOrders();
         }
 
-        function saveReceiptFooter() {
-            settings.receiptFooter = document.getElementById('receiptFooter').value;
-            saveData();
-            alert('Receipt footer saved!');
-        }
+        function saveReceiptFooter() { settings.receiptFooter = document.getElementById('receiptFooter').value; saveData(); alert('Receipt footer saved!'); }
+        function saveNotificationSettings() { settings.emailNotifications = document.getElementById('emailNotifications').checked; settings.soundAlert = document.getElementById('soundAlert').checked; saveData(); alert('Notification settings saved!'); }
 
-        function saveNotificationSettings() {
-            settings.emailNotifications = document.getElementById('emailNotifications').checked;
-            settings.soundAlert = document.getElementById('soundAlert').checked;
-            saveData();
-            alert('Notification settings saved!');
-        }
-
-        // ==================== STAFF FUNCTIONS ====================
         function loadStaffList() {
             const container = document.getElementById('staffList');
-            if(!container) return;
-            container.innerHTML = staff.map(s => `
-                <div class="menu-item-card">
-                    <div><h4>${s.name}</h4><p>${s.email} | ${s.role}</p></div>
-                    <div><button class="edit-btn" onclick="editStaff(${s.id})">Edit</button><button class="delete-btn" onclick="deleteStaff(${s.id})">Delete</button></div>
-                </div>
-            `).join('');
+            if(container) container.innerHTML = staff.map(s => `<div class="menu-item-card"><div><h4>${s.name}</h4><p>${s.email} | ${s.role}</p></div><div><button class="edit-btn" onclick="editStaff(${s.id})">Edit</button><button class="delete-btn" onclick="deleteStaff(${s.id})">Delete</button></div></div>`).join('');
         }
 
         function openAddStaffModal() { editingStaffId = null; document.getElementById('staffModalTitle').innerText = 'Add Staff Member'; document.getElementById('staffName').value = ''; document.getElementById('staffEmail').value = ''; document.getElementById('staffRole').value = 'Cashier'; document.getElementById('staffModal').style.display = 'flex'; }
         function editStaff(id) { const s = staff.find(s => s.id === id); editingStaffId = id; document.getElementById('staffModalTitle').innerText = 'Edit Staff Member'; document.getElementById('staffName').value = s.name; document.getElementById('staffEmail').value = s.email; document.getElementById('staffRole').value = s.role; document.getElementById('staffModal').style.display = 'flex'; }
         function deleteStaff(id) { if(confirm('Remove this staff member?')) { staff = staff.filter(s => s.id !== id); saveData(); loadStaffList(); } }
-        function saveStaffMember() { const name = document.getElementById('staffName').value; const email = document.getElementById('staffEmail').value; const role = document.getElementById('staffRole').value; if(!name || !email) return alert('Please fill all fields'); if(editingStaffId) { const index = staff.findIndex(s => s.id === editingStaffId); staff[index] = { ...staff[index], name, email, role }; } else { staff.push({ id: nextStaffId++, name, email, role }); } saveData(); loadStaffList(); closeStaffModal(); }
+        function saveStaffMember() { const name = document.getElementById('staffName').value, email = document.getElementById('staffEmail').value, role = document.getElementById('staffRole').value; if(!name || !email) return alert('Fill all fields'); if(editingStaffId) { const index = staff.findIndex(s => s.id === editingStaffId); staff[index] = { ...staff[index], name, email, role }; } else { staff.push({ id: nextStaffId++, name, email, role }); } saveData(); loadStaffList(); closeStaffModal(); }
         function closeStaffModal() { document.getElementById('staffModal').style.display = 'none'; }
 
-        // ==================== MENU FUNCTIONS ====================
         function loadMenuItems() {
             const container = document.getElementById('menuItemsList');
             if(!container) return;
             document.getElementById('menuCount').innerText = menuItems.length;
-            container.innerHTML = menuItems.map(item => `
-                <div class="menu-item-card">
-                    <div><div style="display:flex; gap:10px; align-items:center;"><span style="font-size:2rem;">${item.image || '🍽️'}</span><div><h4>${item.name}</h4><p class="menu-item-price">${settings.currencySymbol}${item.price.toFixed(2)}</p><small>${item.category}</small></div></div></div>
-                    <div><button class="edit-btn" onclick="editMenuItem(${item.id})">Edit</button><button class="delete-btn" onclick="deleteMenuItem(${item.id})">Delete</button></div>
-                </div>
-            `).join('');
+            container.innerHTML = menuItems.map(item => `<div class="menu-item-card"><div style="display:flex; gap:10px;"><span style="font-size:2rem;">${item.image || '🍽️'}</span><div><h4>${item.name}</h4><p style="color:var(--primary);">${settings.currencySymbol}${item.price}</p><small>${item.category}</small></div></div><div><button class="edit-btn" onclick="editMenuItem(${item.id})">Edit</button><button class="delete-btn" onclick="deleteMenuItem(${item.id})">Delete</button></div></div>`).join('');
         }
 
         function openAddMenuItemModal() { editingMenuItemId = null; document.getElementById('menuModalTitle').innerText = 'Add Menu Item'; document.getElementById('menuName').value = ''; document.getElementById('menuPrice').value = ''; document.getElementById('menuCategory').value = ''; document.getElementById('menuImage').value = ''; document.getElementById('menuModal').style.display = 'flex'; }
         function editMenuItem(id) { const item = menuItems.find(i => i.id === id); editingMenuItemId = id; document.getElementById('menuModalTitle').innerText = 'Edit Menu Item'; document.getElementById('menuName').value = item.name; document.getElementById('menuPrice').value = item.price; document.getElementById('menuCategory').value = item.category; document.getElementById('menuImage').value = item.image; document.getElementById('menuModal').style.display = 'flex'; }
         function deleteMenuItem(id) { if(confirm('Delete this item?')) { menuItems = menuItems.filter(i => i.id !== id); saveData(); loadMenuItems(); } }
-        function saveMenuItem() { const name = document.getElementById('menuName').value; const price = parseFloat(document.getElementById('menuPrice').value); const category = document.getElementById('menuCategory').value; const image = document.getElementById('menuImage').value || '🍽️'; if(!name || isNaN(price)) return alert('Please fill all fields'); if(editingMenuItemId) { const index = menuItems.findIndex(i => i.id === editingMenuItemId); menuItems[index] = { ...menuItems[index], name, price, category, image }; } else { menuItems.push({ id: nextMenuItemId++, name, price, category, image }); } saveData(); loadMenuItems(); closeMenuModal(); }
+        function saveMenuItem() { const name = document.getElementById('menuName').value, price = parseFloat(document.getElementById('menuPrice').value), category = document.getElementById('menuCategory').value, image = document.getElementById('menuImage').value || '🍽️'; if(!name || isNaN(price)) return alert('Fill all fields'); if(editingMenuItemId) { const index = menuItems.findIndex(i => i.id === editingMenuItemId); menuItems[index] = { ...menuItems[index], name, price, category, image }; } else { menuItems.push({ id: nextMenuItemId++, name, price, category, image }); } saveData(); loadMenuItems(); closeMenuModal(); }
         function closeMenuModal() { document.getElementById('menuModal').style.display = 'none'; }
 
-        // ==================== CUSTOMER FUNCTIONS ====================
         function loadCustomers() {
             const container = document.getElementById('customersList');
             if(!container) return;
-            container.innerHTML = customers.map(c => `
-                <div class="menu-item-card"><div><h4>${c.name}</h4><p>${c.email} | ${c.phone}</p><small>${c.orders} orders | ${settings.currencySymbol}${c.spent}</small></div>
-                <div><button class="edit-btn" onclick="editCustomer(${c.id})">Edit</button><button class="delete-btn" onclick="deleteCustomer(${c.id})">Delete</button></div></div>
-            `).join('');
+            container.innerHTML = customers.map(c => `<div class="menu-item-card"><div><h4>${c.name}</h4><p>${c.email} | ${c.phone}</p><small>${c.orders} orders | ${settings.currencySymbol}${c.spent}</small></div><div><button class="edit-btn" onclick="editCustomer(${c.id})">Edit</button><button class="delete-btn" onclick="deleteCustomer(${c.id})">Delete</button></div></div>`).join('');
         }
 
         function openAddCustomerModal() { editingCustomerId = null; document.getElementById('customerName').value = ''; document.getElementById('customerEmail').value = ''; document.getElementById('customerPhone').value = ''; document.getElementById('customerModal').style.display = 'flex'; }
         function editCustomer(id) { const c = customers.find(c => c.id === id); editingCustomerId = id; document.getElementById('customerName').value = c.name; document.getElementById('customerEmail').value = c.email; document.getElementById('customerPhone').value = c.phone; document.getElementById('customerModal').style.display = 'flex'; }
         function deleteCustomer(id) { if(confirm('Delete this customer?')) { customers = customers.filter(c => c.id !== id); saveData(); loadCustomers(); } }
-        function saveCustomer() { const name = document.getElementById('customerName').value; const email = document.getElementById('customerEmail').value; const phone = document.getElementById('customerPhone').value; if(!name || !email) return alert('Please fill required fields'); if(editingCustomerId) { const index = customers.findIndex(c => c.id === editingCustomerId); customers[index] = { ...customers[index], name, email, phone }; } else { customers.push({ id: nextCustomerId++, name, email, phone, orders: 0, spent: 0 }); } saveData(); loadCustomers(); closeCustomerModal(); }
+        function saveCustomer() { const name = document.getElementById('customerName').value, email = document.getElementById('customerEmail').value, phone = document.getElementById('customerPhone').value; if(!name || !email) return alert('Fill required fields'); if(editingCustomerId) { const index = customers.findIndex(c => c.id === editingCustomerId); customers[index] = { ...customers[index], name, email, phone }; } else { customers.push({ id: nextCustomerId++, name, email, phone, orders: 0, spent: 0 }); } saveData(); loadCustomers(); closeCustomerModal(); }
         function closeCustomerModal() { document.getElementById('customerModal').style.display = 'none'; }
 
-        // ==================== ORDERS FUNCTIONS ====================
         function loadOrders() {
             const recentContainer = document.getElementById('recentOrders');
             const allContainer = document.getElementById('allOrders');
-            if(recentContainer) recentContainer.innerHTML = orders.slice(0,5).map(o => `<tr><td>${o.id}</td><td>${settings.currencySymbol}${o.total.toFixed(2)}</td><td><span class="status s-${o.status.toLowerCase()}">${o.status}</span></td>`).join('');
-            if(allContainer) allContainer.innerHTML = orders.map(o => `<tr><td>${o.id}</td><td>${o.items}</td><td>${settings.currencySymbol}${o.total.toFixed(2)}</td><td><span class="status s-${o.status.toLowerCase()}">${o.status}</span></td><td>${o.time}</td>`).join('');
+            if(recentContainer) recentContainer.innerHTML = orders.slice(0,5).map(o => `<tr><td>${o.id}</td><td>${settings.currencySymbol}${o.total}</td><td><span class="status s-${o.status.toLowerCase()}">${o.status}</span></td>`).join('');
+            if(allContainer) allContainer.innerHTML = orders.map(o => `<tr><td>${o.id}</td><td>${o.items}</td><td>${settings.currencySymbol}${o.total}</td><td><span class="status s-${o.status.toLowerCase()}">${o.status}</span></td><td>${o.time}</td>`).join('');
         }
 
-        // ==================== REPORTS FUNCTIONS ====================
         function loadReports() {
             const topItems = [{ name: 'Classic Burger', sold: 45, revenue: 382.50 }, { name: 'Margherita Pizza', sold: 32, revenue: 384 }, { name: 'French Fries', sold: 78, revenue: 273 }, { name: 'Cappuccino', sold: 56, revenue: 224 }];
             const topContainer = document.getElementById('topItems');
@@ -440,16 +413,14 @@
             if(ctx) new Chart(ctx, { type: 'doughnut', data: { labels: ['Burgers', 'Pizza', 'Sides', 'Beverages', 'Salads'], datasets: [{ data: [45, 32, 78, 56, 20], backgroundColor: ['#4f46e5', '#ec4899', '#10b981', '#f59e0b', '#ef4444'] }] }, options: { responsive: true, maintainAspectRatio: false } });
         }
 
-        // ==================== CHART ====================
+        // Chart
         const chartCtx = document.getElementById('revenueChart');
         if(chartCtx) new Chart(chartCtx, { type: 'line', data: { labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], datasets: [{ label: 'Revenue ($)', data: [1200, 1900, 1500, 2200, 2800, 3500, 3100], borderColor: '#4f46e5', backgroundColor: 'rgba(79,70,229,0.1)', borderWidth: 3, fill: true, tension: 0.4 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } } });
 
-        // ==================== PROFILE & MODALS ====================
         function showProfile() { document.getElementById('profileModal').style.display = 'flex'; }
         function closeProfileModal() { document.getElementById('profileModal').style.display = 'none'; }
         function exportReport() { let csv = "Order ID,Items,Total,Status,Time\n"; orders.forEach(o => { csv += `"${o.id}","${o.items}",${o.total},"${o.status}","${o.time}"\n`; }); const blob = new Blob([csv], { type: 'text/csv' }); const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = 'billzestpos_orders.csv'; link.click(); }
 
-        // ==================== NAVIGATION ====================
         function switchSection(sectionId) {
             document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
             document.getElementById(sectionId).style.display = 'block';
@@ -465,16 +436,24 @@
 
         function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); document.getElementById('overlay').classList.toggle('show'); }
         function toggleProfileMenu() { document.getElementById('profileDropdown').classList.toggle('show'); }
-        function logout() { window.location.href = 'login.html'; }
 
         document.querySelectorAll('.nav-item').forEach(item => { item.addEventListener('click', () => switchSection(item.getAttribute('data-section'))); });
-        document.getElementById('searchInput').addEventListener('input', (e) => { const searchTerm = e.target.value.toLowerCase(); const filteredOrders = orders.filter(o => o.id.toLowerCase().includes(searchTerm) || o.items.toLowerCase().includes(searchTerm)); const allContainer = document.getElementById('allOrders'); if(allContainer) allContainer.innerHTML = filteredOrders.map(o => `<tr><td>${o.id}</td><td>${o.items}</td><td>${settings.currencySymbol}${o.total.toFixed(2)}</td><td><span class="status s-${o.status.toLowerCase()}">${o.status}</span></td><td>${o.time}</td>`).join(''); });
+        document.getElementById('logoutBtn').addEventListener('click', handleLogout);
+        document.getElementById('dropdownLogoutBtn').addEventListener('click', handleLogout);
+        document.getElementById('profileBtn').addEventListener('click', showProfile);
+
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            const filtered = orders.filter(o => o.id.toLowerCase().includes(term) || o.items.toLowerCase().includes(term));
+            document.getElementById('allOrders').innerHTML = filtered.map(o => `<tr><td>${o.id}</td><td>${o.items}</td><td>${settings.currencySymbol}${o.total}</td><td><span class="status s-${o.status.toLowerCase()}">${o.status}</span></td><td>${o.time}</td>`).join('');
+        });
 
         window.onclick = (e) => { if (!e.target.closest('.user-profile')) document.getElementById('profileDropdown')?.classList.remove('show'); if(e.target === document.getElementById('profileModal')) closeProfileModal(); if(e.target === document.getElementById('menuModal')) closeMenuModal(); if(e.target === document.getElementById('customerModal')) closeCustomerModal(); if(e.target === document.getElementById('staffModal')) closeStaffModal(); };
 
         loadMenuItems(); loadCustomers(); loadOrders(); loadReports(); loadSettingsToUI(); loadStaffList();
 
-        window.switchSection = switchSection; window.toggleSidebar = toggleSidebar; window.toggleProfileMenu = toggleProfileMenu; window.logout = logout; window.showProfile = showProfile; window.closeProfileModal = closeProfileModal;
+        window.switchSection = switchSection; window.toggleSidebar = toggleSidebar; window.toggleProfileMenu = toggleProfileMenu;
+        window.showProfile = showProfile; window.closeProfileModal = closeProfileModal;
         window.openAddMenuItemModal = openAddMenuItemModal; window.editMenuItem = editMenuItem; window.deleteMenuItem = deleteMenuItem; window.saveMenuItem = saveMenuItem; window.closeMenuModal = closeMenuModal;
         window.openAddCustomerModal = openAddCustomerModal; window.editCustomer = editCustomer; window.deleteCustomer = deleteCustomer; window.saveCustomer = saveCustomer; window.closeCustomerModal = closeCustomerModal;
         window.openAddStaffModal = openAddStaffModal; window.editStaff = editStaff; window.deleteStaff = deleteStaff; window.saveStaffMember = saveStaffMember; window.closeStaffModal = closeStaffModal;
