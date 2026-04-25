@@ -107,9 +107,9 @@
         }
         .sidebar-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 99; display: none; opacity: 0; transition: opacity 0.3s; }
         
-        /* Loading Spinner */
         .loading-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 9999; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 15px; }
         .spinner { width: 50px; height: 50px; border: 4px solid #e2e8f0; border-top: 4px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
@@ -162,18 +162,50 @@
             </div>
         </header>
 
-        <!-- OVERVIEW SECTION -->
+        <!-- OVERVIEW SECTION - METRICS CARDS WITH ICONS -->
         <div id="overview" class="dashboard-scroll section">
             <h1 class="page-title">Dashboard Overview</h1>
-            <div class="metrics-grid">
-                <div class="metric-card"><div class="metric-info"><h3>Today's Sales</h3><div class="value">$2,450</div><div class="trend up"><i data-lucide="trending-up" size="16"></i> +12.5%</div></div><div class="metric-icon c-primary"><i data-lucide="dollar-sign" size="32"></i></div></div>
-                <div class="metric-card"><div class="metric-info"><h3>Today's Orders</h3><div class="value">145</div><div class="trend up"><i data-lucide="trending-up" size="16"></i> +5.2%</div></div><div class="metric-icon c-success"><i data-lucide="shopping-cart" size="32"></i></div></div>
-                <div class="metric-card"><div class="metric-info"><h3>Total Orders</h3><div class="value">1,280</div></div><div class="metric-icon c-warning"><i data-lucide="receipt" size="32"></i></div></div>
-                <div class="metric-card"><div class="metric-info"><h3>Menu Items</h3><div class="value" id="menuCount">24</div></div><div class="metric-icon c-pink"><i data-lucide="utensils" size="32"></i></div></div>
+            <div class="metrics-grid" id="metricsGrid">
+                <div class="metric-card">
+                    <div class="metric-info">
+                        <h3>Today's Sales</h3>
+                        <div class="value">$2,450</div>
+                        <div class="trend up"><i data-lucide="trending-up" size="14"></i> +12.5%</div>
+                    </div>
+                    <div class="metric-icon c-primary"><i data-lucide="dollar-sign" size="28"></i></div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-info">
+                        <h3>Today's Orders</h3>
+                        <div class="value">145</div>
+                        <div class="trend up"><i data-lucide="trending-up" size="14"></i> +5.2%</div>
+                    </div>
+                    <div class="metric-icon c-success"><i data-lucide="shopping-cart" size="28"></i></div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-info">
+                        <h3>Total Orders</h3>
+                        <div class="value">1,280</div>
+                    </div>
+                    <div class="metric-icon c-warning"><i data-lucide="receipt" size="28"></i></div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-info">
+                        <h3>Menu Items</h3>
+                        <div class="value" id="menuCount">24</div>
+                    </div>
+                    <div class="metric-icon c-pink"><i data-lucide="utensils" size="28"></i></div>
+                </div>
             </div>
             <div class="data-grid">
-                <div class="panel"><div class="panel-header"><h3>Revenue (Last 7 Days)</h3></div><div class="chart-container"><canvas id="revenueChart"></canvas></div></div>
-                <div class="panel"><div class="panel-header"><h3>Recent Orders</h3><div class="panel-action" onclick="switchSection('orders')">View All</div></div><table class="orders-table"><thead><tr><th>Order ID</th><th>Amount</th><th>Status</th></tr></thead><tbody id="recentOrders"></tbody></table></div>
+                <div class="panel">
+                    <div class="panel-header"><h3>Revenue (Last 7 Days)</h3></div>
+                    <div class="chart-container"><canvas id="revenueChart"></canvas></div>
+                </div>
+                <div class="panel">
+                    <div class="panel-header"><h3>Recent Orders</h3><div class="panel-action" onclick="switchSection('orders')">View All</div></div>
+                    <table class="orders-table"><thead><tr><th>Order ID</th><th>Amount</th><th>Status</th></tr></thead><tbody id="recentOrders"></tbody></table>
+                </div>
             </div>
         </div>
 
@@ -186,58 +218,37 @@
         <!-- MENU ITEMS SECTION -->
         <div id="menu-items" class="dashboard-scroll section" style="display:none;">
             <h1 class="page-title">Menu Items</h1>
-            <div class="panel">
-                <div class="panel-header"><h3>Current Menu</h3><button class="add-btn" onclick="openAddMenuItemModal()">+ Add New Item</button></div>
-                <div id="menuItemsList"></div>
-            </div>
+            <div class="panel"><div class="panel-header"><h3>Current Menu</h3><button class="add-btn" onclick="openAddMenuItemModal()">+ Add New Item</button></div><div id="menuItemsList"></div></div>
         </div>
 
         <!-- CUSTOMERS SECTION -->
         <div id="customers" class="dashboard-scroll section" style="display:none;">
             <h1 class="page-title">Customers</h1>
-            <div class="panel">
-                <div class="panel-header"><h3>Customer Directory</h3><button class="add-btn" onclick="openAddCustomerModal()">+ Add Customer</button></div>
-                <div id="customersList"></div>
-            </div>
+            <div class="panel"><div class="panel-header"><h3>Customer Directory</h3><button class="add-btn" onclick="openAddCustomerModal()">+ Add Customer</button></div><div id="customersList"></div></div>
         </div>
 
         <!-- REPORTS SECTION -->
         <div id="reports" class="dashboard-scroll section" style="display:none;">
             <h1 class="page-title">Reports & Analytics</h1>
-            <div class="data-grid">
-                <div class="panel"><div class="panel-header"><h3>Top Selling Items</h3></div><div id="topItems"></div></div>
-                <div class="panel"><div class="panel-header"><h3>Sales by Category</h3></div><canvas id="categoryChart" style="height:250px;"></canvas></div>
-            </div>
+            <div class="data-grid"><div class="panel"><div class="panel-header"><h3>Top Selling Items</h3></div><div id="topItems"></div></div><div class="panel"><div class="panel-header"><h3>Sales by Category</h3></div><canvas id="categoryChart" style="height:250px;"></canvas></div></div>
             <div class="panel" style="margin-top:20px;"><div class="panel-header"><h3>Export Reports</h3></div><button onclick="exportReport()" style="background:var(--primary); color:white; padding:10px 20px; border:none; border-radius:8px; cursor:pointer;">📊 Export as CSV</button></div>
         </div>
 
         <!-- SETTINGS SECTION -->
         <div id="settings" class="dashboard-scroll section" style="display:none;">
             <h1 class="page-title">Settings</h1>
-            <div class="panel">
-                <div class="panel-header"><h3>General Settings</h3></div>
-                <div class="setting-row">
-                    <div class="setting-field"><label>Restaurant Name</label><input type="text" id="restaurantName" placeholder="Restaurant Name"></div>
-                    <div class="setting-field"><label>Tax Rate (%)</label><input type="number" id="taxRate" step="0.1" placeholder="Tax Rate"></div>
-                    <div class="setting-field"><label>Currency Symbol</label><select id="currencySymbol"><option value="$">$ USD</option><option value="€">€ EUR</option><option value="£">£ GBP</option><option value="₹">₹ INR</option><option value="﷼">﷼ SAR</option></select></div>
-                    <div><button onclick="saveGeneralSettings()" style="background:var(--primary); color:white; border:none; padding:10px 20px; border-radius:8px; cursor:pointer;">Save</button></div>
-                </div>
+            <div class="panel"><div class="panel-header"><h3>General Settings</h3></div>
+                <div class="setting-row"><div class="setting-field"><label>Restaurant Name</label><input type="text" id="restaurantName" placeholder="Restaurant Name"></div><div class="setting-field"><label>Tax Rate (%)</label><input type="number" id="taxRate" step="0.1" placeholder="Tax Rate"></div><div class="setting-field"><label>Currency Symbol</label><select id="currencySymbol"><option value="$">$ USD</option><option value="€">€ EUR</option><option value="£">£ GBP</option><option value="₹">₹ INR</option><option value="﷼">﷼ SAR</option></select></div><div><button onclick="saveGeneralSettings()" style="background:var(--primary); color:white; border:none; padding:10px 20px; border-radius:8px; cursor:pointer;">Save</button></div></div>
                 <div class="setting-row"><div class="setting-field" style="flex:2;"><label>Receipt Footer Message</label><input type="text" id="receiptFooter" placeholder="Thank you for your visit!"></div><div><button onclick="saveReceiptFooter()" style="background:var(--primary); color:white; border:none; padding:10px 20px; border-radius:8px; cursor:pointer;">Save</button></div></div>
             </div>
             <div class="panel" style="margin-top:20px;"><div class="panel-header"><h3>Notification Settings</h3></div><div class="inline-checkbox"><div class="checkbox-item"><input type="checkbox" id="emailNotifications"><label>Email Notifications</label></div><div class="checkbox-item"><input type="checkbox" id="soundAlert"><label>Order Sound Alert</label></div><div><button onclick="saveNotificationSettings()" style="background:var(--primary); color:white; border:none; padding:8px 20px; border-radius:8px; cursor:pointer;">Save</button></div></div></div>
             <div class="panel" style="margin-top:20px;"><div class="panel-header"><h3>Staff Management</h3><button class="add-btn" onclick="openAddStaffModal()">+ Add Staff</button></div><div id="staffList"></div></div>
         </div>
 
-        <!-- PROFILE MODAL -->
+        <!-- MODALS -->
         <div id="profileModal" class="modal"><div class="modal-content"><h3>My Profile</h3><div style="display:flex; gap:20px; align-items:center; margin-bottom:20px;"><img id="profileAvatar" src="" style="width:70px; height:70px; border-radius:50%; object-fit:cover;"><div><h4 id="profileName">Loading...</h4><p id="profileEmail">Loading...</p></div></div><div class="modal-buttons"><button class="btn-cancel" onclick="closeProfileModal()">Close</button></div></div></div>
-
-        <!-- MENU MODAL -->
         <div id="menuModal" class="modal"><div class="modal-content"><h3 id="menuModalTitle">Add Menu Item</h3><input type="text" id="menuName" placeholder="Item Name"><input type="number" id="menuPrice" placeholder="Price"><input type="text" id="menuCategory" placeholder="Category"><input type="text" id="menuImage" placeholder="Emoji (🍔)"><div class="modal-buttons"><button class="btn-save" onclick="saveMenuItem()">Save</button><button class="btn-cancel" onclick="closeMenuModal()">Cancel</button></div></div></div>
-
-        <!-- CUSTOMER MODAL -->
         <div id="customerModal" class="modal"><div class="modal-content"><h3>Add Customer</h3><input type="text" id="customerName" placeholder="Full Name"><input type="email" id="customerEmail" placeholder="Email"><input type="text" id="customerPhone" placeholder="Phone"><div class="modal-buttons"><button class="btn-save" onclick="saveCustomer()">Save</button><button class="btn-cancel" onclick="closeCustomerModal()">Cancel</button></div></div></div>
-
-        <!-- STAFF MODAL -->
         <div id="staffModal" class="modal"><div class="modal-content"><h3 id="staffModalTitle">Add Staff Member</h3><input type="text" id="staffName" placeholder="Full Name"><input type="email" id="staffEmail" placeholder="Email"><select id="staffRole"><option value="Cashier">Cashier</option><option value="Waiter">Waiter</option><option value="Kitchen Staff">Kitchen Staff</option><option value="Manager">Manager</option></select><div class="modal-buttons"><button class="btn-save" onclick="saveStaffMember()">Save</button><button class="btn-cancel" onclick="closeStaffModal()">Cancel</button></div></div></div>
     </main>
 
@@ -245,7 +256,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-        // Firebase Config
         const firebaseConfig = {
             apiKey: "AIzaSyCN0akvFXOHM6WPHv9ve9noqqmauO3TJRY",
             authDomain: "billzest-pos.firebaseapp.com",
@@ -259,12 +269,18 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
+        // Function to refresh all icons
+        function refreshIcons() {
+            if (typeof lucide !== 'undefined' && lucide.createIcons) {
+                lucide.createIcons();
+            }
+        }
+
         // Check Auth State
         onAuthStateChanged(auth, (user) => {
             const loadingScreen = document.getElementById('loadingScreen');
             if (user) {
                 loadingScreen.style.display = 'none';
-                // Update UI with user info
                 const displayName = user.displayName || user.email.split('@')[0];
                 document.getElementById('userName').innerText = displayName;
                 document.getElementById('profileName').innerText = displayName;
@@ -276,24 +292,23 @@
                     document.getElementById('userAvatar').src = `https://ui-avatars.com/api/?background=4f46e5&color=fff&name=${displayName}`;
                     document.getElementById('profileAvatar').src = `https://ui-avatars.com/api/?background=4f46e5&color=fff&name=${displayName}`;
                 }
+                refreshIcons();
             } else {
                 window.location.href = 'login.html';
             }
         });
 
-        // Logout Function
         async function handleLogout() {
             try {
                 await signOut(auth);
                 localStorage.removeItem('user');
                 window.location.href = 'login.html';
             } catch (error) {
-                console.error("Logout error:", error);
                 alert("Error logging out: " + error.message);
             }
         }
 
-        // Data Storage (localStorage for demo)
+        // Data Storage
         let menuItems = JSON.parse(localStorage.getItem('menuItems')) || [
             { id: 1, name: 'Classic Burger', price: 8.50, category: 'Burgers', image: '🍔' },
             { id: 2, name: 'Margherita Pizza', price: 12.00, category: 'Pizza', image: '🍕' },
@@ -317,21 +332,11 @@
             { id: '#ORD-896', items: 'Fries, Coffee', total: 15.50, status: 'Cooking', time: '01:20 PM' }
         ];
 
-        let staff = JSON.parse(localStorage.getItem('staff')) || [
-            { id: 1, name: 'Admin User', email: 'admin@billzestpos.com', role: 'Manager' }
-        ];
+        let staff = JSON.parse(localStorage.getItem('staff')) || [{ id: 1, name: 'Admin User', email: 'admin@billzestpos.com', role: 'Manager' }];
+        let settings = JSON.parse(localStorage.getItem('settings')) || { restaurantName: 'Billzestpos Restaurant', taxRate: 5, currencySymbol: '$', receiptFooter: 'Thank you for your visit!', emailNotifications: true, soundAlert: true };
 
-        let settings = JSON.parse(localStorage.getItem('settings')) || {
-            restaurantName: 'Billzestpos Restaurant', taxRate: 5, currencySymbol: '$',
-            receiptFooter: 'Thank you for your visit!', emailNotifications: true, soundAlert: true
-        };
-
-        let nextMenuItemId = menuItems.length + 1;
-        let nextCustomerId = customers.length + 1;
-        let nextStaffId = staff.length + 1;
-        let editingMenuItemId = null;
-        let editingCustomerId = null;
-        let editingStaffId = null;
+        let nextMenuItemId = menuItems.length + 1, nextCustomerId = customers.length + 1, nextStaffId = staff.length + 1;
+        let editingMenuItemId = null, editingCustomerId = null, editingStaffId = null;
 
         function saveData() {
             localStorage.setItem('menuItems', JSON.stringify(menuItems));
@@ -346,25 +351,24 @@
             document.getElementById('taxRate').value = settings.taxRate || 5;
             document.getElementById('currencySymbol').value = settings.currencySymbol || '$';
             document.getElementById('receiptFooter').value = settings.receiptFooter || '';
-            document.getElementById('emailNotifications').checked = settings.emailNotifications || false;
-            document.getElementById('soundAlert').checked = settings.soundAlert || false;
+            document.getElementById('emailNotifications').checked = settings.emailNotifications;
+            document.getElementById('soundAlert').checked = settings.soundAlert;
         }
 
         function saveGeneralSettings() {
             settings.restaurantName = document.getElementById('restaurantName').value;
             settings.taxRate = parseFloat(document.getElementById('taxRate').value);
             settings.currencySymbol = document.getElementById('currencySymbol').value;
-            saveData();
-            alert('General settings saved!');
-            loadMenuItems(); loadCustomers(); loadOrders();
+            saveData(); alert('General settings saved!');
+            loadMenuItems(); loadCustomers(); loadOrders(); refreshIcons();
         }
-
         function saveReceiptFooter() { settings.receiptFooter = document.getElementById('receiptFooter').value; saveData(); alert('Receipt footer saved!'); }
         function saveNotificationSettings() { settings.emailNotifications = document.getElementById('emailNotifications').checked; settings.soundAlert = document.getElementById('soundAlert').checked; saveData(); alert('Notification settings saved!'); }
 
         function loadStaffList() {
             const container = document.getElementById('staffList');
             if(container) container.innerHTML = staff.map(s => `<div class="menu-item-card"><div><h4>${s.name}</h4><p>${s.email} | ${s.role}</p></div><div><button class="edit-btn" onclick="editStaff(${s.id})">Edit</button><button class="delete-btn" onclick="deleteStaff(${s.id})">Delete</button></div></div>`).join('');
+            refreshIcons();
         }
 
         function openAddStaffModal() { editingStaffId = null; document.getElementById('staffModalTitle').innerText = 'Add Staff Member'; document.getElementById('staffName').value = ''; document.getElementById('staffEmail').value = ''; document.getElementById('staffRole').value = 'Cashier'; document.getElementById('staffModal').style.display = 'flex'; }
@@ -378,6 +382,7 @@
             if(!container) return;
             document.getElementById('menuCount').innerText = menuItems.length;
             container.innerHTML = menuItems.map(item => `<div class="menu-item-card"><div style="display:flex; gap:10px;"><span style="font-size:2rem;">${item.image || '🍽️'}</span><div><h4>${item.name}</h4><p style="color:var(--primary);">${settings.currencySymbol}${item.price}</p><small>${item.category}</small></div></div><div><button class="edit-btn" onclick="editMenuItem(${item.id})">Edit</button><button class="delete-btn" onclick="deleteMenuItem(${item.id})">Delete</button></div></div>`).join('');
+            refreshIcons();
         }
 
         function openAddMenuItemModal() { editingMenuItemId = null; document.getElementById('menuModalTitle').innerText = 'Add Menu Item'; document.getElementById('menuName').value = ''; document.getElementById('menuPrice').value = ''; document.getElementById('menuCategory').value = ''; document.getElementById('menuImage').value = ''; document.getElementById('menuModal').style.display = 'flex'; }
@@ -390,6 +395,7 @@
             const container = document.getElementById('customersList');
             if(!container) return;
             container.innerHTML = customers.map(c => `<div class="menu-item-card"><div><h4>${c.name}</h4><p>${c.email} | ${c.phone}</p><small>${c.orders} orders | ${settings.currencySymbol}${c.spent}</small></div><div><button class="edit-btn" onclick="editCustomer(${c.id})">Edit</button><button class="delete-btn" onclick="deleteCustomer(${c.id})">Delete</button></div></div>`).join('');
+            refreshIcons();
         }
 
         function openAddCustomerModal() { editingCustomerId = null; document.getElementById('customerName').value = ''; document.getElementById('customerEmail').value = ''; document.getElementById('customerPhone').value = ''; document.getElementById('customerModal').style.display = 'flex'; }
@@ -403,6 +409,7 @@
             const allContainer = document.getElementById('allOrders');
             if(recentContainer) recentContainer.innerHTML = orders.slice(0,5).map(o => `<tr><td>${o.id}</td><td>${settings.currencySymbol}${o.total}</td><td><span class="status s-${o.status.toLowerCase()}">${o.status}</span></td>`).join('');
             if(allContainer) allContainer.innerHTML = orders.map(o => `<tr><td>${o.id}</td><td>${o.items}</td><td>${settings.currencySymbol}${o.total}</td><td><span class="status s-${o.status.toLowerCase()}">${o.status}</span></td><td>${o.time}</td>`).join('');
+            refreshIcons();
         }
 
         function loadReports() {
@@ -411,13 +418,14 @@
             if(topContainer) topContainer.innerHTML = topItems.map(item => `<div style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #e2e8f0;"><span>${item.name}</span><span>${item.sold} sold</span><span style="color:var(--primary);">${settings.currencySymbol}${item.revenue}</span></div>`).join('');
             const ctx = document.getElementById('categoryChart');
             if(ctx) new Chart(ctx, { type: 'doughnut', data: { labels: ['Burgers', 'Pizza', 'Sides', 'Beverages', 'Salads'], datasets: [{ data: [45, 32, 78, 56, 20], backgroundColor: ['#4f46e5', '#ec4899', '#10b981', '#f59e0b', '#ef4444'] }] }, options: { responsive: true, maintainAspectRatio: false } });
+            refreshIcons();
         }
 
         // Chart
         const chartCtx = document.getElementById('revenueChart');
         if(chartCtx) new Chart(chartCtx, { type: 'line', data: { labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], datasets: [{ label: 'Revenue ($)', data: [1200, 1900, 1500, 2200, 2800, 3500, 3100], borderColor: '#4f46e5', backgroundColor: 'rgba(79,70,229,0.1)', borderWidth: 3, fill: true, tension: 0.4 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } } });
 
-        function showProfile() { document.getElementById('profileModal').style.display = 'flex'; }
+        function showProfile() { document.getElementById('profileModal').style.display = 'flex'; refreshIcons(); }
         function closeProfileModal() { document.getElementById('profileModal').style.display = 'none'; }
         function exportReport() { let csv = "Order ID,Items,Total,Status,Time\n"; orders.forEach(o => { csv += `"${o.id}","${o.items}",${o.total},"${o.status}","${o.time}"\n`; }); const blob = new Blob([csv], { type: 'text/csv' }); const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = 'billzestpos_orders.csv'; link.click(); }
 
@@ -431,11 +439,12 @@
             if(sectionId === 'orders') loadOrders();
             if(sectionId === 'reports') loadReports();
             if(sectionId === 'settings') { loadSettingsToUI(); loadStaffList(); }
+            refreshIcons();
             if(window.innerWidth <= 768) toggleSidebar();
         }
 
-        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); document.getElementById('overlay').classList.toggle('show'); }
-        function toggleProfileMenu() { document.getElementById('profileDropdown').classList.toggle('show'); }
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); document.getElementById('overlay').classList.toggle('show'); refreshIcons(); }
+        function toggleProfileMenu() { document.getElementById('profileDropdown').classList.toggle('show'); refreshIcons(); }
 
         document.querySelectorAll('.nav-item').forEach(item => { item.addEventListener('click', () => switchSection(item.getAttribute('data-section'))); });
         document.getElementById('logoutBtn').addEventListener('click', handleLogout);
@@ -445,12 +454,13 @@
         document.getElementById('searchInput').addEventListener('input', (e) => {
             const term = e.target.value.toLowerCase();
             const filtered = orders.filter(o => o.id.toLowerCase().includes(term) || o.items.toLowerCase().includes(term));
-            document.getElementById('allOrders').innerHTML = filtered.map(o => `<tr><td>${o.id}</td><td>${o.items}</td><td>${settings.currencySymbol}${o.total}</td><td><span class="status s-${o.status.toLowerCase()}">${o.status}</span></td><td>${o.time}</td>`).join('');
+            document.getElementById('allOrders').innerHTML = filtered.map(o => `<td><td>${o.id}</td><td>${o.items}</td><td>${settings.currencySymbol}${o.total}</td><td><span class="status s-${o.status.toLowerCase()}">${o.status}</span></td><td>${o.time}</td>`).join('');
+            refreshIcons();
         });
 
         window.onclick = (e) => { if (!e.target.closest('.user-profile')) document.getElementById('profileDropdown')?.classList.remove('show'); if(e.target === document.getElementById('profileModal')) closeProfileModal(); if(e.target === document.getElementById('menuModal')) closeMenuModal(); if(e.target === document.getElementById('customerModal')) closeCustomerModal(); if(e.target === document.getElementById('staffModal')) closeStaffModal(); };
 
-        loadMenuItems(); loadCustomers(); loadOrders(); loadReports(); loadSettingsToUI(); loadStaffList();
+        loadMenuItems(); loadCustomers(); loadOrders(); loadReports(); loadSettingsToUI(); loadStaffList(); refreshIcons();
 
         window.switchSection = switchSection; window.toggleSidebar = toggleSidebar; window.toggleProfileMenu = toggleProfileMenu;
         window.showProfile = showProfile; window.closeProfileModal = closeProfileModal;
