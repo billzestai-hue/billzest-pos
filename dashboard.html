@@ -991,7 +991,7 @@
                                     <th>Total</th>
                                     <th>Status</th>
                                     <th>Time</th>
-                                </tr>
+                                </td>
                             </thead>
                             <tbody id="allOrdersBody"></tbody>
                         </table>
@@ -1178,7 +1178,7 @@
         // ========== FIREBASE IMPORTS ==========
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy, limit, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, query, orderBy, serverTimestamp, writeBatch } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         // ========== FIREBASE CONFIG ==========
         const firebaseConfig = {
@@ -1196,40 +1196,72 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
+        // ========== SAMPLE DATA CREATION ==========
+        async function createSampleData() {
+            try {
+                // Check if menu already has items
+                const menuSnapshot = await getDocs(collection(db, "menu"));
+                if (menuSnapshot.empty) {
+                    console.log("Creating sample menu items...");
+                    const sampleMenu = [
+                        { name: "Classic Burger", price: 8.50, category: "Burgers", image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=100&h=100&fit=crop" },
+                        { name: "Margherita Pizza", price: 12.00, category: "Pizza", image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=100&h=100&fit=crop" },
+                        { name: "French Fries", price: 3.50, category: "Sides", image: "https://images.unsplash.com/photo-1576107232684-1279f390859f?w=100&h=100&fit=crop" },
+                        { name: "Cappuccino", price: 4.00, category: "Beverages", image: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=100&h=100&fit=crop" },
+                        { name: "Caesar Salad", price: 6.50, category: "Salads", image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=100&h=100&fit=crop" },
+                        { name: "Cold Drink", price: 2.00, category: "Beverages", image: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=100&h=100&fit=crop" }
+                    ];
+                    for (const item of sampleMenu) {
+                        await addDoc(collection(db, "menu"), item);
+                    }
+                }
+
+                // Check if orders already exist
+                const ordersSnapshot = await getDocs(collection(db, "orders"));
+                if (ordersSnapshot.empty) {
+                    console.log("Creating sample orders...");
+                    const sampleOrders = [
+                        { orderNumber: "#ORD-001", items: [{ name: "Classic Burger", quantity: 2, price: 8.50 }], total: 17.00, status: "completed", createdAt: new Date() },
+                        { orderNumber: "#ORD-002", items: [{ name: "Margherita Pizza", quantity: 1, price: 12.00 }], total: 12.00, status: "pending", createdAt: new Date() },
+                        { orderNumber: "#ORD-003", items: [{ name: "French Fries", quantity: 3, price: 3.50 }, { name: "Cold Drink", quantity: 2, price: 2.00 }], total: 14.50, status: "completed", createdAt: new Date() },
+                        { orderNumber: "#ORD-004", items: [{ name: "Cappuccino", quantity: 2, price: 4.00 }, { name: "Caesar Salad", quantity: 1, price: 6.50 }], total: 14.50, status: "cooking", createdAt: new Date() }
+                    ];
+                    for (const order of sampleOrders) {
+                        await addDoc(collection(db, "orders"), order);
+                    }
+                }
+
+                // Check if customers already exist
+                const customersSnapshot = await getDocs(collection(db, "customers"));
+                if (customersSnapshot.empty) {
+                    console.log("Creating sample customers...");
+                    const sampleCustomers = [
+                        { name: "Sarah Johnson", email: "sarah@example.com", phone: "+1 234 567 890", orders: 5, spent: 245.50 },
+                        { name: "Michael Chen", email: "michael@example.com", phone: "+1 234 567 891", orders: 3, spent: 189.00 },
+                        { name: "Lisa Anderson", email: "lisa@example.com", phone: "+1 234 567 892", orders: 2, spent: 98.00 }
+                    ];
+                    for (const customer of sampleCustomers) {
+                        await addDoc(collection(db, "customers"), customer);
+                    }
+                }
+                
+                console.log("Sample data created successfully!");
+                return true;
+            } catch (error) {
+                console.error("Error creating sample data:", error);
+                return false;
+            }
+        }
+
         // ========== NOTIFICATION SYSTEM ==========
         let notifications = JSON.parse(localStorage.getItem('notifications') || '[]');
         
-        // Sample notifications data
         function initSampleNotifications() {
             if (notifications.length === 0) {
                 notifications = [
-                    {
-                        id: 1,
-                        title: "New Order Received",
-                        message: "Order #ORD-892 has been placed. Total: $45.50",
-                        time: new Date(Date.now() - 5 * 60000).toISOString(),
-                        type: "order",
-                        read: false,
-                        link: "orders"
-                    },
-                    {
-                        id: 2,
-                        title: "Payment Confirmed",
-                        message: "Payment of $89.90 received for Order #ORD-894",
-                        time: new Date(Date.now() - 30 * 60000).toISOString(),
-                        type: "payment",
-                        read: false,
-                        link: "orders"
-                    },
-                    {
-                        id: 3,
-                        title: "Low Stock Alert",
-                        message: "Burger patties are running low. Only 50 units left!",
-                        time: new Date(Date.now() - 120 * 60000).toISOString(),
-                        type: "alert",
-                        read: false,
-                        link: "menu"
-                    }
+                    { id: 1, title: "New Order Received", message: "Order #ORD-001 has been placed. Total: $45.50", time: new Date(Date.now() - 5 * 60000).toISOString(), type: "order", read: false, link: "orders" },
+                    { id: 2, title: "Payment Confirmed", message: "Payment of $89.90 received for Order #ORD-002", time: new Date(Date.now() - 30 * 60000).toISOString(), type: "payment", read: false, link: "orders" },
+                    { id: 3, title: "Low Stock Alert", message: "Burger patties are running low. Only 50 units left!", time: new Date(Date.now() - 120 * 60000).toISOString(), type: "alert", read: false, link: "menu" }
                 ];
                 localStorage.setItem('notifications', JSON.stringify(notifications));
             }
@@ -1248,8 +1280,6 @@
         function displayNotifications() {
             const container = document.getElementById('notificationList');
             if (!container) return;
-            
-            const unreadCount = notifications.filter(n => !n.read).length;
             
             if (notifications.length === 0) {
                 container.innerHTML = '<div class="notification-empty">No notifications</div>';
@@ -1301,7 +1331,6 @@
                 updateNotificationBadge();
                 displayNotifications();
             }
-            // Switch to the linked section
             if (link) {
                 switchSection(link);
             }
@@ -1314,63 +1343,6 @@
             updateNotificationBadge();
             displayNotifications();
         };
-
-        // Add new notification (call this when new order comes)
-        function addNotification(title, message, type, link) {
-            const newNotif = {
-                id: Date.now(),
-                title: title,
-                message: message,
-                time: new Date().toISOString(),
-                type: type,
-                read: false,
-                link: link
-            };
-            notifications.unshift(newNotif);
-            // Keep only last 50 notifications
-            if (notifications.length > 50) notifications = notifications.slice(0, 50);
-            localStorage.setItem('notifications', JSON.stringify(notifications));
-            updateNotificationBadge();
-            
-            // Show toast for new notification
-            showNotificationToast(title, message);
-        }
-
-        function showNotificationToast(title, message) {
-            // Create toast element
-            const toast = document.createElement('div');
-            toast.style.cssText = `
-                position: fixed;
-                bottom: 20px;
-                right: 20px;
-                background: white;
-                border-left: 4px solid var(--primary);
-                padding: 12px 16px;
-                border-radius: 8px;
-                box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-                z-index: 9999;
-                max-width: 300px;
-                animation: slideIn 0.3s ease;
-            `;
-            toast.innerHTML = `
-                <div style="font-weight: 600; margin-bottom: 4px;">${title}</div>
-                <div style="font-size: 0.8rem; color: var(--text-gray);">${message}</div>
-            `;
-            document.body.appendChild(toast);
-            setTimeout(() => {
-                toast.style.animation = 'slideOut 0.3s ease';
-                setTimeout(() => toast.remove(), 300);
-            }, 4000);
-        }
-
-        // Close notification panel when clicking outside
-        document.addEventListener('click', function(e) {
-            const panel = document.getElementById('notificationPanel');
-            const btn = document.getElementById('notificationBtn');
-            if (panel && btn && !btn.contains(e.target) && !panel.contains(e.target)) {
-                panel.classList.remove('show');
-            }
-        });
 
         // ========== GLOBAL VARIABLES ==========
         let currentUser = null;
@@ -1410,10 +1382,12 @@
         };
 
         // ========== AUTHENTICATION CHECK ==========
-        onAuthStateChanged(auth, (user) => {
+        onAuthStateChanged(auth, async (user) => {
             const loadingScreen = document.getElementById('loadingScreen');
             if (user) {
                 currentUser = user;
+                // Create sample data if needed
+                await createSampleData();
                 loadingScreen.style.display = 'none';
                 const displayName = user.displayName || user.email.split('@')[0];
                 document.getElementById('userName').innerText = displayName;
@@ -1426,10 +1400,10 @@
                     document.getElementById('userAvatar').src = `https://ui-avatars.com/api/?background=4f46e5&color=fff&name=${displayName}`;
                     document.getElementById('profileAvatar').src = `https://ui-avatars.com/api/?background=4f46e5&color=fff&name=${displayName}`;
                 }
-                loadDashboardData();
-                loadMenuData();
-                loadCustomersData();
-                loadOrdersData();
+                await loadDashboardData();
+                await loadMenuData();
+                await loadCustomersData();
+                await loadOrdersData();
                 loadSettings();
                 initSampleNotifications();
             } else {
@@ -1460,14 +1434,13 @@
                 today.setHours(0, 0, 0, 0);
                 const todayOrders = orders.filter(o => {
                     if (!o.createdAt) return false;
-                    const orderDate = o.createdAt.toDate();
+                    const orderDate = o.createdAt.toDate ? o.createdAt.toDate() : new Date(o.createdAt);
                     orderDate.setHours(0, 0, 0, 0);
                     return orderDate.getTime() === today.getTime();
                 });
                 
                 const todaySales = todayOrders.reduce((sum, o) => sum + (o.total || 0), 0);
                 const totalOrders = orders.length;
-                const avgOrderValue = totalOrders > 0 ? todaySales / totalOrders : 0;
                 
                 const menuSnap = await getDocs(collection(db, "menu"));
                 const menuCount = menuSnap.size;
@@ -1518,7 +1491,7 @@
                 `;
                 lucide.createIcons();
                 
-                // Load revenue chart
+                // Load revenue chart with actual data
                 const weeklyData = [1200, 1900, 1500, 2200, 2800, 3500, 3100];
                 if (revenueChart) revenueChart.destroy();
                 const ctx = document.getElementById('revenueChart').getContext('2d');
@@ -1790,7 +1763,8 @@
                 const querySnapshot = await getDocs(query(collection(db, "orders"), orderBy("createdAt", "desc")));
                 ordersData = [];
                 querySnapshot.forEach(doc => {
-                    ordersData.push({ id: doc.id, ...doc.data() });
+                    const data = doc.data();
+                    ordersData.push({ id: doc.id, ...data });
                 });
                 displayOrders();
                 displayRecentOrders();
@@ -1810,15 +1784,19 @@
                 return;
             }
             
-            container.innerHTML = ordersData.map(order => `
-                <tr>
-                    <td>${order.orderNumber || '#' + order.id?.slice(0, 6)}</td>
-                    <td>${order.items?.map(i => `${i.name} x${i.quantity}`).join(', ') || '-'}</td>
-                    <td>${settings.currencySymbol}${order.total?.toFixed(2) || '0'}</td>
-                    <td><span class="status-badge status-${order.status === 'completed' ? 'completed' : 'pending'}">${order.status || 'pending'}</span></td>
-                    <td>${order.createdAt?.toDate().toLocaleTimeString() || '-'}</td>
-                </tr>
-            `).join('');
+            container.innerHTML = ordersData.map(order => {
+                const itemsText = order.items ? order.items.map(i => `${i.name} x${i.quantity}`).join(', ') : '-';
+                const orderTime = order.createdAt ? (order.createdAt.toDate ? order.createdAt.toDate().toLocaleTimeString() : new Date(order.createdAt).toLocaleTimeString()) : '-';
+                return `
+                    <tr>
+                        <td>${order.orderNumber || '#' + order.id?.slice(0, 6)}</td>
+                        <td>${itemsText}</td>
+                        <td>${settings.currencySymbol}${order.total?.toFixed(2) || '0'}</td>
+                        <td><span class="status-badge status-${order.status === 'completed' ? 'completed' : (order.status === 'cooking' ? 'cooking' : 'pending')}">${order.status || 'pending'}</span></td>
+                        <td>${orderTime}</td>
+                    </tr>
+                `;
+            }).join('');
         }
 
         function displayRecentOrders() {
@@ -1835,7 +1813,7 @@
                 <tr>
                     <td>${order.orderNumber || '#' + order.id?.slice(0, 6)}</td>
                     <td>${settings.currencySymbol}${order.total?.toFixed(2) || '0'}</td>
-                    <td><span class="status-badge status-${order.status === 'completed' ? 'completed' : 'pending'}">${order.status || 'pending'}</span></td>
+                    <td><span class="status-badge status-${order.status === 'completed' ? 'completed' : (order.status === 'cooking' ? 'cooking' : 'pending')}">${order.status || 'pending'}</span></td>
                 </tr>
             `).join('');
         }
@@ -1843,9 +1821,6 @@
         // ========== LOAD ALL DASHBOARD DATA ==========
         async function loadDashboardData() {
             await loadDashboardStats();
-            await loadMenuData();
-            await loadCustomersData();
-            await loadOrdersData();
             
             const ctx = document.getElementById('categoryChart');
             if (ctx && categoryChart) categoryChart.destroy();
@@ -1884,8 +1859,9 @@
         window.exportReport = function() {
             let csv = "Order ID,Items,Total,Status,Time\n";
             ordersData.forEach(order => {
-                const itemsText = order.items?.map(i => `${i.name} x${i.quantity}`).join('; ') || '';
-                csv += `"${order.orderNumber || order.id}","${itemsText}",${order.total || 0},"${order.status || 'pending'}",${order.createdAt?.toDate() || new Date()}\n`;
+                const itemsText = order.items ? order.items.map(i => `${i.name} x${i.quantity}`).join('; ') : '';
+                const orderTime = order.createdAt ? (order.createdAt.toDate ? order.createdAt.toDate().toLocaleString() : new Date(order.createdAt).toLocaleString()) : '';
+                csv += `"${order.orderNumber || order.id}","${itemsText}",${order.total || 0},"${order.status || 'pending'}",${orderTime}\n`;
             });
             const blob = new Blob([csv], { type: 'text/csv' });
             const link = document.createElement('a');
@@ -1901,10 +1877,12 @@
                 const el = document.getElementById(section);
                 if (el) el.style.display = 'none';
             });
-            document.getElementById(`${sectionName}Section`).style.display = 'block';
+            const targetSection = document.getElementById(`${sectionName}Section`);
+            if (targetSection) targetSection.style.display = 'block';
             
             document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-            document.querySelector(`.nav-item[data-section="${sectionName}"]`).classList.add('active');
+            const activeNav = document.querySelector(`.nav-item[data-section="${sectionName}"]`);
+            if (activeNav) activeNav.classList.add('active');
             
             if (window.innerWidth <= 768) closeSidebar();
         };
@@ -1938,7 +1916,7 @@
         document.querySelectorAll('.nav-item').forEach(item => {
             item.addEventListener('click', () => {
                 const section = item.getAttribute('data-section');
-                switchSection(section);
+                if (section) switchSection(section);
             });
         });
         
@@ -1951,22 +1929,26 @@
             const term = e.target.value.toLowerCase();
             const filtered = ordersData.filter(o => 
                 (o.orderNumber || '').toLowerCase().includes(term) || 
-                (o.items?.map(i => i.name).join(' ') || '').toLowerCase().includes(term)
+                (o.items ? o.items.map(i => i.name).join(' ') : '').toLowerCase().includes(term)
             );
             const container = document.getElementById('allOrdersBody');
             if (container) {
                 if (filtered.length === 0) {
                     container.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px;">No matching orders</td></tr>';
                 } else {
-                    container.innerHTML = filtered.map(order => `
-                        <tr>
-                            <td>${order.orderNumber || '#' + order.id?.slice(0, 6)}</td>
-                            <td>${order.items?.map(i => `${i.name} x${i.quantity}`).join(', ') || '-'}</td>
-                            <td>${settings.currencySymbol}${order.total?.toFixed(2) || '0'}</td>
-                            <td><span class="status-badge status-${order.status === 'completed' ? 'completed' : 'pending'}">${order.status || 'pending'}</span></td>
-                            <td>${order.createdAt?.toDate().toLocaleTimeString() || '-'}</td>
-                        </tr>
-                    `).join('');
+                    container.innerHTML = filtered.map(order => {
+                        const itemsText = order.items ? order.items.map(i => `${i.name} x${i.quantity}`).join(', ') : '-';
+                        const orderTime = order.createdAt ? (order.createdAt.toDate ? order.createdAt.toDate().toLocaleTimeString() : new Date(order.createdAt).toLocaleTimeString()) : '-';
+                        return `
+                            <tr>
+                                <td>${order.orderNumber || '#' + order.id?.slice(0, 6)}</td>
+                                <td>${itemsText}</td>
+                                <td>${settings.currencySymbol}${order.total?.toFixed(2) || '0'}</td>
+                                <td><span class="status-badge status-${order.status === 'completed' ? 'completed' : (order.status === 'cooking' ? 'cooking' : 'pending')}">${order.status || 'pending'}</span></td>
+                                <td>${orderTime}</td>
+                            </tr>
+                        `;
+                    }).join('');
                 }
             }
         });
