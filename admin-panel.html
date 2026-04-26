@@ -37,7 +37,7 @@
             --danger: #ef4444;
         }
 
-        /* ========== SIDEBAR ========== */
+        /* ========== SIDEBAR STYLES ========== */
         .sidebar {
             width: 280px;
             background: white;
@@ -140,6 +140,14 @@
             align-items: center;
         }
 
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
         .page-title {
             font-size: 1.5rem;
             font-weight: 700;
@@ -160,6 +168,7 @@
             align-items: center;
             justify-content: center;
             color: white;
+            object-fit: cover;
         }
 
         /* Dashboard Scroll */
@@ -285,14 +294,25 @@
             border: none;
             cursor: pointer;
             margin: 0 5px;
+            padding: 5px;
+            border-radius: 6px;
+            transition: background 0.2s;
         }
 
         .view-btn {
             color: var(--primary);
         }
 
+        .view-btn:hover {
+            background: rgba(79, 70, 229, 0.1);
+        }
+
         .delete-btn {
             color: var(--danger);
+        }
+
+        .delete-btn:hover {
+            background: rgba(239, 68, 68, 0.1);
         }
 
         /* Modal */
@@ -321,16 +341,17 @@
 
         .modal-content h3 {
             margin-bottom: 20px;
+            color: var(--dark);
         }
 
         .modal-info-row {
             display: flex;
-            padding: 10px 0;
+            padding: 12px 0;
             border-bottom: 1px solid var(--border);
         }
 
         .modal-info-label {
-            width: 120px;
+            width: 130px;
             font-weight: 600;
             color: var(--text-gray);
         }
@@ -338,6 +359,7 @@
         .modal-info-value {
             flex: 1;
             font-weight: 500;
+            color: var(--dark);
         }
 
         .modal-buttons {
@@ -347,18 +369,20 @@
             margin-top: 20px;
         }
 
-        .modal-buttons button {
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-
         .btn-close {
             background: #e2e8f0;
             border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
         }
 
-        /* Loading */
+        .btn-close:hover {
+            background: #cbd5e1;
+        }
+
+        /* Loading Screen */
         .loading-screen {
             position: fixed;
             top: 0;
@@ -388,77 +412,144 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Login Required */
-        .login-required {
+        /* Login Container */
+        .login-container {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: white;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             z-index: 9998;
             display: flex;
             align-items: center;
             justify-content: center;
             flex-direction: column;
-            gap: 20px;
         }
 
-        .login-form {
+        .login-card {
             background: white;
-            border-radius: 20px;
-            padding: 30px;
+            border-radius: 24px;
+            padding: 40px;
             width: 90%;
-            max-width: 400px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 450px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
         }
 
-        .login-form input {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            border: 1px solid var(--border);
-            border-radius: 8px;
+        .login-card h2 {
+            text-align: center;
+            margin-bottom: 10px;
+            color: #1e293b;
         }
 
-        .login-form button {
+        .login-card p {
+            text-align: center;
+            color: var(--text-gray);
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group input {
             width: 100%;
-            padding: 12px;
-            background: var(--primary);
+            padding: 14px;
+            border: 1.5px solid var(--border);
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
             border: none;
-            border-radius: 8px;
-            cursor: pointer;
+            border-radius: 12px;
+            font-size: 1rem;
             font-weight: 600;
-        }
-
-        @media (max-width: 768px) {
-            .sidebar {
-                transform: translateX(-100%);
-                position: fixed;
-                height: 100%;
-            }
-            .sidebar.open {
-                transform: translateX(0);
-            }
-            .menu-toggle {
-                display: block;
-            }
-            .data-table {
-                font-size: 0.8rem;
-            }
-            .data-table th,
-            .data-table td {
-                padding: 8px;
-            }
-        }
-
-        .menu-toggle {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 1.2rem;
             cursor: pointer;
+            margin-top: 10px;
+            transition: transform 0.3s;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+        }
+
+        .divider {
+            text-align: center;
+            margin: 25px 0;
+            color: #94a3b8;
+            position: relative;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 45%;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .divider::before {
+            left: 0;
+        }
+
+        .divider::after {
+            right: 0;
+        }
+
+        .btn-google {
+            width: 100%;
+            padding: 12px;
+            background: white;
+            color: #334155;
+            border: 1.5px solid var(--border);
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s;
+        }
+
+        .btn-google:hover {
+            background: #f8fafc;
+            border-color: #cbd5e1;
+        }
+
+        .error-message {
+            background: #fee2e2;
+            color: #dc2626;
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-size: 0.85rem;
+            display: none;
+        }
+
+        .success-message {
+            background: #d1fae5;
+            color: #065f46;
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-size: 0.85rem;
+            display: none;
         }
 
         .sidebar-overlay {
@@ -471,309 +562,424 @@
             z-index: 99;
             display: none;
         }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                height: 100%;
+                transform: translateX(-100%);
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .sidebar-overlay.show {
+                display: block;
+            }
+            .menu-toggle {
+                display: block;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .data-table th,
+            .data-table td {
+                padding: 8px;
+                font-size: 0.7rem;
+            }
+            .panel-header {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+        }
     </style>
 </head>
 <body>
 
     <!-- Loading Screen -->
-    <div class="loading-screen" id="loadingScreen">
+    <div class="loading-screen" id="loadingScreen" style="display: none;">
         <div class="spinner"></div>
         <p>Loading Admin Panel...</p>
     </div>
 
-    <!-- Login Required Screen -->
-    <div class="login-required" id="loginRequired">
-        <div class="login-form">
-            <h2 style="text-align: center; margin-bottom: 20px;">🔐 Admin Login</h2>
-            <input type="email" id="adminEmail" placeholder="Admin Email" value="admin@billzestpos.com">
-            <input type="password" id="adminPassword" placeholder="Password" value="admin123">
-            <button onclick="adminLogin()">Login to Admin Panel</button>
-            <p style="text-align: center; margin-top: 15px; font-size: 0.8rem; color: var(--text-gray);">
-                Default: admin@billzestpos.com / admin123
+    <!-- Login Container -->
+    <div class="login-container" id="loginContainer">
+        <div class="login-card">
+            <h2>🔐 Super Admin Login</h2>
+            <p>Sign in to manage your restaurant system</p>
+            <div class="error-message" id="errorMsg"></div>
+            <div class="success-message" id="successMsg"></div>
+            <form id="loginForm">
+                <div class="input-group">
+                    <input type="email" id="adminEmail" placeholder="Email Address" required>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="adminPassword" placeholder="Password" required>
+                </div>
+                <button type="submit" class="btn-login" id="loginBtn">
+                    <span id="loginBtnText">Sign In</span>
+                    <span id="loginSpinner" style="display: none;">⏳</span>
+                </button>
+            </form>
+            <div class="divider">OR</div>
+            <button class="btn-google" id="googleLoginBtn">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" width="20">
+                Continue with Google
+            </button>
+            <p style="text-align: center; margin-top: 20px; font-size: 0.7rem; color: var(--text-gray);">
+                Only authorized administrators can access this panel
             </p>
         </div>
     </div>
 
-    <!-- Sidebar Overlay -->
-    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+    <!-- Admin Panel Content (Hidden until login) -->
+    <div id="adminPanel" style="display: none; width: 100%; display: flex;">
+        <!-- Sidebar Overlay -->
+        <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
 
-    <!-- Sidebar -->
-    <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <div class="sidebar-logo"><i data-lucide="shield" size="22"></i></div>
-            <div>
-                <h2>Super Admin</h2>
-                <p>BillzestPOS</p>
-            </div>
-        </div>
-        <div class="nav-links">
-            <div class="nav-item active" data-tab="dashboard">
-                <i data-lucide="layout-dashboard" size="18"></i>
-                <span>Dashboard</span>
-            </div>
-            <div class="nav-item" data-tab="customers">
-                <i data-lucide="users" size="18"></i>
-                <span>Customers</span>
-            </div>
-            <div class="nav-item" data-tab="subscriptions">
-                <i data-lucide="credit-card" size="18"></i>
-                <span>Subscriptions</span>
-            </div>
-            <div class="nav-item" data-tab="payments">
-                <i data-lucide="dollar-sign" size="18"></i>
-                <span>Payments</span>
-            </div>
-            <div class="nav-item" data-tab="invoices">
-                <i data-lucide="file-text" size="18"></i>
-                <span>Invoices</span>
-            </div>
-            <div class="nav-item" data-tab="contacts">
-                <i data-lucide="mail" size="18"></i>
-                <span>Contact Forms</span>
-            </div>
-            <div class="nav-item" data-tab="hardware">
-                <i data-lucide="monitor" size="18"></i>
-                <span>Hardware Inquiries</span>
-            </div>
-            <div class="nav-item" data-tab="demos">
-                <i data-lucide="calendar" size="18"></i>
-                <span>Demo Requests</span>
-            </div>
-        </div>
-        <div class="sidebar-footer">
-            <div class="logout-btn" id="logoutBtn">
-                <i data-lucide="log-out" size="18"></i>
-                <span>Logout</span>
-            </div>
-        </div>
-    </aside>
-
-    <!-- Main Content -->
-    <main class="main-content">
-        <header class="top-header">
-            <button class="menu-toggle" onclick="toggleSidebar()">
-                <i data-lucide="menu" size="24"></i>
-            </button>
-            <h1 class="page-title" id="pageTitle">Dashboard</h1>
-            <div class="admin-info">
-                <div class="admin-avatar"><i data-lucide="user" size="20"></i></div>
-                <span id="adminName">Super Admin</span>
-            </div>
-        </header>
-
-        <div class="dashboard-scroll" id="dashboardContent">
-            <!-- Dashboard Tab -->
-            <div id="dashboardTab">
-                <div class="stats-grid" id="statsGrid"></div>
-                <div class="panel">
-                    <div class="panel-header">
-                        <h3>Revenue Chart (Last 7 Days)</h3>
-                    </div>
-                    <canvas id="revenueChart" style="height: 300px;"></canvas>
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <i data-lucide="shield" size="22"></i>
                 </div>
-                <div class="panel">
-                    <div class="panel-header">
-                        <h3>Recent Customers</h3>
-                    </div>
-                    <div style="overflow-x: auto;">
-                        <table class="data-table" id="recentCustomersTable">
-                            <thead>
-                                <tr>
-                                    <th>Business Name</th>
-                                    <th>Contact Person</th>
-                                    <th>Email</th>
-                                    <th>Plan</th>
-                                    <th>Registered</th>
-                                </tr>
-                            </thead>
-                            <tbody id="recentCustomersBody"></tbody>
-                        </table>
-                    </div>
+                <div>
+                    <h2>Super Admin</h2>
+                    <p>BillzestPOS</p>
                 </div>
             </div>
+            <div class="nav-links">
+                <div class="nav-item active" data-tab="dashboard">
+                    <i data-lucide="layout-dashboard" size="18"></i>
+                    <span>Dashboard</span>
+                </div>
+                <div class="nav-item" data-tab="customers">
+                    <i data-lucide="users" size="18"></i>
+                    <span>Customers</span>
+                </div>
+                <div class="nav-item" data-tab="subscriptions">
+                    <i data-lucide="credit-card" size="18"></i>
+                    <span>Subscriptions</span>
+                </div>
+                <div class="nav-item" data-tab="payments">
+                    <i data-lucide="dollar-sign" size="18"></i>
+                    <span>Payments</span>
+                </div>
+                <div class="nav-item" data-tab="invoices">
+                    <i data-lucide="file-text" size="18"></i>
+                    <span>Invoices</span>
+                </div>
+                <div class="nav-item" data-tab="contacts">
+                    <i data-lucide="mail" size="18"></i>
+                    <span>Contact Forms</span>
+                </div>
+                <div class="nav-item" data-tab="hardware">
+                    <i data-lucide="monitor" size="18"></i>
+                    <span>Hardware Inquiries</span>
+                </div>
+                <div class="nav-item" data-tab="demos">
+                    <i data-lucide="calendar" size="18"></i>
+                    <span>Demo Requests</span>
+                </div>
+                <div class="nav-item" data-tab="settings">
+                    <i data-lucide="settings" size="18"></i>
+                    <span>Settings</span>
+                </div>
+            </div>
+            <div class="sidebar-footer">
+                <div class="logout-btn" id="logoutBtn">
+                    <i data-lucide="log-out" size="18"></i>
+                    <span>Logout</span>
+                </div>
+            </div>
+        </aside>
 
-            <!-- Customers Tab -->
-            <div id="customersTab" style="display: none;">
-                <div class="panel">
-                    <div class="panel-header">
-                        <h3>All Customers</h3>
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-header">
+                <button class="menu-toggle" onclick="toggleSidebar()">
+                    <i data-lucide="menu" size="24"></i>
+                </button>
+                <h1 class="page-title" id="pageTitle">Dashboard</h1>
+                <div class="admin-info">
+                    <img class="admin-avatar" id="adminAvatar" src="" alt="Admin">
+                    <span id="adminName">Admin</span>
+                </div>
+            </header>
+
+            <div class="dashboard-scroll" id="dashboardContent">
+                <!-- Dashboard Tab -->
+                <div id="dashboardTab">
+                    <div class="stats-grid" id="statsGrid"></div>
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h3>Revenue Chart (Last 7 Days)</h3>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="revenueChart" style="height: 300px; width: 100%;"></canvas>
+                        </div>
                     </div>
-                    <div style="overflow-x: auto;">
-                        <table class="data-table" id="allCustomersTable">
-                            <thead>
-                                <tr>
-                                    <th>Business Name</th>
-                                    <th>Contact Person</th>
-                                    <th>Email</th>
-                                    <th>Phone</th>
-                                    <th>GST</th>
-                                    <th>Plan</th>
-                                    <th>Orders</th>
-                                    <th>Spent</th>
-                                    <th>Status</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="allCustomersBody"></tbody>
-                        </table>
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h3>Recent Customers</h3>
+                            <button class="action-btn view-btn" onclick="switchTab('customers')" style="font-size: 0.8rem;">View All →</button>
+                        </div>
+                        <div style="overflow-x: auto;">
+                            <table class="data-table" id="recentCustomersTable">
+                                <thead>
+                                    <tr>
+                                        <th>Business Name</th>
+                                        <th>Contact Person</th>
+                                        <th>Email</th>
+                                        <th>Plan</th>
+                                        <th>Registered Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recentCustomersBody">
+                                    <tr><td colspan="5" style="text-align: center;">Loading...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Customers Tab -->
+                <div id="customersTab" style="display: none;">
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h3>All Customers</h3>
+                            <div>
+                                <input type="text" id="customerSearch" placeholder="🔍 Search customers..." style="padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; width: 200px;">
+                            </div>
+                        </div>
+                        <div style="overflow-x: auto;">
+                            <table class="data-table" id="allCustomersTable">
+                                <thead>
+                                    <tr>
+                                        <th>Business Name</th>
+                                        <th>Contact Person</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
+                                        <th>GST</th>
+                                        <th>Plan</th>
+                                        <th>Orders</th>
+                                        <th>Total Spent</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="allCustomersBody">
+                                    <tr><td colspan="10" style="text-align: center;">No customers found</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Subscriptions Tab -->
+                <div id="subscriptionsTab" style="display: none;">
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h3>All Subscriptions</h3>
+                        </div>
+                        <div style="overflow-x: auto;">
+                            <table class="data-table" id="subscriptionsTable">
+                                <thead>
+                                    <tr>
+                                        <th>Customer Name</th>
+                                        <th>Email</th>
+                                        <th>Plan</th>
+                                        <th>Price</th>
+                                        <th>Billing Cycle</th>
+                                        <th>Start Date</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="subscriptionsBody">
+                                    <tr><td colspan="8" style="text-align: center;">No subscriptions found</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Payments Tab -->
+                <div id="paymentsTab" style="display: none;">
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h3>Payment Requests</h3>
+                        </div>
+                        <div style="overflow-x: auto;">
+                            <table class="data-table" id="paymentsTable">
+                                <thead>
+                                    <tr>
+                                        <th>Customer Name</th>
+                                        <th>Email</th>
+                                        <th>Plan</th>
+                                        <th>Amount</th>
+                                        <th>Date</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="paymentsBody">
+                                    <tr><td colspan="7" style="text-align: center;">No payment requests</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Invoices Tab -->
+                <div id="invoicesTab" style="display: none;">
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h3>All Invoices</h3>
+                        </div>
+                        <div style="overflow-x: auto;">
+                            <table class="data-table" id="invoicesTable">
+                                <thead>
+                                    <tr>
+                                        <th>Invoice #</th>
+                                        <th>Customer</th>
+                                        <th>Subtotal</th>
+                                        <th>GST</th>
+                                        <th>Total</th>
+                                        <th>Date</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="invoicesBody">
+                                    <tr><td colspan="8" style="text-align: center;">No invoices found</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contacts Tab -->
+                <div id="contactsTab" style="display: none;">
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h3>Contact Form Submissions</h3>
+                        </div>
+                        <div style="overflow-x: auto;">
+                            <table class="data-table" id="contactsTable">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
+                                        <th>Restaurant</th>
+                                        <th>Message</th>
+                                        <th>Date</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="contactsBody">
+                                    <tr><td colspan="7" style="text-align: center;">No contact submissions</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hardware Inquiries Tab -->
+                <div id="hardwareTab" style="display: none;">
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h3>Hardware Inquiries</h3>
+                        </div>
+                        <div style="overflow-x: auto;">
+                            <table class="data-table" id="hardwareTable">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
+                                        <th>Product</th>
+                                        <th>Quantity</th>
+                                        <th>Date</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="hardwareBody">
+                                    <tr><td colspan="8" style="text-align: center;">No hardware inquiries</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Demo Requests Tab -->
+                <div id="demosTab" style="display: none;">
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h3>Demo Requests</h3>
+                        </div>
+                        <div style="overflow-x: auto;">
+                            <table class="data-table" id="demosTable">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
+                                        <th>Restaurant</th>
+                                        <th>Preferred Date</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="demosBody">
+                                    <tr><td colspan="7" style="text-align: center;">No demo requests</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings Tab -->
+                <div id="settingsTab" style="display: none;">
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h3>Admin Settings</h3>
+                        </div>
+                        <div style="max-width: 500px;">
+                            <div class="input-group">
+                                <label style="display: block; margin-bottom: 8px; font-weight: 500;">Admin Email</label>
+                                <input type="email" id="adminEmailSetting" readonly style="background: #f8fafc;">
+                            </div>
+                            <div class="input-group">
+                                <label style="display: block; margin-bottom: 8px; font-weight: 500;">Admin Name</label>
+                                <input type="text" id="adminNameSetting" readonly style="background: #f8fafc;">
+                            </div>
+                            <div class="input-group">
+                                <label style="display: block; margin-bottom: 8px; font-weight: 500;">User ID</label>
+                                <input type="text" id="adminUID" readonly style="background: #f8fafc;">
+                            </div>
+                            <hr style="margin: 20px 0; border-color: var(--border);">
+                            <h4 style="margin-bottom: 15px;">Authorized Admin Emails</h4>
+                            <p style="font-size: 0.8rem; color: var(--text-gray); margin-bottom: 15px;">Only these emails can access this panel:</p>
+                            <ul style="margin-left: 20px; color: var(--primary);">
+                                <li>admin@billzestpos.com</li>
+                                <li>billzestai@gmail.com</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
-
-            <!-- Subscriptions Tab -->
-            <div id="subscriptionsTab" style="display: none;">
-                <div class="panel">
-                    <div class="panel-header">
-                        <h3>All Subscriptions</h3>
-                    </div>
-                    <div style="overflow-x: auto;">
-                        <table class="data-table" id="subscriptionsTable">
-                            <thead>
-                                <tr>
-                                    <th>Customer</th>
-                                    <th>Email</th>
-                                    <th>Plan</th>
-                                    <th>Price</th>
-                                    <th>Billing</th>
-                                    <th>Start Date</th>
-                                    <th>Status</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="subscriptionsBody"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Payments Tab -->
-            <div id="paymentsTab" style="display: none;">
-                <div class="panel">
-                    <div class="panel-header">
-                        <h3>Payment Requests</h3>
-                    </div>
-                    <div style="overflow-x: auto;">
-                        <table class="data-table" id="paymentsTable">
-                            <thead>
-                                <tr>
-                                    <th>Customer</th>
-                                    <th>Email</th>
-                                    <th>Plan</th>
-                                    <th>Amount</th>
-                                    <th>Date</th>
-                                    <th>Status</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="paymentsBody"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Invoices Tab -->
-            <div id="invoicesTab" style="display: none;">
-                <div class="panel">
-                    <div class="panel-header">
-                        <h3>All Invoices</h3>
-                    </div>
-                    <div style="overflow-x: auto;">
-                        <table class="data-table" id="invoicesTable">
-                            <thead>
-                                <tr>
-                                    <th>Invoice #</th>
-                                    <th>Customer</th>
-                                    <th>Amount</th>
-                                    <th>GST</th>
-                                    <th>Total</th>
-                                    <th>Date</th>
-                                    <th>Status</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="invoicesBody"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Contacts Tab -->
-            <div id="contactsTab" style="display: none;">
-                <div class="panel">
-                    <div class="panel-header">
-                        <h3>Contact Form Submissions</h3>
-                    </div>
-                    <div style="overflow-x: auto;">
-                        <table class="data-table" id="contactsTable">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Phone</th>
-                                    <th>Restaurant</th>
-                                    <th>Message</th>
-                                    <th>Date</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="contactsBody"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Hardware Inquiries Tab -->
-            <div id="hardwareTab" style="display: none;">
-                <div class="panel">
-                    <div class="panel-header">
-                        <h3>Hardware Inquiries</h3>
-                    </div>
-                    <div style="overflow-x: auto;">
-                        <table class="data-table" id="hardwareTable">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Phone</th>
-                                    <th>Product</th>
-                                    <th>Quantity</th>
-                                    <th>Date</th>
-                                    <th>Status</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="hardwareBody"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Demo Requests Tab -->
-            <div id="demosTab" style="display: none;">
-                <div class="panel">
-                    <div class="panel-header">
-                        <h3>Demo Requests</h3>
-                    </div>
-                    <div style="overflow-x: auto;">
-                        <table class="data-table" id="demosTable">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Phone</th>
-                                    <th>Restaurant</th>
-                                    <th>Date</th>
-                                    <th>Status</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="demosBody"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
+        </main>
+    </div>
 
     <!-- Customer Detail Modal -->
     <div id="customerModal" class="modal">
@@ -786,14 +992,44 @@
         </div>
     </div>
 
-    <script>
-        lucide.createIcons();
+    <!-- Subscription Detail Modal -->
+    <div id="subscriptionModal" class="modal">
+        <div class="modal-content">
+            <h3>Subscription Details</h3>
+            <div id="subscriptionDetailContent"></div>
+            <div class="modal-buttons">
+                <button class="btn-close" onclick="closeSubscriptionModal()">Close</button>
+            </div>
+        </div>
+    </div>
 
-        // Admin Credentials
-        const ADMIN_EMAIL = "admin@billzestpos.com";
-        const ADMIN_PASSWORD = "admin123";
+    <script type="module">
+        // Firebase imports
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, collection, getDocs, doc, updateDoc, deleteDoc, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // Sample Data (will be loaded from localStorage)
+        // Firebase Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyCN0akvFXOHM6WPHv9ve9noqqmauO3TJRY",
+            authDomain: "billzest-pos.firebaseapp.com",
+            projectId: "billzest-pos",
+            storageBucket: "billzest-pos.firebasestorage.app",
+            messagingSenderId: "946546876429",
+            appId: "1:946546876429:web:9b4a7aa3cecbf3aea83544",
+            measurementId: "G-69WEHH9X5D"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const provider = new GoogleAuthProvider();
+
+        // Allowed admin emails
+        const ALLOWED_ADMIN_EMAILS = ["admin@billzestpos.com", "billzestai@gmail.com"];
+
+        // Data stores
         let customers = [];
         let subscriptions = [];
         let payments = [];
@@ -801,9 +1037,18 @@
         let contacts = [];
         let hardwareInquiries = [];
         let demoRequests = [];
+        let revenueChart = null;
 
-        // Load data from localStorage
-        function loadAllData() {
+        // DOM Elements
+        const loginContainer = document.getElementById('loginContainer');
+        const adminPanel = document.getElementById('adminPanel');
+        const loadingScreen = document.getElementById('loadingScreen');
+        const errorMsg = document.getElementById('errorMsg');
+        const successMsg = document.getElementById('successMsg');
+
+        // ========== LOAD SAMPLE DATA ==========
+        function loadSampleData() {
+            // Load from localStorage first
             customers = JSON.parse(localStorage.getItem('registered_customers') || '[]');
             subscriptions = JSON.parse(localStorage.getItem('subscriptions') || '[]');
             payments = JSON.parse(localStorage.getItem('pendingPayments') || '[]');
@@ -812,29 +1057,31 @@
             hardwareInquiries = JSON.parse(localStorage.getItem('hardwareInquiries') || '[]');
             demoRequests = JSON.parse(localStorage.getItem('demos') || '[]');
 
-            // Add sample data if empty
+            // Create sample data if empty
             if (customers.length === 0) {
                 customers = [
-                    { id: 1, businessName: "Pizza Palace", contactPerson: "John Doe", email: "john@pizzapalace.com", phone: "+1 234 567 890", gst: "22AAAAA0000A1Z", plan: "Professional", orders: 45, spent: 3450, status: "active", registeredAt: "2026-01-15" },
-                    { id: 2, businessName: "Coffee House", contactPerson: "Sarah Smith", email: "sarah@coffeehouse.com", phone: "+1 234 567 891", gst: "22BBBBB0000B1Z", plan: "Starter", orders: 23, spent: 897, status: "active", registeredAt: "2026-02-10" },
-                    { id: 3, businessName: "Noodle Bar", contactPerson: "Mike Chen", email: "mike@noodlebar.com", phone: "+1 234 567 892", gst: "22CCCCC0000C1Z", plan: "Enterprise", orders: 0, spent: 0, status: "pending", registeredAt: "2026-04-20" }
+                    { id: "cust_1", businessName: "Pizza Palace", contactPerson: "John Doe", email: "john@pizzapalace.com", phone: "+1 234 567 890", gst: "22AAAAA0000A1Z", plan: "Professional", orders: 45, spent: 3450, status: "active", registeredAt: "2026-01-15" },
+                    { id: "cust_2", businessName: "Coffee House", contactPerson: "Sarah Smith", email: "sarah@coffeehouse.com", phone: "+1 234 567 891", gst: "22BBBBB0000B1Z", plan: "Starter", orders: 23, spent: 897, status: "active", registeredAt: "2026-02-10" },
+                    { id: "cust_3", businessName: "Noodle Bar", contactPerson: "Mike Chen", email: "mike@noodlebar.com", phone: "+1 234 567 892", gst: "", plan: "Professional", orders: 12, spent: 456, status: "active", registeredAt: "2026-03-05" },
+                    { id: "cust_4", businessName: "Burger King", contactPerson: "Lisa Wong", email: "lisa@burgerking.com", phone: "+1 234 567 893", gst: "22CCCCC0000C1Z", plan: "Enterprise", orders: 0, spent: 0, status: "pending", registeredAt: "2026-04-20" }
                 ];
                 localStorage.setItem('registered_customers', JSON.stringify(customers));
             }
 
             if (subscriptions.length === 0) {
                 subscriptions = [
-                    { id: 1, customerName: "Pizza Palace", email: "john@pizzapalace.com", plan: "Professional", price: "$79/month", billing: "Monthly", startDate: "2026-01-15", status: "active" },
-                    { id: 2, customerName: "Coffee House", email: "sarah@coffeehouse.com", plan: "Starter", price: "$39/month", billing: "Monthly", startDate: "2026-02-10", status: "active" },
-                    { id: 3, customerName: "Noodle Bar", email: "mike@noodlebar.com", plan: "Enterprise", price: "Custom", billing: "Yearly", startDate: "2026-04-20", status: "pending" }
+                    { id: "sub_1", customerName: "Pizza Palace", email: "john@pizzapalace.com", plan: "Professional", price: "$79/month", billing: "Monthly", startDate: "2026-01-15", status: "active" },
+                    { id: "sub_2", customerName: "Coffee House", email: "sarah@coffeehouse.com", plan: "Starter", price: "$39/month", billing: "Monthly", startDate: "2026-02-10", status: "active" },
+                    { id: "sub_3", customerName: "Noodle Bar", email: "mike@noodlebar.com", plan: "Professional", price: "$79/month", billing: "Yearly", startDate: "2026-03-05", status: "active" }
                 ];
                 localStorage.setItem('subscriptions', JSON.stringify(subscriptions));
             }
 
             if (payments.length === 0) {
                 payments = [
-                    { id: 1, customerName: "Pizza Palace", email: "john@pizzapalace.com", plan: "Professional", amount: 79, date: "2026-04-15", status: "completed" },
-                    { id: 2, customerName: "Coffee House", email: "sarah@coffeehouse.com", plan: "Starter", amount: 39, date: "2026-04-10", status: "completed" }
+                    { id: "pay_1", customerName: "Pizza Palace", email: "john@pizzapalace.com", plan: "Professional", amount: 79, date: "2026-04-15", status: "completed" },
+                    { id: "pay_2", customerName: "Coffee House", email: "sarah@coffeehouse.com", plan: "Starter", amount: 39, date: "2026-04-10", status: "completed" },
+                    { id: "pay_3", customerName: "Burger King", email: "lisa@burgerking.com", plan: "Enterprise", amount: 0, date: "2026-04-20", status: "pending" }
                 ];
                 localStorage.setItem('pendingPayments', JSON.stringify(payments));
             }
@@ -842,122 +1089,143 @@
             if (invoices.length === 0) {
                 invoices = [
                     { id: "INV-001", customer: "Pizza Palace", amount: 79, gst: 3.95, total: 82.95, date: "2026-04-15", status: "paid" },
-                    { id: "INV-002", customer: "Coffee House", amount: 39, gst: 1.95, total: 40.95, date: "2026-04-10", status: "paid" }
+                    { id: "INV-002", customer: "Coffee House", amount: 39, gst: 1.95, total: 40.95, date: "2026-04-10", status: "paid" },
+                    { id: "INV-003", customer: "Noodle Bar", amount: 79, gst: 3.95, total: 82.95, date: "2026-03-05", status: "paid" }
                 ];
                 localStorage.setItem('email_invoices', JSON.stringify(invoices));
             }
 
             if (contacts.length === 0) {
                 contacts = [
-                    { name: "John Doe", email: "john@example.com", phone: "+1 234 567 890", restaurant: "Pizza Palace", message: "Need demo", date: "2026-04-20" }
+                    { name: "John Doe", email: "john@example.com", phone: "+1 234 567 890", restaurant: "Pizza Palace", message: "Need demo for POS system", date: "2026-04-18" },
+                    { name: "Jane Smith", email: "jane@example.com", phone: "+1 234 567 891", restaurant: "Coffee House", message: "Interested in hardware", date: "2026-04-19" }
                 ];
                 localStorage.setItem('contacts', JSON.stringify(contacts));
             }
 
             if (hardwareInquiries.length === 0) {
                 hardwareInquiries = [
-                    { name: "Pizza Palace", email: "john@pizzapalace.com", phone: "+1 234 567 890", product: "Dual-Screen POS", quantity: "2", date: "2026-04-18", status: "new" }
+                    { name: "Pizza Palace", email: "john@pizzapalace.com", phone: "+1 234 567 890", product: "Dual-Screen POS Terminal", quantity: "2", date: "2026-04-18", status: "new" },
+                    { name: "Coffee House", email: "sarah@coffeehouse.com", phone: "+1 234 567 891", product: "Smart Receipt Printer", quantity: "1", date: "2026-04-19", status: "new" }
                 ];
                 localStorage.setItem('hardwareInquiries', JSON.stringify(hardwareInquiries));
             }
 
             if (demoRequests.length === 0) {
                 demoRequests = [
-                    { name: "John Doe", email: "john@example.com", phone: "+1 234 567 890", restaurant: "Pizza Palace", date: "2026-04-25", status: "pending" }
+                    { name: "John Doe", email: "john@example.com", phone: "+1 234 567 890", restaurant: "Pizza Palace", preferredDate: "2026-04-25", status: "pending" }
                 ];
                 localStorage.setItem('demos', JSON.stringify(demoRequests));
             }
         }
 
-        // Update Dashboard Stats
-        function updateDashboard() {
+        // ========== UPDATE DASHBOARD STATS ==========
+        function updateDashboardStats() {
             const totalCustomers = customers.length;
             const activeSubscriptions = subscriptions.filter(s => s.status === 'active').length;
             const totalRevenue = payments.reduce((sum, p) => sum + (p.amount || 0), 0);
             const pendingPayments = payments.filter(p => p.status === 'pending').length;
+            const pendingContacts = contacts.length;
+            const pendingHardware = hardwareInquiries.length;
 
-            document.getElementById('statsGrid').innerHTML = `
-                <div class="stat-card">
-                    <div class="stat-info">
-                        <h4>Total Customers</h4>
-                        <div class="stat-value">${totalCustomers}</div>
+            const statsGrid = document.getElementById('statsGrid');
+            if (statsGrid) {
+                statsGrid.innerHTML = `
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h4>Total Customers</h4>
+                            <div class="stat-value">${totalCustomers}</div>
+                        </div>
+                        <div class="stat-icon" style="background: rgba(79,70,229,0.1); color: #4f46e5;">
+                            <i data-lucide="users" size="28"></i>
+                        </div>
                     </div>
-                    <div class="stat-icon" style="background: rgba(79,70,229,0.1); color: #4f46e5;">
-                        <i data-lucide="users" size="28"></i>
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h4>Active Subscriptions</h4>
+                            <div class="stat-value">${activeSubscriptions}</div>
+                        </div>
+                        <div class="stat-icon" style="background: rgba(16,185,129,0.1); color: #10b981;">
+                            <i data-lucide="credit-card" size="28"></i>
+                        </div>
                     </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-info">
-                        <h4>Active Subscriptions</h4>
-                        <div class="stat-value">${activeSubscriptions}</div>
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h4>Total Revenue</h4>
+                            <div class="stat-value">$${totalRevenue}</div>
+                        </div>
+                        <div class="stat-icon" style="background: rgba(245,158,11,0.1); color: #f59e0b;">
+                            <i data-lucide="dollar-sign" size="28"></i>
+                        </div>
                     </div>
-                    <div class="stat-icon" style="background: rgba(16,185,129,0.1); color: #10b981;">
-                        <i data-lucide="credit-card" size="28"></i>
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h4>Pending Payments</h4>
+                            <div class="stat-value">${pendingPayments}</div>
+                        </div>
+                        <div class="stat-icon" style="background: rgba(239,68,68,0.1); color: #ef4444;">
+                            <i data-lucide="clock" size="28"></i>
+                        </div>
                     </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-info">
-                        <h4>Total Revenue</h4>
-                        <div class="stat-value">$${totalRevenue}</div>
-                    </div>
-                    <div class="stat-icon" style="background: rgba(245,158,11,0.1); color: #f59e0b;">
-                        <i data-lucide="dollar-sign" size="28"></i>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-info">
-                        <h4>Pending Payments</h4>
-                        <div class="stat-value">${pendingPayments}</div>
-                    </div>
-                    <div class="stat-icon" style="background: rgba(239,68,68,0.1); color: #ef4444;">
-                        <i data-lucide="clock" size="28"></i>
-                    </div>
-                </div>
-            `;
+                `;
+            }
 
             // Recent Customers
-            const recentCustomers = customers.slice(-5).reverse();
-            document.getElementById('recentCustomersBody').innerHTML = recentCustomers.map(c => `
-                <tr>
-                    <td>${c.businessName}</td>
-                    <td>${c.contactPerson}</td>
-                    <td>${c.email}</td>
-                    <td>${c.plan}</td>
-                    <td>${c.registeredAt}</td>
-                </tr>
-            `).join('');
+            const recentCustomers = [...customers].sort((a, b) => new Date(b.registeredAt) - new Date(a.registeredAt)).slice(0, 5);
+            const recentBody = document.getElementById('recentCustomersBody');
+            if (recentBody) {
+                recentBody.innerHTML = recentCustomers.map(c => `
+                    <tr>
+                        <td><strong>${c.businessName}</strong></td>
+                        <td>${c.contactPerson}</td>
+                        <td>${c.email}</td>
+                        <td>${c.plan}</td>
+                        <td>${c.registeredAt}</td>
+                    </tr>
+                `).join('');
+            }
 
             lucide.createIcons();
 
             // Revenue Chart
-            const ctx = document.getElementById('revenueChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                    datasets: [{
-                        label: 'Revenue ($)',
-                        data: [1200, 1900, 1500, 2200, 2800, 3500, 3100],
-                        borderColor: '#4f46e5',
-                        backgroundColor: 'rgba(79,70,229,0.1)',
-                        borderWidth: 3,
-                        fill: true,
-                        tension: 0.4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    plugins: { legend: { display: false } }
-                }
-            });
+            const chartCtx = document.getElementById('revenueChart');
+            if (chartCtx) {
+                if (revenueChart) revenueChart.destroy();
+                revenueChart = new Chart(chartCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                        datasets: [{
+                            label: 'Revenue ($)',
+                            data: [1200, 1900, 1500, 2200, 2800, 3500, 3100],
+                            borderColor: '#4f46e5',
+                            backgroundColor: 'rgba(79,70,229,0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4,
+                            pointBackgroundColor: '#ffffff',
+                            pointBorderColor: '#4f46e5',
+                            pointBorderWidth: 2,
+                            pointRadius: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } }
+                    }
+                });
+            }
         }
 
-        // Display Customers
+        // ========== DISPLAY CUSTOMERS ==========
         function displayCustomers() {
-            document.getElementById('allCustomersBody').innerHTML = customers.map(c => `
+            const container = document.getElementById('allCustomersBody');
+            if (!container) return;
+
+            container.innerHTML = customers.map(c => `
                 <tr>
-                    <td>${c.businessName}</td>
+                    <td><strong>${c.businessName}</strong></td>
                     <td>${c.contactPerson}</td>
                     <td>${c.email}</td>
                     <td>${c.phone}</td>
@@ -967,19 +1235,26 @@
                     <td>$${c.spent || 0}</td>
                     <td><span class="status-badge status-${c.status === 'active' ? 'active' : 'pending'}">${c.status}</span></td>
                     <td>
-                        <button class="action-btn view-btn" onclick="viewCustomer(${c.id})"><i data-lucide="eye" size="16"></i></button>
-                        <button class="action-btn delete-btn" onclick="deleteCustomer(${c.id})"><i data-lucide="trash-2" size="16"></i></button>
+                        <button class="action-btn view-btn" onclick="viewCustomer('${c.id}')" title="View Details">
+                            <i data-lucide="eye" size="16"></i>
+                        </button>
+                        <button class="action-btn delete-btn" onclick="deleteCustomer('${c.id}')" title="Delete">
+                            <i data-lucide="trash-2" size="16"></i>
+                        </button>
                     </td>
                 </tr>
             `).join('');
             lucide.createIcons();
         }
 
-        // Display Subscriptions
+        // ========== DISPLAY SUBSCRIPTIONS ==========
         function displaySubscriptions() {
-            document.getElementById('subscriptionsBody').innerHTML = subscriptions.map(s => `
+            const container = document.getElementById('subscriptionsBody');
+            if (!container) return;
+
+            container.innerHTML = subscriptions.map(s => `
                 <tr>
-                    <td>${s.customerName}</td>
+                    <td><strong>${s.customerName}</strong></td>
                     <td>${s.email}</td>
                     <td>${s.plan}</td>
                     <td>${s.price}</td>
@@ -987,75 +1262,102 @@
                     <td>${s.startDate}</td>
                     <td><span class="status-badge status-${s.status === 'active' ? 'active' : 'pending'}">${s.status}</span></td>
                     <td>
-                        <button class="action-btn delete-btn" onclick="deleteSubscription(${s.id})"><i data-lucide="trash-2" size="16"></i></button>
+                        <button class="action-btn view-btn" onclick="viewSubscription('${s.id}')" title="View Details">
+                            <i数据-lucide="eye" size="16"></i>
+                        </button>
+                        <button class="action-btn delete-btn" onclick="deleteSubscription('${s.id}')" title="Delete">
+                            <i data-lucide="trash-2" size="16"></i>
+                        </button>
                     </td>
                 </tr>
             `).join('');
             lucide.createIcons();
         }
 
-        // Display Payments
+        // ========== DISPLAY PAYMENTS ==========
         function displayPayments() {
-            document.getElementById('paymentsBody').innerHTML = payments.map(p => `
+            const container = document.getElementById('paymentsBody');
+            if (!container) return;
+
+            container.innerHTML = payments.map(p => `
                 <tr>
-                    <td>${p.customerName}</td>
+                    <td><strong>${p.customerName}</strong></td>
                     <td>${p.email}</td>
                     <td>${p.plan}</td>
                     <td>$${p.amount}</td>
                     <td>${p.date}</td>
                     <td><span class="status-badge status-${p.status === 'completed' ? 'active' : 'pending'}">${p.status}</span></td>
                     <td>
-                        <button class="action-btn view-btn" onclick="markPaymentComplete(${p.id})"><i data-lucide="check-circle" size="16"></i></button>
-                        <button class="action-btn delete-btn" onclick="deletePayment(${p.id})"><i data-lucide="trash-2" size="16"></i></button>
+                        ${p.status !== 'completed' ? `<button class="action-btn view-btn" onclick="markPaymentComplete('${p.id}')" title="Mark Complete">
+                            <i data-lucide="check-circle" size="16"></i>
+                        </button>` : ''}
+                        <button class="action-btn delete-btn" onclick="deletePayment('${p.id}')" title="Delete">
+                            <i data-lucide="trash-2" size="16"></i>
+                        </button>
                     </td>
                 </tr>
             `).join('');
             lucide.createIcons();
         }
 
-        // Display Invoices
+        // ========== DISPLAY INVOICES ==========
         function displayInvoices() {
-            document.getElementById('invoicesBody').innerHTML = invoices.map(i => `
+            const container = document.getElementById('invoicesBody');
+            if (!container) return;
+
+            container.innerHTML = invoices.map(i => `
                 <tr>
-                    <td>${i.id}</td>
+                    <td><strong>${i.id}</strong></td>
                     <td>${i.customer}</td>
                     <td>$${i.amount}</td>
                     <td>$${i.gst}</td>
-                    <td>$${i.total}</td>
+                    <td><strong>$${i.total}</strong></td>
                     <td>${i.date}</td>
                     <td><span class="status-badge status-active">${i.status}</span></td>
                     <td>
-                        <button class="action-btn view-btn" onclick="downloadInvoice('${i.id}')"><i data-lucide="download" size="16"></i></button>
-                        <button class="action-btn delete-btn" onclick="deleteInvoice('${i.id}')"><i data-lucide="trash-2" size="16"></i></button>
+                        <button class="action-btn view-btn" onclick="downloadInvoice('${i.id}')" title="Download">
+                            <i data-lucide="download" size="16"></i>
+                        </button>
+                        <button class="action-btn delete-btn" onclick="deleteInvoice('${i.id}')" title="Delete">
+                            <i data-lucide="trash-2" size="16"></i>
+                        </button>
                     </td>
                 </tr>
             `).join('');
             lucide.createIcons();
         }
 
-        // Display Contacts
+        // ========== DISPLAY CONTACTS ==========
         function displayContacts() {
-            document.getElementById('contactsBody').innerHTML = contacts.map(c => `
+            const container = document.getElementById('contactsBody');
+            if (!container) return;
+
+            container.innerHTML = contacts.map(c => `
                 <tr>
-                    <td>${c.name}</td>
+                    <td><strong>${c.name}</strong></td>
                     <td>${c.email}</td>
                     <td>${c.phone}</td>
                     <td>${c.restaurant || '-'}</td>
-                    <td>${c.message.substring(0, 50)}${c.message.length > 50 ? '...' : ''}</td>
+                    <td style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${c.message?.substring(0, 50) || ''}${c.message?.length > 50 ? '...' : ''}</td>
                     <td>${c.date}</td>
                     <td>
-                        <button class="action-btn delete-btn" onclick="deleteContact('${c.email}')"><i data-lucide="trash-2" size="16"></i></button>
+                        <button class="action-btn delete-btn" onclick="deleteContact('${c.email}')" title="Delete">
+                            <i data-lucide="trash-2" size="16"></i>
+                        </button>
                     </td>
                 </tr>
             `).join('');
             lucide.createIcons();
         }
 
-        // Display Hardware Inquiries
+        // ========== DISPLAY HARDWARE INQUIRIES ==========
         function displayHardware() {
-            document.getElementById('hardwareBody').innerHTML = hardwareInquiries.map(h => `
+            const container = document.getElementById('hardwareBody');
+            if (!container) return;
+
+            container.innerHTML = hardwareInquiries.map(h => `
                 <tr>
-                    <td>${h.name}</td>
+                    <td><strong>${h.name}</strong></td>
                     <td>${h.email}</td>
                     <td>${h.phone}</td>
                     <td>${h.product}</td>
@@ -1063,174 +1365,241 @@
                     <td>${h.date}</td>
                     <td><span class="status-badge status-pending">${h.status}</span></td>
                     <td>
-                        <button class="action-btn delete-btn" onclick="deleteHardwareInquiry('${h.email}')"><i data-lucide="trash-2" size="16"></i></button>
+                        <button class="action-btn delete-btn" onclick="deleteHardwareInquiry('${h.email}')" title="Delete">
+                            <i data-lucide="trash-2" size="16"></i>
+                        </button>
                     </td>
                 </tr>
             `).join('');
             lucide.createIcons();
         }
 
-        // Display Demo Requests
+        // ========== DISPLAY DEMO REQUESTS ==========
         function displayDemos() {
-            document.getElementById('demosBody').innerHTML = demoRequests.map(d => `
+            const container = document.getElementById('demosBody');
+            if (!container) return;
+
+            container.innerHTML = demoRequests.map(d => `
                 <tr>
-                    <td>${d.name}</td>
+                    <td><strong>${d.name}</strong></td>
                     <td>${d.email}</td>
                     <td>${d.phone}</td>
                     <td>${d.restaurant}</td>
-                    <td>${d.date}</td>
+                    <td>${d.preferredDate || d.date}</td>
                     <td><span class="status-badge status-pending">${d.status}</span></td>
                     <td>
-                        <button class="action-btn delete-btn" onclick="deleteDemoRequest('${d.email}')"><i data-lucide="trash-2" size="16"></i></button>
+                        <button class="action-btn delete-btn" onclick="deleteDemoRequest('${d.email}')" title="Delete">
+                            <i data-lucide="trash-2" size="16"></i>
+                        </button>
                     </td>
                 </tr>
             `).join('');
             lucide.createIcons();
         }
 
-        // Actions
-        window.viewCustomer = function(id) {
+        // ========== ACTION FUNCTIONS ==========
+        window.viewCustomer = (id) => {
             const customer = customers.find(c => c.id === id);
             if (customer) {
-                document.getElementById('customerDetailContent').innerHTML = `
-                    <div class="modal-info-row">
-                        <span class="modal-info-label">Business Name:</span>
-                        <span class="modal-info-value">${customer.businessName}</span>
-                    </div>
-                    <div class="modal-info-row">
-                        <span class="modal-info-label">Contact Person:</span>
-                        <span class="modal-info-value">${customer.contactPerson}</span>
-                    </div>
-                    <div class="modal-info-row">
-                        <span class="modal-info-label">Email:</span>
-                        <span class="modal-info-value">${customer.email}</span>
-                    </div>
-                    <div class="modal-info-row">
-                        <span class="modal-info-label">Phone:</span>
-                        <span class="modal-info-value">${customer.phone}</span>
-                    </div>
-                    <div class="modal-info-row">
-                        <span class="modal-info-label">GST Number:</span>
-                        <span class="modal-info-value">${customer.gst || 'Not provided'}</span>
-                    </div>
-                    <div class="modal-info-row">
-                        <span class="modal-info-label">Plan:</span>
-                        <span class="modal-info-value">${customer.plan}</span>
-                    </div>
-                    <div class="modal-info-row">
-                        <span class="modal-info-label">Orders:</span>
-                        <span class="modal-info-value">${customer.orders || 0}</span>
-                    </div>
-                    <div class="modal-info-row">
-                        <span class="modal-info-label">Total Spent:</span>
-                        <span class="modal-info-value">$${customer.spent || 0}</span>
-                    </div>
-                    <div class="modal-info-row">
-                        <span class="modal-info-label">Registered:</span>
-                        <span class="modal-info-value">${customer.registeredAt}</span>
-                    </div>
-                    <div class="modal-info-row">
-                        <span class="modal-info-label">Status:</span>
-                        <span class="modal-info-value">${customer.status}</span>
-                    </div>
+                const detailHtml = `
+                    <div class="modal-info-row"><span class="modal-info-label">Business Name:</span><span class="modal-info-value">${customer.businessName}</span></div>
+                    <div class="modal-info-row"><span class="modal-info-label">Contact Person:</span><span class="modal-info-value">${customer.contactPerson}</span></div>
+                    <div class="modal-info-row"><span class="modal-info-label">Email:</span><span class="modal-info-value">${customer.email}</span></div>
+                    <div class="modal-info-row"><span class="modal-info-label">Phone:</span><span class="modal-info-value">${customer.phone}</span></div>
+                    <div class="modal-info-row"><span class="modal-info-label">GST Number:</span><span class="modal-info-value">${customer.gst || 'Not provided'}</span></div>
+                    <div class="modal-info-row"><span class="modal-info-label">Plan:</span><span class="modal-info-value">${customer.plan}</span></div>
+                    <div class="modal-info-row"><span class="modal-info-label">Total Orders:</span><span class="modal-info-value">${customer.orders || 0}</span></div>
+                    <div class="modal-info-row"><span class="modal-info-label">Total Spent:</span><span class="modal-info-value">$${customer.spent || 0}</span></div>
+                    <div class="modal-info-row"><span class="modal-info-label">Status:</span><span class="modal-info-value">${customer.status}</span></div>
+                    <div class="modal-info-row"><span class="modal-info-label">Registered:</span><span class="modal-info-value">${customer.registeredAt}</span></div>
                 `;
+                document.getElementById('customerDetailContent').innerHTML = detailHtml;
                 document.getElementById('customerModal').style.display = 'flex';
             }
         };
 
-        window.deleteCustomer = function(id) {
-            if (confirm('Delete this customer? This action cannot be undone.')) {
-                customers = customers.filter(c => c.id !== id);
-                localStorage.setItem('registered_customers', JSON.stringify(customers));
-                displayCustomers();
-                updateDashboard();
+        window.viewSubscription = (id) => {
+            const sub = subscriptions.find(s => s.id === id);
+            if (sub) {
+                const detailHtml = `
+                    <div class="modal-info-row"><span class="modal-info-label">Customer Name:</span><span class="modal-info-value">${sub.customerName}</span></div>
+                    <div class="modal-info-row"><span class="modal-info-label">Email:</span><span class="modal-info-value">${sub.email}</span></div>
+                    <div class="modal-info-row"><span class="modal-info-label">Plan:</span><span class="modal-info-value">${sub.plan}</span></div>
+                    <div class="modal-info-row"><span class="modal-info-label">Price:</span><span class="modal-info-value">${sub.price}</span></div>
+                    <div class="modal-info-row"><span class="modal-info-label">Billing Cycle:</span><span class="modal-info-value">${sub.billing}</span></div>
+                    <div class="modal-info-row"><span class="modal-info-label">Start Date:</span><span class="modal-info-value">${sub.startDate}</span></div>
+                    <div class="modal-info-row"><span class="modal-info-label">Next Renewal:</span><span class="modal-info-value">${new Date(new Date(sub.startDate).setMonth(new Date(sub.startDate).getMonth() + 1)).toLocaleDateString()}</span></div>
+                    <div class="modal-info-row"><span class="modal-info-label">Status:</span><span class="modal-info-value">${sub.status}</span></div>
+                `;
+                document.getElementById('subscriptionDetailContent').innerHTML = detailHtml;
+                document.getElementById('subscriptionModal').style.display = 'flex';
             }
         };
 
-        window.deleteSubscription = function(id) {
+        window.deleteCustomer = (id) => {
+            if (confirm('Are you sure you want to delete this customer? This action cannot be undone.')) {
+                customers = customers.filter(c => c.id !== id);
+                localStorage.setItem('registered_customers', JSON.stringify(customers));
+                displayCustomers();
+                updateDashboardStats();
+                showToast('Customer deleted successfully', 'success');
+            }
+        };
+
+        window.deleteSubscription = (id) => {
             if (confirm('Delete this subscription?')) {
                 subscriptions = subscriptions.filter(s => s.id !== id);
                 localStorage.setItem('subscriptions', JSON.stringify(subscriptions));
                 displaySubscriptions();
-                updateDashboard();
+                updateDashboardStats();
+                showToast('Subscription deleted', 'success');
             }
         };
 
-        window.markPaymentComplete = function(id) {
+        window.markPaymentComplete = (id) => {
             const payment = payments.find(p => p.id === id);
             if (payment) {
                 payment.status = 'completed';
                 localStorage.setItem('pendingPayments', JSON.stringify(payments));
                 displayPayments();
-                updateDashboard();
-                alert(`Payment for ${payment.customerName} marked as completed!`);
+                updateDashboardStats();
+                showToast(`Payment for ${payment.customerName} marked as completed!`, 'success');
             }
         };
 
-        window.deletePayment = function(id) {
+        window.deletePayment = (id) => {
             if (confirm('Delete this payment record?')) {
                 payments = payments.filter(p => p.id !== id);
                 localStorage.setItem('pendingPayments', JSON.stringify(payments));
                 displayPayments();
-                updateDashboard();
+                updateDashboardStats();
+                showToast('Payment record deleted', 'success');
             }
         };
 
-        window.deleteInvoice = function(id) {
+        window.deleteInvoice = (id) => {
             if (confirm('Delete this invoice?')) {
                 invoices = invoices.filter(i => i.id !== id);
                 localStorage.setItem('email_invoices', JSON.stringify(invoices));
                 displayInvoices();
+                showToast('Invoice deleted', 'success');
             }
         };
 
-        window.downloadInvoice = function(id) {
+        window.downloadInvoice = (id) => {
             const invoice = invoices.find(i => i.id === id);
             if (invoice) {
-                alert(`Downloading invoice ${invoice.id} - Total: $${invoice.total}`);
+                alert(`Downloading invoice ${invoice.id}\nTotal Amount: $${invoice.total}`);
+                // In production, this would trigger actual PDF download
             }
         };
 
-        window.deleteContact = function(email) {
+        window.deleteContact = (email) => {
             if (confirm('Delete this contact submission?')) {
                 contacts = contacts.filter(c => c.email !== email);
                 localStorage.setItem('contacts', JSON.stringify(contacts));
                 displayContacts();
+                showToast('Contact submission deleted', 'success');
             }
         };
 
-        window.deleteHardwareInquiry = function(email) {
+        window.deleteHardwareInquiry = (email) => {
             if (confirm('Delete this hardware inquiry?')) {
                 hardwareInquiries = hardwareInquiries.filter(h => h.email !== email);
                 localStorage.setItem('hardwareInquiries', JSON.stringify(hardwareInquiries));
                 displayHardware();
+                showToast('Hardware inquiry deleted', 'success');
             }
         };
 
-        window.deleteDemoRequest = function(email) {
+        window.deleteDemoRequest = (email) => {
             if (confirm('Delete this demo request?')) {
                 demoRequests = demoRequests.filter(d => d.email !== email);
                 localStorage.setItem('demos', JSON.stringify(demoRequests));
                 displayDemos();
+                showToast('Demo request deleted', 'success');
             }
         };
 
-        window.closeCustomerModal = function() {
+        window.closeCustomerModal = () => {
             document.getElementById('customerModal').style.display = 'none';
         };
 
-        // Tab Switching
-        function switchTab(tabName) {
-            const tabs = ['dashboard', 'customers', 'subscriptions', 'payments', 'invoices', 'contacts', 'hardware', 'demos'];
+        window.closeSubscriptionModal = () => {
+            document.getElementById('subscriptionModal').style.display = 'none';
+        };
+
+        function showToast(message, type) {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#10b981' : '#ef4444'};
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                z-index: 9999;
+                animation: slideIn 0.3s ease;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            `;
+            toast.innerHTML = message;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // ========== SEARCH CUSTOMERS ==========
+        const customerSearch = document.getElementById('customerSearch');
+        if (customerSearch) {
+            customerSearch.addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                const filtered = customers.filter(c => 
+                    c.businessName.toLowerCase().includes(term) ||
+                    c.contactPerson.toLowerCase().includes(term) ||
+                    c.email.toLowerCase().includes(term)
+                );
+                const container = document.getElementById('allCustomersBody');
+                if (container) {
+                    container.innerHTML = filtered.map(c => `
+                        <tr>
+                            <td><strong>${c.businessName}</strong></td>
+                            <td>${c.contactPerson}</td>
+                            <td>${c.email}</td>
+                            <td>${c.phone}</td>
+                            <td>${c.gst || '-'}</td>
+                            <td>${c.plan}</td>
+                            <td>${c.orders || 0}</td>
+                            <td>$${c.spent || 0}</td>
+                            <td><span class="status-badge status-${c.status === 'active' ? 'active' : 'pending'}">${c.status}</span></td>
+                            <td>
+                                <button class="action-btn view-btn" onclick="viewCustomer('${c.id}')"><i data-lucide="eye" size="16"></i></button>
+                                <button class="action-btn delete-btn" onclick="deleteCustomer('${c.id}')"><i data-lucide="trash-2" size="16"></i></button>
+                            </td>
+                        </tr>
+                    `).join('');
+                    lucide.createIcons();
+                }
+            });
+        }
+
+        // ========== TAB SWITCHING ==========
+        window.switchTab = function(tabName) {
+            const tabs = ['dashboard', 'customers', 'subscriptions', 'payments', 'invoices', 'contacts', 'hardware', 'demos', 'settings'];
             tabs.forEach(tab => {
                 const el = document.getElementById(tab + 'Tab');
                 if (el) el.style.display = 'none';
             });
-            document.getElementById(tabName + 'Tab').style.display = 'block';
+            const activeTab = document.getElementById(tabName + 'Tab');
+            if (activeTab) activeTab.style.display = 'block';
+            
             document.getElementById('pageTitle').innerText = tabName.charAt(0).toUpperCase() + tabName.slice(1);
             
             document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-            document.querySelector(`.nav-item[data-tab="${tabName}"]`).classList.add('active');
+            const activeNav = document.querySelector(`.nav-item[data-tab="${tabName}"]`);
+            if (activeNav) activeNav.classList.add('active');
 
             // Refresh data when switching tabs
             if (tabName === 'customers') displayCustomers();
@@ -1240,47 +1609,12 @@
             if (tabName === 'contacts') displayContacts();
             if (tabName === 'hardware') displayHardware();
             if (tabName === 'demos') displayDemos();
-        }
+            if (tabName === 'dashboard') updateDashboardStats();
 
-        // Admin Login
-        window.adminLogin = function() {
-            const email = document.getElementById('adminEmail').value;
-            const password = document.getElementById('adminPassword').value;
-            
-            if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
-                localStorage.setItem('adminLoggedIn', 'true');
-                document.getElementById('loginRequired').style.display = 'none';
-                document.getElementById('adminName').innerText = 'Super Admin';
-                loadAllData();
-                updateDashboard();
-                displayCustomers();
-                displaySubscriptions();
-                displayPayments();
-                displayInvoices();
-                displayContacts();
-                displayHardware();
-                displayDemos();
-                document.getElementById('loadingScreen').style.display = 'none';
-            } else {
-                alert('Invalid admin credentials!');
-            }
+            if (window.innerWidth <= 768) closeSidebar();
         };
 
-        // Logout
-        document.getElementById('logoutBtn').addEventListener('click', () => {
-            localStorage.removeItem('adminLoggedIn');
-            window.location.reload();
-        });
-
-        // Sidebar Navigation
-        document.querySelectorAll('.nav-item').forEach(item => {
-            item.addEventListener('click', () => {
-                const tab = item.getAttribute('data-tab');
-                if (tab) switchTab(tab);
-                if (window.innerWidth <= 768) toggleSidebar();
-            });
-        });
-
+        // ========== SIDEBAR FUNCTIONS ==========
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('open');
             document.getElementById('sidebarOverlay').classList.toggle('show');
@@ -1294,23 +1628,117 @@
         window.toggleSidebar = toggleSidebar;
         window.closeSidebar = closeSidebar;
 
-        // Check if already logged in
-        if (localStorage.getItem('adminLoggedIn') === 'true') {
-            document.getElementById('loginRequired').style.display = 'none';
-            document.getElementById('adminName').innerText = 'Super Admin';
-            loadAllData();
-            updateDashboard();
-            displayCustomers();
-            displaySubscriptions();
-            displayPayments();
-            displayInvoices();
-            displayContacts();
-            displayHardware();
-            displayDemos();
-            document.getElementById('loadingScreen').style.display = 'none';
-        } else {
-            document.getElementById('loadingScreen').style.display = 'none';
-        }
+        // ========== AUTH STATE LISTENER ==========
+        onAuthStateChanged(auth, (user) => {
+            if (user && ALLOWED_ADMIN_EMAILS.includes(user.email)) {
+                loginContainer.style.display = 'none';
+                adminPanel.style.display = 'flex';
+                document.getElementById('adminName').innerText = user.displayName || user.email.split('@')[0];
+                document.getElementById('adminNameSetting').value = user.displayName || user.email.split('@')[0];
+                document.getElementById('adminEmailSetting').value = user.email;
+                document.getElementById('adminUID').value = user.uid;
+                document.getElementById('adminAvatar').src = user.photoURL || `https://ui-avatars.com/api/?background=4f46e5&color=fff&name=${user.email[0]}`;
+                loadSampleData();
+                updateDashboardStats();
+                displayCustomers();
+                displaySubscriptions();
+                displayPayments();
+                displayInvoices();
+                displayContacts();
+                displayHardware();
+                displayDemos();
+                lucide.createIcons();
+                loadingScreen.style.display = 'none';
+            } else if (user && !ALLOWED_ADMIN_EMAILS.includes(user.email)) {
+                signOut(auth);
+                errorMsg.innerText = 'You are not authorized to access the admin panel';
+                errorMsg.style.display = 'block';
+                loadingScreen.style.display = 'none';
+            } else {
+                loginContainer.style.display = 'flex';
+                adminPanel.style.display = 'none';
+                loadingScreen.style.display = 'none';
+            }
+        });
+
+        // ========== LOGIN HANDLER ==========
+        const loginForm = document.getElementById('loginForm');
+        const loginBtn = document.getElementById('loginBtn');
+        const loginBtnText = document.getElementById('loginBtnText');
+        const loginSpinner = document.getElementById('loginSpinner');
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('adminEmail').value;
+            const password = document.getElementById('adminPassword').value;
+            
+            errorMsg.style.display = 'none';
+            loginBtnText.innerText = 'Signing in...';
+            loginSpinner.style.display = 'inline-block';
+            loginBtn.disabled = true;
+
+            try {
+                const result = await signInWithEmailAndPassword(auth, email, password);
+                if (!ALLOWED_ADMIN_EMAILS.includes(result.user.email)) {
+                    await signOut(auth);
+                    errorMsg.innerText = 'This email is not authorized as admin';
+                    errorMsg.style.display = 'block';
+                }
+            } catch (err) {
+                errorMsg.innerText = err.message;
+                errorMsg.style.display = 'block';
+            } finally {
+                loginBtnText.innerText = 'Sign In';
+                loginSpinner.style.display = 'none';
+                loginBtn.disabled = false;
+            }
+        });
+
+        // ========== GOOGLE LOGIN ==========
+        document.getElementById('googleLoginBtn').addEventListener('click', async () => {
+            try {
+                const result = await signInWithPopup(auth, provider);
+                if (!ALLOWED_ADMIN_EMAILS.includes(result.user.email)) {
+                    await signOut(auth);
+                    alert('This Google account is not authorized as admin');
+                }
+            } catch (err) {
+                alert(err.message);
+            }
+        });
+
+        // ========== LOGOUT ==========
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await signOut(auth);
+            window.location.reload();
+        });
+
+        // ========== NAVIGATION ==========
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const tab = item.getAttribute('data-tab');
+                if (tab) switchTab(tab);
+                if (window.innerWidth <= 768) toggleSidebar();
+            });
+        });
+
+        // ========== INITIAL LOAD ==========
+        loadSampleData();
     </script>
+    <style>
+        .chart-container {
+            height: 300px;
+            width: 100%;
+            position: relative;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+    </style>
 </body>
 </html>
