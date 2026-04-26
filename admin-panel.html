@@ -37,7 +37,7 @@
             --danger: #ef4444;
         }
 
-        /* ========== SIDEBAR ========== */
+        /* ========== SIDEBAR STYLES ========== */
         .sidebar {
             width: 280px;
             background: white;
@@ -171,6 +171,7 @@
             object-fit: cover;
         }
 
+        /* Dashboard Scroll */
         .dashboard-scroll {
             flex: 1;
             overflow-y: auto;
@@ -235,8 +236,6 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
-            flex-wrap: wrap;
-            gap: 10px;
         }
 
         .panel-header h3 {
@@ -285,6 +284,11 @@
             color: #d97706;
         }
 
+        .status-inactive {
+            background: rgba(239, 68, 68, 0.15);
+            color: #dc2626;
+        }
+
         .action-btn {
             background: none;
             border: none;
@@ -299,37 +303,16 @@
             color: var(--primary);
         }
 
+        .view-btn:hover {
+            background: rgba(79, 70, 229, 0.1);
+        }
+
         .delete-btn {
             color: var(--danger);
         }
 
-        .edit-btn {
-            color: var(--warning);
-        }
-
-        /* Buttons */
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: background 0.2s;
-        }
-
-        .btn-primary:hover {
-            background: var(--primary-dark);
-        }
-
-        .btn-danger {
-            background: var(--danger);
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
-            cursor: pointer;
+        .delete-btn:hover {
+            background: rgba(239, 68, 68, 0.1);
         }
 
         /* Modal */
@@ -392,39 +375,44 @@
             padding: 10px 20px;
             border-radius: 8px;
             cursor: pointer;
-        }
-
-        /* Forms */
-        .input-group {
-            margin-bottom: 20px;
-        }
-
-        .input-group label {
-            display: block;
-            margin-bottom: 8px;
             font-weight: 500;
-            color: #334155;
-            font-size: 0.85rem;
         }
 
-        .input-group input,
-        .input-group select {
+        .btn-close:hover {
+            background: #cbd5e1;
+        }
+
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            padding: 12px;
-            border: 1.5px solid var(--border);
-            border-radius: 10px;
-            font-size: 0.9rem;
-            transition: all 0.3s;
+            height: 100%;
+            background: white;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 15px;
         }
 
-        .input-group input:focus,
-        .input-group select:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #e2e8f0;
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
         }
 
-        /* Login */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Login Container */
         .login-container {
             position: fixed;
             top: 0;
@@ -458,6 +446,25 @@
             text-align: center;
             color: var(--text-gray);
             margin-bottom: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 14px;
+            border: 1.5px solid var(--border);
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
         }
 
         .btn-login {
@@ -535,33 +542,14 @@
             display: none;
         }
 
-        .loading-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: white;
-            z-index: 9999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid #e2e8f0;
-            border-top: 4px solid var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .success-message {
+            background: #d1fae5;
+            color: #065f46;
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-size: 0.85rem;
+            display: none;
         }
 
         .sidebar-overlay {
@@ -575,17 +563,18 @@
             display: none;
         }
 
-        .chart-container {
-            height: 300px;
-            width: 100%;
-            position: relative;
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
         @media (max-width: 768px) {
             .sidebar {
-                transform: translateX(-100%);
                 position: fixed;
                 height: 100%;
+                transform: translateX(-100%);
             }
             .sidebar.open {
                 transform: translateX(0);
@@ -604,6 +593,11 @@
                 padding: 8px;
                 font-size: 0.7rem;
             }
+            .panel-header {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
         }
     </style>
 </head>
@@ -621,6 +615,7 @@
             <h2>🔐 Super Admin Login</h2>
             <p>Sign in to manage your restaurant system</p>
             <div class="error-message" id="errorMsg"></div>
+            <div class="success-message" id="successMsg"></div>
             <form id="loginForm">
                 <div class="input-group">
                     <input type="email" id="adminEmail" placeholder="Email Address" required>
@@ -628,7 +623,10 @@
                 <div class="input-group">
                     <input type="password" id="adminPassword" placeholder="Password" required>
                 </div>
-                <button type="submit" class="btn-login" id="loginBtn">Sign In</button>
+                <button type="submit" class="btn-login" id="loginBtn">
+                    <span id="loginBtnText">Sign In</span>
+                    <span id="loginSpinner" style="display: none;">⏳</span>
+                </button>
             </form>
             <div class="divider">OR</div>
             <button class="btn-google" id="googleLoginBtn">
@@ -641,7 +639,7 @@
         </div>
     </div>
 
-    <!-- Admin Panel Content -->
+    <!-- Admin Panel Content (Hidden until login) -->
     <div id="adminPanel" style="display: none; width: 100%; display: flex;">
         <!-- Sidebar Overlay -->
         <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
@@ -682,9 +680,13 @@
                     <i data-lucide="mail" size="18"></i>
                     <span>Contact Forms</span>
                 </div>
-                <div class="nav-item" data-tab="admin-users">
-                    <i data-lucide="shield-check" size="18"></i>
-                    <span>Admin Users</span>
+                <div class="nav-item" data-tab="hardware">
+                    <i data-lucide="monitor" size="18"></i>
+                    <span>Hardware Inquiries</span>
+                </div>
+                <div class="nav-item" data-tab="demos">
+                    <i data-lucide="calendar" size="18"></i>
+                    <span>Demo Requests</span>
                 </div>
                 <div class="nav-item" data-tab="settings">
                     <i data-lucide="settings" size="18"></i>
@@ -721,13 +723,13 @@
                             <h3>Revenue Chart (Last 7 Days)</h3>
                         </div>
                         <div class="chart-container">
-                            <canvas id="revenueChart"></canvas>
+                            <canvas id="revenueChart" style="height: 300px; width: 100%;"></canvas>
                         </div>
                     </div>
                     <div class="panel">
                         <div class="panel-header">
                             <h3>Recent Customers</h3>
-                            <button class="action-btn view-btn" onclick="switchTab('customers')" style="font-size:0.8rem;">View All →</button>
+                            <button class="action-btn view-btn" onclick="switchTab('customers')" style="font-size: 0.8rem;">View All →</button>
                         </div>
                         <div style="overflow-x: auto;">
                             <table class="data-table" id="recentCustomersTable">
@@ -740,7 +742,9 @@
                                         <th>Registered Date</th>
                                     </tr>
                                 </thead>
-                                <tbody id="recentCustomersBody"></tbody>
+                                <tbody id="recentCustomersBody">
+                                    <tr><td colspan="5" style="text-align: center;">Loading...</td></tr>
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -752,7 +756,7 @@
                         <div class="panel-header">
                             <h3>All Customers</h3>
                             <div>
-                                <input type="text" id="customerSearch" placeholder="🔍 Search customers..." style="padding:8px 12px; border:1px solid var(--border); border-radius:8px; width:200px;">
+                                <input type="text" id="customerSearch" placeholder="🔍 Search customers..." style="padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; width: 200px;">
                             </div>
                         </div>
                         <div style="overflow-x: auto;">
@@ -771,7 +775,9 @@
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody id="allCustomersBody"></tbody>
+                                <tbody id="allCustomersBody">
+                                    <tr><td colspan="10" style="text-align: center;">No customers found</td></tr>
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -797,7 +803,9 @@
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody id="subscriptionsBody"></tbody>
+                                <tbody id="subscriptionsBody">
+                                    <tr><td colspan="8" style="text-align: center;">No subscriptions found</td></tr>
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -822,7 +830,9 @@
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody id="paymentsBody"></tbody>
+                                <tbody id="paymentsBody">
+                                    <tr><td colspan="7" style="text-align: center;">No payment requests</td></tr>
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -848,7 +858,9 @@
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody id="invoicesBody"></tbody>
+                                <tbody id="invoicesBody">
+                                    <tr><td colspan="8" style="text-align: center;">No invoices found</td></tr>
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -873,32 +885,64 @@
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody id="contactsBody"></tbody>
+                                <tbody id="contactsBody">
+                                    <tr><td colspan="7" style="text-align: center;">No contact submissions</td></tr>
+                                </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
 
-                <!-- Admin Users Tab -->
-                <div id="admin-usersTab" style="display: none;">
+                <!-- Hardware Inquiries Tab -->
+                <div id="hardwareTab" style="display: none;">
                     <div class="panel">
                         <div class="panel-header">
-                            <h3>Admin Users Management</h3>
-                            <button class="btn-primary" onclick="openAddAdminModal()">+ Add New Admin User</button>
+                            <h3>Hardware Inquiries</h3>
                         </div>
                         <div style="overflow-x: auto;">
-                            <table class="data-table" id="adminUsersTable">
+                            <table class="data-table" id="hardwareTable">
                                 <thead>
                                     <tr>
-                                        <th>Email</th>
                                         <th>Name</th>
-                                        <th>Role</th>
-                                        <th>Created Date</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
+                                        <th>Product</th>
+                                        <th>Quantity</th>
+                                        <th>Date</th>
                                         <th>Status</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody id="adminUsersBody"></tbody>
+                                <tbody id="hardwareBody">
+                                    <tr><td colspan="8" style="text-align: center;">No hardware inquiries</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Demo Requests Tab -->
+                <div id="demosTab" style="display: none;">
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h3>Demo Requests</h3>
+                        </div>
+                        <div style="overflow-x: auto;">
+                            <table class="data-table" id="demosTable">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
+                                        <th>Restaurant</th>
+                                        <th>Preferred Date</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="demosBody">
+                                    <tr><td colspan="7" style="text-align: center;">No demo requests</td></tr>
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -912,31 +956,24 @@
                         </div>
                         <div style="max-width: 500px;">
                             <div class="input-group">
-                                <label>Your Email</label>
-                                <input type="email" id="adminEmailSetting" readonly style="background:#f8fafc;">
+                                <label style="display: block; margin-bottom: 8px; font-weight: 500;">Admin Email</label>
+                                <input type="email" id="adminEmailSetting" readonly style="background: #f8fafc;">
                             </div>
                             <div class="input-group">
-                                <label>Your Name</label>
-                                <input type="text" id="adminNameSetting" readonly style="background:#f8fafc;">
+                                <label style="display: block; margin-bottom: 8px; font-weight: 500;">Admin Name</label>
+                                <input type="text" id="adminNameSetting" readonly style="background: #f8fafc;">
                             </div>
                             <div class="input-group">
-                                <label>User ID</label>
-                                <input type="text" id="adminUID" readonly style="background:#f8fafc;">
+                                <label style="display: block; margin-bottom: 8px; font-weight: 500;">User ID</label>
+                                <input type="text" id="adminUID" readonly style="background: #f8fafc;">
                             </div>
-                            <hr style="margin:20px 0; border-color: var(--border);">
-                            <h4 style="margin-bottom: 15px;">📋 Authorized Admin Emails</h4>
-                            <p style="font-size: 0.85rem; color: var(--text-gray); margin-bottom: 10px;">Only these emails can access this panel:</p>
+                            <hr style="margin: 20px 0; border-color: var(--border);">
+                            <h4 style="margin-bottom: 15px;">Authorized Admin Emails</h4>
+                            <p style="font-size: 0.8rem; color: var(--text-gray); margin-bottom: 15px;">Only these emails can access this panel:</p>
                             <ul style="margin-left: 20px; color: var(--primary);">
                                 <li>admin@billzestpos.com</li>
                                 <li>billzestai@gmail.com</li>
                             </ul>
-                            <hr style="margin:20px 0;">
-                            <h4 style="margin-bottom: 15px;">➕ How to Create New Admin Users</h4>
-                            <p style="font-size: 0.85rem; color: var(--text-gray); margin-bottom: 10px;">1. Go to "Admin Users" tab</p>
-                            <p style="font-size: 0.85rem; color: var(--text-gray); margin-bottom: 10px;">2. Click "Add New Admin User"</p>
-                            <p style="font-size: 0.85rem; color: var(--text-gray); margin-bottom: 10px;">3. Enter email, name, and password</p>
-                            <p style="font-size: 0.85rem; color: var(--text-gray); margin-bottom: 10px;">4. User will be created in Firebase Authentication</p>
-                            <p style="font-size: 0.85rem; color: var(--text-gray);">5. Share the credentials with your staff</p>
                         </div>
                     </div>
                 </div>
@@ -955,85 +992,24 @@
         </div>
     </div>
 
-    <!-- Add Admin User Modal -->
-    <div id="addAdminModal" class="modal">
+    <!-- Subscription Detail Modal -->
+    <div id="subscriptionModal" class="modal">
         <div class="modal-content">
-            <h3>➕ Add New Admin User</h3>
-            <form id="addAdminForm">
-                <div class="input-group">
-                    <label>Email Address *</label>
-                    <input type="email" id="newAdminEmail" placeholder="admin@example.com" required>
-                </div>
-                <div class="input-group">
-                    <label>Full Name</label>
-                    <input type="text" id="newAdminName" placeholder="John Doe">
-                </div>
-                <div class="input-group">
-                    <label>Password *</label>
-                    <input type="password" id="newAdminPassword" placeholder="Min 6 characters" required>
-                </div>
-                <div class="input-group">
-                    <label>Confirm Password *</label>
-                    <input type="password" id="newAdminConfirmPassword" placeholder="Confirm password" required>
-                </div>
-                <div class="input-group">
-                    <label>Role</label>
-                    <select id="newAdminRole">
-                        <option value="admin">Admin</option>
-                        <option value="manager">Manager</option>
-                        <option value="viewer">Viewer (Read Only)</option>
-                    </select>
-                </div>
-                <div class="modal-buttons">
-                    <button type="submit" class="btn-primary">Create Admin User</button>
-                    <button type="button" class="btn-close" onclick="closeAddAdminModal()">Cancel</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Edit Admin User Modal -->
-    <div id="editAdminModal" class="modal">
-        <div class="modal-content">
-            <h3>✏️ Edit Admin User</h3>
-            <form id="editAdminForm">
-                <input type="hidden" id="editAdminUserId">
-                <div class="input-group">
-                    <label>Email Address</label>
-                    <input type="email" id="editAdminEmail" readonly style="background:#f8fafc;">
-                </div>
-                <div class="input-group">
-                    <label>Full Name</label>
-                    <input type="text" id="editAdminName" placeholder="Full Name">
-                </div>
-                <div class="input-group">
-                    <label>New Password (leave blank to keep same)</label>
-                    <input type="password" id="editAdminPassword" placeholder="Enter new password">
-                </div>
-                <div class="input-group">
-                    <label>Role</label>
-                    <select id="editAdminRole">
-                        <option value="admin">Admin</option>
-                        <option value="manager">Manager</option>
-                        <option value="viewer">Viewer (Read Only)</option>
-                    </select>
-                </div>
-                <div class="modal-buttons">
-                    <button type="submit" class="btn-primary">Update User</button>
-                    <button type="button" class="btn-danger" onclick="deleteAdminUserFromModal()">Delete User</button>
-                    <button type="button" class="btn-close" onclick="closeEditAdminModal()">Cancel</button>
-                </div>
-            </form>
+            <h3>Subscription Details</h3>
+            <div id="subscriptionDetailContent"></div>
+            <div class="modal-buttons">
+                <button class="btn-close" onclick="closeSubscriptionModal()">Close</button>
+            </div>
         </div>
     </div>
 
     <script type="module">
-        // ========== FIREBASE IMPORTS ==========
+        // Firebase imports
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut, createUserWithEmailAndPassword, updateProfile, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, getDocs, doc, setDoc, deleteDoc, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, collection, getDocs, doc, updateDoc, deleteDoc, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // ========== FIREBASE CONFIG ==========
+        // Firebase Config
         const firebaseConfig = {
             apiKey: "AIzaSyCN0akvFXOHM6WPHv9ve9noqqmauO3TJRY",
             authDomain: "billzest-pos.firebaseapp.com",
@@ -1044,212 +1020,35 @@
             measurementId: "G-69WEHH9X5D"
         };
 
-        // ========== INITIALIZE FIREBASE ==========
+        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
         const provider = new GoogleAuthProvider();
 
-        // ========== SUPER ADMIN EMAILS ==========
-        const SUPER_ADMIN_EMAILS = ["admin@billzestpos.com", "billzestai@gmail.com"];
-        let currentUser = null;
-        let adminUsersList = [];
-        let customers = [], subscriptions = [], payments = [], invoices = [], contacts = [], hardwareInquiries = [], demoRequests = [];
+        // Allowed admin emails
+        const ALLOWED_ADMIN_EMAILS = ["admin@billzestpos.com", "billzestai@gmail.com"];
+
+        // Data stores
+        let customers = [];
+        let subscriptions = [];
+        let payments = [];
+        let invoices = [];
+        let contacts = [];
+        let hardwareInquiries = [];
+        let demoRequests = [];
         let revenueChart = null;
 
-        // ========== LOAD ADMIN USERS ==========
-        async function loadAdminUsers() {
-            try {
-                const querySnapshot = await getDocs(collection(db, "adminUsers"));
-                adminUsersList = [];
-                querySnapshot.forEach(doc => {
-                    adminUsersList.push({ id: doc.id, ...doc.data() });
-                });
-                displayAdminUsers();
-            } catch (error) {
-                console.error("Error loading admin users:", error);
-                adminUsersList = JSON.parse(localStorage.getItem('adminUsers') || '[]');
-                displayAdminUsers();
-            }
-        }
-
-        function displayAdminUsers() {
-            const container = document.getElementById('adminUsersBody');
-            if (!container) return;
-            
-            if (adminUsersList.length === 0) {
-                container.innerHTML = '<tr><td colspan="6" style="text-align: center;">No admin users found. Click "Add New Admin User" to create one.</td></tr>';
-                return;
-            }
-            
-            container.innerHTML = adminUsersList.map(user => `
-                <tr>
-                    <td>${user.email}</td>                    <td>${user.name || '-'}</td>
-                    <td>${user.role || 'admin'}</td>
-                    <td>${user.createdAt ? new Date(user.createdAt).toLocaleDateString() : '-'}</td>
-                    <td><span class="status-badge status-active">Active</span></td>
-                    <td>
-                        <button class="action-btn edit-btn" onclick="editAdminUser('${user.id}')" title="Edit"><i data-lucide="edit-2" size="16"></i></button>
-                        ${(SUPER_ADMIN_EMAILS.includes(currentUser?.email) && user.email !== currentUser?.email) ? `<button class="action-btn delete-btn" onclick="deleteAdminUser('${user.id}')" title="Delete"><i data-lucide="trash-2" size="16"></i></button>` : ''}
-                    </td>
-                </tr>
-            `).join('');
-            lucide.createIcons();
-        }
-
-        // ========== CREATE ADMIN USER ==========
-        window.openAddAdminModal = () => {
-            document.getElementById('addAdminModal').style.display = 'flex';
-        };
-
-        window.closeAddAdminModal = () => {
-            document.getElementById('addAdminModal').style.display = 'none';
-            document.getElementById('addAdminForm').reset();
-        };
-
-        document.getElementById('addAdminForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('newAdminEmail').value;
-            const name = document.getElementById('newAdminName').value;
-            const password = document.getElementById('newAdminPassword').value;
-            const confirmPassword = document.getElementById('newAdminConfirmPassword').value;
-            const role = document.getElementById('newAdminRole').value;
-
-            if (password !== confirmPassword) {
-                alert("Passwords do not match!");
-                return;
-            }
-            if (password.length < 6) {
-                alert("Password must be at least 6 characters");
-                return;
-            }
-
-            const submitBtn = e.target.querySelector('button[type="submit"]');
-            const originalText = submitBtn.innerText;
-            submitBtn.innerText = "Creating...";
-            submitBtn.disabled = true;
-
-            try {
-                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                const newUser = userCredential.user;
-                
-                await updateProfile(newUser, { displayName: name || email.split('@')[0] });
-                
-                const userData = {
-                    uid: newUser.uid,
-                    email: email,
-                    name: name || email.split('@')[0],
-                    role: role,
-                    createdAt: new Date().toISOString(),
-                    createdBy: currentUser?.email || 'super_admin'
-                };
-                await setDoc(doc(db, "adminUsers", newUser.uid), userData);
-                
-                adminUsersList.push({ id: newUser.uid, ...userData });
-                localStorage.setItem('adminUsers', JSON.stringify(adminUsersList));
-                
-                displayAdminUsers();
-                closeAddAdminModal();
-                alert(`✅ Admin user ${email} created successfully!\n\nYou can share these credentials with the new admin.`);
-                
-            } catch (error) {
-                console.error("Error creating admin:", error);
-                if (error.code === 'auth/email-already-in-use') {
-                    alert("❌ This email is already registered!");
-                } else {
-                    alert("❌ Error: " + error.message);
-                }
-            } finally {
-                submitBtn.innerText = originalText;
-                submitBtn.disabled = false;
-            }
-        });
-
-        // ========== EDIT ADMIN USER ==========
-        window.editAdminUser = (userId) => {
-            const user = adminUsersList.find(u => u.id === userId);
-            if (user) {
-                document.getElementById('editAdminUserId').value = user.id;
-                document.getElementById('editAdminEmail').value = user.email;
-                document.getElementById('editAdminName').value = user.name || '';
-                document.getElementById('editAdminRole').value = user.role || 'admin';
-                document.getElementById('editAdminModal').style.display = 'flex';
-            }
-        };
-
-        window.closeEditAdminModal = () => {
-            document.getElementById('editAdminModal').style.display = 'none';
-            document.getElementById('editAdminForm').reset();
-        };
-
-        document.getElementById('editAdminForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const userId = document.getElementById('editAdminUserId').value;
-            const name = document.getElementById('editAdminName').value;
-            const newPassword = document.getElementById('editAdminPassword').value;
-            const role = document.getElementById('editAdminRole').value;
-
-            const submitBtn = e.target.querySelector('button[type="submit"]');
-            const originalText = submitBtn.innerText;
-            submitBtn.innerText = "Updating...";
-            submitBtn.disabled = true;
-
-            try {
-                await updateDoc(doc(db, "adminUsers", userId), {
-                    name: name,
-                    role: role,
-                    updatedAt: new Date().toISOString()
-                });
-                
-                const index = adminUsersList.findIndex(u => u.id === userId);
-                if (index !== -1) {
-                    adminUsersList[index].name = name;
-                    adminUsersList[index].role = role;
-                    localStorage.setItem('adminUsers', JSON.stringify(adminUsersList));
-                }
-                
-                if (newPassword && newPassword.length >= 6) {
-                    alert("⚠️ Password update requires the user to reset it via 'Forgot Password' feature.\n\nYou can send a password reset email from Firebase Console.");
-                }
-                
-                displayAdminUsers();
-                closeEditAdminModal();
-                alert("✅ Admin user updated successfully!");
-                
-            } catch (error) {
-                console.error("Error updating admin:", error);
-                alert("❌ Error: " + error.message);
-            } finally {
-                submitBtn.innerText = originalText;
-                submitBtn.disabled = false;
-            }
-        });
-
-        // ========== DELETE ADMIN USER ==========
-        window.deleteAdminUser = async (userId) => {
-            if (!confirm("⚠️ Are you sure you want to delete this admin user? This action cannot be undone.")) return;
-            
-            try {
-                await deleteDoc(doc(db, "adminUsers", userId));
-                adminUsersList = adminUsersList.filter(u => u.id !== userId);
-                localStorage.setItem('adminUsers', JSON.stringify(adminUsersList));
-                displayAdminUsers();
-                alert("✅ Admin user deleted successfully!");
-                
-            } catch (error) {
-                console.error("Error deleting admin:", error);
-                alert("❌ Error: " + error.message);
-            }
-        };
-
-        window.deleteAdminUserFromModal = async () => {
-            const userId = document.getElementById('editAdminUserId').value;
-            await deleteAdminUser(userId);
-            closeEditAdminModal();
-        };
+        // DOM Elements
+        const loginContainer = document.getElementById('loginContainer');
+        const adminPanel = document.getElementById('adminPanel');
+        const loadingScreen = document.getElementById('loadingScreen');
+        const errorMsg = document.getElementById('errorMsg');
+        const successMsg = document.getElementById('successMsg');
 
         // ========== LOAD SAMPLE DATA ==========
         function loadSampleData() {
+            // Load from localStorage first
             customers = JSON.parse(localStorage.getItem('registered_customers') || '[]');
             subscriptions = JSON.parse(localStorage.getItem('subscriptions') || '[]');
             payments = JSON.parse(localStorage.getItem('pendingPayments') || '[]');
@@ -1258,85 +1057,141 @@
             hardwareInquiries = JSON.parse(localStorage.getItem('hardwareInquiries') || '[]');
             demoRequests = JSON.parse(localStorage.getItem('demos') || '[]');
 
+            // Create sample data if empty
             if (customers.length === 0) {
                 customers = [
                     { id: "cust_1", businessName: "Pizza Palace", contactPerson: "John Doe", email: "john@pizzapalace.com", phone: "+1 234 567 890", gst: "22AAAAA0000A1Z", plan: "Professional", orders: 45, spent: 3450, status: "active", registeredAt: "2026-01-15" },
                     { id: "cust_2", businessName: "Coffee House", contactPerson: "Sarah Smith", email: "sarah@coffeehouse.com", phone: "+1 234 567 891", gst: "22BBBBB0000B1Z", plan: "Starter", orders: 23, spent: 897, status: "active", registeredAt: "2026-02-10" },
-                    { id: "cust_3", businessName: "Noodle Bar", contactPerson: "Mike Chen", email: "mike@noodlebar.com", phone: "+1 234 567 892", gst: "", plan: "Professional", orders: 12, spent: 456, status: "active", registeredAt: "2026-03-05" }
+                    { id: "cust_3", businessName: "Noodle Bar", contactPerson: "Mike Chen", email: "mike@noodlebar.com", phone: "+1 234 567 892", gst: "", plan: "Professional", orders: 12, spent: 456, status: "active", registeredAt: "2026-03-05" },
+                    { id: "cust_4", businessName: "Burger King", contactPerson: "Lisa Wong", email: "lisa@burgerking.com", phone: "+1 234 567 893", gst: "22CCCCC0000C1Z", plan: "Enterprise", orders: 0, spent: 0, status: "pending", registeredAt: "2026-04-20" }
                 ];
                 localStorage.setItem('registered_customers', JSON.stringify(customers));
             }
+
             if (subscriptions.length === 0) {
                 subscriptions = [
                     { id: "sub_1", customerName: "Pizza Palace", email: "john@pizzapalace.com", plan: "Professional", price: "$79/month", billing: "Monthly", startDate: "2026-01-15", status: "active" },
-                    { id: "sub_2", customerName: "Coffee House", email: "sarah@coffeehouse.com", plan: "Starter", price: "$39/month", billing: "Monthly", startDate: "2026-02-10", status: "active" }
+                    { id: "sub_2", customerName: "Coffee House", email: "sarah@coffeehouse.com", plan: "Starter", price: "$39/month", billing: "Monthly", startDate: "2026-02-10", status: "active" },
+                    { id: "sub_3", customerName: "Noodle Bar", email: "mike@noodlebar.com", plan: "Professional", price: "$79/month", billing: "Yearly", startDate: "2026-03-05", status: "active" }
                 ];
                 localStorage.setItem('subscriptions', JSON.stringify(subscriptions));
             }
+
             if (payments.length === 0) {
                 payments = [
                     { id: "pay_1", customerName: "Pizza Palace", email: "john@pizzapalace.com", plan: "Professional", amount: 79, date: "2026-04-15", status: "completed" },
-                    { id: "pay_2", customerName: "Coffee House", email: "sarah@coffeehouse.com", plan: "Starter", amount: 39, date: "2026-04-10", status: "completed" }
+                    { id: "pay_2", customerName: "Coffee House", email: "sarah@coffeehouse.com", plan: "Starter", amount: 39, date: "2026-04-10", status: "completed" },
+                    { id: "pay_3", customerName: "Burger King", email: "lisa@burgerking.com", plan: "Enterprise", amount: 0, date: "2026-04-20", status: "pending" }
                 ];
                 localStorage.setItem('pendingPayments', JSON.stringify(payments));
             }
+
             if (invoices.length === 0) {
                 invoices = [
                     { id: "INV-001", customer: "Pizza Palace", amount: 79, gst: 3.95, total: 82.95, date: "2026-04-15", status: "paid" },
-                    { id: "INV-002", customer: "Coffee House", amount: 39, gst: 1.95, total: 40.95, date: "2026-04-10", status: "paid" }
+                    { id: "INV-002", customer: "Coffee House", amount: 39, gst: 1.95, total: 40.95, date: "2026-04-10", status: "paid" },
+                    { id: "INV-003", customer: "Noodle Bar", amount: 79, gst: 3.95, total: 82.95, date: "2026-03-05", status: "paid" }
                 ];
                 localStorage.setItem('email_invoices', JSON.stringify(invoices));
             }
+
             if (contacts.length === 0) {
                 contacts = [
-                    { name: "John Doe", email: "john@example.com", phone: "+1 234 567 890", restaurant: "Pizza Palace", message: "Need demo for POS system", date: "2026-04-18" }
+                    { name: "John Doe", email: "john@example.com", phone: "+1 234 567 890", restaurant: "Pizza Palace", message: "Need demo for POS system", date: "2026-04-18" },
+                    { name: "Jane Smith", email: "jane@example.com", phone: "+1 234 567 891", restaurant: "Coffee House", message: "Interested in hardware", date: "2026-04-19" }
                 ];
                 localStorage.setItem('contacts', JSON.stringify(contacts));
             }
+
+            if (hardwareInquiries.length === 0) {
+                hardwareInquiries = [
+                    { name: "Pizza Palace", email: "john@pizzapalace.com", phone: "+1 234 567 890", product: "Dual-Screen POS Terminal", quantity: "2", date: "2026-04-18", status: "new" },
+                    { name: "Coffee House", email: "sarah@coffeehouse.com", phone: "+1 234 567 891", product: "Smart Receipt Printer", quantity: "1", date: "2026-04-19", status: "new" }
+                ];
+                localStorage.setItem('hardwareInquiries', JSON.stringify(hardwareInquiries));
+            }
+
+            if (demoRequests.length === 0) {
+                demoRequests = [
+                    { name: "John Doe", email: "john@example.com", phone: "+1 234 567 890", restaurant: "Pizza Palace", preferredDate: "2026-04-25", status: "pending" }
+                ];
+                localStorage.setItem('demos', JSON.stringify(demoRequests));
+            }
         }
 
-        // ========== UPDATE DASHBOARD ==========
+        // ========== UPDATE DASHBOARD STATS ==========
         function updateDashboardStats() {
             const totalCustomers = customers.length;
             const activeSubscriptions = subscriptions.filter(s => s.status === 'active').length;
             const totalRevenue = payments.reduce((sum, p) => sum + (p.amount || 0), 0);
             const pendingPayments = payments.filter(p => p.status === 'pending').length;
+            const pendingContacts = contacts.length;
+            const pendingHardware = hardwareInquiries.length;
 
-            document.getElementById('statsGrid').innerHTML = `
-                <div class="stat-card">
-                    <div class="stat-info"><h4>Total Customers</h4><div class="stat-value">${totalCustomers}</div></div>
-                    <div class="stat-icon" style="background:rgba(79,70,229,0.1);color:#4f46e5;"><i data-lucide="users" size="28"></i></div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-info"><h4>Active Subscriptions</h4><div class="stat-value">${activeSubscriptions}</div></div>
-                    <div class="stat-icon" style="background:rgba(16,185,129,0.1);color:#10b981;"><i data-lucide="credit-card" size="28"></i></div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-info"><h4>Total Revenue</h4><div class="stat-value">$${totalRevenue}</div></div>
-                    <div class="stat-icon" style="background:rgba(245,158,11,0.1);color:#f59e0b;"><i data-lucide="dollar-sign" size="28"></i></div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-info"><h4>Admin Users</h4><div class="stat-value">${adminUsersList.length + SUPER_ADMIN_EMAILS.length}</div></div>
-                    <div class="stat-icon" style="background:rgba(79,70,229,0.1);color:#4f46e5;"><i data-lucide="shield" size="28"></i></div>
-                </div>
-            `;
+            const statsGrid = document.getElementById('statsGrid');
+            if (statsGrid) {
+                statsGrid.innerHTML = `
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h4>Total Customers</h4>
+                            <div class="stat-value">${totalCustomers}</div>
+                        </div>
+                        <div class="stat-icon" style="background: rgba(79,70,229,0.1); color: #4f46e5;">
+                            <i data-lucide="users" size="28"></i>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h4>Active Subscriptions</h4>
+                            <div class="stat-value">${activeSubscriptions}</div>
+                        </div>
+                        <div class="stat-icon" style="background: rgba(16,185,129,0.1); color: #10b981;">
+                            <i data-lucide="credit-card" size="28"></i>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h4>Total Revenue</h4>
+                            <div class="stat-value">$${totalRevenue}</div>
+                        </div>
+                        <div class="stat-icon" style="background: rgba(245,158,11,0.1); color: #f59e0b;">
+                            <i data-lucide="dollar-sign" size="28"></i>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h4>Pending Payments</h4>
+                            <div class="stat-value">${pendingPayments}</div>
+                        </div>
+                        <div class="stat-icon" style="background: rgba(239,68,68,0.1); color: #ef4444;">
+                            <i data-lucide="clock" size="28"></i>
+                        </div>
+                    </div>
+                `;
+            }
 
+            // Recent Customers
             const recentCustomers = [...customers].sort((a, b) => new Date(b.registeredAt) - new Date(a.registeredAt)).slice(0, 5);
-            document.getElementById('recentCustomersBody').innerHTML = recentCustomers.map(c => `
-                <tr>
-                    <td>${c.businessName}</td>
-                    <td>${c.contactPerson}</td>
-                    <td>${c.email}</td>
-                    <td>${c.plan}</td>
-                    <td>${c.registeredAt}</td>
-                </tr>
-            `).join('');
+            const recentBody = document.getElementById('recentCustomersBody');
+            if (recentBody) {
+                recentBody.innerHTML = recentCustomers.map(c => `
+                    <tr>
+                        <td><strong>${c.businessName}</strong></td>
+                        <td>${c.contactPerson}</td>
+                        <td>${c.email}</td>
+                        <td>${c.plan}</td>
+                        <td>${c.registeredAt}</td>
+                    </tr>
+                `).join('');
+            }
+
             lucide.createIcons();
 
-            if (revenueChart) revenueChart.destroy();
-            const ctx = document.getElementById('revenueChart');
-            if (ctx) {
-                revenueChart = new Chart(ctx, {
+            // Revenue Chart
+            const chartCtx = document.getElementById('revenueChart');
+            if (chartCtx) {
+                if (revenueChart) revenueChart.destroy();
+                revenueChart = new Chart(chartCtx, {
                     type: 'line',
                     data: {
                         labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
@@ -1347,18 +1202,27 @@
                             backgroundColor: 'rgba(79,70,229,0.1)',
                             borderWidth: 3,
                             fill: true,
-                            tension: 0.4
+                            tension: 0.4,
+                            pointBackgroundColor: '#ffffff',
+                            pointBorderColor: '#4f46e5',
+                            pointBorderWidth: 2,
+                            pointRadius: 4
                         }]
                     },
-                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } }
+                    }
                 });
             }
         }
 
-        // ========== DISPLAY FUNCTIONS ==========
+        // ========== DISPLAY CUSTOMERS ==========
         function displayCustomers() {
             const container = document.getElementById('allCustomersBody');
             if (!container) return;
+
             container.innerHTML = customers.map(c => `
                 <tr>
                     <td><strong>${c.businessName}</strong></td>
@@ -1369,19 +1233,25 @@
                     <td>${c.plan}</td>
                     <td>${c.orders || 0}</td>
                     <td>$${c.spent || 0}</td>
-                    <td><span class="status-badge status-active">${c.status}</span></td>
+                    <td><span class="status-badge status-${c.status === 'active' ? 'active' : 'pending'}">${c.status}</span></td>
                     <td>
-                        <button class="action-btn view-btn" onclick="viewCustomer('${c.id}')"><i data-lucide="eye" size="16"></i></button>
-                        <button class="action-btn delete-btn" onclick="deleteCustomer('${c.id}')"><i data-lucide="trash-2" size="16"></i></button>
+                        <button class="action-btn view-btn" onclick="viewCustomer('${c.id}')" title="View Details">
+                            <i data-lucide="eye" size="16"></i>
+                        </button>
+                        <button class="action-btn delete-btn" onclick="deleteCustomer('${c.id}')" title="Delete">
+                            <i data-lucide="trash-2" size="16"></i>
+                        </button>
                     </td>
                 </tr>
             `).join('');
             lucide.createIcons();
         }
 
+        // ========== DISPLAY SUBSCRIPTIONS ==========
         function displaySubscriptions() {
             const container = document.getElementById('subscriptionsBody');
             if (!container) return;
+
             container.innerHTML = subscriptions.map(s => `
                 <tr>
                     <td><strong>${s.customerName}</strong></td>
@@ -1390,16 +1260,25 @@
                     <td>${s.price}</td>
                     <td>${s.billing}</td>
                     <td>${s.startDate}</td>
-                    <td><span class="status-badge status-active">${s.status}</span></td>
-                    <td><button class="action-btn delete-btn" onclick="deleteSubscription('${s.id}')"><i data-lucide="trash-2" size="16"></i></button></td>
+                    <td><span class="status-badge status-${s.status === 'active' ? 'active' : 'pending'}">${s.status}</span></td>
+                    <td>
+                        <button class="action-btn view-btn" onclick="viewSubscription('${s.id}')" title="View Details">
+                            <i数据-lucide="eye" size="16"></i>
+                        </button>
+                        <button class="action-btn delete-btn" onclick="deleteSubscription('${s.id}')" title="Delete">
+                            <i data-lucide="trash-2" size="16"></i>
+                        </button>
+                    </td>
                 </tr>
             `).join('');
             lucide.createIcons();
         }
 
+        // ========== DISPLAY PAYMENTS ==========
         function displayPayments() {
             const container = document.getElementById('paymentsBody');
             if (!container) return;
+
             container.innerHTML = payments.map(p => `
                 <tr>
                     <td><strong>${p.customerName}</strong></td>
@@ -1409,17 +1288,23 @@
                     <td>${p.date}</td>
                     <td><span class="status-badge status-${p.status === 'completed' ? 'active' : 'pending'}">${p.status}</span></td>
                     <td>
-                        ${p.status !== 'completed' ? `<button class="action-btn view-btn" onclick="markPaymentComplete('${p.id}')"><i data-lucide="check-circle" size="16"></i></button>` : ''}
-                        <button class="action-btn delete-btn" onclick="deletePayment('${p.id}')"><i data-lucide="trash-2" size="16"></i></button>
+                        ${p.status !== 'completed' ? `<button class="action-btn view-btn" onclick="markPaymentComplete('${p.id}')" title="Mark Complete">
+                            <i data-lucide="check-circle" size="16"></i>
+                        </button>` : ''}
+                        <button class="action-btn delete-btn" onclick="deletePayment('${p.id}')" title="Delete">
+                            <i data-lucide="trash-2" size="16"></i>
+                        </button>
                     </td>
                 </tr>
             `).join('');
             lucide.createIcons();
         }
 
+        // ========== DISPLAY INVOICES ==========
         function displayInvoices() {
             const container = document.getElementById('invoicesBody');
             if (!container) return;
+
             container.innerHTML = invoices.map(i => `
                 <tr>
                     <td><strong>${i.id}</strong></td>
@@ -1430,26 +1315,83 @@
                     <td>${i.date}</td>
                     <td><span class="status-badge status-active">${i.status}</span></td>
                     <td>
-                        <button class="action-btn view-btn" onclick="downloadInvoice('${i.id}')"><i data-lucide="download" size="16"></i></button>
-                        <button class="action-btn delete-btn" onclick="deleteInvoice('${i.id}')"><i data-lucide="trash-2" size="16"></i></button>
+                        <button class="action-btn view-btn" onclick="downloadInvoice('${i.id}')" title="Download">
+                            <i data-lucide="download" size="16"></i>
+                        </button>
+                        <button class="action-btn delete-btn" onclick="deleteInvoice('${i.id}')" title="Delete">
+                            <i data-lucide="trash-2" size="16"></i>
+                        </button>
                     </td>
                 </tr>
             `).join('');
             lucide.createIcons();
         }
 
+        // ========== DISPLAY CONTACTS ==========
         function displayContacts() {
             const container = document.getElementById('contactsBody');
             if (!container) return;
+
             container.innerHTML = contacts.map(c => `
                 <tr>
                     <td><strong>${c.name}</strong></td>
                     <td>${c.email}</td>
                     <td>${c.phone}</td>
                     <td>${c.restaurant || '-'}</td>
-                    <td style="max-width:200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${c.message?.substring(0, 50) || ''}${c.message?.length > 50 ? '...' : ''}</td>
+                    <td style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${c.message?.substring(0, 50) || ''}${c.message?.length > 50 ? '...' : ''}</td>
                     <td>${c.date}</td>
-                    <td><button class="action-btn delete-btn" onclick="deleteContact('${c.email}')"><i data-lucide="trash-2" size="16"></i></button></td>
+                    <td>
+                        <button class="action-btn delete-btn" onclick="deleteContact('${c.email}')" title="Delete">
+                            <i data-lucide="trash-2" size="16"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        // ========== DISPLAY HARDWARE INQUIRIES ==========
+        function displayHardware() {
+            const container = document.getElementById('hardwareBody');
+            if (!container) return;
+
+            container.innerHTML = hardwareInquiries.map(h => `
+                <tr>
+                    <td><strong>${h.name}</strong></td>
+                    <td>${h.email}</td>
+                    <td>${h.phone}</td>
+                    <td>${h.product}</td>
+                    <td>${h.quantity}</td>
+                    <td>${h.date}</td>
+                    <td><span class="status-badge status-pending">${h.status}</span></td>
+                    <td>
+                        <button class="action-btn delete-btn" onclick="deleteHardwareInquiry('${h.email}')" title="Delete">
+                            <i data-lucide="trash-2" size="16"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        // ========== DISPLAY DEMO REQUESTS ==========
+        function displayDemos() {
+            const container = document.getElementById('demosBody');
+            if (!container) return;
+
+            container.innerHTML = demoRequests.map(d => `
+                <tr>
+                    <td><strong>${d.name}</strong></td>
+                    <td>${d.email}</td>
+                    <td>${d.phone}</td>
+                    <td>${d.restaurant}</td>
+                    <td>${d.preferredDate || d.date}</td>
+                    <td><span class="status-badge status-pending">${d.status}</span></td>
+                    <td>
+                        <button class="action-btn delete-btn" onclick="deleteDemoRequest('${d.email}')" title="Delete">
+                            <i data-lucide="trash-2" size="16"></i>
+                        </button>
+                    </td>
                 </tr>
             `).join('');
             lucide.createIcons();
@@ -1457,144 +1399,218 @@
 
         // ========== ACTION FUNCTIONS ==========
         window.viewCustomer = (id) => {
-            const c = customers.find(c => c.id === id);
-            if (c) {
-                document.getElementById('customerDetailContent').innerHTML = `
-                    <div class="modal-info-row"><span class="modal-info-label">Business Name:</span><span class="modal-info-value">${c.businessName}</span></div>
-                    <div class="modal-info-row"><span class="modal-info-label">Contact Person:</span><span class="modal-info-value">${c.contactPerson}</span></div>
-                    <div class="modal-info-row"><span class="modal-info-label">Email:</span><span class="modal-info-value">${c.email}</span></div>
-                    <div class="modal-info-row"><span class="modal-info-label">Phone:</span><span class="modal-info-value">${c.phone}</span></div>
-                    <div class="modal-info-row"><span class="modal-info-label">GST:</span><span class="modal-info-value">${c.gst || '-'}</span></div>
-                    <div class="modal-info-row"><span class="modal-info-label">Plan:</span><span class="modal-info-value">${c.plan}</span></div>
-                    <div class="modal-info-row"><span class="modal-info-label">Orders:</span><span class="modal-info-value">${c.orders || 0}</span></div>
-                    <div class="modal-info-row"><span class="modal-info-label">Total Spent:</span><span class="modal-info-value">$${c.spent || 0}</span></div>
-                    <div class="modal-info-row"><span class="modal-info-label">Registered:</span><span class="modal-info-value">${c.registeredAt}</span></div>
-                    <div class="modal-info-row"><span class="modal-info-label">Status:</span><span class="modal-info-value">${c.status}</span></div>
+            const customer = customers.find(c => c.id === id);
+            if (customer) {
+                const detailHtml = `
+                    <div class="modal-info-row"><span class="modal-info-label">Business Name:</span><span class="modal-info-value">${customer.businessName}</span></div>
+                    <div class="modal-info-row"><span class="modal-info-label">Contact Person:</span><span class="modal-info-value">${customer.contactPerson}</span></div>
+                    <div class="modal-info-row"><span class="modal-info-label">Email:</span><span class="modal-info-value">${customer.email}</span></div>
+                    <div class="modal-info-row"><span class="modal-info-label">Phone:</span><span class="modal-info-value">${customer.phone}</span></div>
+                    <div class="modal-info-row"><span class="modal-info-label">GST Number:</span><span class="modal-info-value">${customer.gst || 'Not provided'}</span></div>
+                    <div class="modal-info-row"><span class="modal-info-label">Plan:</span><span class="modal-info-value">${customer.plan}</span></div>
+                    <div class="modal-info-row"><span class="modal-info-label">Total Orders:</span><span class="modal-info-value">${customer.orders || 0}</span></div>
+                    <div class="modal-info-row"><span class="modal-info-label">Total Spent:</span><span class="modal-info-value">$${customer.spent || 0}</span></div>
+                    <div class="modal-info-row"><span class="modal-info-label">Status:</span><span class="modal-info-value">${customer.status}</span></div>
+                    <div class="modal-info-row"><span class="modal-info-label">Registered:</span><span class="modal-info-value">${customer.registeredAt}</span></div>
                 `;
+                document.getElementById('customerDetailContent').innerHTML = detailHtml;
                 document.getElementById('customerModal').style.display = 'flex';
             }
         };
 
-        window.closeCustomerModal = () => document.getElementById('customerModal').style.display = 'none';
-        
+        window.viewSubscription = (id) => {
+            const sub = subscriptions.find(s => s.id === id);
+            if (sub) {
+                const detailHtml = `
+                    <div class="modal-info-row"><span class="modal-info-label">Customer Name:</span><span class="modal-info-value">${sub.customerName}</span></div>
+                    <div class="modal-info-row"><span class="modal-info-label">Email:</span><span class="modal-info-value">${sub.email}</span></div>
+                    <div class="modal-info-row"><span class="modal-info-label">Plan:</span><span class="modal-info-value">${sub.plan}</span></div>
+                    <div class="modal-info-row"><span class="modal-info-label">Price:</span><span class="modal-info-value">${sub.price}</span></div>
+                    <div class="modal-info-row"><span class="modal-info-label">Billing Cycle:</span><span class="modal-info-value">${sub.billing}</span></div>
+                    <div class="modal-info-row"><span class="modal-info-label">Start Date:</span><span class="modal-info-value">${sub.startDate}</span></div>
+                    <div class="modal-info-row"><span class="modal-info-label">Next Renewal:</span><span class="modal-info-value">${new Date(new Date(sub.startDate).setMonth(new Date(sub.startDate).getMonth() + 1)).toLocaleDateString()}</span></div>
+                    <div class="modal-info-row"><span class="modal-info-label">Status:</span><span class="modal-info-value">${sub.status}</span></div>
+                `;
+                document.getElementById('subscriptionDetailContent').innerHTML = detailHtml;
+                document.getElementById('subscriptionModal').style.display = 'flex';
+            }
+        };
+
         window.deleteCustomer = (id) => {
-            if (confirm('Delete this customer?')) {
+            if (confirm('Are you sure you want to delete this customer? This action cannot be undone.')) {
                 customers = customers.filter(c => c.id !== id);
                 localStorage.setItem('registered_customers', JSON.stringify(customers));
                 displayCustomers();
                 updateDashboardStats();
-                alert('Customer deleted!');
+                showToast('Customer deleted successfully', 'success');
             }
         };
-        
+
         window.deleteSubscription = (id) => {
             if (confirm('Delete this subscription?')) {
                 subscriptions = subscriptions.filter(s => s.id !== id);
                 localStorage.setItem('subscriptions', JSON.stringify(subscriptions));
                 displaySubscriptions();
                 updateDashboardStats();
-                alert('Subscription deleted!');
+                showToast('Subscription deleted', 'success');
             }
         };
-        
+
         window.markPaymentComplete = (id) => {
-            const p = payments.find(p => p.id === id);
-            if (p) {
-                p.status = 'completed';
+            const payment = payments.find(p => p.id === id);
+            if (payment) {
+                payment.status = 'completed';
                 localStorage.setItem('pendingPayments', JSON.stringify(payments));
                 displayPayments();
                 updateDashboardStats();
-                alert(`Payment for ${p.customerName} marked as completed!`);
+                showToast(`Payment for ${payment.customerName} marked as completed!`, 'success');
             }
         };
-        
+
         window.deletePayment = (id) => {
             if (confirm('Delete this payment record?')) {
                 payments = payments.filter(p => p.id !== id);
                 localStorage.setItem('pendingPayments', JSON.stringify(payments));
                 displayPayments();
                 updateDashboardStats();
-                alert('Payment record deleted!');
+                showToast('Payment record deleted', 'success');
             }
         };
-        
+
         window.deleteInvoice = (id) => {
             if (confirm('Delete this invoice?')) {
                 invoices = invoices.filter(i => i.id !== id);
                 localStorage.setItem('email_invoices', JSON.stringify(invoices));
                 displayInvoices();
-                alert('Invoice deleted!');
+                showToast('Invoice deleted', 'success');
             }
         };
-        
+
         window.downloadInvoice = (id) => {
             const invoice = invoices.find(i => i.id === id);
             if (invoice) {
                 alert(`Downloading invoice ${invoice.id}\nTotal Amount: $${invoice.total}`);
+                // In production, this would trigger actual PDF download
             }
         };
-        
+
         window.deleteContact = (email) => {
             if (confirm('Delete this contact submission?')) {
                 contacts = contacts.filter(c => c.email !== email);
                 localStorage.setItem('contacts', JSON.stringify(contacts));
                 displayContacts();
-                alert('Contact submission deleted!');
+                showToast('Contact submission deleted', 'success');
             }
         };
 
-        // Search Customer
-        document.getElementById('customerSearch')?.addEventListener('input', (e) => {
-            const term = e.target.value.toLowerCase();
-            const filtered = customers.filter(c => 
-                c.businessName.toLowerCase().includes(term) || 
-                c.contactPerson.toLowerCase().includes(term) || 
-                c.email.toLowerCase().includes(term)
-            );
-            const container = document.getElementById('allCustomersBody');
-            if (container) {
-                container.innerHTML = filtered.map(c => `
-                    <tr>
-                        <td><strong>${c.businessName}</strong></td>
-                        <td>${c.contactPerson}</td>
-                        <td>${c.email}</td>
-                        <td>${c.phone}</td>
-                        <td>${c.gst || '-'}</td>
-                        <td>${c.plan}</td>
-                        <td>${c.orders || 0}</td>
-                        <td>$${c.spent || 0}</td>
-                        <td><span class="status-badge status-active">${c.status}</span></td>
-                        <td>
-                            <button class="action-btn view-btn" onclick="viewCustomer('${c.id}')"><i data-lucide="eye" size="16"></i></button>
-                            <button class="action-btn delete-btn" onclick="deleteCustomer('${c.id}')"><i data-lucide="trash-2" size="16"></i></button>
-                        </td>
-                    </tr>
-                `).join('');
-                lucide.createIcons();
+        window.deleteHardwareInquiry = (email) => {
+            if (confirm('Delete this hardware inquiry?')) {
+                hardwareInquiries = hardwareInquiries.filter(h => h.email !== email);
+                localStorage.setItem('hardwareInquiries', JSON.stringify(hardwareInquiries));
+                displayHardware();
+                showToast('Hardware inquiry deleted', 'success');
             }
-        });
+        };
+
+        window.deleteDemoRequest = (email) => {
+            if (confirm('Delete this demo request?')) {
+                demoRequests = demoRequests.filter(d => d.email !== email);
+                localStorage.setItem('demos', JSON.stringify(demoRequests));
+                displayDemos();
+                showToast('Demo request deleted', 'success');
+            }
+        };
+
+        window.closeCustomerModal = () => {
+            document.getElementById('customerModal').style.display = 'none';
+        };
+
+        window.closeSubscriptionModal = () => {
+            document.getElementById('subscriptionModal').style.display = 'none';
+        };
+
+        function showToast(message, type) {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#10b981' : '#ef4444'};
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                z-index: 9999;
+                animation: slideIn 0.3s ease;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            `;
+            toast.innerHTML = message;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // ========== SEARCH CUSTOMERS ==========
+        const customerSearch = document.getElementById('customerSearch');
+        if (customerSearch) {
+            customerSearch.addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                const filtered = customers.filter(c => 
+                    c.businessName.toLowerCase().includes(term) ||
+                    c.contactPerson.toLowerCase().includes(term) ||
+                    c.email.toLowerCase().includes(term)
+                );
+                const container = document.getElementById('allCustomersBody');
+                if (container) {
+                    container.innerHTML = filtered.map(c => `
+                        <tr>
+                            <td><strong>${c.businessName}</strong></td>
+                            <td>${c.contactPerson}</td>
+                            <td>${c.email}</td>
+                            <td>${c.phone}</td>
+                            <td>${c.gst || '-'}</td>
+                            <td>${c.plan}</td>
+                            <td>${c.orders || 0}</td>
+                            <td>$${c.spent || 0}</td>
+                            <td><span class="status-badge status-${c.status === 'active' ? 'active' : 'pending'}">${c.status}</span></td>
+                            <td>
+                                <button class="action-btn view-btn" onclick="viewCustomer('${c.id}')"><i data-lucide="eye" size="16"></i></button>
+                                <button class="action-btn delete-btn" onclick="deleteCustomer('${c.id}')"><i data-lucide="trash-2" size="16"></i></button>
+                            </td>
+                        </tr>
+                    `).join('');
+                    lucide.createIcons();
+                }
+            });
+        }
 
         // ========== TAB SWITCHING ==========
-        window.switchTab = (tabName) => {
-            const tabs = ['dashboard', 'customers', 'subscriptions', 'payments', 'invoices', 'contacts', 'admin-users', 'settings'];
+        window.switchTab = function(tabName) {
+            const tabs = ['dashboard', 'customers', 'subscriptions', 'payments', 'invoices', 'contacts', 'hardware', 'demos', 'settings'];
             tabs.forEach(tab => {
                 const el = document.getElementById(tab + 'Tab');
                 if (el) el.style.display = 'none';
             });
-            document.getElementById(tabName + 'Tab').style.display = 'block';
+            const activeTab = document.getElementById(tabName + 'Tab');
+            if (activeTab) activeTab.style.display = 'block';
+            
             document.getElementById('pageTitle').innerText = tabName.charAt(0).toUpperCase() + tabName.slice(1);
             
             document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-            document.querySelector(`.nav-item[data-tab="${tabName}"]`).classList.add('active');
+            const activeNav = document.querySelector(`.nav-item[data-tab="${tabName}"]`);
+            if (activeNav) activeNav.classList.add('active');
 
+            // Refresh data when switching tabs
             if (tabName === 'customers') displayCustomers();
             if (tabName === 'subscriptions') displaySubscriptions();
             if (tabName === 'payments') displayPayments();
             if (tabName === 'invoices') displayInvoices();
             if (tabName === 'contacts') displayContacts();
-            if (tabName === 'admin-users') loadAdminUsers();
+            if (tabName === 'hardware') displayHardware();
+            if (tabName === 'demos') displayDemos();
             if (tabName === 'dashboard') updateDashboardStats();
-            
+
             if (window.innerWidth <= 768) closeSidebar();
         };
 
@@ -1612,14 +1628,9 @@
         window.toggleSidebar = toggleSidebar;
         window.closeSidebar = closeSidebar;
 
-        // ========== AUTH STATE ==========
-        onAuthStateChanged(auth, async (user) => {
-            const loginContainer = document.getElementById('loginContainer');
-            const adminPanel = document.getElementById('adminPanel');
-            const loadingScreen = document.getElementById('loadingScreen');
-            
-            if (user && (SUPER_ADMIN_EMAILS.includes(user.email) || adminUsersList.some(u => u.email === user.email))) {
-                currentUser = user;
+        // ========== AUTH STATE LISTENER ==========
+        onAuthStateChanged(auth, (user) => {
+            if (user && ALLOWED_ADMIN_EMAILS.includes(user.email)) {
                 loginContainer.style.display = 'none';
                 adminPanel.style.display = 'flex';
                 document.getElementById('adminName').innerText = user.displayName || user.email.split('@')[0];
@@ -1627,8 +1638,6 @@
                 document.getElementById('adminEmailSetting').value = user.email;
                 document.getElementById('adminUID').value = user.uid;
                 document.getElementById('adminAvatar').src = user.photoURL || `https://ui-avatars.com/api/?background=4f46e5&color=fff&name=${user.email[0]}`;
-                
-                await loadAdminUsers();
                 loadSampleData();
                 updateDashboardStats();
                 displayCustomers();
@@ -1636,12 +1645,14 @@
                 displayPayments();
                 displayInvoices();
                 displayContacts();
+                displayHardware();
+                displayDemos();
                 lucide.createIcons();
                 loadingScreen.style.display = 'none';
-            } else if (user && !SUPER_ADMIN_EMAILS.includes(user.email) && !adminUsersList.some(u => u.email === user.email)) {
-                await signOut(auth);
-                document.getElementById('errorMsg').innerText = 'You are not authorized to access the admin panel';
-                document.getElementById('errorMsg').style.display = 'block';
+            } else if (user && !ALLOWED_ADMIN_EMAILS.includes(user.email)) {
+                signOut(auth);
+                errorMsg.innerText = 'You are not authorized to access the admin panel';
+                errorMsg.style.display = 'block';
                 loadingScreen.style.display = 'none';
             } else {
                 loginContainer.style.display = 'flex';
@@ -1650,28 +1661,53 @@
             }
         });
 
-        // ========== LOGIN HANDLERS ==========
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        // ========== LOGIN HANDLER ==========
+        const loginForm = document.getElementById('loginForm');
+        const loginBtn = document.getElementById('loginBtn');
+        const loginBtnText = document.getElementById('loginBtnText');
+        const loginSpinner = document.getElementById('loginSpinner');
+
+        loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('adminEmail').value;
             const password = document.getElementById('adminPassword').value;
-            document.getElementById('errorMsg').style.display = 'none';
+            
+            errorMsg.style.display = 'none';
+            loginBtnText.innerText = 'Signing in...';
+            loginSpinner.style.display = 'inline-block';
+            loginBtn.disabled = true;
+
             try {
-                await signInWithEmailAndPassword(auth, email, password);
+                const result = await signInWithEmailAndPassword(auth, email, password);
+                if (!ALLOWED_ADMIN_EMAILS.includes(result.user.email)) {
+                    await signOut(auth);
+                    errorMsg.innerText = 'This email is not authorized as admin';
+                    errorMsg.style.display = 'block';
+                }
             } catch (err) {
-                document.getElementById('errorMsg').innerText = err.message;
-                document.getElementById('errorMsg').style.display = 'block';
+                errorMsg.innerText = err.message;
+                errorMsg.style.display = 'block';
+            } finally {
+                loginBtnText.innerText = 'Sign In';
+                loginSpinner.style.display = 'none';
+                loginBtn.disabled = false;
             }
         });
 
+        // ========== GOOGLE LOGIN ==========
         document.getElementById('googleLoginBtn').addEventListener('click', async () => {
             try {
-                await signInWithPopup(auth, provider);
+                const result = await signInWithPopup(auth, provider);
+                if (!ALLOWED_ADMIN_EMAILS.includes(result.user.email)) {
+                    await signOut(auth);
+                    alert('This Google account is not authorized as admin');
+                }
             } catch (err) {
                 alert(err.message);
             }
         });
 
+        // ========== LOGOUT ==========
         document.getElementById('logoutBtn').addEventListener('click', async () => {
             await signOut(auth);
             window.location.reload();
@@ -1686,8 +1722,23 @@
             });
         });
 
-        // Initial load
+        // ========== INITIAL LOAD ==========
         loadSampleData();
     </script>
+    <style>
+        .chart-container {
+            height: 300px;
+            width: 100%;
+            position: relative;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+    </style>
 </body>
 </html>
