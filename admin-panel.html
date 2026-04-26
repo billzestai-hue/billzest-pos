@@ -4,93 +4,125 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Super Admin Panel - BillzestPOS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        *{margin:0;padding:0;box-sizing:border-box}
-        body{font-family:'Inter',sans-serif;background:#f1f5f9;color:#0f172a;display:flex;height:100vh;overflow:hidden}
-        :root{--primary:#4f46e5;--primary-dark:#4338ca;--secondary:#ec4899;--dark:#0f172a;--text-gray:#64748b;--border:#e2e8f0;--success:#10b981;--warning:#f59e0b;--danger:#ef4444}
-        .sidebar{width:280px;background:white;border-right:1px solid var(--border);display:flex;flex-direction:column;transition:transform 0.3s ease;z-index:100}
-        .sidebar-header{padding:25px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px}
-        .sidebar-logo{width:40px;height:40px;background:linear-gradient(135deg,var(--primary),var(--secondary));border-radius:10px;display:flex;align-items:center;justify-content:center;color:white}
-        .sidebar-header h2{font-size:1.2rem;font-weight:800}
-        .sidebar-header p{font-size:0.7rem;color:var(--text-gray)}
-        .nav-links{flex:1;padding:20px;overflow-y:auto}
-        .nav-item{display:flex;align-items:center;gap:12px;padding:12px 15px;border-radius:10px;margin-bottom:5px;cursor:pointer;color:#475569;font-weight:500;transition:all 0.2s}
-        .nav-item:hover,.nav-item.active{background:rgba(79,70,229,0.1);color:var(--primary)}
-        .sidebar-footer{padding:20px;border-top:1px solid var(--border)}
-        .logout-btn{display:flex;align-items:center;gap:12px;padding:12px 15px;border-radius:10px;cursor:pointer;color:var(--danger);font-weight:500}
-        .main-content{flex:1;display:flex;flex-direction:column;overflow:hidden}
-        .top-header{background:white;border-bottom:1px solid var(--border);padding:15px 30px;display:flex;justify-content:space-between;align-items:center}
-        .menu-toggle{display:none;background:none;border:none;font-size:1.2rem;cursor:pointer}
-        .page-title{font-size:1.5rem;font-weight:700}
-        .admin-info{display:flex;align-items:center;gap:15px}
-        .admin-avatar{width:40px;height:40px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center;color:white}
-        .dashboard-scroll{flex:1;overflow-y:auto;padding:25px}
-        .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;margin-bottom:25px}
-        .stat-card{background:white;border-radius:16px;padding:20px;border:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
-        .stat-info h4{font-size:0.8rem;color:var(--text-gray);margin-bottom:8px}
-        .stat-value{font-size:1.8rem;font-weight:800}
-        .stat-icon{width:50px;height:50px;border-radius:12px;display:flex;align-items:center;justify-content:center}
-        .panel{background:white;border-radius:16px;border:1px solid var(--border);padding:20px;margin-bottom:25px}
-        .panel-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:10px}
-        .panel-header h3{font-size:1.1rem;font-weight:700}
-        .data-table{width:100%;border-collapse:collapse}
-        .data-table th,.data-table td{padding:12px;text-align:left;border-bottom:1px solid var(--border)}
-        .data-table th{color:var(--text-gray);font-size:0.75rem;font-weight:600;text-transform:uppercase}
-        .data-table td{font-size:0.85rem}
-        .status-badge{padding:4px 10px;border-radius:20px;font-size:0.7rem;font-weight:600;display:inline-block}
-        .status-active{background:rgba(16,185,129,0.15);color:#065f46}
-        .status-pending{background:rgba(245,158,11,0.15);color:#d97706}
-        .action-btn{background:none;border:none;cursor:pointer;margin:0 5px;padding:5px;border-radius:6px}
-        .view-btn{color:var(--primary)}
-        .delete-btn{color:var(--danger)}
-        .edit-btn{color:var(--warning)}
-        .btn-primary{background:var(--primary);color:white;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-weight:500}
-        .btn-danger{background:var(--danger);color:white;border:none;padding:8px 16px;border-radius:6px;cursor:pointer}
-        .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:1000;align-items:center;justify-content:center}
-        .modal-content{background:white;border-radius:20px;padding:30px;width:90%;max-width:500px;max-height:85vh;overflow-y:auto}
-        .modal-info-row{display:flex;padding:12px 0;border-bottom:1px solid var(--border)}
-        .modal-info-label{width:130px;font-weight:600;color:var(--text-gray)}
-        .modal-info-value{flex:1;font-weight:500}
-        .modal-buttons{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}
-        .btn-close{background:#e2e8f0;border:none;padding:10px 20px;border-radius:8px;cursor:pointer}
-        .input-group{margin-bottom:20px}
-        .input-group label{display:block;margin-bottom:8px;font-weight:500;color:#334155;font-size:0.85rem}
-        .input-group input,.input-group select{width:100%;padding:12px;border:1.5px solid var(--border);border-radius:10px;font-size:0.9rem}
-        .login-container{position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);z-index:9998;display:flex;align-items:center;justify-content:center}
-        .login-card{background:white;border-radius:24px;padding:40px;width:90%;max-width:450px}
-        .login-card h2{text-align:center;margin-bottom:10px}
-        .login-card p{text-align:center;color:var(--text-gray);margin-bottom:30px}
-        .btn-login{width:100%;padding:14px;background:linear-gradient(135deg,var(--primary),var(--secondary));color:white;border:none;border-radius:12px;font-size:1rem;font-weight:600;cursor:pointer;margin-top:10px}
-        .divider{text-align:center;margin:25px 0;color:#94a3b8;position:relative}
-        .divider::before,.divider::after{content:'';position:absolute;top:50%;width:45%;height:1px;background:var(--border)}
-        .divider::before{left:0}
-        .divider::after{right:0}
-        .btn-google{width:100%;padding:12px;background:white;color:#334155;border:1.5px solid var(--border);border-radius:12px;font-size:1rem;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px}
-        .error-message{background:#fee2e2;color:#dc2626;padding:12px;border-radius:12px;margin-bottom:20px;display:none}
-        .loading-screen{position:fixed;top:0;left:0;width:100%;height:100%;background:white;z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:15px}
-        .spinner{width:50px;height:50px;border:4px solid #e2e8f0;border-top:4px solid var(--primary);border-radius:50%;animation:spin 1s linear infinite}
-        @keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
-        .sidebar-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:99;display:none}
-        .chart-container{height:300px;width:100%}
-        @media(max-width:768px){.sidebar{transform:translateX(-100%);position:fixed;height:100%}.sidebar.open{transform:translateX(0)}.sidebar-overlay.show{display:block}.menu-toggle{display:block}.stats-grid{grid-template-columns:1fr}}
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #f1f5f9; color: #0f172a; display: flex; height: 100vh; overflow: hidden; }
+        :root { --primary: #4f46e5; --primary-dark: #4338ca; --secondary: #ec4899; --dark: #0f172a; --text-gray: #64748b; --border: #e2e8f0; --success: #10b981; --warning: #f59e0b; --danger: #ef4444; }
+        
+        .sidebar { width: 280px; background: white; border-right: 1px solid var(--border); display: flex; flex-direction: column; transition: transform 0.3s ease; z-index: 100; }
+        .sidebar-header { padding: 25px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; }
+        .sidebar-logo { width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; }
+        .sidebar-header h2 { font-size: 1.2rem; font-weight: 800; }
+        .sidebar-header p { font-size: 0.7rem; color: var(--text-gray); }
+        .nav-links { flex: 1; padding: 20px; overflow-y: auto; }
+        .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 15px; border-radius: 10px; margin-bottom: 5px; cursor: pointer; color: #475569; font-weight: 500; transition: all 0.2s; }
+        .nav-item:hover, .nav-item.active { background: rgba(79,70,229,0.1); color: var(--primary); }
+        .sidebar-footer { padding: 20px; border-top: 1px solid var(--border); }
+        .logout-btn { display: flex; align-items: center; gap: 12px; padding: 12px 15px; border-radius: 10px; cursor: pointer; color: var(--danger); font-weight: 500; transition: background 0.2s; }
+        .logout-btn:hover { background: rgba(239,68,68,0.1); }
+
+        .main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+        .top-header { background: white; border-bottom: 1px solid var(--border); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; }
+        .menu-toggle { display: none; background: none; border: none; font-size: 1.2rem; cursor: pointer; }
+        .page-title { font-size: 1.5rem; font-weight: 700; }
+        .admin-info { display: flex; align-items: center; gap: 15px; }
+        .admin-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--primary); display: flex; align-items: center; justify-content: center; color: white; object-fit: cover; }
+        .dashboard-scroll { flex: 1; overflow-y: auto; padding: 25px; }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 25px; }
+        .stat-card { background: white; border-radius: 16px; padding: 20px; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; transition: transform 0.2s; }
+        .stat-card:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .stat-info h4 { font-size: 0.8rem; color: var(--text-gray); margin-bottom: 8px; }
+        .stat-value { font-size: 1.8rem; font-weight: 800; }
+        .stat-icon { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+
+        .panel { background: white; border-radius: 16px; border: 1px solid var(--border); padding: 20px; margin-bottom: 25px; }
+        .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
+        .panel-header h3 { font-size: 1.1rem; font-weight: 700; }
+        .data-table { width: 100%; border-collapse: collapse; }
+        .data-table th, .data-table td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); }
+        .data-table th { color: var(--text-gray); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; }
+        .data-table td { font-size: 0.85rem; }
+        .status-badge { padding: 4px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: 600; display: inline-block; }
+        .status-active { background: rgba(16,185,129,0.15); color: #065f46; }
+        .status-pending { background: rgba(245,158,11,0.15); color: #d97706; }
+        .action-btn { background: none; border: none; cursor: pointer; margin: 0 5px; padding: 5px; border-radius: 6px; transition: background 0.2s; }
+        .view-btn { color: var(--primary); }
+        .delete-btn { color: var(--danger); }
+        .edit-btn { color: var(--warning); }
+        .btn-primary { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 500; transition: background 0.2s; }
+        .btn-primary:hover { background: var(--primary-dark); }
+        .btn-danger { background: var(--danger); color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; }
+
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; }
+        .modal-content { background: white; border-radius: 20px; padding: 30px; width: 90%; max-width: 500px; max-height: 85vh; overflow-y: auto; }
+        .modal-content h3 { margin-bottom: 20px; color: var(--dark); }
+        .modal-info-row { display: flex; padding: 12px 0; border-bottom: 1px solid var(--border); }
+        .modal-info-label { width: 130px; font-weight: 600; color: var(--text-gray); }
+        .modal-info-value { flex: 1; font-weight: 500; color: var(--dark); }
+        .modal-buttons { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+        .btn-close { background: #e2e8f0; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; }
+
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; margin-bottom: 8px; font-weight: 500; color: #334155; font-size: 0.85rem; }
+        .input-group input, .input-group select { width: 100%; padding: 12px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 0.9rem; transition: all 0.3s; }
+        .input-group input:focus, .input-group select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79,70,229,0.1); }
+
+        .login-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); z-index: 9998; display: flex; align-items: center; justify-content: center; flex-direction: column; }
+        .login-card { background: white; border-radius: 24px; padding: 40px; width: 90%; max-width: 450px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); }
+        .login-card h2 { text-align: center; margin-bottom: 10px; color: #1e293b; }
+        .login-card p { text-align: center; color: var(--text-gray); margin-bottom: 30px; }
+        .btn-login { width: 100%; padding: 14px; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border: none; border-radius: 12px; font-size: 1rem; font-weight: 600; cursor: pointer; margin-top: 10px; transition: transform 0.3s; }
+        .btn-login:hover { transform: translateY(-2px); }
+        .divider { text-align: center; margin: 25px 0; color: #94a3b8; position: relative; }
+        .divider::before, .divider::after { content: ''; position: absolute; top: 50%; width: 45%; height: 1px; background: var(--border); }
+        .divider::before { left: 0; }
+        .divider::after { right: 0; }
+        .btn-google { width: 100%; padding: 12px; background: white; color: #334155; border: 1.5px solid var(--border); border-radius: 12px; font-size: 1rem; font-weight: 500; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.3s; }
+        .btn-google:hover { background: #f8fafc; border-color: #cbd5e1; }
+        .error-message { background: #fee2e2; color: #dc2626; padding: 12px; border-radius: 12px; margin-bottom: 20px; font-size: 0.85rem; display: none; }
+        .loading-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 9999; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 15px; }
+        .spinner { width: 50px; height: 50px; border: 4px solid #e2e8f0; border-top: 4px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 99; display: none; }
+        .chart-container { height: 300px; width: 100%; position: relative; }
+
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); position: fixed; height: 100%; }
+            .sidebar.open { transform: translateX(0); }
+            .sidebar-overlay.show { display: block; }
+            .menu-toggle { display: block; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .data-table th, .data-table td { padding: 8px; font-size: 0.7rem; }
+        }
     </style>
 </head>
 <body>
-    <div class="loading-screen" id="loadingScreen" style="display:none"><div class="spinner"></div><p>Loading Admin Panel...</p></div>
+
+    <div class="loading-screen" id="loadingScreen" style="display: none;"><div class="spinner"></div><p>Loading Admin Panel...</p></div>
+
     <div class="login-container" id="loginContainer">
         <div class="login-card">
             <h2>🔐 Super Admin Login</h2>
             <p>Sign in to manage your restaurant system</p>
             <div class="error-message" id="errorMsg"></div>
-            <form id="loginForm"><div class="input-group"><input type="email" id="adminEmail" placeholder="Email Address" required></div><div class="input-group"><input type="password" id="adminPassword" placeholder="Password" required></div><button type="submit" class="btn-login">Sign In</button></form>
+            <form id="loginForm">
+                <div class="input-group"><input type="email" id="adminEmail" placeholder="Email Address" required></div>
+                <div class="input-group"><input type="password" id="adminPassword" placeholder="Password" required></div>
+                <button type="submit" class="btn-login">Sign In</button>
+            </form>
             <div class="divider">OR</div>
             <button class="btn-google" id="googleLoginBtn"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" width="20"> Continue with Google</button>
+            <p style="text-align: center; margin-top: 20px; font-size: 0.7rem; color: var(--text-gray);">Only authorized administrators can access this panel</p>
         </div>
     </div>
-    <div id="adminPanel" style="display:none;width:100%;display:flex">
+
+    <div id="adminPanel" style="display: none; width: 100%; display: flex;">
         <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header"><div class="sidebar-logo"><i data-lucide="shield" size="22"></i></div><div><h2>Super Admin</h2><p>BillzestPOS</p></div></div>
@@ -106,24 +138,49 @@
             </div>
             <div class="sidebar-footer"><div class="logout-btn" id="logoutBtn"><i data-lucide="log-out" size="18"></i><span>Logout</span></div></div>
         </aside>
+
         <main class="main-content">
-            <header class="top-header"><button class="menu-toggle" onclick="toggleSidebar()"><i data-lucide="menu" size="24"></i></button><h1 class="page-title" id="pageTitle">Dashboard</h1><div class="admin-info"><img class="admin-avatar" id="adminAvatar" src=""><span id="adminName">Admin</span></div></header>
+            <header class="top-header">
+                <button class="menu-toggle" onclick="toggleSidebar()"><i data-lucide="menu" size="24"></i></button>
+                <h1 class="page-title" id="pageTitle">Dashboard</h1>
+                <div class="admin-info"><img class="admin-avatar" id="adminAvatar" src=""><span id="adminName">Admin</span></div>
+            </header>
+
             <div class="dashboard-scroll" id="dashboardContent">
-                <div id="dashboardTab"><div class="stats-grid" id="statsGrid"></div><div class="panel"><div class="panel-header"><h3>Revenue Chart</h3></div><div class="chart-container"><canvas id="revenueChart"></canvas></div></div><div class="panel"><div class="panel-header"><h3>Recent Customers</h3><button class="action-btn view-btn" onclick="switchTab('customers')">View All →</button></div><div style="overflow-x:auto"><table class="data-table" id="recentCustomersTable"><thead><tr><th>Business</th><th>Contact</th><th>Email</th><th>Plan</th><th>Registered</th></tr></thead><tbody id="recentCustomersBody"></tbody></table></div></div></div>
-                <div id="customersTab" style="display:none"><div class="panel"><div class="panel-header"><h3>All Customers</h3><div><input type="text" id="customerSearch" placeholder="🔍 Search customers..."></div></div><div style="overflow-x:auto"><table class="data-table" id="allCustomersTable"><thead><tr><th>Business</th><th>Contact</th><th>Email</th><th>Phone</th><th>GST</th><th>Plan</th><th>Orders</th><th>Spent</th><th>Status</th><th>Actions</th></tr></thead><tbody id="allCustomersBody"></tbody></table></div></div></div>
-                <div id="subscriptionsTab" style="display:none"><div class="panel"><div class="panel-header"><h3>All Subscriptions</h3></div><div style="overflow-x:auto"><table class="data-table" id="subscriptionsTable"><thead><tr><th>Customer</th><th>Email</th><th>Plan</th><th>Price</th><th>Billing</th><th>Start Date</th><th>Status</th><th>Actions</th></tr></thead><tbody id="subscriptionsBody"></tbody></table></div></div></div>
-                <div id="paymentsTab" style="display:none"><div class="panel"><div class="panel-header"><h3>Payment Requests</h3></div><div style="overflow-x:auto"><table class="data-table" id="paymentsTable"><thead><tr><th>Customer</th><th>Email</th><th>Plan</th><th>Amount</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead><tbody id="paymentsBody"></tbody></table></div></div></div>
-                <div id="invoicesTab" style="display:none"><div class="panel"><div class="panel-header"><h3>All Invoices</h3></div><div style="overflow-x:auto"><table class="data-table" id="invoicesTable"><thead><tr><th>Invoice #</th><th>Customer</th><th>Amount</th><th>GST</th><th>Total</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead><tbody id="invoicesBody"></tbody></table></div></div></div>
-                <div id="contactsTab" style="display:none"><div class="panel"><div class="panel-header"><h3>Contact Submissions</h3></div><div style="overflow-x:auto"><table class="data-table" id="contactsTable"><thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Restaurant</th><th>Message</th><th>Date</th><th>Actions</th></tr></thead><tbody id="contactsBody"></tbody></table></div></div></div>
-                <div id="admin-usersTab" style="display:none"><div class="panel"><div class="panel-header"><h3>Admin Users</h3><button class="btn-primary" onclick="openAddAdminModal()">+ Add Admin</button></div><div style="overflow-x:auto"><table class="data-table" id="adminUsersTable"><thead><tr><th>Email</th><th>Name</th><th>Role</th><th>Created</th><th>Status</th><th>Actions</th></tr></thead><tbody id="adminUsersBody"></tbody></table></div></div></div>
-                <div id="settingsTab" style="display:none"><div class="panel"><div class="panel-header"><h3>Settings</h3></div><div style="max-width:500px"><div class="input-group"><label>Your Email</label><input type="email" id="adminEmailSetting" readonly></div><div class="input-group"><label>Your Name</label><input type="text" id="adminNameSetting" readonly></div><hr><p>Authorized admins: admin@billzestpos.com, billzestai@gmail.com</p><hr><p><strong>How to create admin:</strong><br>1. Go to Admin Users tab<br>2. Click Add Admin<br>3. Enter email, name, password<br>4. Share credentials</p></div></div></div>
+                <div id="dashboardTab">
+                    <div class="stats-grid" id="statsGrid"></div>
+                    <div class="panel"><div class="panel-header"><h3>Revenue Chart (Last 7 Days)</h3></div><div class="chart-container"><canvas id="revenueChart"></canvas></div></div>
+                    <div class="panel"><div class="panel-header"><h3>Recent Customers</h3><button class="action-btn view-btn" onclick="switchTab('customers')" style="font-size:0.8rem;">View All →</button></div><div style="overflow-x:auto;"><table class="data-table" id="recentCustomersTable"><thead><tr><th>Business Name</th><th>Contact Person</th><th>Email</th><th>Plan</th><th>Registered</th></tr></thead><tbody id="recentCustomersBody"></tbody></table></div></div>
+                </div>
+
+                <div id="customersTab" style="display: none;">
+                    <div class="panel"><div class="panel-header"><h3>All Customers</h3><div><input type="text" id="customerSearch" placeholder="🔍 Search customers..." style="padding:8px 12px; border:1px solid var(--border); border-radius:8px; width:200px;"></div></div><div style="overflow-x:auto;"><table class="data-table" id="allCustomersTable"><thead><tr><th>Business</th><th>Contact</th><th>Email</th><th>Phone</th><th>GST</th><th>Plan</th><th>Orders</th><th>Spent</th><th>Status</th><th>Actions</th></tr></thead><tbody id="allCustomersBody"></tbody>}</div></div>
+                </div>
+
+                <div id="subscriptionsTab" style="display: none;"><div class="panel"><div class="panel-header"><h3>All Subscriptions</h3></div><div style="overflow-x:auto;"><table class="data-table" id="subscriptionsTable"><thead><tr><th>Customer</th><th>Email</th><th>Plan</th><th>Price</th><th>Billing</th><th>Start Date</th><th>Status</th><th>Actions</th></tr></thead><tbody id="subscriptionsBody"></tbody></table></div></div></div>
+
+                <div id="paymentsTab" style="display: none;"><div class="panel"><div class="panel-header"><h3>Payment Requests</h3></div><div style="overflow-x:auto;"><table class="data-table" id="paymentsTable"><thead><tr><th>Customer</th><th>Email</th><th>Plan</th><th>Amount</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead><tbody id="paymentsBody"></tbody></table></div></div></div>
+
+                <div id="invoicesTab" style="display: none;"><div class="panel"><div class="panel-header"><h3>All Invoices</h3></div><div style="overflow-x:auto;"><table class="data-table" id="invoicesTable"><thead><tr><th>Invoice #</th><th>Customer</th><th>Subtotal</th><th>GST</th><th>Total</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead><tbody id="invoicesBody"></tbody></table></div></div></div>
+
+                <div id="contactsTab" style="display: none;"><div class="panel"><div class="panel-header"><h3>Contact Form Submissions</h3></div><div style="overflow-x:auto;"><table class="data-table" id="contactsTable"><thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Restaurant</th><th>Message</th><th>Date</th><th>Actions</th></tr></thead><tbody id="contactsBody"></tbody></table></div></div></div>
+
+                <div id="admin-usersTab" style="display: none;">
+                    <div class="panel"><div class="panel-header"><h3>Admin Users Management</h3><button class="btn-primary" onclick="openAddAdminModal()">+ Add New Admin User</button></div><div style="overflow-x:auto;"><table class="data-table" id="adminUsersTable"><thead><tr><th>Email</th><th>Name</th><th>Role</th><th>Created</th><th>Status</th><th>Actions</th></tr></thead><tbody id="adminUsersBody"></tbody></table></div></div>
+                </div>
+
+                <div id="settingsTab" style="display: none;">
+                    <div class="panel"><div class="panel-header"><h3>Admin Settings</h3></div><div style="max-width:500px;"><div class="input-group"><label>Your Email</label><input type="email" id="adminEmailSetting" readonly style="background:#f8fafc;"></div><div class="input-group"><label>Your Name</label><input type="text" id="adminNameSetting" readonly style="background:#f8fafc;"></div><div class="input-group"><label>User ID</label><input type="text" id="adminUID" readonly style="background:#f8fafc;"></div><hr style="margin:20px 0;"><h4 style="margin-bottom:15px;">📋 Authorized Admin Emails</h4><ul style="margin-left:20px; color:var(--primary);"><li>admin@billzestpos.com</li><li>billzestai@gmail.com</li></ul><hr style="margin:20px 0;"><h4 style="margin-bottom:15px;">➕ How to Create Admin Users</h4><p style="font-size:0.85rem; color:var(--text-gray);">1. Go to "Admin Users" tab<br>2. Click "Add New Admin User"<br>3. Enter email, name, password<br>4. User created in Firebase Auth<br>5. Share credentials with staff</p></div></div>
+                </div>
             </div>
         </main>
     </div>
+
     <div id="customerModal" class="modal"><div class="modal-content"><h3>Customer Details</h3><div id="customerDetailContent"></div><div class="modal-buttons"><button class="btn-close" onclick="closeCustomerModal()">Close</button></div></div></div>
-    <div id="addAdminModal" class="modal"><div class="modal-content"><h3>➕ Add Admin User</h3><form id="addAdminForm"><div class="input-group"><label>Email *</label><input type="email" id="newAdminEmail" required></div><div class="input-group"><label>Full Name</label><input type="text" id="newAdminName"></div><div class="input-group"><label>Password *</label><input type="password" id="newAdminPassword" required></div><div class="input-group"><label>Confirm Password</label><input type="password" id="newAdminConfirmPassword" required></div><div class="input-group"><label>Role</label><select id="newAdminRole"><option value="admin">Admin</option><option value="manager">Manager</option><option value="viewer">Viewer</option></select></div><div class="modal-buttons"><button type="submit" class="btn-primary">Create</button><button type="button" class="btn-close" onclick="closeAddAdminModal()">Cancel</button></div></form></div></div>
-    <div id="editAdminModal" class="modal"><div class="modal-content"><h3>✏️ Edit Admin</h3><form id="editAdminForm"><input type="hidden" id="editAdminUserId"><div class="input-group"><label>Email</label><input type="email" id="editAdminEmail" readonly></div><div class="input-group"><label>Full Name</label><input type="text" id="editAdminName"></div><div class="input-group"><label>New Password</label><input type="password" id="editAdminPassword" placeholder="Leave blank to keep same"></div><div class="input-group"><label>Role</label><select id="editAdminRole"><option value="admin">Admin</option><option value="manager">Manager</option><option value="viewer">Viewer</option></select></div><div class="modal-buttons"><button type="submit" class="btn-primary">Update</button><button type="button" class="btn-danger" onclick="deleteAdminUserFromModal()">Delete</button><button type="button" class="btn-close" onclick="closeEditAdminModal()">Cancel</button></div></form></div></div>
-        <script type="module">
+    <div id="addAdminModal" class="modal"><div class="modal-content"><h3>➕ Add New Admin User</h3><form id="addAdminForm"><div class="input-group"><label>Email *</label><input type="email" id="newAdminEmail" required></div><div class="input-group"><label>Full Name</label><input type="text" id="newAdminName"></div><div class="input-group"><label>Password *</label><input type="password" id="newAdminPassword" required></div><div class="input-group"><label>Confirm Password *</label><input type="password" id="newAdminConfirmPassword" required></div><div class="input-group"><label>Role</label><select id="newAdminRole"><option value="admin">Admin</option><option value="manager">Manager</option><option value="viewer">Viewer</option></select></div><div class="modal-buttons"><button type="submit" class="btn-primary">Create</button><button type="button" class="btn-close" onclick="closeAddAdminModal()">Cancel</button></div></form></div></div>
+    <div id="editAdminModal" class="modal"><div class="modal-content"><h3>✏️ Edit Admin User</h3><form id="editAdminForm"><input type="hidden" id="editAdminUserId"><div class="input-group"><label>Email</label><input type="email" id="editAdminEmail" readonly style="background:#f8fafc;"></div><div class="input-group"><label>Full Name</label><input type="text" id="editAdminName"></div><div class="input-group"><label>New Password</label><input type="password" id="editAdminPassword" placeholder="Leave blank to keep same"></div><div class="input-group"><label>Role</label><select id="editAdminRole"><option value="admin">Admin</option><option value="manager">Manager</option><option value="viewer">Viewer</option></select></div><div class="modal-buttons"><button type="submit" class="btn-primary">Update</button><button type="button" class="btn-danger" onclick="deleteAdminUserFromModal()">Delete</button><button type="button" class="btn-close" onclick="closeEditAdminModal()">Cancel</button></div></form></div></div>
+
+    <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut, createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, collection, getDocs, doc, setDoc, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -145,7 +202,7 @@
         }
         function displayAdminUsers() {
             const c = document.getElementById('adminUsersBody'); if(!c) return;
-            if(adminUsersList.length===0) { c.innerHTML = '<tr><td colspan="6" style="text-align:center">No admin users</td></tr>'; return; }
+            if(adminUsersList.length===0) { c.innerHTML = '<tr><td colspan="6" style="text-align:center;">No admin users<td></tr>'; return; }
             c.innerHTML = adminUsersList.map(u => `<tr><td>${u.email}</td><td>${u.name||'-'}</td><td>${u.role||'admin'}</td><td>${u.createdAt?new Date(u.createdAt).toLocaleDateString():'-'}</td><td><span class="status-badge status-active">Active</span></td><td><button class="action-btn edit-btn" onclick="editAdminUser('${u.id}')"><i data-lucide="edit-2" size="16"></i></button>${(SUPER_ADMIN_EMAILS.includes(currentUser?.email) && u.email!==currentUser?.email)?`<button class="action-btn delete-btn" onclick="deleteAdminUser('${u.id}')"><i data-lucide="trash-2" size="16"></i></button>`:''}</td></tr>`).join('');
             lucide.createIcons();
         }
@@ -204,11 +261,11 @@
             if(ctx) revenueChart = new Chart(ctx, { type:'line', data:{ labels:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'], datasets:[{ label:'Revenue ($)', data:[1200,1900,1500,2200,2800,3500,3100], borderColor:'#4f46e5', backgroundColor:'rgba(79,70,229,0.1)', fill:true, tension:0.4 }] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ display:false } } } });
         }
 
-        function displayCustomers() { document.getElementById('allCustomersBody').innerHTML = customers.map(c=>`<tr><td>${c.businessName}</td><td>${c.contactPerson}</td><td>${c.email}</td><td>${c.phone}</td><td>${c.gst||'-'}</td><td>${c.plan}</td><td>${c.orders||0}</td><td>$${c.spent||0}</td><td><span class="status-badge status-active">${c.status}</span></td><td><button class="action-btn view-btn" onclick="viewCustomer('${c.id}')"><i data-lucide="eye" size="16"></i></button><button class="action-btn delete-btn" onclick="deleteCustomer('${c.id}')"><i data-lucide="trash-2" size="16"></i></button></td></tr>`).join(''); lucide.createIcons(); }
+        function displayCustomers() { document.getElementById('allCustomersBody').innerHTML = customers.map(c=>`<table><td>${c.businessName}</td><td>${c.contactPerson}</td><td>${c.email}</td><td>${c.phone}</td><td>${c.gst||'-'}</td><td>${c.plan}</td><td>${c.orders||0}</td><td>$${c.spent||0}</td><td><span class="status-badge status-active">${c.status}</span></td><td><button class="action-btn view-btn" onclick="viewCustomer('${c.id}')"><i data-lucide="eye" size="16"></i></button><button class="action-btn delete-btn" onclick="deleteCustomer('${c.id}')"><i data-lucide="trash-2" size="16"></i></button></td></tr>`).join(''); lucide.createIcons(); }
         function displaySubscriptions() { document.getElementById('subscriptionsBody').innerHTML = subscriptions.map(s=>`<tr><td>${s.customerName}</td><td>${s.email}</td><td>${s.plan}</td><td>${s.price}</td><td>${s.billing}</td><td>${s.startDate}</td><td><span class="status-badge status-active">${s.status}</span></td><td><button class="action-btn delete-btn" onclick="deleteSubscription('${s.id}')"><i data-lucide="trash-2" size="16"></i></button></td></tr>`).join(''); lucide.createIcons(); }
         function displayPayments() { document.getElementById('paymentsBody').innerHTML = payments.map(p=>`<tr><td>${p.customerName}</td><td>${p.email}</td><td>${p.plan}</td><td>$${p.amount}</td><td>${p.date}</td><td><span class="status-badge status-${p.status==='completed'?'active':'pending'}">${p.status}</span></td><td>${p.status!=='completed'?`<button class="action-btn view-btn" onclick="markPaymentComplete('${p.id}')"><i data-lucide="check-circle" size="16"></i></button>`:''}<button class="action-btn delete-btn" onclick="deletePayment('${p.id}')"><i data-lucide="trash-2" size="16"></i></button></td></tr>`).join(''); lucide.createIcons(); }
         function displayInvoices() { document.getElementById('invoicesBody').innerHTML = invoices.map(i=>`<tr><td>${i.id}</td><td>${i.customer}</td><td>$${i.amount}</td><td>$${i.gst}</td><td>$${i.total}</td><td>${i.date}</td><td><span class="status-badge status-active">${i.status}</span></td><td><button class="action-btn view-btn" onclick="downloadInvoice('${i.id}')"><i data-lucide="download" size="16"></i></button><button class="action-btn delete-btn" onclick="deleteInvoice('${i.id}')"><i data-lucide="trash-2" size="16"></i></button></td></tr>`).join(''); lucide.createIcons(); }
-        function displayContacts() { document.getElementById('contactsBody').innerHTML = contacts.map(c=>`<tr><td>${c.name}</td><td>${c.email}</td><td>${c.phone}</td><td>${c.restaurant||'-'}</td><td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${c.message?.substring(0,50)||''}${c.message?.length>50?'...':''}</td><td>${c.date}</td><td><button class="action-btn delete-btn" onclick="deleteContact('${c.email}')"><i data-lucide="trash-2" size="16"></i></button></td></tr>`).join(''); lucide.createIcons(); }
+        function displayContacts() { document.getElementById('contactsBody').innerHTML = contacts.map(c=>`<tr><td>${c.name}</td><td>${c.email}</td><td>${c.phone}</td><td>${c.restaurant||'-'}</td><td style="max-width:200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${c.message?.substring(0,50)||''}${c.message?.length>50?'...':''}</td><td>${c.date}</td><td><button class="action-btn delete-btn" onclick="deleteContact('${c.email}')"><i data-lucide="trash-2" size="16"></i></button></td></tr>`).join(''); lucide.createIcons(); }
 
         window.viewCustomer = (id) => { const c = customers.find(c=>c.id===id); if(c) document.getElementById('customerDetailContent').innerHTML = `<div class="modal-info-row"><span class="modal-info-label">Business:</span><span class="modal-info-value">${c.businessName}</span></div><div class="modal-info-row"><span class="modal-info-label">Contact:</span><span class="modal-info-value">${c.contactPerson}</span></div><div class="modal-info-row"><span class="modal-info-label">Email:</span><span class="modal-info-value">${c.email}</span></div><div class="modal-info-row"><span class="modal-info-label">Phone:</span><span class="modal-info-value">${c.phone}</span></div><div class="modal-info-row"><span class="modal-info-label">GST:</span><span class="modal-info-value">${c.gst||'-'}</span></div><div class="modal-info-row"><span class="modal-info-label">Plan:</span><span class="modal-info-value">${c.plan}</span></div><div class="modal-info-row"><span class="modal-info-label">Orders:</span><span class="modal-info-value">${c.orders||0}</span></div><div class="modal-info-row"><span class="modal-info-label">Spent:</span><span class="modal-info-value">$${c.spent||0}</span></div><div class="modal-info-row"><span class="modal-info-label">Registered:</span><span class="modal-info-value">${c.registeredAt}</span></div>`; document.getElementById('customerModal').style.display = 'flex'; };
         window.closeCustomerModal = () => document.getElementById('customerModal').style.display = 'none';
@@ -217,7 +274,7 @@
         window.markPaymentComplete = (id) => { const p=payments.find(p=>p.id===id); if(p){ p.status='completed'; localStorage.setItem('pendingPayments',JSON.stringify(payments)); displayPayments(); updateDashboard(); alert('Payment completed!'); } };
         window.deletePayment = (id) => { if(confirm('Delete?')){ payments=payments.filter(p=>p.id!==id); localStorage.setItem('pendingPayments',JSON.stringify(payments)); displayPayments(); updateDashboard(); alert('Deleted!'); } };
         window.deleteInvoice = (id) => { if(confirm('Delete?')){ invoices=invoices.filter(i=>i.id!==id); localStorage.setItem('email_invoices',JSON.stringify(invoices)); displayInvoices(); alert('Deleted!'); } };
-        window.downloadInvoice = (id) => { alert(`Downloading invoice ${id}`); };
+        window.downloadInvoice = (id) => { const i=invoices.find(i=>i.id===id); if(i) alert(`Downloading invoice ${i.id}\nTotal: $${i.total}`); };
         window.deleteContact = (email) => { if(confirm('Delete?')){ contacts=contacts.filter(c=>c.email!==email); localStorage.setItem('contacts',JSON.stringify(contacts)); displayContacts(); alert('Deleted!'); } };
         document.getElementById('customerSearch')?.addEventListener('input',(e)=>{ const t=e.target.value.toLowerCase(); const f=customers.filter(c=>c.businessName.toLowerCase().includes(t)||c.contactPerson.toLowerCase().includes(t)||c.email.toLowerCase().includes(t)); document.getElementById('allCustomersBody').innerHTML = f.map(c=>`<tr><td>${c.businessName}</td><td>${c.contactPerson}</td><td>${c.email}</td><td>${c.phone}</td><td>${c.gst||'-'}</td><td>${c.plan}</td><td>${c.orders||0}</td><td>$${c.spent||0}</td><td><span class="status-badge status-active">${c.status}</span></td><td><button class="action-btn view-btn" onclick="viewCustomer('${c.id}')"><i data-lucide="eye" size="16"></i></button><button class="action-btn delete-btn" onclick="deleteCustomer('${c.id}')"><i data-lucide="trash-2" size="16"></i></button></td></tr>`).join(''); lucide.createIcons(); });
 
