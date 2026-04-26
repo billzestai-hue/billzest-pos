@@ -187,6 +187,11 @@
             position: relative;
             cursor: pointer;
             color: var(--text-gray);
+            transition: color 0.3s;
+        }
+
+        .notification-btn:hover {
+            color: var(--primary);
         }
 
         .notification-badge {
@@ -202,6 +207,124 @@
             display: flex;
             align-items: center;
             justify-content: center;
+        }
+
+        /* Notification Panel */
+        .notification-panel {
+            position: absolute;
+            top: 60px;
+            right: 20px;
+            width: 350px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            z-index: 200;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            animation: slideDown 0.3s ease;
+        }
+
+        .notification-panel.show {
+            display: flex;
+        }
+
+        .notification-header {
+            padding: 15px 20px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notification-header h4 {
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        .mark-all-read {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            cursor: pointer;
+        }
+
+        .notification-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .notification-item {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            gap: 12px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .notification-item:hover {
+            background: #f8fafc;
+        }
+
+        .notification-item.unread {
+            background: #eff6ff;
+        }
+
+        .notification-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .notification-icon.order {
+            background: rgba(79, 70, 229, 0.1);
+            color: var(--primary);
+        }
+
+        .notification-icon.payment {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .notification-icon.alert {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-bottom: 4px;
+        }
+
+        .notification-message {
+            font-size: 0.75rem;
+            color: var(--text-gray);
+        }
+
+        .notification-time {
+            font-size: 0.65rem;
+            color: var(--text-gray);
+            margin-top: 4px;
+        }
+
+        .notification-empty {
+            padding: 40px;
+            text-align: center;
+            color: var(--text-gray);
         }
 
         .user-profile {
@@ -703,6 +826,12 @@
             .stats-grid {
                 grid-template-columns: 1fr;
             }
+
+            .notification-panel {
+                width: calc(100% - 40px);
+                right: 20px;
+                left: 20px;
+            }
         }
     </style>
 </head>
@@ -771,10 +900,25 @@
                 <input type="text" id="searchInput" placeholder="Search orders...">
             </div>
             <div class="header-actions">
-                <button class="notification-btn">
-                    <i data-lucide="bell" size="20"></i>
-                    <span class="notification-badge">3</span>
-                </button>
+                <!-- Notification Button -->
+                <div style="position: relative;">
+                    <button class="notification-btn" id="notificationBtn" onclick="toggleNotificationPanel()">
+                        <i data-lucide="bell" size="20"></i>
+                        <span class="notification-badge" id="notificationCount">0</span>
+                    </button>
+                    
+                    <!-- Notification Panel -->
+                    <div class="notification-panel" id="notificationPanel">
+                        <div class="notification-header">
+                            <h4>Notifications</h4>
+                            <button class="mark-all-read" onclick="markAllNotificationsRead()">Mark all read</button>
+                        </div>
+                        <div class="notification-list" id="notificationList">
+                            <div class="notification-empty">No new notifications</div>
+                        </div>
+                    </div>
+                </div>
+                
                 <div class="user-profile" onclick="toggleProfileMenu()">
                     <img class="user-avatar" id="userAvatar" src="https://ui-avatars.com/api/?background=4f46e5&color=fff&name=Admin" alt="User">
                     <span class="user-name" id="userName">Admin</span>
@@ -1052,6 +1196,182 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
+        // ========== NOTIFICATION SYSTEM ==========
+        let notifications = JSON.parse(localStorage.getItem('notifications') || '[]');
+        
+        // Sample notifications data
+        function initSampleNotifications() {
+            if (notifications.length === 0) {
+                notifications = [
+                    {
+                        id: 1,
+                        title: "New Order Received",
+                        message: "Order #ORD-892 has been placed. Total: $45.50",
+                        time: new Date(Date.now() - 5 * 60000).toISOString(),
+                        type: "order",
+                        read: false,
+                        link: "orders"
+                    },
+                    {
+                        id: 2,
+                        title: "Payment Confirmed",
+                        message: "Payment of $89.90 received for Order #ORD-894",
+                        time: new Date(Date.now() - 30 * 60000).toISOString(),
+                        type: "payment",
+                        read: false,
+                        link: "orders"
+                    },
+                    {
+                        id: 3,
+                        title: "Low Stock Alert",
+                        message: "Burger patties are running low. Only 50 units left!",
+                        time: new Date(Date.now() - 120 * 60000).toISOString(),
+                        type: "alert",
+                        read: false,
+                        link: "menu"
+                    }
+                ];
+                localStorage.setItem('notifications', JSON.stringify(notifications));
+            }
+            updateNotificationBadge();
+        }
+
+        function updateNotificationBadge() {
+            const unreadCount = notifications.filter(n => !n.read).length;
+            const badge = document.getElementById('notificationCount');
+            if (badge) {
+                badge.innerText = unreadCount;
+                badge.style.display = unreadCount > 0 ? 'flex' : 'none';
+            }
+        }
+
+        function displayNotifications() {
+            const container = document.getElementById('notificationList');
+            if (!container) return;
+            
+            const unreadCount = notifications.filter(n => !n.read).length;
+            
+            if (notifications.length === 0) {
+                container.innerHTML = '<div class="notification-empty">No notifications</div>';
+                return;
+            }
+            
+            container.innerHTML = notifications.map(notif => `
+                <div class="notification-item ${notif.read ? '' : 'unread'}" onclick="markNotificationRead(${notif.id}, '${notif.link}')">
+                    <div class="notification-icon ${notif.type}">
+                        <i data-lucide="${notif.type === 'order' ? 'shopping-bag' : (notif.type === 'payment' ? 'credit-card' : 'alert-triangle')}" size="18"></i>
+                    </div>
+                    <div class="notification-content">
+                        <div class="notification-title">${notif.title}</div>
+                        <div class="notification-message">${notif.message}</div>
+                        <div class="notification-time">${formatTimeAgo(notif.time)}</div>
+                    </div>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        function formatTimeAgo(timestamp) {
+            const date = new Date(timestamp);
+            const now = new Date();
+            const diffMs = now - date;
+            const diffMins = Math.floor(diffMs / 60000);
+            const diffHours = Math.floor(diffMs / 3600000);
+            const diffDays = Math.floor(diffMs / 86400000);
+            
+            if (diffMins < 1) return 'Just now';
+            if (diffMins < 60) return `${diffMins} min ago`;
+            if (diffHours < 24) return `${diffHours} hour ago`;
+            return `${diffDays} day ago`;
+        }
+
+        window.toggleNotificationPanel = function() {
+            const panel = document.getElementById('notificationPanel');
+            panel.classList.toggle('show');
+            if (panel.classList.contains('show')) {
+                displayNotifications();
+            }
+        };
+
+        window.markNotificationRead = function(id, link) {
+            const notif = notifications.find(n => n.id === id);
+            if (notif) {
+                notif.read = true;
+                localStorage.setItem('notifications', JSON.stringify(notifications));
+                updateNotificationBadge();
+                displayNotifications();
+            }
+            // Switch to the linked section
+            if (link) {
+                switchSection(link);
+            }
+            document.getElementById('notificationPanel').classList.remove('show');
+        };
+
+        window.markAllNotificationsRead = function() {
+            notifications.forEach(n => n.read = true);
+            localStorage.setItem('notifications', JSON.stringify(notifications));
+            updateNotificationBadge();
+            displayNotifications();
+        };
+
+        // Add new notification (call this when new order comes)
+        function addNotification(title, message, type, link) {
+            const newNotif = {
+                id: Date.now(),
+                title: title,
+                message: message,
+                time: new Date().toISOString(),
+                type: type,
+                read: false,
+                link: link
+            };
+            notifications.unshift(newNotif);
+            // Keep only last 50 notifications
+            if (notifications.length > 50) notifications = notifications.slice(0, 50);
+            localStorage.setItem('notifications', JSON.stringify(notifications));
+            updateNotificationBadge();
+            
+            // Show toast for new notification
+            showNotificationToast(title, message);
+        }
+
+        function showNotificationToast(title, message) {
+            // Create toast element
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background: white;
+                border-left: 4px solid var(--primary);
+                padding: 12px 16px;
+                border-radius: 8px;
+                box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+                z-index: 9999;
+                max-width: 300px;
+                animation: slideIn 0.3s ease;
+            `;
+            toast.innerHTML = `
+                <div style="font-weight: 600; margin-bottom: 4px;">${title}</div>
+                <div style="font-size: 0.8rem; color: var(--text-gray);">${message}</div>
+            `;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+
+        // Close notification panel when clicking outside
+        document.addEventListener('click', function(e) {
+            const panel = document.getElementById('notificationPanel');
+            const btn = document.getElementById('notificationBtn');
+            if (panel && btn && !btn.contains(e.target) && !panel.contains(e.target)) {
+                panel.classList.remove('show');
+            }
+        });
+
         // ========== GLOBAL VARIABLES ==========
         let currentUser = null;
         let revenueChart = null;
@@ -1111,6 +1431,7 @@
                 loadCustomersData();
                 loadOrdersData();
                 loadSettings();
+                initSampleNotifications();
             } else {
                 window.location.href = 'login.html';
             }
@@ -1241,7 +1562,6 @@
                 displayMenuItems();
             } catch (error) {
                 console.error("Error loading menu:", error);
-                // Fallback to localStorage
                 menuData = JSON.parse(localStorage.getItem('menuData') || '[]');
                 displayMenuItems();
             }
@@ -1323,7 +1643,6 @@
                 loadDashboardStats();
             } catch (error) {
                 console.error("Error saving menu item:", error);
-                // Fallback to localStorage
                 if (editingMenuItemId) {
                     const index = menuData.findIndex(i => i.id === editingMenuItemId);
                     menuData[index] = { ...menuData[index], ...menuItem };
@@ -1528,7 +1847,6 @@
             await loadCustomersData();
             await loadOrdersData();
             
-            // Load category chart
             const ctx = document.getElementById('categoryChart');
             if (ctx && categoryChart) categoryChart.destroy();
             if (ctx) {
@@ -1545,7 +1863,6 @@
                 });
             }
             
-            // Load top items
             const topItems = [
                 { name: 'Classic Burger', sold: 45, revenue: 382.50 },
                 { name: 'Margherita Pizza', sold: 32, revenue: 384 },
