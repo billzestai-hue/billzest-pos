@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - Billzestpos</title>
+    <title>Register - BillzestPOS</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -48,15 +48,15 @@
 <body>
     <div class="register-container">
         <div class="register-brand">
-            <div class="brand-logo"><div><i data-lucide="store" size="26"></i></div><span>Billzestpos</span></div>
+            <div class="brand-logo"><div><i data-lucide="store" size="26"></i></div><span>BillzestPOS</span></div>
             <div class="brand-text"><h1>Join Us!</h1><p>Create your account and start managing your restaurant like a pro.</p></div>
-            <div style="font-size: 0.75rem; opacity: 0.6;">© 2026 Billzestpos</div>
+            <div style="font-size: 0.75rem; opacity: 0.6;">© 2026 BillzestPOS</div>
         </div>
 
         <div class="register-form-section">
             <a href="login.html" class="back-to-login"><i data-lucide="arrow-left" size="16"></i> Back to Login</a>
             
-            <div class="form-header"><h2>Create Account</h2><p>Get started with Billzestpos</p></div>
+            <div class="form-header"><h2>Create Account</h2><p>Get started with BillzestPOS</p></div>
 
             <div class="error-message" id="errorMsg"><i data-lucide="alert-circle" size="16"></i> <span id="errorText"></span></div>
 
@@ -96,7 +96,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-        // 🔥 YOUR FIREBASE CONFIG (UPDATED)
         const firebaseConfig = {
             apiKey: "AIzaSyCN0akvFXOHM6WPHv9ve9noqqmauO3TJRY",
             authDomain: "billzest-pos.firebaseapp.com",
@@ -118,9 +117,7 @@
         function showError(message) {
             errorText.innerText = message;
             errorMsgDiv.style.display = 'flex';
-            setTimeout(() => {
-                errorMsgDiv.style.display = 'none';
-            }, 4000);
+            setTimeout(() => { errorMsgDiv.style.display = 'none'; }, 4000);
         }
 
         registerForm.addEventListener('submit', async (e) => {
@@ -158,17 +155,10 @@
             } catch (error) {
                 let errorMessage = '';
                 switch (error.code) {
-                    case 'auth/email-already-in-use':
-                        errorMessage = 'Email already registered. Please login.';
-                        break;
-                    case 'auth/invalid-email':
-                        errorMessage = 'Invalid email format';
-                        break;
-                    case 'auth/weak-password':
-                        errorMessage = 'Password is too weak';
-                        break;
-                    default:
-                        errorMessage = error.message;
+                    case 'auth/email-already-in-use': errorMessage = 'Email already registered. Please login.'; break;
+                    case 'auth/invalid-email': errorMessage = 'Invalid email format'; break;
+                    case 'auth/weak-password': errorMessage = 'Password is too weak'; break;
+                    default: errorMessage = error.message;
                 }
                 showError(errorMessage);
                 registerBtn.disabled = false;
