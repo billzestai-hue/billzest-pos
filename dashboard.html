@@ -37,7 +37,7 @@
             --danger: #ef4444;
         }
 
-        /* ========== SIDEBAR ========== */
+        /* ========== SIDEBAR STYLES ========== */
         .sidebar {
             width: 280px;
             background: white;
@@ -121,7 +121,7 @@
             background: rgba(239, 68, 68, 0.1);
         }
 
-        /* ========== MAIN CONTENT ========== */
+        /* ========== MAIN CONTENT STYLES ========== */
         .main-content {
             flex: 1;
             display: flex;
@@ -168,11 +168,13 @@
             border-radius: 25px;
             outline: none;
             background: #f8fafc;
+            transition: all 0.3s;
         }
 
         .header-search input:focus {
             border-color: var(--primary);
             background: white;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
         }
 
         .header-actions {
@@ -229,6 +231,17 @@
             display: flex;
         }
 
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         .notification-header {
             padding: 15px 20px;
             background: linear-gradient(135deg, var(--primary), var(--secondary));
@@ -251,6 +264,11 @@
             border-radius: 20px;
             font-size: 0.7rem;
             cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .mark-all-read:hover {
+            background: rgba(255, 255, 255, 0.3);
         }
 
         .notification-list {
@@ -327,6 +345,7 @@
             color: var(--text-gray);
         }
 
+        /* User Profile */
         .user-profile {
             display: flex;
             align-items: center;
@@ -367,17 +386,6 @@
         .profile-dropdown.show {
             display: flex;
             animation: slideDown 0.2s ease;
-        }
-
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
 
         .profile-dropdown div {
@@ -456,6 +464,10 @@
 
         .trend-up {
             color: var(--success);
+        }
+
+        .trend-down {
+            color: var(--danger);
         }
 
         .stat-icon {
@@ -591,6 +603,12 @@
             justify-content: space-between;
             align-items: center;
             border: 1px solid var(--border);
+            transition: all 0.2s;
+        }
+
+        .menu-item-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
         }
 
         .menu-item-info {
@@ -635,6 +653,11 @@
             border-radius: 6px;
             cursor: pointer;
             font-size: 0.75rem;
+            transition: background 0.2s;
+        }
+
+        .edit-btn:hover {
+            background: var(--primary-dark);
         }
 
         .delete-btn {
@@ -645,6 +668,11 @@
             border-radius: 6px;
             cursor: pointer;
             font-size: 0.75rem;
+            transition: background 0.2s;
+        }
+
+        .delete-btn:hover {
+            background: #dc2626;
         }
 
         .add-btn {
@@ -656,6 +684,11 @@
             cursor: pointer;
             font-size: 0.85rem;
             font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .add-btn:hover {
+            background: var(--primary-dark);
         }
 
         /* Settings Form */
@@ -682,6 +715,14 @@
             border: 1px solid var(--border);
             border-radius: 8px;
             font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
         }
 
         .save-btn {
@@ -692,6 +733,11 @@
             border-radius: 8px;
             cursor: pointer;
             font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .save-btn:hover {
+            background: var(--primary-dark);
         }
 
         /* Modal */
@@ -720,6 +766,7 @@
 
         .modal-content h3 {
             margin-bottom: 20px;
+            color: var(--dark);
         }
 
         .modal-buttons {
@@ -734,6 +781,7 @@
             border-radius: 8px;
             cursor: pointer;
             font-weight: 600;
+            transition: all 0.2s;
         }
 
         .modal-save {
@@ -742,10 +790,18 @@
             border: none;
         }
 
+        .modal-save:hover {
+            background: var(--primary-dark);
+        }
+
         .modal-cancel {
             background: #e2e8f0;
             border: none;
             color: #334155;
+        }
+
+        .modal-cancel:hover {
+            background: #cbd5e1;
         }
 
         /* Loading Screen */
@@ -790,6 +846,28 @@
             display: none;
         }
 
+        /* Reports Section Styles */
+        .top-item-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .top-item-name {
+            font-weight: 500;
+        }
+
+        .top-item-sold {
+            color: var(--text-gray);
+        }
+
+        .top-item-revenue {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* Responsive */
         @media (max-width: 1024px) {
             .data-grid {
                 grid-template-columns: 1fr;
@@ -919,6 +997,7 @@
                     </div>
                 </div>
                 
+                <!-- User Profile -->
                 <div class="user-profile" onclick="toggleProfileMenu()">
                     <img class="user-avatar" id="userAvatar" src="https://ui-avatars.com/api/?background=4f46e5&color=fff&name=Admin" alt="User">
                     <span class="user-name" id="userName">Admin</span>
@@ -943,7 +1022,7 @@
             <div id="overviewSection" class="section-content">
                 <h1 class="page-title">Dashboard Overview</h1>
                 <div class="stats-grid" id="statsGrid">
-                    <!-- Stats will be loaded dynamically -->
+                    <!-- Stats loaded dynamically -->
                 </div>
                 <div class="data-grid">
                     <div class="panel">
@@ -991,7 +1070,7 @@
                                     <th>Total</th>
                                     <th>Status</th>
                                     <th>Time</th>
-                                </td>
+                                </tr>
                             </thead>
                             <tbody id="allOrdersBody"></tbody>
                         </table>
@@ -999,7 +1078,7 @@
                 </div>
             </div>
 
-            <!-- Menu Section -->
+            <!-- Menu Items Section -->
             <div id="menuSection" class="section-content" style="display: none;">
                 <h1 class="page-title">Menu Items</h1>
                 <div class="panel">
@@ -1178,7 +1257,7 @@
         // ========== FIREBASE IMPORTS ==========
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, query, orderBy, serverTimestamp, writeBatch } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         // ========== FIREBASE CONFIG ==========
         const firebaseConfig = {
@@ -1196,10 +1275,10 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // ========== SAMPLE DATA CREATION ==========
+        // ========== CREATE SAMPLE DATA FUNCTION ==========
         async function createSampleData() {
             try {
-                // Check if menu already has items
+                // Check and create sample menu
                 const menuSnapshot = await getDocs(collection(db, "menu"));
                 if (menuSnapshot.empty) {
                     console.log("Creating sample menu items...");
@@ -1216,7 +1295,7 @@
                     }
                 }
 
-                // Check if orders already exist
+                // Check and create sample orders
                 const ordersSnapshot = await getDocs(collection(db, "orders"));
                 if (ordersSnapshot.empty) {
                     console.log("Creating sample orders...");
@@ -1231,7 +1310,7 @@
                     }
                 }
 
-                // Check if customers already exist
+                // Check and create sample customers
                 const customersSnapshot = await getDocs(collection(db, "customers"));
                 if (customersSnapshot.empty) {
                     console.log("Creating sample customers...");
@@ -1351,6 +1430,8 @@
         let menuData = [];
         let customersData = [];
         let ordersData = [];
+        let editingMenuItemId = null;
+        let editingCustomerId = null;
         let settings = {
             restaurantName: "BillzestPOS",
             taxRate: 5,
@@ -1358,19 +1439,22 @@
             receiptFooter: "Thank you for your visit!"
         };
 
-        // ========== LOAD SETTINGS FROM LOCAL STORAGE ==========
+        // ========== LOAD SETTINGS ==========
         function loadSettings() {
             const saved = localStorage.getItem('settings');
             if (saved) {
                 settings = JSON.parse(saved);
             }
-            document.getElementById('restaurantName').value = settings.restaurantName;
-            document.getElementById('taxRate').value = settings.taxRate;
-            document.getElementById('currencySymbol').value = settings.currencySymbol;
-            document.getElementById('receiptFooter').value = settings.receiptFooter;
+            const restaurantInput = document.getElementById('restaurantName');
+            const taxRateInput = document.getElementById('taxRate');
+            const currencySelect = document.getElementById('currencySymbol');
+            const receiptInput = document.getElementById('receiptFooter');
+            if (restaurantInput) restaurantInput.value = settings.restaurantName;
+            if (taxRateInput) taxRateInput.value = settings.taxRate;
+            if (currencySelect) currencySelect.value = settings.currencySymbol;
+            if (receiptInput) receiptInput.value = settings.receiptFooter;
         }
 
-        // ========== SAVE SETTINGS ==========
         window.saveSettings = function() {
             settings.restaurantName = document.getElementById('restaurantName').value;
             settings.taxRate = parseFloat(document.getElementById('taxRate').value);
@@ -1379,27 +1463,32 @@
             localStorage.setItem('settings', JSON.stringify(settings));
             alert('Settings saved successfully!');
             loadDashboardStats();
+            displayMenuItems();
+            displayCustomers();
+            displayOrders();
         };
 
-        // ========== AUTHENTICATION CHECK ==========
+        // ========== AUTHENTICATION ==========
         onAuthStateChanged(auth, async (user) => {
             const loadingScreen = document.getElementById('loadingScreen');
             if (user) {
                 currentUser = user;
-                // Create sample data if needed
                 await createSampleData();
                 loadingScreen.style.display = 'none';
                 const displayName = user.displayName || user.email.split('@')[0];
-                document.getElementById('userName').innerText = displayName;
-                document.getElementById('profileName').innerText = displayName;
-                document.getElementById('profileEmail').innerText = user.email;
-                if (user.photoURL) {
-                    document.getElementById('userAvatar').src = user.photoURL;
-                    document.getElementById('profileAvatar').src = user.photoURL;
-                } else {
-                    document.getElementById('userAvatar').src = `https://ui-avatars.com/api/?background=4f46e5&color=fff&name=${displayName}`;
-                    document.getElementById('profileAvatar').src = `https://ui-avatars.com/api/?background=4f46e5&color=fff&name=${displayName}`;
-                }
+                const userNameSpan = document.getElementById('userName');
+                const profileNameSpan = document.getElementById('profileName');
+                const profileEmailSpan = document.getElementById('profileEmail');
+                if (userNameSpan) userNameSpan.innerText = displayName;
+                if (profileNameSpan) profileNameSpan.innerText = displayName;
+                if (profileEmailSpan) profileEmailSpan.innerText = user.email;
+                
+                const avatarUrl = user.photoURL || `https://ui-avatars.com/api/?background=4f46e5&color=fff&name=${displayName}`;
+                const userAvatarImg = document.getElementById('userAvatar');
+                const profileAvatarImg = document.getElementById('profileAvatar');
+                if (userAvatarImg) userAvatarImg.src = avatarUrl;
+                if (profileAvatarImg) profileAvatarImg.src = avatarUrl;
+                
                 await loadDashboardData();
                 await loadMenuData();
                 await loadCustomersData();
@@ -1411,7 +1500,6 @@
             }
         });
 
-        // ========== LOGOUT FUNCTION ==========
         async function handleLogout() {
             try {
                 await signOut(auth);
@@ -1441,90 +1529,94 @@
                 
                 const todaySales = todayOrders.reduce((sum, o) => sum + (o.total || 0), 0);
                 const totalOrders = orders.length;
-                
                 const menuSnap = await getDocs(collection(db, "menu"));
                 const menuCount = menuSnap.size;
                 
-                document.getElementById('statsGrid').innerHTML = `
-                    <div class="stat-card">
-                        <div class="stat-info">
-                            <h3>Today's Sales</h3>
-                            <div class="stat-value">${settings.currencySymbol}${todaySales.toFixed(2)}</div>
-                            <div class="stat-trend trend-up">
-                                <i data-lucide="trending-up" size="14"></i> +12.5%
+                const statsGrid = document.getElementById('statsGrid');
+                if (statsGrid) {
+                    statsGrid.innerHTML = `
+                        <div class="stat-card">
+                            <div class="stat-info">
+                                <h3>Today's Sales</h3>
+                                <div class="stat-value">${settings.currencySymbol}${todaySales.toFixed(2)}</div>
+                                <div class="stat-trend trend-up">
+                                    <i data-lucide="trending-up" size="14"></i> +12.5%
+                                </div>
+                            </div>
+                            <div class="stat-icon icon-primary">
+                                <i data-lucide="dollar-sign" size="28"></i>
                             </div>
                         </div>
-                        <div class="stat-icon icon-primary">
-                            <i data-lucide="dollar-sign" size="28"></i>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-info">
-                            <h3>Today's Orders</h3>
-                            <div class="stat-value">${todayOrders.length}</div>
-                            <div class="stat-trend trend-up">
-                                <i data-lucide="trending-up" size="14"></i> +5.2%
+                        <div class="stat-card">
+                            <div class="stat-info">
+                                <h3>Today's Orders</h3>
+                                <div class="stat-value">${todayOrders.length}</div>
+                                <div class="stat-trend trend-up">
+                                    <i data-lucide="trending-up" size="14"></i> +5.2%
+                                </div>
+                            </div>
+                            <div class="stat-icon icon-success">
+                                <i data-lucide="shopping-cart" size="28"></i>
                             </div>
                         </div>
-                        <div class="stat-icon icon-success">
-                            <i data-lucide="shopping-cart" size="28"></i>
+                        <div class="stat-card">
+                            <div class="stat-info">
+                                <h3>Total Orders</h3>
+                                <div class="stat-value">${totalOrders}</div>
+                            </div>
+                            <div class="stat-icon icon-warning">
+                                <i data-lucide="receipt" size="28"></i>
+                            </div>
                         </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-info">
-                            <h3>Total Orders</h3>
-                            <div class="stat-value">${totalOrders}</div>
+                        <div class="stat-card">
+                            <div class="stat-info">
+                                <h3>Menu Items</h3>
+                                <div class="stat-value">${menuCount}</div>
+                            </div>
+                            <div class="stat-icon icon-secondary">
+                                <i data-lucide="utensils" size="28"></i>
+                            </div>
                         </div>
-                        <div class="stat-icon icon-warning">
-                            <i data-lucide="receipt" size="28"></i>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-info">
-                            <h3>Menu Items</h3>
-                            <div class="stat-value">${menuCount}</div>
-                        </div>
-                        <div class="stat-icon icon-secondary">
-                            <i data-lucide="utensils" size="28"></i>
-                        </div>
-                    </div>
-                `;
-                lucide.createIcons();
+                    `;
+                    lucide.createIcons();
+                }
                 
-                // Load revenue chart with actual data
+                // Revenue Chart
                 const weeklyData = [1200, 1900, 1500, 2200, 2800, 3500, 3100];
-                if (revenueChart) revenueChart.destroy();
-                const ctx = document.getElementById('revenueChart').getContext('2d');
-                revenueChart = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                        datasets: [{
-                            label: 'Revenue',
-                            data: weeklyData,
-                            borderColor: '#4f46e5',
-                            backgroundColor: 'rgba(79, 70, 229, 0.1)',
-                            borderWidth: 3,
-                            fill: true,
-                            tension: 0.4,
-                            pointBackgroundColor: '#ffffff',
-                            pointBorderColor: '#4f46e5',
-                            pointBorderWidth: 2,
-                            pointRadius: 4
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: { legend: { display: false } }
-                    }
-                });
+                const chartCtx = document.getElementById('revenueChart');
+                if (chartCtx) {
+                    if (revenueChart) revenueChart.destroy();
+                    revenueChart = new Chart(chartCtx, {
+                        type: 'line',
+                        data: {
+                            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                            datasets: [{
+                                label: 'Revenue',
+                                data: weeklyData,
+                                borderColor: '#4f46e5',
+                                backgroundColor: 'rgba(79, 70, 229, 0.1)',
+                                borderWidth: 3,
+                                fill: true,
+                                tension: 0.4,
+                                pointBackgroundColor: '#ffffff',
+                                pointBorderColor: '#4f46e5',
+                                pointBorderWidth: 2,
+                                pointRadius: 4
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: { legend: { display: false } }
+                        }
+                    });
+                }
             } catch (error) {
                 console.error("Error loading stats:", error);
             }
         }
 
-        // ========== LOAD MENU DATA ==========
+        // ========== MENU FUNCTIONS ==========
         async function loadMenuData() {
             try {
                 const querySnapshot = await getDocs(collection(db, "menu"));
@@ -1535,7 +1627,8 @@
                 displayMenuItems();
             } catch (error) {
                 console.error("Error loading menu:", error);
-                menuData = JSON.parse(localStorage.getItem('menuData') || '[]');
+                const savedMenu = localStorage.getItem('menuData');
+                menuData = savedMenu ? JSON.parse(savedMenu) : [];
                 displayMenuItems();
             }
         }
@@ -1578,7 +1671,6 @@
             document.getElementById('menuModal').style.display = 'flex';
         };
 
-        let editingMenuItemId = null;
         window.editMenuItem = function(id) {
             const item = menuData.find(i => i.id === id);
             if (item) {
@@ -1618,7 +1710,7 @@
                 console.error("Error saving menu item:", error);
                 if (editingMenuItemId) {
                     const index = menuData.findIndex(i => i.id === editingMenuItemId);
-                    menuData[index] = { ...menuData[index], ...menuItem };
+                    if (index !== -1) menuData[index] = { ...menuData[index], ...menuItem };
                 } else {
                     menuData.push({ id: Date.now().toString(), ...menuItem });
                 }
@@ -1648,7 +1740,7 @@
             document.getElementById('menuModal').style.display = 'none';
         };
 
-        // ========== LOAD CUSTOMERS DATA ==========
+        // ========== CUSTOMER FUNCTIONS ==========
         async function loadCustomersData() {
             try {
                 const querySnapshot = await getDocs(collection(db, "customers"));
@@ -1658,7 +1750,9 @@
                 });
                 displayCustomers();
             } catch (error) {
-                customersData = JSON.parse(localStorage.getItem('customersData') || '[]');
+                console.error("Error loading customers:", error);
+                const savedCustomers = localStorage.getItem('customersData');
+                customersData = savedCustomers ? JSON.parse(savedCustomers) : [];
                 displayCustomers();
             }
         }
@@ -1668,14 +1762,14 @@
             if (!container) return;
             
             if (customersData.length === 0) {
-                container.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 40px;">No customers found</td></tr>';
+                container.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 40px;">No customers found</tr>';
                 return;
             }
             
             container.innerHTML = customersData.map(customer => `
                 <tr>
-                    <td>${customer.name}</td>
-                    <td>${customer.email}</td>
+                    <td>${customer.name || 'N/A'}</td>
+                    <td>${customer.email || 'N/A'}</td>
                     <td>${customer.phone || '-'}</td>
                     <td>${customer.orders || 0}</td>
                     <td>${settings.currencySymbol}${customer.spent || 0}</td>
@@ -1695,13 +1789,12 @@
             document.getElementById('customerModal').style.display = 'flex';
         };
 
-        let editingCustomerId = null;
         window.editCustomer = function(id) {
             const customer = customersData.find(c => c.id === id);
             if (customer) {
                 editingCustomerId = id;
-                document.getElementById('customerName').value = customer.name;
-                document.getElementById('customerEmail').value = customer.email;
+                document.getElementById('customerName').value = customer.name || '';
+                document.getElementById('customerEmail').value = customer.email || '';
                 document.getElementById('customerPhone').value = customer.phone || '';
                 document.getElementById('customerModal').style.display = 'flex';
             }
@@ -1728,9 +1821,10 @@
                 closeCustomerModal();
                 loadCustomersData();
             } catch (error) {
+                console.error("Error saving customer:", error);
                 if (editingCustomerId) {
                     const index = customersData.findIndex(c => c.id === editingCustomerId);
-                    customersData[index] = { ...customersData[index], ...customer };
+                    if (index !== -1) customersData[index] = { ...customersData[index], ...customer };
                 } else {
                     customersData.push({ id: Date.now().toString(), ...customer });
                 }
@@ -1757,7 +1851,7 @@
             document.getElementById('customerModal').style.display = 'none';
         };
 
-        // ========== LOAD ORDERS DATA ==========
+        // ========== ORDER FUNCTIONS ==========
         async function loadOrdersData() {
             try {
                 const querySnapshot = await getDocs(query(collection(db, "orders"), orderBy("createdAt", "desc")));
@@ -1769,7 +1863,9 @@
                 displayOrders();
                 displayRecentOrders();
             } catch (error) {
-                ordersData = JSON.parse(localStorage.getItem('ordersData') || '[]');
+                console.error("Error loading orders:", error);
+                const savedOrders = localStorage.getItem('ordersData');
+                ordersData = savedOrders ? JSON.parse(savedOrders) : [];
                 displayOrders();
                 displayRecentOrders();
             }
@@ -1780,19 +1876,20 @@
             if (!container) return;
             
             if (ordersData.length === 0) {
-                container.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 40px;">No orders found</td></tr>';
+                container.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 40px;">No orders found</tr>';
                 return;
             }
             
             container.innerHTML = ordersData.map(order => {
                 const itemsText = order.items ? order.items.map(i => `${i.name} x${i.quantity}`).join(', ') : '-';
                 const orderTime = order.createdAt ? (order.createdAt.toDate ? order.createdAt.toDate().toLocaleTimeString() : new Date(order.createdAt).toLocaleTimeString()) : '-';
+                const statusClass = order.status === 'completed' ? 'completed' : (order.status === 'cooking' ? 'cooking' : 'pending');
                 return `
                     <tr>
                         <td>${order.orderNumber || '#' + order.id?.slice(0, 6)}</td>
                         <td>${itemsText}</td>
                         <td>${settings.currencySymbol}${order.total?.toFixed(2) || '0'}</td>
-                        <td><span class="status-badge status-${order.status === 'completed' ? 'completed' : (order.status === 'cooking' ? 'cooking' : 'pending')}">${order.status || 'pending'}</span></td>
+                        <td><span class="status-badge status-${statusClass}">${order.status || 'pending'}</span></td>
                         <td>${orderTime}</td>
                     </tr>
                 `;
@@ -1809,53 +1906,19 @@
                 return;
             }
             
-            container.innerHTML = recent.map(order => `
-                <tr>
-                    <td>${order.orderNumber || '#' + order.id?.slice(0, 6)}</td>
-                    <td>${settings.currencySymbol}${order.total?.toFixed(2) || '0'}</td>
-                    <td><span class="status-badge status-${order.status === 'completed' ? 'completed' : (order.status === 'cooking' ? 'cooking' : 'pending')}">${order.status || 'pending'}</span></td>
-                </tr>
-            `).join('');
+            container.innerHTML = recent.map(order => {
+                const statusClass = order.status === 'completed' ? 'completed' : (order.status === 'cooking' ? 'cooking' : 'pending');
+                return `
+                    <tr>
+                        <td>${order.orderNumber || '#' + order.id?.slice(0, 6)}</td>
+                        <td>${settings.currencySymbol}${order.total?.toFixed(2) || '0'}</td>
+                        <td><span class="status-badge status-${statusClass}">${order.status || 'pending'}</span></td>
+                    </tr>
+                `;
+            }).join('');
         }
 
-        // ========== LOAD ALL DASHBOARD DATA ==========
-        async function loadDashboardData() {
-            await loadDashboardStats();
-            
-            const ctx = document.getElementById('categoryChart');
-            if (ctx && categoryChart) categoryChart.destroy();
-            if (ctx) {
-                categoryChart = new Chart(ctx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: ['Burgers', 'Pizza', 'Sides', 'Beverages', 'Salads'],
-                        datasets: [{
-                            data: [30, 25, 20, 15, 10],
-                            backgroundColor: ['#4f46e5', '#ec4899', '#10b981', '#f59e0b', '#ef4444']
-                        }]
-                    },
-                    options: { responsive: true, maintainAspectRatio: false }
-                });
-            }
-            
-            const topItems = [
-                { name: 'Classic Burger', sold: 45, revenue: 382.50 },
-                { name: 'Margherita Pizza', sold: 32, revenue: 384 },
-                { name: 'French Fries', sold: 78, revenue: 273 }
-            ];
-            const topContainer = document.getElementById('topItemsList');
-            if (topContainer) {
-                topContainer.innerHTML = topItems.map(item => `
-                    <div style="display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid var(--border);">
-                        <span>${item.name}</span>
-                        <span>${item.sold} sold</span>
-                        <span style="color: var(--primary);">${settings.currencySymbol}${item.revenue}</span>
-                    </div>
-                `).join('');
-            }
-        }
-
-        // ========== EXPORT REPORT ==========
+        // ========== REPORT FUNCTIONS ==========
         window.exportReport = function() {
             let csv = "Order ID,Items,Total,Status,Time\n";
             ordersData.forEach(order => {
@@ -1869,6 +1932,54 @@
             link.download = `billzestpos_orders_${new Date().toISOString().split('T')[0]}.csv`;
             link.click();
         };
+
+        // Category Chart
+        async function loadCategoryChart() {
+            const ctx = document.getElementById('categoryChart');
+            if (ctx) {
+                if (categoryChart) categoryChart.destroy();
+                categoryChart = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Burgers', 'Pizza', 'Sides', 'Beverages', 'Salads'],
+                        datasets: [{
+                            data: [30, 25, 20, 15, 10],
+                            backgroundColor: ['#4f46e5', '#ec4899', '#10b981', '#f59e0b', '#ef4444'],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { position: 'bottom' }
+                        }
+                    }
+                });
+            }
+
+            // Top Items
+            const topItems = [
+                { name: 'Classic Burger', sold: 45, revenue: 382.50 },
+                { name: 'Margherita Pizza', sold: 32, revenue: 384 },
+                { name: 'French Fries', sold: 78, revenue: 273 }
+            ];
+            const topContainer = document.getElementById('topItemsList');
+            if (topContainer) {
+                topContainer.innerHTML = topItems.map(item => `
+                    <div class="top-item-row">
+                        <span class="top-item-name">${item.name}</span>
+                        <span class="top-item-sold">${item.sold} sold</span>
+                        <span class="top-item-revenue">${settings.currencySymbol}${item.revenue}</span>
+                    </div>
+                `).join('');
+            }
+        }
+
+        async function loadDashboardData() {
+            await loadDashboardStats();
+            await loadCategoryChart();
+        }
 
         // ========== SECTION SWITCHING ==========
         window.switchSection = function(sectionName) {
@@ -1887,79 +1998,101 @@
             if (window.innerWidth <= 768) closeSidebar();
         };
 
-        // ========== SIDEBAR FUNCTIONS ==========
+        // ========== SIDEBAR ==========
         function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('open');
-            document.getElementById('sidebarOverlay').classList.toggle('show');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            if (sidebar) sidebar.classList.toggle('open');
+            if (overlay) overlay.classList.toggle('show');
         }
         
         function closeSidebar() {
-            document.getElementById('sidebar').classList.remove('open');
-            document.getElementById('sidebarOverlay').classList.remove('show');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            if (sidebar) sidebar.classList.remove('open');
+            if (overlay) overlay.classList.remove('show');
         }
 
-        // ========== PROFILE FUNCTIONS ==========
+        // ========== PROFILE ==========
         function toggleProfileMenu() {
-            document.getElementById('profileDropdown').classList.toggle('show');
+            const dropdown = document.getElementById('profileDropdown');
+            if (dropdown) dropdown.classList.toggle('show');
         }
         
         function showProfile() {
-            document.getElementById('profileModal').style.display = 'flex';
+            const modal = document.getElementById('profileModal');
+            if (modal) modal.style.display = 'flex';
             toggleProfileMenu();
         }
         
         function closeProfileModal() {
-            document.getElementById('profileModal').style.display = 'none';
+            const modal = document.getElementById('profileModal');
+            if (modal) modal.style.display = 'none';
         }
 
         // ========== EVENT LISTENERS ==========
-        document.querySelectorAll('.nav-item').forEach(item => {
+        const navItems = document.querySelectorAll('.nav-item');
+        navItems.forEach(item => {
             item.addEventListener('click', () => {
                 const section = item.getAttribute('data-section');
                 if (section) switchSection(section);
             });
         });
         
-        document.getElementById('logoutBtn').addEventListener('click', handleLogout);
-        document.getElementById('dropdownLogoutBtn').addEventListener('click', handleLogout);
-        document.getElementById('profileBtn').addEventListener('click', showProfile);
+        const logoutBtn = document.getElementById('logoutBtn');
+        if (logoutBtn) logoutBtn.addEventListener('click', handleLogout);
         
-        // Search functionality
-        document.getElementById('searchInput').addEventListener('input', (e) => {
-            const term = e.target.value.toLowerCase();
-            const filtered = ordersData.filter(o => 
-                (o.orderNumber || '').toLowerCase().includes(term) || 
-                (o.items ? o.items.map(i => i.name).join(' ') : '').toLowerCase().includes(term)
-            );
-            const container = document.getElementById('allOrdersBody');
-            if (container) {
-                if (filtered.length === 0) {
-                    container.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px;">No matching orders</td></tr>';
-                } else {
-                    container.innerHTML = filtered.map(order => {
-                        const itemsText = order.items ? order.items.map(i => `${i.name} x${i.quantity}`).join(', ') : '-';
-                        const orderTime = order.createdAt ? (order.createdAt.toDate ? order.createdAt.toDate().toLocaleTimeString() : new Date(order.createdAt).toLocaleTimeString()) : '-';
-                        return `
-                            <tr>
-                                <td>${order.orderNumber || '#' + order.id?.slice(0, 6)}</td>
-                                <td>${itemsText}</td>
-                                <td>${settings.currencySymbol}${order.total?.toFixed(2) || '0'}</td>
-                                <td><span class="status-badge status-${order.status === 'completed' ? 'completed' : (order.status === 'cooking' ? 'cooking' : 'pending')}">${order.status || 'pending'}</span></td>
-                                <td>${orderTime}</td>
-                            </tr>
-                        `;
-                    }).join('');
+        const dropdownLogout = document.getElementById('dropdownLogoutBtn');
+        if (dropdownLogout) dropdownLogout.addEventListener('click', handleLogout);
+        
+        const profileBtn = document.getElementById('profileBtn');
+        if (profileBtn) profileBtn.addEventListener('click', showProfile);
+        
+        // Search
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                const filtered = ordersData.filter(o => 
+                    (o.orderNumber || '').toLowerCase().includes(term) || 
+                    (o.items ? o.items.map(i => i.name).join(' ') : '').toLowerCase().includes(term)
+                );
+                const container = document.getElementById('allOrdersBody');
+                if (container) {
+                    if (filtered.length === 0) {
+                        container.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px;">No matching orders</td></tr>';
+                    } else {
+                        container.innerHTML = filtered.map(order => {
+                            const itemsText = order.items ? order.items.map(i => `${i.name} x${i.quantity}`).join(', ') : '-';
+                            const orderTime = order.createdAt ? (order.createdAt.toDate ? order.createdAt.toDate().toLocaleTimeString() : new Date(order.createdAt).toLocaleTimeString()) : '-';
+                            const statusClass = order.status === 'completed' ? 'completed' : (order.status === 'cooking' ? 'cooking' : 'pending');
+                            return `
+                                <tr>
+                                    <td>${order.orderNumber || '#' + order.id?.slice(0, 6)}</td>
+                                    <td>${itemsText}</td>
+                                    <td>${settings.currencySymbol}${order.total?.toFixed(2) || '0'}</td>
+                                    <td><span class="status-badge status-${statusClass}">${order.status || 'pending'}</span></td>
+                                    <td>${orderTime}</td>
+                                </tr>
+                            `;
+                        }).join('');
+                    }
                 }
-            }
-        });
+            });
+        }
         
         // Close modals on outside click
         window.onclick = (e) => {
-            if (e.target === document.getElementById('profileModal')) closeProfileModal();
-            if (e.target === document.getElementById('menuModal')) closeMenuModal();
-            if (e.target === document.getElementById('customerModal')) closeCustomerModal();
-            if (!e.target.closest('.user-profile')) {
-                document.getElementById('profileDropdown')?.classList.remove('show');
+            const profileModal = document.getElementById('profileModal');
+            const menuModal = document.getElementById('menuModal');
+            const customerModal = document.getElementById('customerModal');
+            const profileDropdown = document.getElementById('profileDropdown');
+            
+            if (e.target === profileModal) closeProfileModal();
+            if (e.target === menuModal) closeMenuModal();
+            if (e.target === customerModal) closeCustomerModal();
+            if (profileDropdown && !e.target.closest('.user-profile')) {
+                profileDropdown.classList.remove('show');
             }
         };
 
@@ -1970,8 +2103,11 @@
         window.showProfile = showProfile;
         window.closeProfileModal = closeProfileModal;
         window.switchSection = switchSection;
+        window.closeMenuModal = closeMenuModal;
+        window.closeCustomerModal = closeCustomerModal;
+        window.exportReport = exportReport;
 
-        // Initial load
+        // Initialize icons
         lucide.createIcons();
     </script>
 </body>
