@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice Template - BillzestPOS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Inter',sans-serif;background:#f1f5f9;padding:40px 20px}
+        .invoice{max-width:800px;margin:0 auto;background:white;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,0.1);overflow:hidden}
+        .invoice-header{background:linear-gradient(135deg,#0f172a,#1e293b);color:white;padding:30px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px}
+        .invoice-header h1{font-size:1.8rem}
+        .invoice-header p{color:#94a3b8;margin-top:5px}
+        .invoice-body{padding:30px}
+        .company-info{margin-bottom:30px;padding-bottom:20px;border-bottom:1px solid #e2e8f0}
+        .company-info h3{color:#1e293b;margin-bottom:10px}
+        .company-info p{color:#64748b;margin:3px 0}
+        .bill-to{margin-bottom:30px;padding:15px;background:#f8fafc;border-radius:12px}
+        .bill-to h4{color:#1e293b;margin-bottom:10px}
+        .items-table{width:100%;border-collapse:collapse;margin:20px 0}
+        .items-table th,.items-table td{padding:12px;text-align:left;border-bottom:1px solid #e2e8f0}
+        .items-table th{background:#f8fafc;color:#475569;font-weight:600}
+        .totals{width:300px;margin-left:auto;margin-top:20px}
+        .totals .row{display:flex;justify-content:space-between;padding:8px 0}
+        .totals .row.total{font-weight:800;font-size:1.2rem;border-top:2px solid #e2e8f0;margin-top:10px;padding-top:10px;color:#4f46e5}
+        .footer{text-align:center;padding:20px;background:#f8fafc;color:#64748b;font-size:0.8rem}
+        .status-paid{background:#d1fae5;color:#065f46;padding:5px 15px;border-radius:20px;display:inline-block;font-weight:600}
+        .status-pending{background:#fef3c7;color:#d97706;padding:5px 15px;border-radius:20px;display:inline-block;font-weight:600}
+        @media print{
+            body{background:white;padding:0}
+            .no-print{display:none}
+            .invoice{box-shadow:none}
+        }
+        .no-print{text-align:center;margin-top:20px}
+        .no-print button{padding:10px 25px;background:#4f46e5;color:white;border:none;border-radius:8px;cursor:pointer;margin:0 10px}
+    </style>
+</head>
+<body>
+    <div class="invoice" id="invoice">
+        <div class="invoice-header">
+            <div>
+                <h1>TAX INVOICE</h1>
+                <p>BillzestPOS Restaurant Management System</p>
+            </div>
+            <div>
+                <div id="invoiceStatus" class="status-paid">PAID</div>
+                <p style="margin-top:10px"><strong>Invoice #:</strong> <span id="invoiceNumber">INV-2026-001</span></p>
+                <p><strong>Date:</strong> <span id="invoiceDate">April 15, 2026</span></p>
+            </div>
+        </div>
+        <div class="invoice-body">
+            <div class="company-info">
+                <h3>BillzestPOS</h3>
+                <p>Riyadh, Saudi Arabia</p>
+                <p>Email: billing@billzestpos.com | Phone: +966 550 898978</p>
+                <p>GST: 22AAAAA0000A1Z | PAN: AAAAA1234A</p>
+            </div>
+            
+            <div class="bill-to">
+                <h4>Bill To:</h4>
+                <p><strong id="customerName">John Doe</strong></p>
+                <p id="customerEmail">john@restaurant.com</p>
+                <p id="customerGST">GST: 22AAAAA0000A1Z</p>
+                <p id="customerAddress">123 Business Street, City, 400001</p>
+            </div>
+            
+            <table class="items-table">
+                <thead>
+                    <tr>
+                        <th>Description</th>
+                        <th>Quantity</th>
+                        <th>Unit Price</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody id="invoiceItems">
+                    <tr>
+                        <td>Professional Plan (Monthly)</td>
+                        <td>1</td>
+                        <td>$79.00</td>
+                        <td>$79.00</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="totals">
+                <div class="row"><span>Subtotal:</span><span id="subtotal">$79.00</span></div>
+                <div class="row"><span>GST (18%):</span><span id="gstAmount">$14.22</span></div>
+                <div class="row total"><span>TOTAL:</span><span id="totalAmount">$93.22</span></div>
+            </div>
+        </div>
+        <div class="footer">
+            <p>Thank you for your business!</p>
+            <p>This is a computer generated invoice. No signature required.</p>
+            <p>For any queries, contact billing@billzestpos.com</p>
+        </div>
+    </div>
+    <div class="no-print">
+        <button onclick="window.print()">🖨️ Print Invoice</button>
+        <button onclick="downloadInvoice()">📥 Download PDF</button>
+        <button onclick="window.location.href='customer-dashboard.html'">← Back to Dashboard</button>
+    </div>
+    <script>
+        // Get invoice data from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const invoiceId = urlParams.get('id') || 'INV-2026-001';
+        const customerName = urlParams.get('name') || 'John Doe';
+        const customerEmail = urlParams.get('email') || 'john@restaurant.com';
+        const plan = urlParams.get('plan') || 'Professional';
+        const billing = urlParams.get('billing') || 'monthly';
+        const amount = parseFloat(urlParams.get('amount')) || 79;
+        const status = urlParams.get('status') || 'paid';
+        
+        const gstRate = 18;
+        const gstAmount = (amount * gstRate) / 100;
+        const total = amount + gstAmount;
+        
+        document.getElementById('invoiceNumber').innerText = invoiceId;
+        document.getElementById('invoiceDate').innerText = new Date().toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
+        document.getElementById('invoiceStatus').innerText = status.toUpperCase();
+        document.getElementById('invoiceStatus').className = status === 'paid' ? 'status-paid' : 'status-pending';
+        document.getElementById('customerName').innerText = customerName;
+        document.getElementById('customerEmail').innerText = customerEmail;
+        document.getElementById('subtotal').innerHTML = `$${amount.toFixed(2)}`;
+        document.getElementById('gstAmount').innerHTML = `$${gstAmount.toFixed(2)}`;
+        document.getElementById('totalAmount').innerHTML = `$${total.toFixed(2)}`;
+        document.getElementById('invoiceItems').innerHTML = `
+            <tr><td>${plan} Plan (${billing === 'yearly' ? 'Yearly' : 'Monthly'})</td><td>1</td><td>$${amount.toFixed(2)}</td><td>$${amount.toFixed(2)}</td></tr>
+        `;
+        
+        function downloadInvoice() {
+            const printContents = document.getElementById('invoice').innerHTML;
+            const originalContents = document.body.innerHTML;
+            document.body.innerHTML = printContents;
+            window.print();
+            document.body.innerHTML = originalContents;
+            location.reload();
+        }
+    </script>
+</body>
+</html>
