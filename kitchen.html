@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kitchen Display - Billzestpos</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="global.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="main.js" defer></script>
+    <style>
+        :root { --primary: #4f46e5; --secondary: #ec4899; --dark: #0f172a; --new: #f59e0b; --cooking: #3b82f6; --ready: #10b981; }
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Inter',sans-serif; }
+        body { background:#0f172a; color:white; height:100vh; display:flex; flex-direction:column; overflow:hidden; }
+
+        /* Top Bar */
+        .top-bar { background:#1e293b; padding:14px 24px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.08); flex-shrink:0; }
+        .top-logo { display:flex; align-items:center; gap:10px; font-size:1.3rem; font-weight:800; }
+        .top-logo .icon { background:linear-gradient(135deg,var(--primary),var(--secondary)); width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center; }
+        .top-clock { font-size:1.5rem; font-weight:800; color:#94a3b8; font-variant-numeric:tabular-nums; }
+        .top-stats { display:flex; gap:20px; }
+        .stat-chip { background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); padding:8px 16px; border-radius:20px; font-size:0.85rem; font-weight:600; display:flex; align-items:center; gap:8px; }
+        .stat-dot { width:8px; height:8px; border-radius:50%; }
+
+        /* Filters */
+        .filter-bar { background:#1e293b; padding:10px 24px; display:flex; gap:10px; border-bottom:1px solid rgba(255,255,255,0.06); flex-shrink:0; }
+        .filter-btn { padding:8px 20px; border-radius:20px; border:none; font-weight:600; font-size:0.85rem; cursor:pointer; transition:all 0.2s; }
+        .filter-btn.all { background:rgba(79,70,229,0.2); color:#818cf8; }
+        .filter-btn.new-f { background:rgba(245,158,11,0.2); color:#fbbf24; }
+        .filter-btn.cooking-f { background:rgba(59,130,246,0.2); color:#60a5fa; }
+        .filter-btn.ready-f { background:rgba(16,185,129,0.2); color:#34d399; }
+        .filter-btn.active { opacity:1; box-shadow:0 4px 15px rgba(255,255,255,0.1); }
+        .filter-btn:not(.active) { opacity:0.5; }
+
+        /* Orders Grid */
+        .orders-grid { flex:1; padding:20px 24px; display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:18px; overflow-y:auto; align-content:start; }
+
+        /* Order Card */
+        .order-card { background:#1e293b; border-radius:16px; border:1px solid rgba(255,255,255,0.07); overflow:hidden; transition:transform 0.2s; }
+        .order-card:hover { transform:translateY(-3px); }
+        .order-card.status-new { border-top:4px solid var(--new); }
+        .order-card.status-cooking { border-top:4px solid var(--cooking); }
+        .order-card.status-ready { border-top:4px solid var(--ready); }
+
+        .card-header { padding:16px 18px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.06); }
+        .order-num { font-size:1.1rem; font-weight:800; }
+        .order-table { font-size:0.85rem; color:#94a3b8; margin-top:2px; }
+        .status-pill { padding:5px 12px; border-radius:20px; font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; }
+        .pill-new { background:rgba(245,158,11,0.2); color:#fbbf24; }
+        .pill-cooking { background:rgba(59,130,246,0.2); color:#60a5fa; }
+        .pill-ready { background:rgba(16,185,129,0.2); color:#34d399; }
+
+        .card-timer { padding:8px 18px; background:rgba(0,0,0,0.2); font-size:0.85rem; color:#94a3b8; display:flex; align-items:center; gap:6px; font-variant-numeric:tabular-nums; }
+        .timer-urgent { color:#ef4444 !important; animation:blink 1s ease-in-out infinite; }
+        @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+
+        .card-items { padding:14px 18px; }
+        .card-item { display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.05); }
+        .card-item:last-child { border-bottom:none; }
+        .item-check { width:22px; height:22px; border:2px solid rgba(255,255,255,0.2); border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.2s; flex-shrink:0; }
+        .item-check.done { background:var(--ready); border-color:var(--ready); }
+        .item-text { flex:1; margin:0 10px; font-size:0.9rem; color:rgba(255,255,255,0.85); }
+        .item-text.done { text-decoration:line-through; color:#64748b; }
+        .item-qty { background:rgba(255,255,255,0.1); padding:2px 8px; border-radius:8px; font-size:0.8rem; font-weight:700; }
+
+        .card-actions { padding:14px 18px; display:flex; gap:10px; border-top:1px solid rgba(255,255,255,0.06); }
+        .action-btn { flex:1; padding:10px; border:none; border-radius:10px; font-weight:700; font-size:0.85rem; cursor:pointer; transition:all 0.2s; }
+        .btn-start { background:rgba(59,130,246,0.2); color:#60a5fa; }
+        .btn-start:hover { background:rgba(59,130,246,0.3); }
+        .btn-done { background:rgba(16,185,129,0.2); color:#34d399; }
+        .btn-done:hover { background:rgba(16,185,129,0.3); }
+        .btn-complete { background:linear-gradient(to right,var(--primary),var(--secondary)); color:white; }
+        .btn-complete:hover { opacity:0.9; }
+
+        /* Empty State */
+        .empty-kds { grid-column:1/-1; text-align:center; padding:60px; color:#334155; }
+        .empty-kds i { margin-bottom:16px; opacity:0.3; }
+        .empty-kds h3 { font-size:1.3rem; margin-bottom:8px; opacity:0.5; }
+
+        /* Add Demo Btn */
+        .add-demo-btn { position:fixed; bottom:24px; right:24px; padding:14px 22px; background:linear-gradient(to right,var(--primary),var(--secondary)); color:white; border:none; border-radius:14px; font-weight:700; cursor:pointer; box-shadow:0 10px 25px rgba(79,70,229,0.4); display:flex; align-items:center; gap:8px; font-size:0.95rem; transition:all 0.3s; }
+        .add-demo-btn:hover { transform:translateY(-2px); }
+
+        @media (max-width:768px) { .top-stats { display:none; } .orders-grid { grid-template-columns:1fr; } }
+    </style>
+</head>
+<body>
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="top-logo">
+            <div class="icon"><i data-lucide="chef-hat" size="18"></i></div>
+            <span data-brand="name">Billzestpos</span> <small style="margin-left:8px; opacity:0.6; font-size:0.8rem;">Kitchen Display</small>
+        </div>
+        <div class="top-clock" id="clock">--:--:--</div>
+        <div class="top-stats">
+            <div class="stat-chip"><div class="stat-dot" style="background:var(--new)"></div><span id="countNew">0</span> New</div>
+            <div class="stat-chip"><div class="stat-dot" style="background:var(--cooking)"></div><span id="countCooking">0</span> Cooking</div>
+            <div class="stat-chip"><div class="stat-dot" style="background:var(--ready)"></div><span id="countReady">0</span> Ready</div>
+        </div>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="filter-bar">
+        <button class="filter-btn all active" onclick="setFilter('all',this)">All Orders</button>
+        <button class="filter-btn new-f" onclick="setFilter('new',this)">🆕 New</button>
+        <button class="filter-btn cooking-f" onclick="setFilter('cooking',this)">🔥 Cooking</button>
+        <button class="filter-btn ready-f" onclick="setFilter('ready',this)">✅ Ready</button>
+    </div>
+
+    <!-- Orders Grid -->
+    <div class="orders-grid" id="ordersGrid"></div>
+
+    <!-- Add Demo Order Button -->
+    <button class="add-demo-btn" onclick="addDemoOrder()">
+        <i data-lucide="plus" size="18"></i> New Demo Order
+    </button>
+
+    <script>
+        lucide.createIcons();
+
+        // ── Clock ──────────────────────────────────────────────
+        function updateClock() {
+            document.getElementById('clock').textContent = new Date().toLocaleTimeString();
+        }
+        updateClock();
+        setInterval(updateClock, 1000);
+
+        // ── Order Data ─────────────────────────────────────────
+        let orders = [
+            { id:'ORD-891', table:'Table 02', status:'new',     startTime: Date.now()-120000, items:[{n:'Margherita Pizza',q:2,done:false},{n:'Garlic Bread',q:1,done:false},{n:'Salad',q:1,done:false}] },
+            { id:'ORD-892', table:'Table 04', status:'cooking', startTime: Date.now()-480000, items:[{n:'Grilled Chicken',q:1,done:true},{n:'French Fries',q:2,done:false},{n:'Cola',q:2,done:false}] },
+            { id:'ORD-893', table:'Delivery', status:'cooking', startTime: Date.now()-600000, items:[{n:'Double Burger',q:3,done:true},{n:'Onion Rings',q:1,done:true},{n:'Milkshake',q:1,done:false}] },
+            { id:'ORD-894', table:'Table 07', status:'ready',   startTime: Date.now()-750000, items:[{n:'Pasta Carbonara',q:2,done:true},{n:'Caesar Salad',q:1,done:true}] },
+        ];
+        let orderCounter = 895;
+        let activeFilter = 'all';
+
+        // ── Render ─────────────────────────────────────────────
+        function render() {
+            const grid = document.getElementById('ordersGrid');
+            const visible = orders.filter(o => activeFilter === 'all' || o.status === activeFilter);
+
+            document.getElementById('countNew').textContent    = orders.filter(o=>o.status==='new').length;
+            document.getElementById('countCooking').textContent= orders.filter(o=>o.status==='cooking').length;
+            document.getElementById('countReady').textContent  = orders.filter(o=>o.status==='ready').length;
+
+            if (visible.length === 0) {
+                grid.innerHTML = `<div class="empty-kds"><i data-lucide="check-circle" size="64"></i><h3>All Clear!</h3><p>No orders in this category</p></div>`;
+                lucide.createIcons();
+                return;
+            }
+
+            grid.innerHTML = visible.map(order => {
+                const elapsed = Math.floor((Date.now() - order.startTime) / 1000);
+                const mins = String(Math.floor(elapsed/60)).padStart(2,'0');
+                const secs = String(elapsed%60).padStart(2,'0');
+                const urgent = elapsed > 600;
+                const statusClass = `status-${order.status}`;
+                const pillClass = `pill-${order.status}`;
+                const pillText = order.status === 'new' ? '🆕 New' : order.status === 'cooking' ? '🔥 Cooking' : '✅ Ready';
+
+                const items = order.items.map((item, idx) => `
+                    <div class="card-item">
+                        <div class="item-check ${item.done?'done':''}" onclick="toggleItem('${order.id}',${idx})">
+                            ${item.done ? '<i data-lucide="check" size="12"></i>' : ''}
+                        </div>
+                        <span class="item-text ${item.done?'done':''}">${item.n}</span>
+                        <span class="item-qty">×${item.q}</span>
+                    </div>`).join('');
+
+                const actionBtn = order.status === 'new'
+                    ? `<button class="action-btn btn-start" onclick="updateStatus('${order.id}','cooking')">🔥 Start Cooking</button>`
+                    : order.status === 'cooking'
+                    ? `<button class="action-btn btn-done" onclick="updateStatus('${order.id}','ready')">✅ Mark Ready</button>`
+                    : `<button class="action-btn btn-complete" onclick="removeOrder('${order.id}')">🎉 Complete & Remove</button>`;
+
+                return `
+                    <div class="order-card ${statusClass}" id="card-${order.id}">
+                        <div class="card-header">
+                            <div>
+                                <div class="order-num">#${order.id}</div>
+                                <div class="order-table">${order.table}</div>
+                            </div>
+                            <span class="status-pill ${pillClass}">${pillText}</span>
+                        </div>
+                        <div class="card-timer ${urgent?'timer-urgent':''}">
+                            <i data-lucide="timer" size="14"></i> ${mins}:${secs} elapsed ${urgent?'⚠️ URGENT':''}
+                        </div>
+                        <div class="card-items">${items}</div>
+                        <div class="card-actions">${actionBtn}</div>
+                    </div>`;
+            }).join('');
+            lucide.createIcons();
+        }
+
+        function toggleItem(orderId, itemIdx) {
+            const order = orders.find(o=>o.id===orderId);
+            if (order) order.items[itemIdx].done = !order.items[itemIdx].done;
+            render();
+        }
+
+        function updateStatus(orderId, newStatus) {
+            const order = orders.find(o=>o.id===orderId);
+            if (order) order.status = newStatus;
+            render();
+        }
+
+        function removeOrder(orderId) {
+            orders = orders.filter(o=>o.id!==orderId);
+            render();
+        }
+
+        function setFilter(filter, btn) {
+            activeFilter = filter;
+            document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+            btn.classList.add('active');
+            render();
+        }
+
+        const menuItems = [
+            ['Burger', 'Pizza', 'Fries', 'Cola', 'Salad', 'Pasta', 'Chicken Wings', 'Milkshake', 'Garlic Bread', 'Onion Rings']
+        ].flat();
+        const tables = ['Table 01','Table 02','Table 03','Table 04','Table 05','Table 06','Delivery','Takeaway'];
+
+        function addDemoOrder() {
+            const numItems = Math.floor(Math.random()*3)+2;
+            const items = [];
+            for(let i=0;i<numItems;i++) {
+                items.push({ n: menuItems[Math.floor(Math.random()*menuItems.length)], q: Math.floor(Math.random()*3)+1, done:false });
+            }
+            orders.unshift({ id:'ORD-'+orderCounter++, table:tables[Math.floor(Math.random()*tables.length)], status:'new', startTime:Date.now(), items });
+            render();
+        }
+
+        // Re-render timers every second
+        setInterval(render, 1000);
+        render();
+    </script>
+</body>
+</html>

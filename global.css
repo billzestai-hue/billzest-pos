@@ -1,0 +1,131 @@
+/* 
+  Billzestpos Global Design System 
+  Update variables here to change the look and feel site-wide.
+*/
+
+:root {
+    /* Brand Colors */
+    --primary: #4f46e5;
+    --primary-dark: #4338ca;
+    --secondary: #ec4899;
+    --dark: #0f172a;
+    --bg-color: #f1f5f9;
+    --text-gray: #64748b;
+    --border-color: #e2e8f0;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+
+    /* Contact Details */
+    --contact-email: "billzestai@gmail.com";
+    --contact-phone: "+966 550 898978";
+    --brand-name: "Billzestpos";
+}
+
+/* Global Buttons */
+.btn-primary-global {
+    background: linear-gradient(to right, var(--primary), var(--secondary));
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 24px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    border: none !important;
+}
+.btn-primary-global:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(79, 70, 229, 0.2); opacity: 0.95; }
+
+/* Floating Elements */
+.floating-actions-global { position: fixed; bottom: 30px; right: 30px; display: flex; flex-direction: column; gap: 15px; z-index: 9999; }
+.float-btn { width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; cursor: pointer; border: none; box-shadow: 0 10px 25px rgba(0,0,0,0.2); transition: transform 0.3s; }
+.float-whatsapp { background: #25d366; }
+.float-ai { background: linear-gradient(135deg, var(--primary), var(--secondary)); }
+.float-btn:hover { transform: scale(1.1); }
+.float-btn i, .float-btn svg { width: 28px; height: 28px; }
+
+/* Global Chatbot Widget */
+.chatbot-global { position: fixed; bottom: 100px; right: 30px; width: 350px; background: white; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.15); z-index: 10000; display: none; flex-direction: column; overflow: hidden; border: 1px solid var(--border-color); }
+.chatbot-global.active { display: flex; }
+.chat-header { background: linear-gradient(to right, var(--primary), var(--secondary)); padding: 15px; color: white; display: flex; justify-content: space-between; align-items: center; }
+.chat-messages { height: 300px; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: #f8fafc; }
+.chat-msg { padding: 10px 15px; border-radius: 15px; font-size: 0.9rem; max-width: 85%; }
+.bot-msg { background: white; border: 1px solid #e2e8f0; align-self: flex-start; color: #1e293b; }
+.user-msg { background: var(--primary); color: white; align-self: flex-end; }
+.chat-input-area { padding: 10px; display: flex; gap: 8px; border-top: 1px solid #e2e8f0; }
+.chat-input-area input { flex: 1; padding: 8px 12px; border: 1px solid #e2e8f0; border-radius: 20px; outline: none; }
+.chat-send-btn { background: var(--primary); color: white; border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+
+/* Shared Font & Resets */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Global Logo Component */
+.brand-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    transition: transform 0.3s ease;
+}
+
+.brand-logo:hover {
+    transform: scale(1.02);
+}
+
+.logo-icon-box {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
+}
+
+.logo-text-global {
+    font-weight: 800;
+    font-size: 1.5rem;
+    background: linear-gradient(to right, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Common Layout Utilities */
+.glass {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.btn-primary-global {
+    background: var(--primary);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-weight: 700;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-primary-global:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(79, 70, 229, 0.3);
+}

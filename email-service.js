@@ -1,136 +1,83 @@
-// email-service.js
-// EmailJS configuration for Invoice System
+// ============================================================
+// Billzestpos Email Service — Powered by EmailJS
+// ============================================================
+// Setup: https://www.emailjs.com/
+// 1. Create account → Get Public Key
+// 2. Create Email Service → Get Service ID
+// 3. Create Email Templates → Get Template IDs
+// 4. Replace placeholders below with your real IDs
+// ============================================================
 
-// 🔥 YAHAN APNI DETAILS DAALO 🔥
 const EMAIL_CONFIG = {
-    PUBLIC_KEY: "YOUR_EMAILJS_PUBLIC_KEY",     // EmailJS se copy karo
-    SERVICE_ID: "YOUR_EMAILJS_SERVICE_ID",     // Service ID (jaise: service_gmail)
-    TEMPLATE_ID: "YOUR_EMAILJS_TEMPLATE_ID"    // Template ID (jaise: template_invoice)
+    publicKey:        "YOUR_EMAILJS_PUBLIC_KEY",     // From EmailJS → Account → API Keys
+    serviceId:        "YOUR_SERVICE_ID",             // From EmailJS → Email Services
+    contactTemplateId: "template_contact",           // Template for contact form
+    demoTemplateId:   "template_demo",               // Template for demo requests
+    invoiceTemplateId: "template_invoice",           // Template for invoice emails
 };
 
-// Company GST Details (Aapki company ke)
-const COMPANY_DETAILS = {
-    name: "BillzestPOS",
-    gst: "22AAAAA0000A1Z",
-    pan: "AAAAA1234A",
-    email: "billing@billzestpos.com",
-    phone: "+966550898978",
-    address: "Riyadh, Saudi Arabia"
-};
-
-// GST Rate (India: 18%, Saudi: 15%)
-const GST_RATE = 18; // Change as per your country
-
-// Function to send invoice email
-async function sendInvoiceEmail(customerData, subscriptionData) {
-    // Check if EmailJS is loaded
+// Initialize EmailJS (call this once on page load)
+function initEmailService() {
     if (typeof emailjs === 'undefined') {
-        console.log("EmailJS not loaded yet");
+        console.warn('EmailJS SDK not loaded. Add: <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>');
         return false;
     }
-    
-    // Calculate GST
-    const subtotal = parseFloat(subscriptionData.amount);
-    const gstAmount = (subtotal * GST_RATE) / 100;
-    const totalAmount = subtotal + gstAmount;
-    const invoiceNo = `INV-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
-    
-    // Template parameters
-    const templateParams = {
-        // Customer Details
-        customer_name: customerData.fullName,
-        customer_email: customerData.email,
-        customer_phone: customerData.phone,
-        customer_gst: customerData.gstNumber || 'Not registered',
-        customer_address: customerData.address || 'Not provided',
-        
-        // Invoice Details
-        invoice_no: invoiceNo,
-        date: new Date().toLocaleDateString('en-IN'),
-        
-        // Subscription Details
-        plan_name: subscriptionData.plan,
-        billing_cycle: subscriptionData.billingCycle,
-        amount: subtotal.toFixed(2),
-        
-        // GST Details
-        gst_percent: GST_RATE,
-        gst_amount: gstAmount.toFixed(2),
-        total_amount: totalAmount.toFixed(2),
-        
-        // Company Details
-        company_name: COMPANY_DETAILS.name,
-        company_gst: COMPANY_DETAILS.gst,
-        company_pan: COMPANY_DETAILS.pan,
-        company_email: COMPANY_DETAILS.email,
-        company_phone: COMPANY_DETAILS.phone,
-        company_address: COMPANY_DETAILS.address,
-        
-        // Payment Status
-        status: subscriptionData.status || 'pending',
-        payment_link: `https://billzestpos.com/pay/${invoiceNo}`
-    };
-    
+    emailjs.init(EMAIL_CONFIG.publicKey);
+    return true;
+}
+
+// ── Send Contact Form Email ──────────────────────────────────
+async function sendContactEmail({ firstName, lastName, email, phone, restaurantName, message }) {
+    if (!initEmailService()) return { success: false, error: 'EmailJS not loaded' };
     try {
-        const response = await emailjs.send(
-            EMAIL_CONFIG.SERVICE_ID,
-            EMAIL_CONFIG.TEMPLATE_ID,
-            templateParams,
-            EMAIL_CONFIG.PUBLIC_KEY
-        );
-        
-        console.log("Invoice email sent!", response);
-        
-        // Save invoice to localStorage for record
-        saveInvoiceToLocal({
-            invoiceNo: invoiceNo,
-            customerName: customerData.fullName,
-            customerEmail: customerData.email,
-            plan: subscriptionData.plan,
-            amount: subtotal,
-            gst: gstAmount,
-            total: totalAmount,
-            date: new Date().toISOString(),
-            status: 'sent'
+        await emailjs.send(EMAIL_CONFIG.serviceId, EMAIL_CONFIG.contactTemplateId, {
+            from_name:       `${firstName} ${lastName}`,
+            from_email:      email,
+            phone:           phone || 'N/A',
+            restaurant_name: restaurantName || 'N/A',
+            message:         message,
+            reply_to:        email,
         });
-        
-        return true;
+        return { success: true };
     } catch (error) {
-        console.error("Email send failed:", error);
-        return false;
+        console.error('Contact email failed:', error);
+        return { success: false, error: error.text || error.message };
     }
 }
 
-// Save invoice to localStorage
-function saveInvoiceToLocal(invoice) {
-    let invoices = JSON.parse(localStorage.getItem('email_invoices') || '[]');
-    invoices.push(invoice);
-    localStorage.setItem('email_invoices', JSON.stringify(invoices));
-}
-
-// Function to send payment confirmation
-async function sendPaymentConfirmation(customerEmail, customerName, invoiceNo) {
-    const templateParams = {
-        customer_name: customerName,
-        customer_email: customerEmail,
-        invoice_no: invoiceNo,
-        company_name: COMPANY_DETAILS.name
-    };
-    
+// ── Send Demo Request Email ──────────────────────────────────
+async function sendDemoRequest({ name, email, restaurantName }) {
+    if (!initEmailService()) return { success: false, error: 'EmailJS not loaded' };
     try {
-        await emailjs.send(
-            EMAIL_CONFIG.SERVICE_ID,
-            "template_payment_confirmation",  // Separate template for confirmation
-            templateParams,
-            EMAIL_CONFIG.PUBLIC_KEY
-        );
-        return true;
+        await emailjs.send(EMAIL_CONFIG.serviceId, EMAIL_CONFIG.demoTemplateId, {
+            from_name:       name,
+            from_email:      email,
+            restaurant_name: restaurantName,
+            reply_to:        email,
+        });
+        return { success: true };
     } catch (error) {
-        console.error("Payment confirmation failed:", error);
-        return false;
+        console.error('Demo request email failed:', error);
+        return { success: false, error: error.text || error.message };
     }
 }
 
-// Export functions
-window.sendInvoiceEmail = sendInvoiceEmail;
-window.sendPaymentConfirmation = sendPaymentConfirmation;
+// ── Send Invoice Email ───────────────────────────────────────
+async function sendInvoiceEmail({ toEmail, toName, invoiceId, amount, items, date }) {
+    if (!initEmailService()) return { success: false, error: 'EmailJS not loaded' };
+    try {
+        const itemList = items.map(i => `${i.name} x${i.qty} — $${i.price.toFixed(2)}`).join('\n');
+        await emailjs.send(EMAIL_CONFIG.serviceId, EMAIL_CONFIG.invoiceTemplateId, {
+            to_email:    toEmail,
+            to_name:     toName,
+            invoice_id:  invoiceId,
+            amount:      `$${amount.toFixed(2)}`,
+            items:       itemList,
+            date:        date,
+        });
+        return { success: true };
+    } catch (error) {
+        console.error('Invoice email failed:', error);
+        return { success: false, error: error.text || error.message };
+    }
+}
