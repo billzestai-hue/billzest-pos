@@ -1228,6 +1228,13 @@
             setTimeout(() => toast.remove(), 3000);
         }
 
+        // NEW FUNCTION: Get emoji from category name
+        function getCategoryEmoji(categoryName) {
+            if (!categoryName) return '🍽️';
+            const category = categories.find(c => c.name === categoryName);
+            return category ? category.emoji : '🍽️';
+        }
+
         function loadDefaultCategories() {
             const saved = localStorage.getItem('billzest_categories');
             if (saved) {
@@ -1469,7 +1476,6 @@
             } catch (error) { console.error("Error loading stats:", error); }
         }
 
-        // FIXED: Using "products" collection
         async function loadMenuData() {
             try {
                 const querySnapshot = await getDocs(collection(db, "products"));
@@ -1485,6 +1491,7 @@
             }
         }
 
+        // UPDATED: displayMenuItems with automatic emoji from category
         function displayMenuItems() {
             const container = document.getElementById('menuItemsList');
             if (!container) return;
@@ -1492,18 +1499,25 @@
                 container.innerHTML = '<div style="text-align: center; padding: 40px; color: var(--text-gray);">No menu items. Click "Add New Item" to create one.</div>';
                 return;
             }
-            container.innerHTML = menuData.map(item => `
-                <div class="menu-item-card">
-                    <div class="menu-item-info">
-                        <img src="${item.image || 'https://placehold.co/50x50?text=🍽️'}" class="menu-item-img" onerror="this.src='https://placehold.co/50x50?text=🍽️'">
-                        <div><div class="menu-item-name">${item.name}</div><div class="menu-item-price">${settings.currencySymbol}${item.price}</div><div class="menu-item-category">${item.category || 'General'}</div></div>
+            container.innerHTML = menuData.map(item => {
+                const itemEmoji = getCategoryEmoji(item.category);
+                return `
+                    <div class="menu-item-card">
+                        <div class="menu-item-info">
+                            <img src="${item.image || 'https://placehold.co/50x50?text=🍽️'}" class="menu-item-img" onerror="this.src='https://placehold.co/50x50?text=🍽️'">
+                            <div>
+                                <div class="menu-item-name">${itemEmoji} ${item.name}</div>
+                                <div class="menu-item-price">${settings.currencySymbol}${item.price}</div>
+                                <div class="menu-item-category">${item.category || 'General'}</div>
+                            </div>
+                        </div>
+                        <div class="menu-item-actions">
+                            <button class="edit-btn" onclick="editMenuItem('${item.id}')">Edit</button>
+                            <button class="delete-btn" onclick="deleteMenuItem('${item.id}')">Delete</button>
+                        </div>
                     </div>
-                    <div class="menu-item-actions">
-                        <button class="edit-btn" onclick="editMenuItem('${item.id}')">Edit</button>
-                        <button class="delete-btn" onclick="deleteMenuItem('${item.id}')">Delete</button>
-                    </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
             if (typeof lucide !== 'undefined') lucide.createIcons();
         }
 
@@ -1532,7 +1546,6 @@
             }
         };
 
-        // FIXED: Using "products" collection
         window.saveMenuItem = async function() {
             const name = document.getElementById('menuItemName').value;
             const price = parseFloat(document.getElementById('menuItemPrice').value);
@@ -1558,7 +1571,6 @@
             }
         };
 
-        // FIXED: Using "products" collection
         window.deleteMenuItem = async function(id) {
             if (confirm('Delete this menu item?')) {
                 try {
@@ -1595,7 +1607,7 @@
             const container = document.getElementById('customersBody');
             if (!container) return;
             if (customersData.length === 0) {
-                container.innerHTML = '<td><td colspan="9" style="text-align: center; padding: 40px;">No customers found</td></tr>';
+                container.innerHTML = '<tr><td colspan="9" style="text-align: center; padding: 40px;">No customers found</td></tr>';
                 return;
             }
             container.innerHTML = customersData.map(customer => `
@@ -1745,7 +1757,6 @@
             }).join('');
         }
 
-        // FIXED: Using "products" collection
         async function createSampleData() {
             try {
                 const menuSnapshot = await getDocs(collection(db, "products"));
@@ -1872,7 +1883,7 @@
             const filtered = ordersData.filter(o => (o.orderNumber || '').toLowerCase().includes(term) || (o.items ? o.items.map(i => i.name).join(' ') : '').toLowerCase().includes(term));
             const container = document.getElementById('allOrdersBody');
             if (container) {
-                if (filtered.length === 0) { container.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px;">No matching orders</td></tr>'; }
+                if (filtered.length === 0) { container.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px;">No matching orders</td></table>'; }
                 else {
                     container.innerHTML = filtered.map(order => {
                         const itemsText = order.items ? order.items.map(i => `${i.name} x${i.quantity}`).join(', ') : '-';
