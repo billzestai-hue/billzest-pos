@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Request - Billzestpos</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root { --primary: #4f46e5; --primary-dark: #4338ca; --secondary: #ec4899; --dark: #0f172a; }
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Inter',sans-serif; }
+        body { background:linear-gradient(135deg,#0f172a 0%,#1e1b4b 100%); min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px; }
+
+        .card { background:rgba(255,255,255,0.05); backdrop-filter:blur(20px); border:1px solid rgba(255,255,255,0.1); border-radius:28px; padding:50px 45px; width:100%; max-width:480px; color:white; }
+
+        .brand { display:flex; align-items:center; gap:12px; margin-bottom:35px; }
+        .brand-icon { background:linear-gradient(135deg,var(--primary),var(--secondary)); width:45px; height:45px; border-radius:12px; display:flex; align-items:center; justify-content:center; }
+        .brand-name { font-size:1.3rem; font-weight:800; }
+
+        .amount-display { text-align:center; margin-bottom:35px; padding:30px; background:rgba(255,255,255,0.05); border-radius:20px; border:1px solid rgba(255,255,255,0.08); }
+        .amount-label { font-size:0.85rem; color:rgba(255,255,255,0.5); text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; }
+        .amount-value { font-size:3.5rem; font-weight:800; background:linear-gradient(to right,#a5f3fc,#818cf8); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+        .amount-desc { color:rgba(255,255,255,0.6); font-size:0.95rem; margin-top:8px; }
+
+        .order-items { margin-bottom:28px; }
+        .order-item { display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid rgba(255,255,255,0.08); font-size:0.95rem; }
+        .order-item:last-child { border-bottom:none; }
+        .item-label { color:rgba(255,255,255,0.75); }
+        .item-value { font-weight:600; color:white; }
+        .item-value.total { color:#a5f3fc; font-size:1.1rem; }
+
+        .form-group { margin-bottom:18px; }
+        .form-group label { display:block; margin-bottom:6px; font-size:0.85rem; color:rgba(255,255,255,0.6); font-weight:500; }
+        .form-control { width:100%; padding:14px 16px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); border-radius:12px; color:white; font-size:0.95rem; transition:all 0.3s; }
+        .form-control::placeholder { color:rgba(255,255,255,0.3); }
+        .form-control:focus { outline:none; border-color:rgba(165,243,252,0.5); background:rgba(255,255,255,0.12); }
+
+        .pay-btn { width:100%; padding:18px; background:linear-gradient(to right,var(--primary),var(--secondary)); color:white; border:none; border-radius:14px; font-size:1.1rem; font-weight:800; cursor:pointer; transition:all 0.3s; box-shadow:0 10px 30px rgba(79,70,229,0.4); margin-top:10px; display:flex; align-items:center; justify-content:center; gap:10px; }
+        .pay-btn:hover { transform:translateY(-2px); box-shadow:0 15px 35px rgba(79,70,229,0.5); }
+        .pay-btn:disabled { opacity:0.6; pointer-events:none; }
+
+        .secure-note { text-align:center; margin-top:18px; color:rgba(255,255,255,0.35); font-size:0.82rem; display:flex; align-items:center; justify-content:center; gap:6px; }
+
+        /* Success State */
+        .success-state { display:none; text-align:center; }
+        .success-state.show { display:block; animation:fadeIn 0.5s ease; }
+        @keyframes fadeIn { from{opacity:0;transform:scale(0.95)} to{opacity:1;transform:scale(1)} }
+        .success-icon { width:80px; height:80px; background:rgba(16,185,129,0.2); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 20px; color:#34d399; }
+        .success-title { font-size:1.7rem; font-weight:800; margin-bottom:10px; }
+        .success-sub { color:rgba(255,255,255,0.6); line-height:1.6; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <!-- Main Payment State -->
+        <div id="paymentState">
+            <div class="brand">
+                <div class="brand-icon"><i data-lucide="store" size="22"></i></div>
+                <div class="brand-name">Billzestpos</div>
+            </div>
+
+            <div class="amount-display">
+                <div class="amount-label">Amount Due</div>
+                <div class="amount-value" id="displayAmount">$45.50</div>
+                <div class="amount-desc" id="displayDesc">Table 04 — Order #ORD-892</div>
+            </div>
+
+            <div class="order-items" id="orderItems">
+                <div class="order-item"><span class="item-label">1x Burger</span><span class="item-value">$8.50</span></div>
+                <div class="order-item"><span class="item-label">2x Pizza</span><span class="item-value">$24.00</span></div>
+                <div class="order-item"><span class="item-label">3x Cola</span><span class="item-value">$6.00</span></div>
+                <div class="order-item"><span class="item-label">VAT (15%)</span><span class="item-value">$7.00</span></div>
+                <div class="order-item"><span class="item-label">Total</span><span class="item-value total">$45.50</span></div>
+            </div>
+
+            <form id="paymentForm">
+                <div class="form-group">
+                    <label>Cardholder Name</label>
+                    <input type="text" class="form-control" id="cardName" placeholder="John Doe" required>
+                </div>
+                <div class="form-group">
+                    <label>Card Number</label>
+                    <input type="text" class="form-control" id="cardNum" placeholder="•••• •••• •••• ••••" maxlength="19" required oninput="formatCard(this)">
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+                    <div class="form-group">
+                        <label>Expiry</label>
+                        <input type="text" class="form-control" id="cardExp" placeholder="MM/YY" maxlength="5" required oninput="formatExpiry(this)">
+                    </div>
+                    <div class="form-group">
+                        <label>CVV</label>
+                        <input type="password" class="form-control" id="cardCvv" placeholder="•••" maxlength="3" required>
+                    </div>
+                </div>
+                <button type="submit" class="pay-btn" id="payBtn">
+                    <i data-lucide="lock" size="18"></i>
+                    <span id="payBtnText">Pay $45.50 Securely</span>
+                </button>
+            </form>
+
+            <div class="secure-note"><i data-lucide="shield-check" size="14"></i> 256-bit SSL encrypted · Your card data is never stored</div>
+        </div>
+
+        <!-- Success State -->
+        <div class="success-state" id="successState">
+            <div class="success-icon"><i data-lucide="check-circle" size="40"></i></div>
+            <div class="success-title">Payment Successful! 🎉</div>
+            <p class="success-sub">Your payment of <strong id="paidAmount">$45.50</strong> was processed successfully.<br>A receipt has been sent to your email.</p>
+            <button onclick="window.close()" style="margin-top:28px; padding:14px 32px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:white; border-radius:12px; font-weight:600; cursor:pointer; font-size:0.95rem;">Close</button>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // Read URL params
+        const p = new URLSearchParams(window.location.search);
+        const amount = p.get('amount') || '45.50';
+        const desc   = p.get('desc')   || 'Table 04 — Order #ORD-892';
+        document.getElementById('displayAmount').textContent = '$' + amount;
+        document.getElementById('displayDesc').textContent   = desc;
+        document.getElementById('payBtnText').textContent    = `Pay $${amount} Securely`;
+        document.getElementById('paidAmount').textContent    = '$' + amount;
+
+        function formatCard(el) {
+            el.value = el.value.replace(/\D/g,'').replace(/(.{4})/g,'$1 ').trim();
+        }
+        function formatExpiry(el) {
+            el.value = el.value.replace(/\D/g,'').replace(/^(\d{2})(\d)/,'$1/$2');
+        }
+
+        document.getElementById('paymentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('payBtn');
+            btn.disabled = true;
+            document.getElementById('payBtnText').textContent = 'Processing...';
+            setTimeout(() => {
+                document.getElementById('paymentState').style.display = 'none';
+                document.getElementById('successState').classList.add('show');
+            }, 2000);
+        });
+    </script>
+</body>
+</html>
