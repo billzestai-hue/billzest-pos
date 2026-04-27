@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hardware - Billzestpos</title>
+    <meta name="description" content="Explore Billzestpos POS hardware including terminals, printers, barcode scanners, and customer displays.">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="manifest" href="manifest.json">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root { --primary: #4f46e5; --primary-dark: #4338ca; --secondary: #ec4899; --dark: #0f172a; --light: #f8fafc; --text-gray: #64748b; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: linear-gradient(135deg, #f0f9ff 0%, #e0e7ff 100%); color: var(--dark); line-height: 1.6; overflow-x: hidden; }
+
+        /* Floating Actions Container */
+        .floating-actions { position: fixed; bottom: 30px; right: 30px; display: flex; flex-direction: column; gap: 15px; z-index: 1000; }
+        .whatsapp-float, .ai-float { width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; cursor: pointer; border: none; box-shadow: 0 10px 20px rgba(0,0,0,0.2); transition: transform 0.3s ease; }
+        .whatsapp-float { background-color: #25d366; text-decoration: none; animation: pulse 2s infinite; }
+        .ai-float { background: linear-gradient(135deg, var(--primary), var(--secondary)); }
+        .whatsapp-float:hover, .ai-float:hover { transform: scale(1.1); animation: none; }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); } 100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); } }
+
+        /* AI Chatbot Widget */
+        .chatbot-container { position: fixed; bottom: 100px; right: 30px; width: 350px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,1); border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.15); z-index: 1001; display: flex; flex-direction: column; overflow: hidden; transform-origin: bottom right; transition: all 0.3s ease; opacity: 0; transform: scale(0.5); pointer-events: none; }
+        .chatbot-container.active { opacity: 1; transform: scale(1); pointer-events: all; }
+        .chatbot-header { background: linear-gradient(to right, var(--primary), var(--secondary)); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .bot-info { display: flex; align-items: center; gap: 10px; }
+        .bot-avatar { width: 40px; height: 40px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--primary); }
+        .chatbot-messages { height: 350px; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; background: #f8fafc; }
+        .msg { max-width: 80%; padding: 10px 15px; border-radius: 15px; font-size: 0.95rem; line-height: 1.4; animation: fadeIn 0.3s ease; }
+        .bot-msg { background: white; color: #334155; align-self: flex-start; border-bottom-left-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;}
+        .user-msg { background: var(--primary); color: white; align-self: flex-end; border-bottom-right-radius: 5px; box-shadow: 0 2px 5px rgba(79, 70, 229, 0.2); }
+        .chatbot-input { padding: 15px; background: white; border-top: 1px solid #e2e8f0; display: flex; gap: 10px; }
+        .chatbot-input input { flex-grow: 1; padding: 10px 15px; border: 1px solid #cbd5e1; border-radius: 20px; outline: none; font-size: 0.95rem; transition: border-color 0.3s; }
+        .chatbot-input input:focus { border-color: var(--primary); }
+        .chatbot-input button { width: 40px; height: 40px; border-radius: 50%; background: var(--primary); color: white; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.3s; }
+        .chatbot-input button:hover { background: var(--primary-dark); }
+
+        .bg-shapes { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; overflow: hidden; pointer-events: none; }
+        .shape { position: absolute; border-radius: 50%; filter: blur(100px); }
+        .shape-1 { background: rgba(79, 70, 229, 0.2); width: 500px; height: 500px; top: -200px; right: -100px; }
+        .shape-2 { background: rgba(236, 72, 153, 0.2); width: 400px; height: 400px; bottom: 100px; left: -150px; }
+
+        /* Header Navigation */
+        header { padding: 20px 5%; display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255, 255, 255, 0.5); position: sticky; top: 0; z-index: 100; }
+        .logo { font-size: 1.5rem; font-weight: 800; background: linear-gradient(to right, var(--primary), var(--secondary)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; text-decoration: none; }
+        .desktop-nav { display: flex; gap: 30px; align-items: center; }
+        .desktop-nav a { text-decoration: none; color: #334155; font-weight: 500; transition: color 0.3s; }
+        .desktop-nav a:hover, .desktop-nav a.active { color: var(--primary); }
+        .nav-btn { background: var(--primary); color: white; padding: 10px 20px; border-radius: 10px; font-weight: 600; }
+        .nav-btn:hover { color: white; background: var(--primary-dark); }
+
+        /* Mobile Hamburger Menu */
+        .mobile-menu-btn { display: none; background: none; border: none; color: #0f172a; cursor: pointer; }
+        .mobile-nav-overlay { position: fixed; top: 0; right: -100%; width: 100%; height: 100vh; background: rgba(255,255,255,0.98); backdrop-filter: blur(10px); z-index: 999; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 30px; transition: right 0.4s cubic-bezier(0.77, 0, 0.175, 1); }
+        .mobile-nav-overlay.open { right: 0; }
+        .mobile-nav-overlay a { font-size: 1.8rem; font-weight: 700; color: #0f172a; text-decoration: none; transition: color 0.3s; }
+        .mobile-nav-overlay a:hover, .mobile-nav-overlay a.active { color: var(--primary); }
+        .close-menu-btn { position: absolute; top: 30px; right: 5%; background: none; border: none; color: #0f172a; cursor: pointer; }
+
+        @media (max-width: 900px) {
+            .desktop-nav { display: none; }
+            .mobile-menu-btn { display: block; }
+        }
+
+        .hero { text-align: center; padding: 80px 5% 40px; }
+        .hero h1 { font-size: 3.5rem; font-weight: 800; margin-bottom: 20px; background: linear-gradient(to right, #1e293b, #4f46e5); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; line-height: 1.2; }
+        .hero p { font-size: 1.2rem; color: var(--text-gray); max-width: 600px; margin: 0 auto; }
+
+        .hardware-grid { padding: 40px 5% 80px; max-width: 1250px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 40px; }
+        
+        .hard-card { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,1); border-radius: 24px; overflow: hidden; transition: all 0.3s ease; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); display: flex; flex-direction: column; }
+        .hard-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12); }
+        .hard-img-wrapper { width: 100%; height: 250px; overflow: hidden; background: #e2e8f0; position: relative; }
+        .hard-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+        .hard-card:hover .hard-img { transform: scale(1.08); }
+        .badge-premium { position: absolute; top: 15px; left: 15px; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 5px 15px; border-radius: 20px; font-weight: 600; font-size: 0.8rem; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        
+        .hard-content { padding: 30px; display: flex; flex-direction: column; flex-grow: 1; }
+        .hard-card h3 { font-size: 1.5rem; margin-bottom: 10px; font-weight: 800; color: #0f172a; }
+        .hard-card p { color: var(--text-gray); font-size: 1rem; margin-bottom: 20px; line-height: 1.6; flex-grow: 1; }
+        
+        .specs { display: flex; gap: 15px; margin-bottom: 25px; flex-wrap: wrap; }
+        .spec-item { background: #f1f5f9; padding: 6px 12px; border-radius: 10px; font-size: 0.85rem; font-weight: 600; color: #334155; display: flex; align-items: center; gap: 5px; }
+        
+        .btn-buy { width: 100%; padding: 14px; background: white; border: 2px solid var(--primary); color: var(--primary); border-radius: 12px; font-weight: 700; text-align: center; text-decoration: none; transition: all 0.3s; }
+        .btn-buy:hover { background: var(--primary); color: white; }
+
+        footer { background: #020617; color: #94a3b8; padding: 60px 5% 30px; text-align: center; }
+        .footer-logo { font-size: 2rem; font-weight: 800; background: linear-gradient(to right, var(--primary), var(--secondary)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 15px; display: inline-block; }
+        .footer-contact { display: flex; justify-content: center; gap: 30px; margin-bottom: 30px; flex-wrap: wrap; }
+        .footer-contact a { color: #f8fafc; text-decoration: none; display: flex; align-items: center; gap: 8px; font-weight: 500; font-size: 1.1rem; transition: color 0.3s ease; background: rgba(255, 255, 255, 0.05); padding: 10px 20px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1); }
+        .footer-contact a:hover { color: var(--secondary); border-color: var(--secondary); background: rgba(236, 72, 153, 0.1); }
+        .footer-links { display: flex; justify-content: center; gap: 30px; margin-bottom: 40px; flex-wrap: wrap; }
+        .footer-links a { color: #64748b; text-decoration: none; transition: color 0.3s ease; font-weight: 500; }
+        .footer-links a:hover { color: white; }
+        .copyright { border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 20px; font-size: 0.9rem; color: #475569; }
+        @media (max-width: 768px) { .hero h1 { font-size: 2.5rem; } }
+    </style>
+</head>
+<body>
+
+    <!-- Floating Actions -->
+    <div class="floating-actions">
+        <button class="ai-float" onclick="toggleChat()">
+            <i data-lucide="bot" size="28"></i>
+        </button>
+        <a href="https://wa.me/966550898978" target="_blank" class="whatsapp-float">
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+        </a>
+    </div>
+
+    <!-- AI Chatbot Widget -->
+    <div class="chatbot-container" id="chatbot">
+        <div class="chatbot-header">
+            <div class="bot-info">
+                <div class="bot-avatar"><i data-lucide="bot" size="20"></i></div>
+                <div>
+                    <h4 style="color:white; margin:0; font-size:1rem;">Billzest AI</h4>
+                    <p style="color:rgba(255,255,255,0.8); margin:0; font-size:0.8rem;">Online & Ready</p>
+                </div>
+            </div>
+            <button onclick="toggleChat()" style="background:none; border:none; color:white; cursor:pointer;"><i data-lucide="x"></i></button>
+        </div>
+        <div class="chatbot-messages" id="chatMessages">
+            <div class="msg bot-msg">Hi there! 👋 I am Billzest AI. How can I help you grow your restaurant today?</div>
+        </div>
+        <div class="chatbot-input">
+            <input type="text" id="chatInput" placeholder="Type your message..." onkeypress="handleChat(event)">
+            <button onclick="sendMsg()"><i data-lucide="send" size="18"></i></button>
+        </div>
+    </div>
+
+    <div class="bg-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+    </div>
+
+    <header>
+        <a href="index.html" class="brand-logo">
+            <img src="logo.png" alt="Billzestpos" class="logo-img">
+            <span class="logo-text-global" data-brand="name">Billzestpos</span>
+        </a>
+        <nav class="desktop-nav">
+            <a href="index.html">Home</a>
+            <a href="solutions.html">Solutions</a>
+            <a href="hardware.html" class="active">Hardware</a>
+            <a href="pricing.html">Pricing</a>
+            <a href="contact.html">Contact Us</a>
+            <a href="login.html" style="font-weight: 700; color: #334155;">Login</a>
+            <a href="solutions.html" class="nav-btn">Book Demo</a>
+        </nav>
+        <button class="mobile-menu-btn" onclick="toggleMobileMenu()"><i data-lucide="menu" size="28"></i></button>
+    </header>
+
+    <!-- Mobile Nav Overlay -->
+    <div class="mobile-nav-overlay" id="mobileNav">
+        <button class="close-menu-btn" onclick="toggleMobileMenu()"><i data-lucide="x" size="32"></i></button>
+        <a href="index.html">Home</a>
+        <a href="solutions.html">Solutions</a>
+        <a href="hardware.html" class="active">Hardware</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="contact.html">Contact Us</a>
+        <a href="login.html" style="font-weight: 700; color: #0f172a;">Login</a>
+        <a href="solutions.html" style="color: var(--primary);">Book Demo</a>
+    </div>
+
+    <section class="hero" data-aos="fade-down">
+        <h1>Powerful POS Hardware</h1>
+        <p>Reliable, sleek, and lightning-fast physical equipment designed perfectly for the demanding restaurant environment.</p>
+    </section>
+
+    <section class="hardware-grid">
+        
+        <div class="hard-card" data-aos="fade-up" data-aos-delay="100">
+            <div class="hard-img-wrapper">
+                <div class="badge-premium">Best Seller</div>
+                <img src="https://images.pexels.com/photos/4199094/pexels-photo-4199094.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Main Register" class="hard-img">
+            </div>
+            <div class="hard-content">
+                <h3>Dual-Screen POS Terminal</h3>
+                <p>A beautiful 15.6" merchant touch screen with a 10" customer-facing display. Perfect for taking orders efficiently while showing customers their cart.</p>
+                <div class="specs">
+                    <div class="spec-item"><i data-lucide="monitor" size="16"></i> 15.6" HD</div>
+                    <div class="spec-item"><i data-lucide="wifi" size="16"></i> WiFi 6</div>
+                </div>
+                <a href="contact.html" class="btn-buy">Request Quote</a>
+            </div>
+        </div>
+
+        <div class="hard-card" data-aos="fade-up" data-aos-delay="200">
+            <div class="hard-img-wrapper">
+                <img src="https://images.unsplash.com/photo-1556742044-3c52d4e8e018?w=600&q=80" alt="Printer" class="hard-img">
+            </div>
+            <div class="hard-content">
+                <h3>Smart Receipt Printer</h3>
+                <p>Lightning fast thermal printing. Auto-cutter included and seamless wireless connectivity directly to your POS terminal and kitchen displays.</p>
+                <div class="specs">
+                    <div class="spec-item"><i data-lucide="printer" size="16"></i> Thermal</div>
+                    <div class="spec-item"><i data-lucide="bluetooth" size="16"></i> BT/LAN</div>
+                </div>
+                <a href="contact.html" class="btn-buy">Request Quote</a>
+            </div>
+        </div>
+
+        <div class="hard-card" data-aos="fade-up" data-aos-delay="300">
+            <div class="hard-img-wrapper">
+                <img src="https://images.unsplash.com/photo-1542744094-3a31f272c490?w=600&q=80" alt="Tablet" class="hard-img">
+            </div>
+            <div class="hard-content">
+                <h3>Waiter Order Tablet</h3>
+                <p>Rugged, spill-proof 8" tablet for table-side ordering. Instantly fires orders to the kitchen to reduce wait times and improve accuracy.</p>
+                <div class="specs">
+                    <div class="spec-item"><i data-lucide="battery-charging" size="16"></i> 12h Battery</div>
+                    <div class="spec-item"><i data-lucide="droplet" size="16"></i> Spill-proof</div>
+                </div>
+                <a href="contact.html" class="btn-buy">Request Quote</a>
+            </div>
+        </div>
+
+    </section>
+
+    <footer>
+        <div class="footer-logo" style="display:flex; align-items:center; justify-content:center; gap:10px;">
+            <div style="background: linear-gradient(135deg, var(--primary), var(--secondary)); width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);">
+                <i data-lucide="store" size="26"></i>
+            </div>
+            <span style="background: linear-gradient(to right, var(--primary), var(--secondary)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; font-size: 2rem;">Billzestpos</span>
+        </div>
+        <div class="footer-contact">
+            <a href="mailto:billzestai@gmail.com"><i data-lucide="mail"></i> billzestai@gmail.com</a>
+            <a href="tel:+966550898978"><i data-lucide="phone"></i> +966550898978</a>
+        </div>
+        <div class="footer-links">
+            <a href="index.html">Home</a>
+            <a href="solutions.html">Solutions</a>
+            <a href="hardware.html">Hardware</a>
+            <a href="pricing.html">Pricing</a>
+            <a href="contact.html">Contact Us</a>
+        </div>
+        <p class="copyright">&copy; 2026 Billzestpos. All rights reserved.</p>
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        lucide.createIcons();
+        AOS.init({ once: true });
+
+        // Mobile Menu Logic
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileNav');
+            menu.classList.toggle('open');
+        }
+
+        // AI Chatbot Logic
+        function toggleChat() {
+            const chat = document.getElementById('chatbot');
+            chat.classList.toggle('active');
+        }
+
+        function handleChat(e) {
+            if (e.key === 'Enter') sendMsg();
+        }
+
+        function sendMsg() {
+            const input = document.getElementById('chatInput');
+            const text = input.value.trim();
+            if (!text) return;
+
+            const chatMessages = document.getElementById('chatMessages');
+            
+            // Add user message
+            const userMsg = document.createElement('div');
+            userMsg.className = 'msg user-msg';
+            userMsg.innerText = text;
+            chatMessages.appendChild(userMsg);
+            
+            input.value = '';
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            // Simulate AI typing delay
+            setTimeout(() => {
+                const aiMsg = document.createElement('div');
+                aiMsg.className = 'msg bot-msg';
+                
+                // Simple Mock AI Logic
+                const lower = text.toLowerCase();
+                if (lower.includes('price') || lower.includes('cost')) {
+                    aiMsg.innerText = "Our plans start at just $39/mo! You can visit our Pricing page to see more details.";
+                } else if (lower.includes('demo')) {
+                    aiMsg.innerText = "Awesome! You can book a free demo by clicking the 'Book Demo' button at the top of the page.";
+                } else if (lower.includes('contact') || lower.includes('phone')) {
+                    aiMsg.innerText = "You can reach us directly on WhatsApp or call +966550898978.";
+                } else {
+                    aiMsg.innerText = "Thanks for your message! Our team will get back to you shortly. You can also book a demo to see Billzestpos in action.";
+                }
+                
+                chatMessages.appendChild(aiMsg);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 1000);
+        }
+    </script>
+</body>
+</html>

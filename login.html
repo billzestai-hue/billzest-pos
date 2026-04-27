@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Billzestpos</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="global.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="main.js" defer></script>
+    <style>
+        :root { --primary: #4f46e5; --primary-dark: #4338ca; --secondary: #ec4899; --dark: #0f172a; --light: #f8fafc; --text-gray: #64748b; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: #f1f5f9; color: var(--dark); line-height: 1.6; height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+
+        .login-container { display: flex; width: 100%; max-width: 1200px; height: 90vh; max-height: 800px; background: white; border-radius: 24px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); overflow: hidden; margin: 20px; position: relative; }
+
+        /* Left Side - Branding */
+        .login-brand { flex: 1; background: linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(67, 56, 202, 0.9)), url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1000&q=80') center/cover; padding: 60px; display: flex; flex-direction: column; justify-content: space-between; color: white; position: relative; overflow: hidden; }
+        .brand-logo { font-size: 2rem; font-weight: 800; display: flex; align-items: center; gap: 10px; z-index: 2; }
+        .brand-text { z-index: 2; }
+        .brand-text h1 { font-size: 3.5rem; font-weight: 800; line-height: 1.1; margin-bottom: 20px; letter-spacing: -1px; }
+        .brand-text p { font-size: 1.2rem; color: #cbd5e1; max-width: 400px; }
+        
+        .circle-decor { position: absolute; border-radius: 50%; background: radial-gradient(circle, rgba(236,72,153,0.3) 0%, transparent 70%); }
+        .circle-1 { width: 600px; height: 600px; top: -200px; left: -200px; }
+        .circle-2 { width: 500px; height: 500px; bottom: -150px; right: -100px; }
+
+        /* Right Side - Form */
+        .login-form-section { flex: 1; padding: 60px; display: flex; flex-direction: column; justify-content: center; background: white; position: relative; }
+        
+        .back-btn { position: absolute; top: 40px; right: 60px; text-decoration: none; color: var(--text-gray); font-weight: 600; display: flex; align-items: center; gap: 5px; transition: color 0.3s; }
+        .back-btn:hover { color: var(--primary); }
+
+        .form-header { margin-bottom: 40px; }
+        .form-header h2 { font-size: 2.2rem; color: #0f172a; margin-bottom: 10px; font-weight: 800; }
+        .form-header p { color: var(--text-gray); font-size: 1.1rem; }
+
+        .form-group { margin-bottom: 25px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.95rem; color: #334155; }
+        
+        .input-wrapper { position: relative; }
+        .input-wrapper i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #94a3b8; }
+        .form-control { width: 100%; padding: 16px 16px 16px 45px; border: 1.5px solid #e2e8f0; border-radius: 12px; font-size: 1rem; color: #0f172a; transition: all 0.3s; background: #f8fafc; }
+        .form-control:focus { outline: none; border-color: var(--primary); background: white; box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1); }
+        
+        .form-options { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .remember-me { display: flex; align-items: center; gap: 8px; font-size: 0.95rem; color: #475569; cursor: pointer; }
+        .remember-me input { width: 18px; height: 18px; accent-color: var(--primary); cursor: pointer; }
+        .forgot-pass { color: var(--primary); font-weight: 600; text-decoration: none; font-size: 0.95rem; transition: color 0.3s; }
+        .forgot-pass:hover { color: var(--primary-dark); text-decoration: underline; }
+
+        .btn-login { width: 100%; padding: 18px; background: linear-gradient(to right, var(--primary), var(--secondary)); color: white; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: all 0.3s; box-shadow: 0 10px 20px rgba(236, 72, 153, 0.2); display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .btn-login:hover { transform: translateY(-2px); box-shadow: 0 15px 30px rgba(236, 72, 153, 0.3); }
+        .btn-login.loading { opacity: 0.8; pointer-events: none; }
+
+        .divider { display: flex; align-items: center; text-align: center; margin: 25px 0; color: #94a3b8; font-size: 0.9rem; }
+        .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid #e2e8f0; }
+        .divider span { padding: 0 15px; }
+        
+        .btn-google { width: 100%; padding: 16px; background: white; color: #334155; border: 1px solid #cbd5e1; border-radius: 12px; font-size: 1.05rem; font-weight: 600; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .btn-google:hover { background: #f8fafc; border-color: #94a3b8; }
+        .btn-google img { width: 24px; height: 24px; }
+
+        .signup-prompt { text-align: center; margin-top: 40px; color: var(--text-gray); font-size: 1rem; }
+        .signup-prompt a { color: var(--primary); font-weight: 700; text-decoration: none; }
+        .signup-prompt a:hover { text-decoration: underline; }
+
+        /* Loader */
+        .spinner { border: 3px solid rgba(255,255,255,0.3); border-top: 3px solid white; border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; display: none; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        @media (max-width: 900px) {
+            .login-brand { display: none; }
+            .login-form-section { padding: 40px; }
+            .login-container { margin: 15px; height: auto; max-height: 95vh; }
+            .back-btn { top: 20px; right: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <!-- Left Side Branding -->
+        <div class="login-brand">
+            <div class="circle-decor circle-1"></div>
+            <div class="circle-decor circle-2"></div>
+            
+            <div class="brand-logo" style="display:flex; align-items:center; gap:15px; background: rgba(255,255,255,0.05); padding: 15px 25px; border-radius: 20px; backdrop-filter: blur(10px); width: fit-content;">
+                <img src="logo.png" alt="Billzestpos Logo" style="height: 60px; width: auto; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.2));">
+                <span style="color: white; font-weight: 800; font-size: 2.2rem;" data-brand="name">Billzestpos</span>
+            </div>
+
+            <div class="brand-text">
+                <h1>Manage your restaurant like a pro.</h1>
+                <p>Access your dashboard to track sales, manage inventory, and oversee your staff in real-time.</p>
+            </div>
+            
+            <div style="font-size: 0.9rem; color: rgba(255,255,255,0.6); z-index: 2;">
+                © 2026 Billzestpos Software.
+            </div>
+        </div>
+
+        <!-- Right Side Form -->
+        <div class="login-form-section">
+            <a href="index.html" class="back-btn"><i data-lucide="arrow-left" size="18"></i> Home</a>
+
+            <div class="form-header">
+                <h2>Welcome Back!</h2>
+                <p>Please enter your details to sign in.</p>
+            </div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <div class="input-wrapper">
+                        <i data-lucide="mail" size="18"></i>
+                        <input type="email" id="emailInput" class="form-control" required placeholder="Enter your email address">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Password</label>
+                    <div class="input-wrapper">
+                        <i data-lucide="lock" size="18"></i>
+                        <input type="password" id="passwordInput" class="form-control" required placeholder="Enter your password">
+                    </div>
+                </div>
+
+                <div class="form-options">
+                    <label class="remember-me">
+                        <input type="checkbox" checked>
+                        Remember me
+                    </label>
+                    <a href="forgot-password.html" class="forgot-pass">Forgot Password?</a>
+                </div>
+
+                <button type="submit" class="btn-login" id="loginBtn">
+                    <span id="btnText">Sign In</span>
+                    <div class="spinner" id="spinner"></div>
+                </button>
+                
+                <div class="divider"><span>OR</span></div>
+                
+                <button type="button" class="btn-google" id="googleBtn">
+                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
+                    Sign in with Google
+                </button>
+            </form>
+
+            <div class="signup-prompt">
+                Don't have an account? <a href="register.html">Create one free</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Controller Logic -->
+    <script>
+        // Common initialization handled by main.js
+    </script>
+
+    <!-- Initialize Lucide Icons -->
+    <script>
+        lucide.createIcons();
+    </script>
+
+    <!-- Real Firebase Authentication Logic -->
+    <script type="module">
+        import { auth, provider, signInWithEmailAndPassword, signInWithPopup } from './firebase-config.js';
+
+        const handleAuthSuccess = (user) => {
+            // Simple role check: if email contains admin, or for demo purposes
+            if (user.email.toLowerCase().includes('admin')) {
+                window.location.href = 'admin-panel.html';
+            } else {
+                window.location.href = 'dashboard.html';
+            }
+        };
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+
+            const btn = document.getElementById('loginBtn');
+            const text = document.getElementById('btnText');
+            const spinner = document.getElementById('spinner');
+            const email = document.getElementById('emailInput').value;
+            const pass = document.getElementById('passwordInput').value;
+
+            btn.classList.add('loading');
+            text.innerText = "Authenticating...";
+            spinner.style.display = "block";
+
+            try {
+                const result = await signInWithEmailAndPassword(auth, email, pass);
+                handleAuthSuccess(result.user);
+            } catch (error) {
+                alert("Login Failed: " + error.message);
+                btn.classList.remove('loading');
+                text.innerText = "Sign In";
+                spinner.style.display = "none";
+            }
+        });
+
+        document.getElementById('googleBtn').addEventListener('click', async (e) => {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            try {
+                const result = await signInWithPopup(auth, provider);
+                handleAuthSuccess(result.user);
+            } catch (error) {
+                alert("Google Sign-In Failed: " + error.message);
+            }
+        });
+    </script>
+</body>
+</html>

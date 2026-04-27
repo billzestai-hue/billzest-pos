@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice - Billzestpos</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="global.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="main.js" defer></script>
+    <style>
+        :root { --primary: #4f46e5; --secondary: #ec4899; --dark: #0f172a; }
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Inter',sans-serif; }
+        body { background:#f1f5f9; padding:30px 20px; }
+
+        .toolbar { display:flex; justify-content:space-between; align-items:center; max-width:800px; margin:0 auto 24px; }
+        .toolbar a { display:flex; align-items:center; gap:6px; color:#64748b; text-decoration:none; font-weight:500; font-size:0.9rem; }
+        .toolbar a:hover { color:var(--primary); }
+        .print-btn { display:flex; align-items:center; gap:8px; padding:12px 24px; background:linear-gradient(to right,var(--primary),var(--secondary)); color:white; border:none; border-radius:10px; font-weight:700; font-size:0.95rem; cursor:pointer; box-shadow:0 6px 15px rgba(79,70,229,0.3); transition:all 0.3s; }
+        .print-btn:hover { transform:translateY(-2px); }
+
+        .invoice { max-width:800px; margin:0 auto; background:white; border-radius:20px; box-shadow:0 10px 40px rgba(0,0,0,0.1); overflow:hidden; }
+
+        /* Header */
+        .inv-header { background:linear-gradient(135deg,var(--dark),#1e3a8a); padding:40px 50px; color:white; display:flex; justify-content:space-between; align-items:flex-start; }
+        .inv-logo { font-size:1.8rem; font-weight:800; display:flex; align-items:center; gap:12px; }
+        .inv-logo .icon { background:rgba(255,255,255,0.15); width:48px; height:48px; border-radius:12px; display:flex; align-items:center; justify-content:center; }
+        .inv-meta { text-align:right; }
+        .inv-meta h2 { font-size:2rem; font-weight:800; color:rgba(255,255,255,0.9); letter-spacing:2px; }
+        .inv-meta p { color:rgba(255,255,255,0.6); font-size:0.9rem; margin-top:4px; }
+        .inv-id { background:rgba(255,255,255,0.1); display:inline-block; padding:6px 16px; border-radius:20px; font-size:0.85rem; margin-top:8px; }
+
+        /* Body */
+        .inv-body { padding:40px 50px; }
+
+        .inv-parties { display:grid; grid-template-columns:1fr 1fr; gap:40px; margin-bottom:40px; }
+        .party-label { font-size:0.78rem; text-transform:uppercase; letter-spacing:1.5px; color:#94a3b8; font-weight:700; margin-bottom:10px; }
+        .party-name { font-size:1.1rem; font-weight:800; color:#0f172a; }
+        .party-detail { color:#64748b; font-size:0.9rem; margin-top:4px; }
+
+        /* Status badge */
+        .status-row { display:flex; gap:20px; margin-bottom:35px; flex-wrap:wrap; }
+        .status-badge { padding:8px 18px; border-radius:30px; font-size:0.85rem; font-weight:700; }
+        .s-paid { background:rgba(16,185,129,0.12); color:#059669; }
+        .s-pending { background:rgba(245,158,11,0.12); color:#d97706; }
+        .meta-chip { background:#f1f5f9; padding:8px 16px; border-radius:30px; font-size:0.85rem; color:#475569; font-weight:600; }
+
+        /* Items Table */
+        table { width:100%; border-collapse:collapse; margin-bottom:30px; }
+        thead tr { background:linear-gradient(to right,rgba(79,70,229,0.08),rgba(236,72,153,0.04)); }
+        th { padding:14px 16px; text-align:left; font-size:0.8rem; text-transform:uppercase; letter-spacing:1px; color:#94a3b8; font-weight:700; }
+        td { padding:14px 16px; border-bottom:1px solid #f1f5f9; color:#334155; font-size:0.95rem; }
+        tr:last-child td { border-bottom:none; }
+        .item-name { font-weight:600; color:#0f172a; }
+
+        /* Totals */
+        .totals-wrap { display:flex; justify-content:flex-end; }
+        .totals { width:280px; }
+        .total-row { display:flex; justify-content:space-between; padding:8px 0; font-size:0.95rem; color:#64748b; border-bottom:1px solid #f1f5f9; }
+        .total-row.grand { border-top:2px solid #e2e8f0; border-bottom:none; margin-top:8px; padding-top:16px; font-size:1.2rem; font-weight:800; color:#0f172a; }
+
+        /* Footer */
+        .inv-footer { background:#f8fafc; padding:30px 50px; border-top:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center; }
+        .inv-footer .note { font-size:0.88rem; color:#94a3b8; max-width:350px; line-height:1.5; }
+        .inv-footer .thank-you { font-size:1.1rem; font-weight:800; background:linear-gradient(to right,var(--primary),var(--secondary)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+
+        @media print {
+            body { background:white; padding:0; }
+            .toolbar { display:none; }
+            .invoice { box-shadow:none; border-radius:0; max-width:100%; }
+        }
+        @media (max-width:600px) {
+            .inv-header { flex-direction:column; gap:20px; }
+            .inv-meta { text-align:left; }
+            .inv-parties { grid-template-columns:1fr; gap:20px; }
+            .inv-body, .inv-footer { padding:30px 25px; }
+            .inv-header { padding:30px 25px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="toolbar">
+        <a href="dashboard.html"><i data-lucide="arrow-left" size="16"></i> Back to Dashboard</a>
+        <button class="print-btn" onclick="window.print()"><i data-lucide="printer" size="18"></i> Print / Save PDF</button>
+    </div>
+
+    <div class="invoice">
+        <!-- Header -->
+        <div class="inv-header">
+            <div class="inv-logo" style="gap:15px;">
+                <img src="logo.png" alt="Invoice Logo" style="height: 50px; width: auto; object-fit: contain; filter: brightness(0) invert(1);">
+                <span data-brand="name">Billzestpos</span>
+            </div>
+            <div class="inv-meta">
+                <h2>INVOICE</h2>
+                <p><span data-brand="email">billzestai@gmail.com</span> &nbsp;|&nbsp; <span data-brand="phone">+966 550 898978</span></p>
+                <div class="inv-id" id="invoiceId">#INV-00001</div>
+            </div>
+        </div>
+
+        <!-- Body -->
+        <div class="inv-body">
+            <div class="status-row">
+                <span class="status-badge s-paid" id="statusBadge">✓ Paid</span>
+                <span class="meta-chip" id="invDate">📅 April 27, 2026</span>
+                <span class="meta-chip" id="invDue">Due: April 27, 2026</span>
+            </div>
+
+            <div class="inv-parties">
+                <div>
+                    <div class="party-label">From</div>
+                    <div class="party-name" data-brand="name">Billzestpos Software</div>
+                    <div class="party-detail">Riyadh, Saudi Arabia</div>
+                    <div class="party-detail" data-brand="email">billzestai@gmail.com</div>
+                    <div class="party-detail" data-brand="phone">+966 550 898978</div>
+                </div>
+                <div>
+                    <div class="party-label">Billed To</div>
+                    <div class="party-name" id="clientName">My Restaurant</div>
+                    <div class="party-detail" id="clientEmail">client@restaurant.com</div>
+                    <div class="party-detail" id="clientPhone">+1 234 567 890</div>
+                </div>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Item Description</th>
+                        <th>Qty</th>
+                        <th>Unit Price</th>
+                        <th style="text-align:right;">Total</th>
+                    </tr>
+                </thead>
+                <tbody id="itemsBody">
+                    <tr>
+                        <td>1</td>
+                        <td><span class="item-name">Billzestpos Pro Plan</span><br><small style="color:#94a3b8;">Monthly subscription — April 2026</small></td>
+                        <td>1</td>
+                        <td>$79.00</td>
+                        <td style="text-align:right; font-weight:700;">$79.00</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td><span class="item-name">KDS Hardware Setup</span><br><small style="color:#94a3b8;">One-time installation fee</small></td>
+                        <td>1</td>
+                        <td>$150.00</td>
+                        <td style="text-align:right; font-weight:700;">$150.00</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="totals-wrap">
+                <div class="totals">
+                    <div class="total-row"><span>Subtotal</span><span id="subtotal">$229.00</span></div>
+                    <div class="total-row"><span>VAT (15%)</span><span id="vat">$34.35</span></div>
+                    <div class="total-row"><span>Discount</span><span id="discount">-$0.00</span></div>
+                    <div class="total-row grand"><span>Total Due</span><span id="grandTotal">$263.35</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="inv-footer">
+            <p class="note">Payment is due within 30 days of invoice date. Thank you for your business!</p>
+            <div class="thank-you">Thank You! 🙏</div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+        // Auto-fill from URL params: ?id=INV-001&client=Name&email=x&phone=y
+        const p = new URLSearchParams(window.location.search);
+        if (p.get('id'))     document.getElementById('invoiceId').textContent = '#' + p.get('id');
+        if (p.get('client')) document.getElementById('clientName').textContent = p.get('client');
+        if (p.get('email'))  document.getElementById('clientEmail').textContent = p.get('email');
+        if (p.get('phone'))  document.getElementById('clientPhone').textContent = p.get('phone');
+        if (p.get('date'))   document.getElementById('invDate').textContent = '📅 ' + p.get('date');
+    </script>
+</body>
+</html>
