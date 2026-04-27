@@ -129,7 +129,6 @@
             overflow: hidden;
         }
 
-        /* Header */
         .top-header {
             background: white;
             border-bottom: 1px solid var(--border);
@@ -209,7 +208,6 @@
             justify-content: center;
         }
 
-        /* Notification Panel */
         .notification-panel {
             position: absolute;
             top: 60px;
@@ -247,11 +245,6 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-        }
-
-        .notification-header h4 {
-            margin: 0;
-            font-size: 1rem;
         }
 
         .mark-all-read {
@@ -332,13 +325,6 @@
             margin-top: 4px;
         }
 
-        .notification-empty {
-            padding: 40px;
-            text-align: center;
-            color: var(--text-gray);
-        }
-
-        /* User Profile */
         .user-profile {
             display: flex;
             align-items: center;
@@ -378,7 +364,6 @@
 
         .profile-dropdown.show {
             display: flex;
-            animation: slideDown 0.2s ease;
         }
 
         .profile-dropdown div {
@@ -396,7 +381,6 @@
             color: var(--primary);
         }
 
-        /* Dashboard Scroll Area */
         .dashboard-scroll {
             flex: 1;
             overflow-y: auto;
@@ -410,7 +394,6 @@
             color: var(--dark);
         }
 
-        /* Stats Grid */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -447,18 +430,6 @@
             color: var(--dark);
         }
 
-        .stat-trend {
-            font-size: 0.75rem;
-            margin-top: 5px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .trend-up {
-            color: var(--success);
-        }
-
         .stat-icon {
             width: 50px;
             height: 50px;
@@ -488,7 +459,6 @@
             color: var(--secondary);
         }
 
-        /* Data Grid */
         .data-grid {
             display: grid;
             grid-template-columns: 2fr 1fr;
@@ -530,7 +500,6 @@
             width: 100%;
         }
 
-        /* Tables */
         .data-table {
             width: 100%;
             border-collapse: collapse;
@@ -577,7 +546,6 @@
             color: var(--primary);
         }
 
-        /* Categories Grid */
         .categories-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -639,7 +607,6 @@
             opacity: 1;
         }
 
-        /* Menu Items Grid */
         .menu-items-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -728,7 +695,6 @@
             font-weight: 600;
         }
 
-        /* Settings Form */
         .settings-form {
             max-width: 500px;
         }
@@ -765,7 +731,6 @@
             font-weight: 600;
         }
 
-        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -820,7 +785,6 @@
             cursor: pointer;
         }
 
-        /* Loading Screen */
         .loading-screen {
             position: fixed;
             top: 0;
@@ -850,7 +814,33 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Mobile Overlay */
+        .toast-message {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #333;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            z-index: 10000;
+            animation: slideInRight 0.3s ease;
+        }
+
+        .toast-success { background: #10b981; }
+        .toast-error { background: #ef4444; }
+        .toast-info { background: #3b82f6; }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
         .sidebar-overlay {
             position: fixed;
             top: 0;
@@ -874,31 +864,24 @@
                 height: 100%;
                 transform: translateX(-100%);
             }
-
             .sidebar.open {
                 transform: translateX(0);
             }
-
             .sidebar-overlay.show {
                 display: block;
             }
-
             .menu-toggle {
                 display: block;
             }
-
             .header-search {
                 display: none;
             }
-
             .dashboard-scroll {
                 padding: 20px;
             }
-
             .stats-grid {
                 grid-template-columns: 1fr;
             }
-
             .notification-panel {
                 width: calc(100% - 40px);
                 right: 20px;
@@ -909,16 +892,13 @@
 </head>
 <body>
 
-    <!-- Loading Screen -->
     <div class="loading-screen" id="loadingScreen">
         <div class="spinner"></div>
         <p>Loading dashboard...</p>
     </div>
 
-    <!-- Sidebar Overlay -->
     <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
 
-    <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <div class="sidebar-logo">
@@ -964,9 +944,7 @@
         </div>
     </aside>
 
-    <!-- Main Content -->
     <main class="main-content">
-        <!-- Top Header -->
         <header class="top-header">
             <button class="menu-toggle" onclick="toggleSidebar()">
                 <i data-lucide="menu" size="24"></i>
@@ -976,14 +954,11 @@
                 <input type="text" id="searchInput" placeholder="Search orders...">
             </div>
             <div class="header-actions">
-                <!-- Notification Button -->
                 <div style="position: relative;">
                     <button class="notification-btn" id="notificationBtn" onclick="toggleNotificationPanel()">
                         <i data-lucide="bell" size="20"></i>
                         <span class="notification-badge" id="notificationCount">0</span>
                     </button>
-                    
-                    <!-- Notification Panel -->
                     <div class="notification-panel" id="notificationPanel">
                         <div class="notification-header">
                             <h4>Notifications</h4>
@@ -994,8 +969,6 @@
                         </div>
                     </div>
                 </div>
-                
-                <!-- User Profile -->
                 <div class="user-profile" onclick="toggleProfileMenu()">
                     <img class="user-avatar" id="userAvatar" src="https://ui-avatars.com/api/?background=4f46e5&color=fff&name=Admin" alt="User">
                     <span class="user-name" id="userName">Admin</span>
@@ -1014,14 +987,10 @@
             </div>
         </header>
 
-        <!-- Dashboard Sections -->
         <div class="dashboard-scroll">
-            <!-- Overview Section -->
             <div id="overviewSection" class="section-content">
                 <h1 class="page-title">Dashboard Overview</h1>
-                <div class="stats-grid" id="statsGrid">
-                    <!-- Stats will be loaded dynamically -->
-                </div>
+                <div class="stats-grid" id="statsGrid"></div>
                 <div class="data-grid">
                     <div class="panel">
                         <div class="panel-header">
@@ -1039,11 +1008,7 @@
                         <div style="overflow-x: auto;">
                             <table class="data-table" id="recentOrdersTable">
                                 <thead>
-                                    <tr>
-                                        <th>Order ID</th>
-                                        <th>Amount</th>
-                                        <th>Status</th>
-                                    </tr>
+                                    <tr><th>Order ID</th><th>Amount</th><th>Status</th></tr>
                                 </thead>
                                 <tbody id="recentOrdersBody"></tbody>
                             </table>
@@ -1052,7 +1017,6 @@
                 </div>
             </div>
 
-            <!-- Orders Section -->
             <div id="ordersSection" class="section-content" style="display: none;">
                 <h1 class="page-title">Orders Management</h1>
                 <div class="panel">
@@ -1061,22 +1025,13 @@
                     </div>
                     <div style="overflow-x: auto;">
                         <table class="data-table" id="allOrdersTable">
-                            <thead>
-                                <tr>
-                                    <th>Order ID</th>
-                                    <th>Items</th>
-                                    <th>Total</th>
-                                    <th>Status</th>
-                                    <th>Time</th>
-                                </td>
-                            </thead>
+                            <thead><tr><th>Order ID</th><th>Items</th><th>Total</th><th>Status</th><th>Time</th></tr></thead>
                             <tbody id="allOrdersBody"></tbody>
                         </table>
                     </div>
                 </div>
             </div>
 
-            <!-- Menu Section -->
             <div id="menuSection" class="section-content" style="display: none;">
                 <h1 class="page-title">Menu Items</h1>
                 <div class="panel">
@@ -1088,7 +1043,6 @@
                 </div>
             </div>
 
-            <!-- Categories Section -->
             <div id="categoriesSection" class="section-content" style="display: none;">
                 <h1 class="page-title">Categories Management</h1>
                 <div class="panel">
@@ -1100,7 +1054,6 @@
                 </div>
             </div>
 
-            <!-- Customers Section -->
             <div id="customersSection" class="section-content" style="display: none;">
                 <h1 class="page-title">Customers</h1>
                 <div class="panel">
@@ -1110,57 +1063,35 @@
                     </div>
                     <div style="overflow-x: auto;">
                         <table class="data-table" id="customersTable">
-                            <thead>
-                                <tr>
-                                    <th>Shop Name</th>
-                                    <th>Contact Person</th>
-                                    <th>Email</th>
-                                    <th>Phone</th>
-                                    <th>GST</th>
-                                    <th>Plan</th>
-                                    <th>Orders</th>
-                                    <th>Spent</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
+                            <thead><tr><th>Shop Name</th><th>Contact Person</th><th>Email</th><th>Phone</th><th>GST</th><th>Plan</th><th>Orders</th><th>Spent</th><th>Action</th></tr></thead>
                             <tbody id="customersBody"></tbody>
                         </table>
                     </div>
                 </div>
             </div>
 
-            <!-- Reports Section -->
             <div id="reportsSection" class="section-content" style="display: none;">
                 <h1 class="page-title">Reports & Analytics</h1>
                 <div class="data-grid">
                     <div class="panel">
-                        <div class="panel-header">
-                            <h3>Top Selling Items</h3>
-                        </div>
+                        <div class="panel-header"><h3>Top Selling Items</h3></div>
                         <div id="topItemsList"></div>
                     </div>
                     <div class="panel">
-                        <div class="panel-header">
-                            <h3>Sales by Category</h3>
-                        </div>
+                        <div class="panel-header"><h3>Sales by Category</h3></div>
                         <canvas id="categoryChart" style="height: 250px;"></canvas>
                     </div>
                 </div>
                 <div class="panel" style="margin-top: 20px;">
-                    <div class="panel-header">
-                        <h3>Export Reports</h3>
-                    </div>
+                    <div class="panel-header"><h3>Export Reports</h3></div>
                     <button onclick="exportReport()" class="add-btn">📊 Export as CSV</button>
                 </div>
             </div>
 
-            <!-- Settings Section -->
             <div id="settingsSection" class="section-content" style="display: none;">
                 <h1 class="page-title">Settings</h1>
                 <div class="panel">
-                    <div class="panel-header">
-                        <h3>General Settings</h3>
-                    </div>
+                    <div class="panel-header"><h3>General Settings</h3></div>
                     <div class="settings-form">
                         <div class="form-group">
                             <label>Restaurant Name</label>
@@ -1191,7 +1122,6 @@
         </div>
     </main>
 
-    <!-- Profile Modal -->
     <div id="profileModal" class="modal">
         <div class="modal-content">
             <h3>My Profile</h3>
@@ -1209,22 +1139,12 @@
         </div>
     </div>
 
-    <!-- Category Modal -->
     <div id="categoryModal" class="modal">
         <div class="modal-content">
             <h3 id="categoryModalTitle">Add New Category</h3>
-            <div class="form-group">
-                <label>Category Name</label>
-                <input type="text" id="categoryName" placeholder="e.g., Burgers, Pizza, Drinks">
-            </div>
-            <div class="form-group">
-                <label>Category Emoji / Icon</label>
-                <input type="text" id="categoryEmoji" placeholder="🍔" maxlength="5">
-            </div>
-            <div class="form-group">
-                <label>Category Color</label>
-                <input type="color" id="categoryColor" value="#4f46e5">
-            </div>
+            <div class="form-group"><label>Category Name</label><input type="text" id="categoryName" placeholder="e.g., Burgers, Pizza, Drinks"></div>
+            <div class="form-group"><label>Category Emoji / Icon</label><input type="text" id="categoryEmoji" placeholder="🍔" maxlength="5"></div>
+            <div class="form-group"><label>Category Color</label><input type="color" id="categoryColor" value="#4f46e5"></div>
             <div class="modal-buttons">
                 <button class="modal-save" onclick="saveCategory()">Save Category</button>
                 <button class="modal-cancel" onclick="closeCategoryModal()">Cancel</button>
@@ -1232,26 +1152,13 @@
         </div>
     </div>
 
-    <!-- Menu Item Modal -->
     <div id="menuModal" class="modal">
         <div class="modal-content">
             <h3 id="menuModalTitle">Add Menu Item</h3>
-            <div class="form-group">
-                <label>Item Name</label>
-                <input type="text" id="menuItemName" placeholder="e.g., Margherita Pizza">
-            </div>
-            <div class="form-group">
-                <label>Price ($)</label>
-                <input type="number" id="menuItemPrice" step="0.01" placeholder="0.00">
-            </div>
-            <div class="form-group">
-                <label>Category</label>
-                <select id="menuItemCategory"></select>
-            </div>
-            <div class="form-group">
-                <label>Image URL (optional)</label>
-                <input type="text" id="menuItemImage" placeholder="https://example.com/image.jpg">
-            </div>
+            <div class="form-group"><label>Item Name</label><input type="text" id="menuItemName" placeholder="e.g., Margherita Pizza"></div>
+            <div class="form-group"><label>Price ($)</label><input type="number" id="menuItemPrice" step="0.01" placeholder="0.00"></div>
+            <div class="form-group"><label>Category</label><select id="menuItemCategory"></select></div>
+            <div class="form-group"><label>Image URL (optional)</label><input type="text" id="menuItemImage" placeholder="https://example.com/image.jpg"></div>
             <div class="modal-buttons">
                 <button class="modal-save" onclick="saveMenuItem()">Save</button>
                 <button class="modal-cancel" onclick="closeMenuModal()">Cancel</button>
@@ -1259,65 +1166,26 @@
         </div>
     </div>
 
-    <!-- Customer Modal (Full Details) -->
     <div id="customerModal" class="modal">
         <div class="modal-content">
             <h3>Add New Customer</h3>
-            
-            <!-- Business / Shop Details -->
             <div style="background: #f1f5f9; padding: 15px; border-radius: 12px; margin-bottom: 20px;">
                 <h4 style="margin-bottom: 12px; color: var(--primary);">🏪 Business / Shop Details</h4>
-                <div class="form-group">
-                    <label>Restaurant / Shop Name <span style="color: #ef4444;">*</span></label>
-                    <input type="text" id="customerShopName" placeholder="e.g., Pizza Palace" required>
-                </div>
-                <div class="form-group">
-                    <label>GST Number</label>
-                    <input type="text" id="customerGST" placeholder="22AAAAA0000A1Z">
-                </div>
-                <div class="form-group">
-                    <label>Business Address</label>
-                    <textarea id="customerAddress" rows="2" placeholder="Full business address"></textarea>
-                </div>
+                <div class="form-group"><label>Restaurant / Shop Name <span style="color: #ef4444;">*</span></label><input type="text" id="customerShopName" required></div>
+                <div class="form-group"><label>GST Number</label><input type="text" id="customerGST"></div>
+                <div class="form-group"><label>Business Address</label><textarea id="customerAddress" rows="2"></textarea></div>
             </div>
-
-            <!-- Contact Person Details -->
             <div style="background: #f8fafc; padding: 15px; border-radius: 12px; margin-bottom: 20px;">
                 <h4 style="margin-bottom: 12px; color: var(--primary);">👤 Contact Person Details</h4>
-                <div class="form-group">
-                    <label>Contact Person Name <span style="color: #ef4444;">*</span></label>
-                    <input type="text" id="customerName" placeholder="John Doe" required>
-                </div>
-                <div class="form-group">
-                    <label>Email Address <span style="color: #ef4444;">*</span></label>
-                    <input type="email" id="customerEmail" placeholder="john@example.com" required>
-                </div>
-                <div class="form-group">
-                    <label>Phone Number <span style="color: #ef4444;">*</span></label>
-                    <input type="tel" id="customerPhone" placeholder="+1 234 567 890" required>
-                </div>
+                <div class="form-group"><label>Contact Person Name <span style="color: #ef4444;">*</span></label><input type="text" id="customerName" required></div>
+                <div class="form-group"><label>Email Address <span style="color: #ef4444;">*</span></label><input type="email" id="customerEmail" required></div>
+                <div class="form-group"><label>Phone Number <span style="color: #ef4444;">*</span></label><input type="tel" id="customerPhone" required></div>
             </div>
-
-            <!-- Subscription Details -->
             <div style="background: #fff7ed; padding: 15px; border-radius: 12px; margin-bottom: 20px;">
                 <h4 style="margin-bottom: 12px; color: #f59e0b;">📦 Subscription Details</h4>
-                <div class="form-group">
-                    <label>Selected Plan</label>
-                    <select id="customerPlan">
-                        <option value="Starter">Starter - $39/month</option>
-                        <option value="Professional" selected>Professional - $79/month</option>
-                        <option value="Enterprise">Enterprise - Custom</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Billing Cycle</label>
-                    <select id="customerBilling">
-                        <option value="monthly">Monthly</option>
-                        <option value="yearly">Yearly (Save 20%)</option>
-                    </select>
-                </div>
+                <div class="form-group"><label>Selected Plan</label><select id="customerPlan"><option value="Starter">Starter - $39/month</option><option value="Professional" selected>Professional - $79/month</option><option value="Enterprise">Enterprise - Custom</option></select></div>
+                <div class="form-group"><label>Billing Cycle</label><select id="customerBilling"><option value="monthly">Monthly</option><option value="yearly">Yearly (Save 20%)</option></select></div>
             </div>
-
             <div class="modal-buttons">
                 <button class="modal-save" onclick="saveCustomer()">Save Customer</button>
                 <button class="modal-cancel" onclick="closeCustomerModal()">Cancel</button>
@@ -1326,12 +1194,10 @@
     </div>
 
     <script type="module">
-        // ========== FIREBASE IMPORTS ==========
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, query, orderBy, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // ========== FIREBASE CONFIG ==========
         const firebaseConfig = {
             apiKey: "AIzaSyCN0akvFXOHM6WPHv9ve9noqqmauO3TJRY",
             authDomain: "billzest-pos.firebaseapp.com",
@@ -1342,12 +1208,10 @@
             measurementId: "G-69WEHH9X5D"
         };
 
-        // ========== INITIALIZE FIREBASE ==========
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // ========== GLOBAL VARIABLES ==========
         let currentUser = null;
         let revenueChart = null;
         let categoryChart = null;
@@ -1366,9 +1230,21 @@
             receiptFooter: "Thank you for your visit!"
         };
 
-        // ========== LOAD DEFAULT CATEGORIES ==========
+        // Toast notification function
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast-message toast-${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        // Load default categories
         function loadDefaultCategories() {
-            if (categories.length === 0) {
+            const saved = localStorage.getItem('billzest_categories');
+            if (saved) {
+                categories = JSON.parse(saved);
+            } else {
                 categories = [
                     { id: "cat_1", name: "Burgers", emoji: "🍔", color: "#4f46e5" },
                     { id: "cat_2", name: "Pizza", emoji: "🍕", color: "#ec4899" },
@@ -1377,32 +1253,21 @@
                     { id: "cat_5", name: "Salads", emoji: "🥗", color: "#22c55e" },
                     { id: "cat_6", name: "Desserts", emoji: "🍰", color: "#ef4444" }
                 ];
-                localStorage.setItem('categories', JSON.stringify(categories));
+                localStorage.setItem('billzest_categories', JSON.stringify(categories));
             }
         }
-        loadDefaultCategories();
 
-        // ========== CATEGORIES FUNCTIONS ==========
-        function loadCategories() {
-            const saved = localStorage.getItem('categories');
-            if (saved) {
-                categories = JSON.parse(saved);
-            } else {
-                loadDefaultCategories();
-            }
-            displayCategories();
-            updateCategorySelect();
+        function saveCategoriesToLocal() {
+            localStorage.setItem('billzest_categories', JSON.stringify(categories));
         }
 
         function displayCategories() {
             const container = document.getElementById('categoriesList');
             if (!container) return;
-            
             if (categories.length === 0) {
                 container.innerHTML = '<div style="text-align: center; padding: 40px; color: var(--text-gray);">No categories. Click "Add New Category" to create one.</div>';
                 return;
             }
-            
             container.innerHTML = categories.map(cat => `
                 <div class="category-card" style="border-left: 4px solid ${cat.color};" onclick="filterByCategory('${cat.name}')">
                     <button class="category-delete" onclick="event.stopPropagation(); deleteCategory('${cat.id}')">✕</button>
@@ -1445,33 +1310,27 @@
             const name = document.getElementById('categoryName').value;
             const emoji = document.getElementById('categoryEmoji').value || '📦';
             const color = document.getElementById('categoryColor').value;
-            
-            if (!name) {
-                alert('Please enter category name');
-                return;
-            }
-            
+            if (!name) { showToast('Please enter category name', 'error'); return; }
             if (editingCategoryId) {
                 const index = categories.findIndex(c => c.id === editingCategoryId);
-                if (index !== -1) {
-                    categories[index] = { ...categories[index], name, emoji, color };
-                }
+                if (index !== -1) categories[index] = { ...categories[index], name, emoji, color };
             } else {
                 categories.push({ id: Date.now().toString(), name, emoji, color });
             }
-            
-            localStorage.setItem('categories', JSON.stringify(categories));
+            saveCategoriesToLocal();
             closeCategoryModal();
-            loadCategories();
+            displayCategories();
             updateCategorySelect();
+            showToast('Category saved successfully!', 'success');
         };
 
         window.deleteCategory = function(id) {
             if (confirm('Delete this category? Items will become "Uncategorized".')) {
                 categories = categories.filter(c => c.id !== id);
-                localStorage.setItem('categories', JSON.stringify(categories));
-                loadCategories();
+                saveCategoriesToLocal();
+                displayCategories();
                 updateCategorySelect();
+                showToast('Category deleted', 'success');
             }
         };
 
@@ -1493,8 +1352,8 @@
             }, 100);
         };
 
-        // ========== NOTIFICATION SYSTEM ==========
-        let notifications = JSON.parse(localStorage.getItem('notifications') || '[]');
+        // Notifications
+        let notifications = JSON.parse(localStorage.getItem('billzest_notifications') || '[]');
         
         function initSampleNotifications() {
             if (notifications.length === 0) {
@@ -1502,7 +1361,7 @@
                     { id: 1, title: "Welcome to Dashboard", message: "Your restaurant management system is ready.", time: new Date().toISOString(), type: "order", read: false, link: "overview" },
                     { id: 2, title: "New Feature Available", message: "Categories management has been added!", time: new Date(Date.now() - 60000).toISOString(), type: "payment", read: false, link: "categories" }
                 ];
-                localStorage.setItem('notifications', JSON.stringify(notifications));
+                localStorage.setItem('billzest_notifications', JSON.stringify(notifications));
             }
             updateNotificationBadge();
         }
@@ -1519,17 +1378,13 @@
         function displayNotifications() {
             const container = document.getElementById('notificationList');
             if (!container) return;
-            
             if (notifications.length === 0) {
                 container.innerHTML = '<div class="notification-empty">No notifications</div>';
                 return;
             }
-            
             container.innerHTML = notifications.map(notif => `
                 <div class="notification-item ${notif.read ? '' : 'unread'}" onclick="markNotificationRead(${notif.id}, '${notif.link}')">
-                    <div class="notification-icon ${notif.type}">
-                        <i data-lucide="${notif.type === 'order' ? 'shopping-bag' : 'credit-card'}" size="18"></i>
-                    </div>
+                    <div class="notification-icon ${notif.type}"><i data-lucide="${notif.type === 'order' ? 'shopping-bag' : 'credit-card'}" size="18"></i></div>
                     <div class="notification-content">
                         <div class="notification-title">${notif.title}</div>
                         <div class="notification-message">${notif.message}</div>
@@ -1537,7 +1392,7 @@
                     </div>
                 </div>
             `).join('');
-            lucide.createIcons();
+            if (typeof lucide !== 'undefined') lucide.createIcons();
         }
 
         function formatTimeAgo(timestamp) {
@@ -1545,108 +1400,55 @@
             const now = new Date();
             const diffMs = now - date;
             const diffMins = Math.floor(diffMs / 60000);
-            const diffHours = Math.floor(diffMs / 3600000);
-            const diffDays = Math.floor(diffMs / 86400000);
-            
             if (diffMins < 1) return 'Just now';
             if (diffMins < 60) return `${diffMins} min ago`;
+            const diffHours = Math.floor(diffMins / 60);
             if (diffHours < 24) return `${diffHours} hour ago`;
+            const diffDays = Math.floor(diffHours / 24);
             return `${diffDays} day ago`;
         }
 
         window.toggleNotificationPanel = function() {
             const panel = document.getElementById('notificationPanel');
             panel.classList.toggle('show');
-            if (panel.classList.contains('show')) {
-                displayNotifications();
-            }
+            if (panel.classList.contains('show')) displayNotifications();
         };
 
         window.markNotificationRead = function(id, link) {
             const notif = notifications.find(n => n.id === id);
-            if (notif) {
-                notif.read = true;
-                localStorage.setItem('notifications', JSON.stringify(notifications));
-                updateNotificationBadge();
-                displayNotifications();
-            }
-            if (link) {
-                switchSection(link);
-            }
+            if (notif) { notif.read = true; localStorage.setItem('billzest_notifications', JSON.stringify(notifications)); updateNotificationBadge(); displayNotifications(); }
+            if (link) switchSection(link);
             document.getElementById('notificationPanel').classList.remove('show');
         };
 
         window.markAllNotificationsRead = function() {
             notifications.forEach(n => n.read = true);
-            localStorage.setItem('notifications', JSON.stringify(notifications));
+            localStorage.setItem('billzest_notifications', JSON.stringify(notifications));
             updateNotificationBadge();
             displayNotifications();
         };
 
-        // ========== CREATE SAMPLE DATA ==========
-        async function createSampleData() {
-            try {
-                const menuSnapshot = await getDocs(collection(db, "menu"));
-                if (menuSnapshot.empty) {
-                    console.log("Creating sample menu items...");
-                    const sampleMenu = [
-                        { name: "Classic Burger", price: 8.50, category: "Burgers", image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=100&h=100&fit=crop" },
-                        { name: "Margherita Pizza", price: 12.00, category: "Pizza", image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=100&h=100&fit=crop" },
-                        { name: "French Fries", price: 3.50, category: "Sides", image: "https://images.unsplash.com/photo-1576107232684-1279f390859f?w=100&h=100&fit=crop" },
-                        { name: "Cappuccino", price: 4.00, category: "Beverages", image: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=100&h=100&fit=crop" },
-                        { name: "Caesar Salad", price: 6.50, category: "Salads", image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=100&h=100&fit=crop" },
-                        { name: "Cold Drink", price: 2.00, category: "Beverages", image: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=100&h=100&fit=crop" }
-                    ];
-                    for (const item of sampleMenu) {
-                        await addDoc(collection(db, "menu"), item);
-                    }
-                }
-
-                const ordersSnapshot = await getDocs(collection(db, "orders"));
-                if (ordersSnapshot.empty) {
-                    console.log("Creating sample orders...");
-                    const sampleOrders = [
-                        { orderNumber: "#ORD-001", items: [{ name: "Classic Burger", quantity: 2, price: 8.50 }], total: 17.00, status: "completed", createdAt: new Date() },
-                        { orderNumber: "#ORD-002", items: [{ name: "Margherita Pizza", quantity: 1, price: 12.00 }], total: 12.00, status: "pending", createdAt: new Date() },
-                        { orderNumber: "#ORD-003", items: [{ name: "French Fries", quantity: 3, price: 3.50 }, { name: "Cold Drink", quantity: 2, price: 2.00 }], total: 14.50, status: "completed", createdAt: new Date() },
-                        { orderNumber: "#ORD-004", items: [{ name: "Cappuccino", quantity: 2, price: 4.00 }, { name: "Caesar Salad", quantity: 1, price: 6.50 }], total: 14.50, status: "cooking", createdAt: new Date() }
-                    ];
-                    for (const order of sampleOrders) {
-                        await addDoc(collection(db, "orders"), order);
-                    }
-                }
-
-                const customersSnapshot = await getDocs(collection(db, "customers"));
-                if (customersSnapshot.empty) {
-                    console.log("Creating sample customers...");
-                    const sampleCustomers = [
-                        { name: "Sarah Johnson", email: "sarah@example.com", phone: "+1 234 567 890", orders: 5, spent: 245.50, shopName: "Coffee House", gstNumber: "22AAAAA0000A1Z" },
-                        { name: "Michael Chen", email: "michael@example.com", phone: "+1 234 567 891", orders: 3, spent: 189.00, shopName: "Noodle Bar", gstNumber: "22BBBBB0000B1Z" }
-                    ];
-                    for (const customer of sampleCustomers) {
-                        await addDoc(collection(db, "customers"), customer);
-                    }
-                }
-                
-                console.log("Sample data created successfully!");
-                return true;
-            } catch (error) {
-                console.error("Error creating sample data:", error);
-                return false;
-            }
+        // Save data to localStorage as fallback
+        function saveMenuToLocal() {
+            localStorage.setItem('billzest_menu', JSON.stringify(menuData));
         }
 
-        // ========== LOAD SETTINGS ==========
+        function saveCustomersToLocal() {
+            localStorage.setItem('billzest_customers', JSON.stringify(customersData));
+        }
+
+        function saveOrdersToLocal() {
+            localStorage.setItem('billzest_orders', JSON.stringify(ordersData));
+        }
+
+        // Load settings
         function loadSettings() {
-            const saved = localStorage.getItem('settings');
-            if (saved) {
-                settings = JSON.parse(saved);
-            }
+            const saved = localStorage.getItem('billzest_settings');
+            if (saved) settings = JSON.parse(saved);
             const restaurantInput = document.getElementById('restaurantName');
             const taxRateInput = document.getElementById('taxRate');
             const currencySelect = document.getElementById('currencySymbol');
             const receiptInput = document.getElementById('receiptFooter');
-            
             if (restaurantInput) restaurantInput.value = settings.restaurantName;
             if (taxRateInput) taxRateInput.value = settings.taxRate;
             if (currencySelect) currencySelect.value = settings.currencySymbol;
@@ -1658,130 +1460,54 @@
             settings.taxRate = parseFloat(document.getElementById('taxRate').value);
             settings.currencySymbol = document.getElementById('currencySymbol').value;
             settings.receiptFooter = document.getElementById('receiptFooter').value;
-            localStorage.setItem('settings', JSON.stringify(settings));
-            alert('Settings saved successfully!');
+            localStorage.setItem('billzest_settings', JSON.stringify(settings));
+            showToast('Settings saved successfully!', 'success');
             loadDashboardStats();
             displayMenuItems();
             displayCustomers();
         };
 
-        // ========== DASHBOARD STATS ==========
+        // Dashboard stats
         async function loadDashboardStats() {
             try {
-                const ordersSnap = await getDocs(collection(db, "orders"));
-                const orders = [];
-                ordersSnap.forEach(doc => orders.push({ id: doc.id, ...doc.data() }));
-                
-                const today = new Date();
-                today.setHours(0, 0, 0, 0);
-                const todayOrders = orders.filter(o => {
-                    if (!o.createdAt) return false;
-                    const orderDate = o.createdAt.toDate ? o.createdAt.toDate() : new Date(o.createdAt);
-                    orderDate.setHours(0, 0, 0, 0);
-                    return orderDate.getTime() === today.getTime();
-                });
-                
-                const todaySales = todayOrders.reduce((sum, o) => sum + (o.total || 0), 0);
-                const totalOrders = orders.length;
-                const menuSnap = await getDocs(collection(db, "menu"));
-                const menuCount = menuSnap.size;
-                
+                const todaySales = ordersData.filter(o => o.status === 'completed').reduce((sum, o) => sum + (o.total || 0), 0);
+                const todayOrdersCount = ordersData.filter(o => o.status === 'completed').length;
+                const totalOrders = ordersData.length;
+                const menuCount = menuData.length;
                 const statsGrid = document.getElementById('statsGrid');
                 if (statsGrid) {
                     statsGrid.innerHTML = `
-                        <div class="stat-card">
-                            <div class="stat-info">
-                                <h3>Today's Sales</h3>
-                                <div class="stat-value">${settings.currencySymbol}${todaySales.toFixed(2)}</div>
-                                <div class="stat-trend trend-up">
-                                    <i data-lucide="trending-up" size="14"></i> +12.5%
-                                </div>
-                            </div>
-                            <div class="stat-icon icon-primary">
-                                <i data-lucide="dollar-sign" size="28"></i>
-                            </div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-info">
-                                <h3>Today's Orders</h3>
-                                <div class="stat-value">${todayOrders.length}</div>
-                                <div class="stat-trend trend-up">
-                                    <i data-lucide="trending-up" size="14"></i> +5.2%
-                                </div>
-                            </div>
-                            <div class="stat-icon icon-success">
-                                <i data-lucide="shopping-cart" size="28"></i>
-                            </div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-info">
-                                <h3>Total Orders</h3>
-                                <div class="stat-value">${totalOrders}</div>
-                            </div>
-                            <div class="stat-icon icon-warning">
-                                <i data-lucide="receipt" size="28"></i>
-                            </div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-info">
-                                <h3>Menu Items</h3>
-                                <div class="stat-value">${menuCount}</div>
-                            </div>
-                            <div class="stat-icon icon-secondary">
-                                <i data-lucide="utensils" size="28"></i>
-                            </div>
-                        </div>
+                        <div class="stat-card"><div class="stat-info"><h3>Total Sales</h3><div class="stat-value">${settings.currencySymbol}${todaySales.toFixed(2)}</div></div><div class="stat-icon icon-primary"><i data-lucide="dollar-sign" size="28"></i></div></div>
+                        <div class="stat-card"><div class="stat-info"><h3>Completed Orders</h3><div class="stat-value">${todayOrdersCount}</div></div><div class="stat-icon icon-success"><i data-lucide="shopping-cart" size="28"></i></div></div>
+                        <div class="stat-card"><div class="stat-info"><h3>Total Orders</h3><div class="stat-value">${totalOrders}</div></div><div class="stat-icon icon-warning"><i data-lucide="receipt" size="28"></i></div></div>
+                        <div class="stat-card"><div class="stat-info"><h3>Menu Items</h3><div class="stat-value">${menuCount}</div></div><div class="stat-icon icon-secondary"><i data-lucide="utensils" size="28"></i></div></div>
                     `;
-                    lucide.createIcons();
+                    if (typeof lucide !== 'undefined') lucide.createIcons();
                 }
-                
-                // Revenue Chart
                 const weeklyData = [1200, 1900, 1500, 2200, 2800, 3500, 3100];
                 const chartCtx = document.getElementById('revenueChart');
                 if (chartCtx) {
                     if (revenueChart) revenueChart.destroy();
                     revenueChart = new Chart(chartCtx, {
                         type: 'line',
-                        data: {
-                            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                            datasets: [{
-                                label: 'Revenue',
-                                data: weeklyData,
-                                borderColor: '#4f46e5',
-                                backgroundColor: 'rgba(79, 70, 229, 0.1)',
-                                borderWidth: 3,
-                                fill: true,
-                                tension: 0.4,
-                                pointBackgroundColor: '#ffffff',
-                                pointBorderColor: '#4f46e5',
-                                pointBorderWidth: 2,
-                                pointRadius: 4
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            plugins: { legend: { display: false } }
-                        }
+                        data: { labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], datasets: [{ label: 'Revenue', data: weeklyData, borderColor: '#4f46e5', backgroundColor: 'rgba(79, 70, 229, 0.1)', borderWidth: 3, fill: true, tension: 0.4 }] },
+                        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
                     });
                 }
-            } catch (error) {
-                console.error("Error loading stats:", error);
-            }
+            } catch (error) { console.error("Error loading stats:", error); }
         }
 
-        // ========== LOAD MENU DATA ==========
+        // Load menu data
         async function loadMenuData() {
             try {
                 const querySnapshot = await getDocs(collection(db, "menu"));
                 menuData = [];
-                querySnapshot.forEach(doc => {
-                    menuData.push({ id: doc.id, ...doc.data() });
-                });
+                querySnapshot.forEach(doc => menuData.push({ id: doc.id, ...doc.data() }));
+                saveMenuToLocal();
                 displayMenuItems();
             } catch (error) {
-                console.error("Error loading menu:", error);
-                const savedMenu = localStorage.getItem('menuData');
+                console.error("Error loading menu from Firestore:", error);
+                const savedMenu = localStorage.getItem('billzest_menu');
                 menuData = savedMenu ? JSON.parse(savedMenu) : [];
                 displayMenuItems();
             }
@@ -1790,21 +1516,15 @@
         function displayMenuItems() {
             const container = document.getElementById('menuItemsList');
             if (!container) return;
-            
             if (menuData.length === 0) {
                 container.innerHTML = '<div style="text-align: center; padding: 40px; color: var(--text-gray);">No menu items. Click "Add New Item" to create one.</div>';
                 return;
             }
-            
             container.innerHTML = menuData.map(item => `
                 <div class="menu-item-card">
                     <div class="menu-item-info">
                         <img src="${item.image || 'https://placehold.co/50x50?text=🍽️'}" class="menu-item-img" onerror="this.src='https://placehold.co/50x50?text=🍽️'">
-                        <div>
-                            <div class="menu-item-name">${item.name}</div>
-                            <div class="menu-item-price">${settings.currencySymbol}${item.price}</div>
-                            <div class="menu-item-category">${item.category || 'General'}</div>
-                        </div>
+                        <div><div class="menu-item-name">${item.name}</div><div class="menu-item-price">${settings.currencySymbol}${item.price}</div><div class="menu-item-category">${item.category || 'General'}</div></div>
                     </div>
                     <div class="menu-item-actions">
                         <button class="edit-btn" onclick="editMenuItem('${item.id}')">Edit</button>
@@ -1812,7 +1532,7 @@
                     </div>
                 </div>
             `).join('');
-            lucide.createIcons();
+            if (typeof lucide !== 'undefined') lucide.createIcons();
         }
 
         window.openAddMenuItemModal = function() {
@@ -1845,27 +1565,23 @@
             const price = parseFloat(document.getElementById('menuItemPrice').value);
             const category = document.getElementById('menuItemCategory').value;
             const image = document.getElementById('menuItemImage').value;
-            
-            if (!name || isNaN(price)) {
-                alert('Please fill item name and price');
-                return;
-            }
-            
+            if (!name || isNaN(price)) { showToast('Please fill item name and price', 'error'); return; }
             const menuItem = { name, price, category, image: image || null };
-            
             try {
                 if (editingMenuItemId) {
                     await updateDoc(doc(db, "menu", editingMenuItemId), menuItem);
+                    showToast('Menu item updated!', 'success');
                 } else {
                     await addDoc(collection(db, "menu"), menuItem);
+                    showToast('Menu item added!', 'success');
                 }
                 closeMenuModal();
-                loadMenuData();
-                loadDashboardStats();
-                loadCategories();
+                await loadMenuData();
+                await loadDashboardStats();
+                displayCategories();
             } catch (error) {
                 console.error("Error saving menu item:", error);
-                alert("Error saving: " + error.message);
+                showToast('Error saving: ' + error.message, 'error');
             }
         };
 
@@ -1873,32 +1589,30 @@
             if (confirm('Delete this menu item?')) {
                 try {
                     await deleteDoc(doc(db, "menu", id));
-                    loadMenuData();
-                    loadDashboardStats();
-                    loadCategories();
+                    showToast('Menu item deleted!', 'success');
+                    await loadMenuData();
+                    await loadDashboardStats();
+                    displayCategories();
                 } catch (error) {
                     console.error("Error deleting menu item:", error);
-                    alert("Error deleting: " + error.message);
+                    showToast('Error deleting: ' + error.message, 'error');
                 }
             }
         };
 
-        window.closeMenuModal = function() {
-            document.getElementById('menuModal').style.display = 'none';
-        };
+        window.closeMenuModal = function() { document.getElementById('menuModal').style.display = 'none'; };
 
-        // ========== LOAD CUSTOMERS DATA ==========
+        // Load customers data
         async function loadCustomersData() {
             try {
                 const querySnapshot = await getDocs(collection(db, "customers"));
                 customersData = [];
-                querySnapshot.forEach(doc => {
-                    customersData.push({ id: doc.id, ...doc.data() });
-                });
+                querySnapshot.forEach(doc => customersData.push({ id: doc.id, ...doc.data() }));
+                saveCustomersToLocal();
                 displayCustomers();
             } catch (error) {
-                console.error("Error loading customers:", error);
-                const savedCustomers = localStorage.getItem('customersData');
+                console.error("Error loading customers from Firestore:", error);
+                const savedCustomers = localStorage.getItem('billzest_customers');
                 customersData = savedCustomers ? JSON.parse(savedCustomers) : [];
                 displayCustomers();
             }
@@ -1907,12 +1621,10 @@
         function displayCustomers() {
             const container = document.getElementById('customersBody');
             if (!container) return;
-            
             if (customersData.length === 0) {
                 container.innerHTML = '<tr><td colspan="9" style="text-align: center; padding: 40px;">No customers found</td></tr>';
                 return;
             }
-            
             container.innerHTML = customersData.map(customer => `
                 <tr>
                     <td><strong>${customer.shopName || customer.name || 'N/A'}</strong></td>
@@ -1923,10 +1635,7 @@
                     <td>${customer.plan || '-'}<br><small>${customer.billingCycle || '-'}</small></td>
                     <td>${customer.orders || 0}</td>
                     <td>${settings.currencySymbol}${customer.spent || 0}</td>
-                    <td>
-                        <button class="edit-btn" onclick="editCustomer('${customer.id}')">Edit</button>
-                        <button class="delete-btn" onclick="deleteCustomer('${customer.id}')">Delete</button>
-                    </td>
+                    <td><button class="edit-btn" onclick="editCustomer('${customer.id}')">Edit</button> <button class="delete-btn" onclick="deleteCustomer('${customer.id}')">Delete</button></td>
                 </tr>
             `).join('');
         }
@@ -1971,7 +1680,7 @@
             const billing = document.getElementById('customerBilling').value;
             
             if (!shopName || !name || !email || !phone) {
-                alert('Please fill all required fields: Shop Name, Contact Person, Email, Phone');
+                showToast('Please fill all required fields: Shop Name, Contact Person, Email, Phone', 'error');
                 return;
             }
             
@@ -1992,14 +1701,26 @@
             try {
                 if (editingCustomerId) {
                     await updateDoc(doc(db, "customers", editingCustomerId), customer);
+                    showToast('Customer updated successfully!', 'success');
                 } else {
                     await addDoc(collection(db, "customers"), customer);
+                    showToast('Customer added successfully!', 'success');
                 }
                 closeCustomerModal();
-                loadCustomersData();
+                await loadCustomersData();
             } catch (error) {
                 console.error("Error saving customer:", error);
-                alert("Error saving customer: " + error.message);
+                // Fallback: Save to localStorage
+                if (editingCustomerId) {
+                    const index = customersData.findIndex(c => c.id === editingCustomerId);
+                    if (index !== -1) customersData[index] = { ...customersData[index], ...customer, id: editingCustomerId };
+                } else {
+                    customersData.push({ ...customer, id: Date.now().toString() });
+                }
+                saveCustomersToLocal();
+                displayCustomers();
+                closeCustomerModal();
+                showToast('Customer saved locally (offline mode)', 'info');
             }
         };
 
@@ -2007,32 +1728,32 @@
             if (confirm('Delete this customer?')) {
                 try {
                     await deleteDoc(doc(db, "customers", id));
-                    loadCustomersData();
+                    showToast('Customer deleted!', 'success');
+                    await loadCustomersData();
                 } catch (error) {
                     console.error("Error deleting customer:", error);
-                    alert("Error deleting: " + error.message);
+                    customersData = customersData.filter(c => c.id !== id);
+                    saveCustomersToLocal();
+                    displayCustomers();
+                    showToast('Customer deleted locally', 'info');
                 }
             }
         };
 
-        window.closeCustomerModal = function() {
-            document.getElementById('customerModal').style.display = 'none';
-        };
+        window.closeCustomerModal = function() { document.getElementById('customerModal').style.display = 'none'; };
 
-        // ========== LOAD ORDERS DATA ==========
+        // Load orders data
         async function loadOrdersData() {
             try {
                 const querySnapshot = await getDocs(query(collection(db, "orders"), orderBy("createdAt", "desc")));
                 ordersData = [];
-                querySnapshot.forEach(doc => {
-                    const data = doc.data();
-                    ordersData.push({ id: doc.id, ...data });
-                });
+                querySnapshot.forEach(doc => ordersData.push({ id: doc.id, ...doc.data() }));
+                saveOrdersToLocal();
                 displayOrders();
                 displayRecentOrders();
             } catch (error) {
-                console.error("Error loading orders:", error);
-                const savedOrders = localStorage.getItem('ordersData');
+                console.error("Error loading orders from Firestore:", error);
+                const savedOrders = localStorage.getItem('billzest_orders');
                 ordersData = savedOrders ? JSON.parse(savedOrders) : [];
                 displayOrders();
                 displayRecentOrders();
@@ -2042,51 +1763,55 @@
         function displayOrders() {
             const container = document.getElementById('allOrdersBody');
             if (!container) return;
-            
             if (ordersData.length === 0) {
                 container.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 40px;">No orders found</td></tr>';
                 return;
             }
-            
             container.innerHTML = ordersData.map(order => {
                 const itemsText = order.items ? order.items.map(i => `${i.name} x${i.quantity}`).join(', ') : '-';
                 const orderTime = order.createdAt ? (order.createdAt.toDate ? order.createdAt.toDate().toLocaleTimeString() : new Date(order.createdAt).toLocaleTimeString()) : '-';
                 const statusClass = order.status === 'completed' ? 'completed' : (order.status === 'cooking' ? 'cooking' : 'pending');
-                return `
-                    <tr>
-                        <td>${order.orderNumber || '#' + order.id?.slice(0, 6)}</td>
-                        <td>${itemsText}</td>
-                        <td>${settings.currencySymbol}${order.total?.toFixed(2) || '0'}</td>
-                        <td><span class="status-badge status-${statusClass}">${order.status || 'pending'}</span></td>
-                        <td>${orderTime}</td>
-                    </tr>
-                `;
+                return `<tr><td>${order.orderNumber || '#' + order.id?.slice(0, 6)}</td><td>${itemsText}</td><td>${settings.currencySymbol}${order.total?.toFixed(2) || '0'}</td><td><span class="status-badge status-${statusClass}">${order.status || 'pending'}</span></td><td>${orderTime}</td></tr>`;
             }).join('');
         }
 
         function displayRecentOrders() {
             const container = document.getElementById('recentOrdersBody');
             if (!container) return;
-            
             const recent = ordersData.slice(0, 5);
-            if (recent.length === 0) {
-                container.innerHTML = '<tr><td colspan="3" style="text-align: center; padding: 20px;">No orders yet</td></tr>';
-                return;
-            }
-            
+            if (recent.length === 0) { container.innerHTML = '<tr><td colspan="3" style="text-align: center; padding: 20px;">No orders yet</td></tr>'; return; }
             container.innerHTML = recent.map(order => {
                 const statusClass = order.status === 'completed' ? 'completed' : (order.status === 'cooking' ? 'cooking' : 'pending');
-                return `
-                    <tr>
-                        <td>${order.orderNumber || '#' + order.id?.slice(0, 6)}</td>
-                        <td>${settings.currencySymbol}${order.total?.toFixed(2) || '0'}</td>
-                        <td><span class="status-badge status-${statusClass}">${order.status || 'pending'}</span></td>
-                    </tr>
-                `;
+                return `<tr><td>${order.orderNumber || '#' + order.id?.slice(0, 6)}</td><td>${settings.currencySymbol}${order.total?.toFixed(2) || '0'}</td><td><span class="status-badge status-${statusClass}">${order.status || 'pending'}</span></td></tr>`;
             }).join('');
         }
 
-        // ========== REPORT FUNCTIONS ==========
+        // Create sample data
+        async function createSampleData() {
+            try {
+                const menuSnapshot = await getDocs(collection(db, "menu"));
+                if (menuSnapshot.empty) {
+                    const sampleMenu = [
+                        { name: "Classic Burger", price: 8.50, category: "Burgers", image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=100&h=100&fit=crop" },
+                        { name: "Margherita Pizza", price: 12.00, category: "Pizza", image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=100&h=100&fit=crop" },
+                        { name: "French Fries", price: 3.50, category: "Sides", image: "https://images.unsplash.com/photo-1576107232684-1279f390859f?w=100&h=100&fit=crop" },
+                        { name: "Cappuccino", price: 4.00, category: "Beverages", image: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=100&h=100&fit=crop" },
+                        { name: "Caesar Salad", price: 6.50, category: "Salads", image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=100&h=100&fit=crop" }
+                    ];
+                    for (const item of sampleMenu) await addDoc(collection(db, "menu"), item);
+                }
+                const ordersSnapshot = await getDocs(collection(db, "orders"));
+                if (ordersSnapshot.empty) {
+                    const sampleOrders = [
+                        { orderNumber: "#ORD-001", items: [{ name: "Classic Burger", quantity: 2, price: 8.50 }], total: 17.00, status: "completed", createdAt: new Date() },
+                        { orderNumber: "#ORD-002", items: [{ name: "Margherita Pizza", quantity: 1, price: 12.00 }], total: 12.00, status: "pending", createdAt: new Date() }
+                    ];
+                    for (const order of sampleOrders) await addDoc(collection(db, "orders"), order);
+                }
+            } catch (error) { console.error("Error creating sample data:", error); }
+        }
+
+        // Report functions
         window.exportReport = function() {
             let csv = "Order ID,Items,Total,Status,Time\n";
             ordersData.forEach(order => {
@@ -2099,33 +1824,19 @@
             link.href = URL.createObjectURL(blob);
             link.download = `billzestpos_orders_${new Date().toISOString().split('T')[0]}.csv`;
             link.click();
+            showToast('Report exported!', 'success');
         };
 
-        // Category Chart and Top Items
         async function loadCategoryChart() {
             const ctx = document.getElementById('categoryChart');
             if (ctx) {
                 if (categoryChart) categoryChart.destroy();
                 categoryChart = new Chart(ctx, {
                     type: 'doughnut',
-                    data: {
-                        labels: ['Burgers', 'Pizza', 'Sides', 'Beverages', 'Salads'],
-                        datasets: [{
-                            data: [30, 25, 20, 15, 10],
-                            backgroundColor: ['#4f46e5', '#ec4899', '#10b981', '#f59e0b', '#ef4444'],
-                            borderWidth: 0
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { position: 'bottom' }
-                        }
-                    }
+                    data: { labels: ['Burgers', 'Pizza', 'Sides', 'Beverages', 'Salads'], datasets: [{ data: [30, 25, 20, 15, 10], backgroundColor: ['#4f46e5', '#ec4899', '#10b981', '#f59e0b', '#ef4444'], borderWidth: 0 }] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
                 });
             }
-            
             const topItems = [
                 { name: 'Classic Burger', sold: 45, revenue: 382.50 },
                 { name: 'Margherita Pizza', sold: 32, revenue: 384 },
@@ -2133,13 +1844,7 @@
             ];
             const topContainer = document.getElementById('topItemsList');
             if (topContainer) {
-                topContainer.innerHTML = topItems.map(item => `
-                    <div style="display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid var(--border);">
-                        <span>${item.name}</span>
-                        <span>${item.sold} sold</span>
-                        <span style="color: var(--primary);">${settings.currencySymbol}${item.revenue}</span>
-                    </div>
-                `).join('');
+                topContainer.innerHTML = topItems.map(item => `<div style="display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid var(--border);"><span>${item.name}</span><span>${item.sold} sold</span><span style="color: var(--primary);">${settings.currencySymbol}${item.revenue}</span></div>`).join('');
             }
         }
 
@@ -2148,7 +1853,7 @@
             await loadCategoryChart();
         }
 
-        // ========== AUTHENTICATION ==========
+        // Auth state
         onAuthStateChanged(auth, async (user) => {
             const loadingScreen = document.getElementById('loadingScreen');
             if (user) {
@@ -2159,18 +1864,18 @@
                 document.getElementById('userName').innerText = displayName;
                 document.getElementById('profileName').innerText = displayName;
                 document.getElementById('profileEmail').innerText = user.email;
-                
                 const avatarUrl = user.photoURL || `https://ui-avatars.com/api/?background=4f46e5&color=fff&name=${displayName}`;
                 document.getElementById('userAvatar').src = avatarUrl;
                 document.getElementById('profileAvatar').src = avatarUrl;
-                
                 await loadDashboardData();
                 await loadMenuData();
                 await loadCustomersData();
                 await loadOrdersData();
                 loadSettings();
-                loadCategories();
+                loadDefaultCategories();
+                displayCategories();
                 initSampleNotifications();
+                if (typeof lucide !== 'undefined') lucide.createIcons();
             } else {
                 window.location.href = 'login.html';
             }
@@ -2179,116 +1884,62 @@
         async function handleLogout() {
             try {
                 await signOut(auth);
-                localStorage.removeItem('user');
                 window.location.href = 'login.html';
-            } catch (error) {
-                console.error("Logout error:", error);
-                alert("Error logging out: " + error.message);
-            }
+            } catch (error) { showToast('Error logging out: ' + error.message, 'error'); }
         }
 
-        // ========== SECTION SWITCHING ==========
         window.switchSection = function(sectionName) {
             const sections = ['overviewSection', 'ordersSection', 'menuSection', 'categoriesSection', 'customersSection', 'reportsSection', 'settingsSection'];
-            sections.forEach(section => {
-                const el = document.getElementById(section);
-                if (el) el.style.display = 'none';
-            });
+            sections.forEach(section => { const el = document.getElementById(section); if (el) el.style.display = 'none'; });
             const targetSection = document.getElementById(`${sectionName}Section`);
             if (targetSection) targetSection.style.display = 'block';
-            
             document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
             const activeNav = document.querySelector(`.nav-item[data-section="${sectionName}"]`);
             if (activeNav) activeNav.classList.add('active');
-            
             if (window.innerWidth <= 768) closeSidebar();
         };
 
-        // ========== SIDEBAR FUNCTIONS ==========
-        function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('open');
-            document.getElementById('sidebarOverlay').classList.toggle('show');
-        }
-        
-        function closeSidebar() {
-            document.getElementById('sidebar').classList.remove('open');
-            document.getElementById('sidebarOverlay').classList.remove('show');
-        }
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); document.getElementById('sidebarOverlay').classList.toggle('show'); }
+        function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('sidebarOverlay').classList.remove('show'); }
+        function toggleProfileMenu() { document.getElementById('profileDropdown').classList.toggle('show'); }
+        function showProfile() { document.getElementById('profileModal').style.display = 'flex'; toggleProfileMenu(); }
+        function closeProfileModal() { document.getElementById('profileModal').style.display = 'none'; }
 
-        // ========== PROFILE FUNCTIONS ==========
-        function toggleProfileMenu() {
-            document.getElementById('profileDropdown').classList.toggle('show');
-        }
-        
-        function showProfile() {
-            document.getElementById('profileModal').style.display = 'flex';
-            toggleProfileMenu();
-        }
-        
-        function closeProfileModal() {
-            document.getElementById('profileModal').style.display = 'none';
-        }
-
-        // ========== EVENT LISTENERS ==========
-        document.querySelectorAll('.nav-item').forEach(item => {
-            item.addEventListener('click', () => {
-                const section = item.getAttribute('data-section');
-                if (section) switchSection(section);
-            });
-        });
-        
+        document.querySelectorAll('.nav-item').forEach(item => { item.addEventListener('click', () => { const section = item.getAttribute('data-section'); if (section) switchSection(section); }); });
         document.getElementById('logoutBtn').addEventListener('click', handleLogout);
         document.getElementById('dropdownLogoutBtn').addEventListener('click', handleLogout);
         document.getElementById('profileBtn').addEventListener('click', showProfile);
-        
-        // Search functionality
+
         document.getElementById('searchInput').addEventListener('input', (e) => {
             const term = e.target.value.toLowerCase();
-            const filtered = ordersData.filter(o => 
-                (o.orderNumber || '').toLowerCase().includes(term) || 
-                (o.items ? o.items.map(i => i.name).join(' ') : '').toLowerCase().includes(term)
-            );
+            const filtered = ordersData.filter(o => (o.orderNumber || '').toLowerCase().includes(term) || (o.items ? o.items.map(i => i.name).join(' ') : '').toLowerCase().includes(term));
             const container = document.getElementById('allOrdersBody');
             if (container) {
-                if (filtered.length === 0) {
-                    container.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px;">No matching orders</td></tr>';
-                } else {
+                if (filtered.length === 0) { container.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px;">No matching orders</td></tr>'; }
+                else {
                     container.innerHTML = filtered.map(order => {
                         const itemsText = order.items ? order.items.map(i => `${i.name} x${i.quantity}`).join(', ') : '-';
                         const orderTime = order.createdAt ? (order.createdAt.toDate ? order.createdAt.toDate().toLocaleTimeString() : new Date(order.createdAt).toLocaleTimeString()) : '-';
                         const statusClass = order.status === 'completed' ? 'completed' : (order.status === 'cooking' ? 'cooking' : 'pending');
-                        return `
-                            <tr>
-                                <td>${order.orderNumber || '#' + order.id?.slice(0, 6)}</td>
-                                <td>${itemsText}</td>
-                                <td>${settings.currencySymbol}${order.total?.toFixed(2) || '0'}</td>
-                                <td><span class="status-badge status-${statusClass}">${order.status || 'pending'}</span></td>
-                                <td>${orderTime}</td>
-                            </tr>
-                        `;
+                        return `<tr><td>${order.orderNumber || '#' + order.id?.slice(0, 6)}</td><td>${itemsText}</td><td>${settings.currencySymbol}${order.total?.toFixed(2) || '0'}</td><td><span class="status-badge status-${statusClass}">${order.status || 'pending'}</span></td><td>${orderTime}</td></tr>`;
                     }).join('');
                 }
             }
         });
-        
-        // Close modals on outside click
+
         window.onclick = (e) => {
             if (e.target === document.getElementById('profileModal')) closeProfileModal();
             if (e.target === document.getElementById('menuModal')) closeMenuModal();
             if (e.target === document.getElementById('customerModal')) closeCustomerModal();
             if (e.target === document.getElementById('categoryModal')) closeCategoryModal();
-            if (!e.target.closest('.user-profile')) {
-                document.getElementById('profileDropdown')?.classList.remove('show');
-            }
+            if (!e.target.closest('.user-profile')) document.getElementById('profileDropdown')?.classList.remove('show');
         };
 
-        // Make functions global
         window.toggleSidebar = toggleSidebar;
         window.closeSidebar = closeSidebar;
         window.toggleProfileMenu = toggleProfileMenu;
         window.showProfile = showProfile;
         window.closeProfileModal = closeProfileModal;
-        window.switchSection = switchSection;
         window.closeMenuModal = closeMenuModal;
         window.closeCustomerModal = closeCustomerModal;
         window.closeCategoryModal = closeCategoryModal;
@@ -2298,8 +1949,7 @@
         window.filterByCategory = filterByCategory;
         window.exportReport = exportReport;
 
-        // Initial load
-        lucide.createIcons();
+        if (typeof lucide !== 'undefined') lucide.createIcons();
     </script>
 </body>
 </html>
