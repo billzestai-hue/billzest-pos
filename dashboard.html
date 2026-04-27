@@ -37,7 +37,6 @@
             --danger: #ef4444;
         }
 
-        /* ========== SIDEBAR ========== */
         .sidebar {
             width: 280px;
             background: white;
@@ -121,7 +120,6 @@
             background: rgba(239, 68, 68, 0.1);
         }
 
-        /* ========== MAIN CONTENT ========== */
         .main-content {
             flex: 1;
             display: flex;
@@ -228,14 +226,8 @@
         }
 
         @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .notification-header {
@@ -1007,9 +999,7 @@
                         </div>
                         <div style="overflow-x: auto;">
                             <table class="data-table" id="recentOrdersTable">
-                                <thead>
-                                    <tr><th>Order ID</th><th>Amount</th><th>Status</th></tr>
-                                </thead>
+                                <thead><tr><th>Order ID</th><th>Amount</th><th>Status</th></tr></thead>
                                 <tbody id="recentOrdersBody"></tbody>
                             </table>
                         </div>
@@ -1156,9 +1146,9 @@
         <div class="modal-content">
             <h3 id="menuModalTitle">Add Menu Item</h3>
             <div class="form-group"><label>Item Name</label><input type="text" id="menuItemName" placeholder="e.g., Margherita Pizza"></div>
-            <div class="form-group"><label>Price ($)</label><input type="number" id="menuItemPrice" step="0.01" placeholder="0.00"></div>
+            <div class="form-group"><label>Price</label><input type="number" id="menuItemPrice" step="0.01" placeholder="0.00"></div>
             <div class="form-group"><label>Category</label><select id="menuItemCategory"></select></div>
-            <div class="form-group"><label>Image URL (optional)</label><input type="text" id="menuItemImage" placeholder="https://example.com/image.jpg"></div>
+            <div class="form-group"><label>Image URL (optional)</label><input type="text" id="menuItemImage" placeholder="https://images.unsplash.com/photo-..."></div>
             <div class="modal-buttons">
                 <button class="modal-save" onclick="saveMenuItem()">Save</button>
                 <button class="modal-cancel" onclick="closeMenuModal()">Cancel</button>
@@ -1196,7 +1186,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, query, orderBy, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCN0akvFXOHM6WPHv9ve9noqqmauO3TJRY",
@@ -1230,7 +1220,6 @@
             receiptFooter: "Thank you for your visit!"
         };
 
-        // Toast notification function
         function showToast(message, type = 'info') {
             const toast = document.createElement('div');
             toast.className = `toast-message toast-${type}`;
@@ -1239,7 +1228,6 @@
             setTimeout(() => toast.remove(), 3000);
         }
 
-        // Load default categories
         function loadDefaultCategories() {
             const saved = localStorage.getItem('billzest_categories');
             if (saved) {
@@ -1294,18 +1282,6 @@
             document.getElementById('categoryModal').style.display = 'flex';
         };
 
-        window.editCategory = function(id) {
-            const cat = categories.find(c => c.id === id);
-            if (cat) {
-                editingCategoryId = id;
-                document.getElementById('categoryModalTitle').innerText = 'Edit Category';
-                document.getElementById('categoryName').value = cat.name;
-                document.getElementById('categoryEmoji').value = cat.emoji;
-                document.getElementById('categoryColor').value = cat.color;
-                document.getElementById('categoryModal').style.display = 'flex';
-            }
-        };
-
         window.saveCategory = function() {
             const name = document.getElementById('categoryName').value;
             const emoji = document.getElementById('categoryEmoji').value || '📦';
@@ -1352,7 +1328,6 @@
             }, 100);
         };
 
-        // Notifications
         let notifications = JSON.parse(localStorage.getItem('billzest_notifications') || '[]');
         
         function initSampleNotifications() {
@@ -1428,7 +1403,6 @@
             displayNotifications();
         };
 
-        // Save data to localStorage as fallback
         function saveMenuToLocal() {
             localStorage.setItem('billzest_menu', JSON.stringify(menuData));
         }
@@ -1441,7 +1415,6 @@
             localStorage.setItem('billzest_orders', JSON.stringify(ordersData));
         }
 
-        // Load settings
         function loadSettings() {
             const saved = localStorage.getItem('billzest_settings');
             if (saved) settings = JSON.parse(saved);
@@ -1467,7 +1440,6 @@
             displayCustomers();
         };
 
-        // Dashboard stats
         async function loadDashboardStats() {
             try {
                 const todaySales = ordersData.filter(o => o.status === 'completed').reduce((sum, o) => sum + (o.total || 0), 0);
@@ -1497,10 +1469,10 @@
             } catch (error) { console.error("Error loading stats:", error); }
         }
 
-        // Load menu data
+        // FIXED: Using "products" collection
         async function loadMenuData() {
             try {
-                const querySnapshot = await getDocs(collection(db, "menu"));
+                const querySnapshot = await getDocs(collection(db, "products"));
                 menuData = [];
                 querySnapshot.forEach(doc => menuData.push({ id: doc.id, ...doc.data() }));
                 saveMenuToLocal();
@@ -1560,6 +1532,7 @@
             }
         };
 
+        // FIXED: Using "products" collection
         window.saveMenuItem = async function() {
             const name = document.getElementById('menuItemName').value;
             const price = parseFloat(document.getElementById('menuItemPrice').value);
@@ -1569,10 +1542,10 @@
             const menuItem = { name, price, category, image: image || null };
             try {
                 if (editingMenuItemId) {
-                    await updateDoc(doc(db, "menu", editingMenuItemId), menuItem);
+                    await updateDoc(doc(db, "products", editingMenuItemId), menuItem);
                     showToast('Menu item updated!', 'success');
                 } else {
-                    await addDoc(collection(db, "menu"), menuItem);
+                    await addDoc(collection(db, "products"), menuItem);
                     showToast('Menu item added!', 'success');
                 }
                 closeMenuModal();
@@ -1585,10 +1558,11 @@
             }
         };
 
+        // FIXED: Using "products" collection
         window.deleteMenuItem = async function(id) {
             if (confirm('Delete this menu item?')) {
                 try {
-                    await deleteDoc(doc(db, "menu", id));
+                    await deleteDoc(doc(db, "products", id));
                     showToast('Menu item deleted!', 'success');
                     await loadMenuData();
                     await loadDashboardStats();
@@ -1602,7 +1576,6 @@
 
         window.closeMenuModal = function() { document.getElementById('menuModal').style.display = 'none'; };
 
-        // Load customers data
         async function loadCustomersData() {
             try {
                 const querySnapshot = await getDocs(collection(db, "customers"));
@@ -1622,7 +1595,7 @@
             const container = document.getElementById('customersBody');
             if (!container) return;
             if (customersData.length === 0) {
-                container.innerHTML = '<tr><td colspan="9" style="text-align: center; padding: 40px;">No customers found</td></tr>';
+                container.innerHTML = '<td><td colspan="9" style="text-align: center; padding: 40px;">No customers found</td></tr>';
                 return;
             }
             container.innerHTML = customersData.map(customer => `
@@ -1710,17 +1683,7 @@
                 await loadCustomersData();
             } catch (error) {
                 console.error("Error saving customer:", error);
-                // Fallback: Save to localStorage
-                if (editingCustomerId) {
-                    const index = customersData.findIndex(c => c.id === editingCustomerId);
-                    if (index !== -1) customersData[index] = { ...customersData[index], ...customer, id: editingCustomerId };
-                } else {
-                    customersData.push({ ...customer, id: Date.now().toString() });
-                }
-                saveCustomersToLocal();
-                displayCustomers();
-                closeCustomerModal();
-                showToast('Customer saved locally (offline mode)', 'info');
+                showToast('Error saving customer: ' + error.message, 'error');
             }
         };
 
@@ -1732,17 +1695,13 @@
                     await loadCustomersData();
                 } catch (error) {
                     console.error("Error deleting customer:", error);
-                    customersData = customersData.filter(c => c.id !== id);
-                    saveCustomersToLocal();
-                    displayCustomers();
-                    showToast('Customer deleted locally', 'info');
+                    showToast('Error deleting: ' + error.message, 'error');
                 }
             }
         };
 
         window.closeCustomerModal = function() { document.getElementById('customerModal').style.display = 'none'; };
 
-        // Load orders data
         async function loadOrdersData() {
             try {
                 const querySnapshot = await getDocs(query(collection(db, "orders"), orderBy("createdAt", "desc")));
@@ -1786,10 +1745,10 @@
             }).join('');
         }
 
-        // Create sample data
+        // FIXED: Using "products" collection
         async function createSampleData() {
             try {
-                const menuSnapshot = await getDocs(collection(db, "menu"));
+                const menuSnapshot = await getDocs(collection(db, "products"));
                 if (menuSnapshot.empty) {
                     const sampleMenu = [
                         { name: "Classic Burger", price: 8.50, category: "Burgers", image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=100&h=100&fit=crop" },
@@ -1798,7 +1757,7 @@
                         { name: "Cappuccino", price: 4.00, category: "Beverages", image: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=100&h=100&fit=crop" },
                         { name: "Caesar Salad", price: 6.50, category: "Salads", image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=100&h=100&fit=crop" }
                     ];
-                    for (const item of sampleMenu) await addDoc(collection(db, "menu"), item);
+                    for (const item of sampleMenu) await addDoc(collection(db, "products"), item);
                 }
                 const ordersSnapshot = await getDocs(collection(db, "orders"));
                 if (ordersSnapshot.empty) {
@@ -1811,7 +1770,6 @@
             } catch (error) { console.error("Error creating sample data:", error); }
         }
 
-        // Report functions
         window.exportReport = function() {
             let csv = "Order ID,Items,Total,Status,Time\n";
             ordersData.forEach(order => {
@@ -1853,7 +1811,6 @@
             await loadCategoryChart();
         }
 
-        // Auth state
         onAuthStateChanged(auth, async (user) => {
             const loadingScreen = document.getElementById('loadingScreen');
             if (user) {
