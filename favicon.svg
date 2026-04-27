@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <!-- Background -->
-  <rect width="64" height="64" rx="14" fill="#4f2d91"/>
-  <!-- B letter -->
-  <text x="8" y="46" font-family="Arial Black, sans-serif" font-size="36" font-weight="900" fill="white">B</text>
-  <!-- Z letter orange -->
-  <text x="34" y="46" font-family="Arial Black, sans-serif" font-size="36" font-weight="900" fill="#f5a623">Z</text>
-</svg>
