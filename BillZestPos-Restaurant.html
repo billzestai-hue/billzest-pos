@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>BillZestPos — Restaurant POS</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,system-ui,sans-serif;background:#0b1220;color:#f1f5f9;height:100dvh;overflow:hidden}
+button,input,select{font-family:inherit}
+.top{height:48px;background:#060b14;border-bottom:1px solid #1e293b;display:flex;align-items:center;padding:0 12px;gap:10px}
+.logo{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#0f766e,#14b8a6);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.7rem}
+.top h1{font-size:.95rem;font-weight:800}
+.pill{background:rgba(20,184,166,.15);color:#2dd4bf;border:1px solid rgba(20,184,166,.3);padding:3px 10px;border-radius:999px;font-size:.72rem;font-weight:700}
+.shell{display:grid;grid-template-columns:150px 1fr 300px;height:calc(100dvh - 48px)}
+.side{background:#111827;border-right:1px solid #1e293b;overflow-y:auto;padding:10px 8px}
+.cat{width:100%;text-align:left;padding:12px 12px;border:none;border-radius:10px;background:transparent;color:#94a3b8;font-weight:600;font-size:.85rem;cursor:pointer;margin-bottom:4px;display:flex;gap:8px;align-items:center}
+.cat.active{background:linear-gradient(135deg,#0f766e,#14b8a6);color:#fff}
+.cat:hover{background:#1e293b;color:#fff}
+.main{display:flex;flex-direction:column;overflow:hidden}
+.tools{padding:10px;display:flex;gap:8px;border-bottom:1px solid #1e293b;background:#0f172a;flex-wrap:wrap;align-items:center}
+.tools input,.tools select{background:#1e293b;border:1px solid #334155;color:#fff;border-radius:8px;padding:10px 12px;font-size:.9rem}
+.tools input{flex:1;min-width:120px}
+.grid{flex:1;overflow-y:auto;padding:12px;display:grid;grid-template-columns:repeat(auto-fill,minmax(125px,1fr));gap:10px;align-content:start}
+.card{background:#1e293b;border:1px solid #334155;border-radius:14px;padding:10px;cursor:pointer;text-align:center;position:relative;transition:.12s}
+.card:active{transform:scale(.96)}
+.card:hover{border-color:#14b8a6}
+.card .img{font-size:2.5rem;height:70px;display:flex;align-items:center;justify-content:center;background:#0f172a;border-radius:10px;margin-bottom:8px}
+.card h4{font-size:.8rem;font-weight:600;min-height:2.3em;line-height:1.25;margin-bottom:4px}
+.card .pr{color:#2dd4bf;font-weight:800;font-size:.95rem}
+.badge{position:absolute;top:6px;right:6px;background:#0f766e;color:#fff;width:22px;height:22px;border-radius:50%;font-size:.72rem;font-weight:700;display:flex;align-items:center;justify-content:center}
+.cart{background:#111827;border-left:1px solid #1e293b;display:flex;flex-direction:column}
+.ch{padding:12px 14px;border-bottom:1px solid #1e293b;display:flex;justify-content:space-between;align-items:center}
+.ch h2{font-size:1rem;font-weight:700}
+.ot{display:flex;gap:6px;padding:8px 12px}
+.ot button{flex:1;padding:8px;border-radius:8px;border:1px solid #334155;background:transparent;color:#94a3b8;font-weight:600;font-size:.78rem;cursor:pointer}
+.ot button.on{background:rgba(20,184,166,.15);border-color:#14b8a6;color:#2dd4bf}
+.items{flex:1;overflow-y:auto;padding:10px}
+.empty{text-align:center;color:#64748b;padding:30px 10px;font-size:.88rem}
+.line{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:10px;margin-bottom:8px}
+.line h4{font-size:.88rem;margin-bottom:6px}
+.line .row{display:flex;align-items:center;justify-content:space-between}
+.q{display:flex;align-items:center;gap:6px}
+.q button{width:28px;height:28px;border-radius:8px;border:1px solid #334155;background:#0f172a;color:#fff;font-weight:700;cursor:pointer}
+.tot{padding:12px 14px;border-top:1px solid #1e293b;font-size:.88rem}
+.tot .r{display:flex;justify-content:space-between;margin-bottom:5px;color:#94a3b8}
+.tot .g{color:#fff;font-weight:800;font-size:1.15rem;margin-top:8px;display:flex;justify-content:space-between}
+.pay{padding:10px 12px 14px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.btn{border:none;border-radius:12px;padding:13px;font-weight:700;cursor:pointer;font-size:.9rem}
+.pay-main{grid-column:1/-1;background:linear-gradient(135deg,#0f766e,#14b8a6);color:#fff;font-size:1rem}
+.cash{background:#14532d;color:#bbf7d0}
+.cardp{background:#1e3a5f;color:#93c5fd}
+.clr{grid-column:1/-1;background:transparent;border:1px solid #334155;color:#94a3b8}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);background:#134e4a;color:#fff;padding:12px 18px;border-radius:12px;font-weight:600;z-index:50;opacity:0;transition:.3s}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+@media(max-width:800px){
+  .shell{grid-template-columns:1fr;grid-template-rows:auto 1fr auto;height:auto;min-height:calc(100dvh - 48px)}
+  body{overflow:auto;height:auto}
+  .side{display:flex;flex-direction:row;overflow-x:auto;border-right:none;border-bottom:1px solid #1e293b;gap:4px}
+  .cat{width:auto;white-space:nowrap;margin:0}
+  .grid{max-height:38vh}
+  .cart{border-left:none;border-top:1px solid #1e293b;max-height:48vh}
+}
+</style>
+</head>
+<body>
+<div class="top">
+  <div class="logo">BZ</div>
+  <h1>BillZestPos</h1>
+  <span class="pill">🍽️ Restaurant</span>
+</div>
+<div class="shell">
+  <aside class="side" id="side"></aside>
+  <section class="main">
+    <div class="tools">
+      <input id="search" placeholder="Search food..." oninput="render()">
+      <button type="button" class="btn" style="background:#0f766e;color:#fff;padding:10px 12px;border-radius:8px;border:none;font-weight:700;cursor:pointer;white-space:nowrap" onclick="openAdd()">+ Add Item</button>
+      <select id="table"><option value="">Table —</option><option>T1</option><option>T2</option><option>T3</option><option>T4</option><option>T5</option></select>
+    </div>
+    <div class="grid" id="grid"></div>
+  </section>
+  <aside class="cart">
+    <div class="ch"><h2>Order</h2><span id="cnt" style="color:#94a3b8;font-size:.85rem">0 items</span></div>
+    <div class="ot">
+      <button type="button" class="on" id="di" onclick="setOT('dine')">Dine In</button>
+      <button type="button" id="ta" onclick="setOT('take')">Take Away</button>
+    </div>
+    <div class="items" id="items"><div class="empty">Tap food to add</div></div>
+    <div class="tot" id="tot"></div>
+    <div class="pay">
+      <button class="btn cash" onclick="pay('Cash')">Cash</button>
+      <button class="btn cardp" onclick="pay('Mada')">Mada</button>
+      <button class="btn pay-main" onclick="pay('Cash')">PAY · <span id="amt">0.00</span> SAR</button>
+      <button class="btn clr" onclick="cart=[];render()">Clear</button>
+    </div>
+  </aside>
+</div>
+
+<div id="addModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:80;align-items:center;justify-content:center;padding:16px">
+  <div style="background:#1e293b;border-radius:16px;padding:20px;width:100%;max-width:380px;border:1px solid #334155">
+    <h3 style="margin-bottom:14px;font-size:1.05rem">Add Menu Item</h3>
+    <label style="font-size:.8rem;color:#94a3b8">Name</label>
+    <input id="aName" style="width:100%;padding:10px;margin:4px 0 10px;border-radius:8px;border:1px solid #334155;background:#0f172a;color:#fff">
+    <label style="font-size:.8rem;color:#94a3b8">Price (SAR)</label>
+    <input id="aPrice" type="number" step="0.01" style="width:100%;padding:10px;margin:4px 0 10px;border-radius:8px;border:1px solid #334155;background:#0f172a;color:#fff">
+    <label style="font-size:.8rem;color:#94a3b8">Category</label>
+    <select id="aCat" style="width:100%;padding:10px;margin:4px 0 10px;border-radius:8px;border:1px solid #334155;background:#0f172a;color:#fff">
+      <option>Food</option><option>Grill</option><option>Drinks</option><option>Dessert</option>
+    </select>
+    <label style="font-size:.8rem;color:#94a3b8">Photo</label>
+    <input id="aPhoto" type="file" accept="image/*" style="width:100%;margin:4px 0 10px;color:#94a3b8;font-size:.85rem">
+    <div id="aPrev" style="text-align:center;font-size:2.5rem;margin-bottom:10px"></div>
+    <div style="display:flex;gap:8px">
+      <button type="button" onclick="closeAdd()" style="flex:1;padding:12px;border-radius:10px;border:1px solid #334155;background:transparent;color:#94a3b8;font-weight:600;cursor:pointer">Cancel</button>
+      <button type="button" onclick="saveAdd()" style="flex:1;padding:12px;border-radius:10px;border:none;background:linear-gradient(135deg,#0f766e,#14b8a6);color:#fff;font-weight:700;cursor:pointer">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<script>
+const STORE = 'bz_rest_items_v1';
+const defaults = [
+  {id:1,n:'Chicken Shawarma',p:18,c:'Food',i:'🌯',img:''},
+  {id:2,n:'Kabsa Plate',p:28,c:'Food',i:'🍚',img:''},
+  {id:3,n:'Beef Burger',p:22,c:'Food',i:'🍔',img:''},
+  {id:4,n:'Hummus Plate',p:14,c:'Food',i:'🥣',img:''},
+  {id:5,n:'Grilled Fish',p:45,c:'Grill',i:'🔥',img:''},
+  {id:6,n:'Mixed Grill',p:55,c:'Grill',i:'🔥',img:''},
+  {id:7,n:'Orange Juice',p:12,c:'Drinks',i:'🍊',img:''},
+  {id:8,n:'Arabic Coffee',p:8,c:'Drinks',i:'☕',img:''},
+  {id:9,n:'Fresh Lemonade',p:10,c:'Drinks',i:'🍋',img:''},
+  {id:10,n:'Kunafa',p:16,c:'Dessert',i:'🍰',img:''},
+  {id:11,n:'Baklava',p:14,c:'Dessert',i:'🧁',img:''},
+  {id:12,n:'Basbousa',p:12,c:'Dessert',i:'🍪',img:''}
+];
+let items = [];
+try { items = JSON.parse(localStorage.getItem(STORE)||'[]'); } catch(e){}
+if (!items.length) { items = defaults.slice(); saveItems(); }
+const cats=['All','Food','Grill','Drinks','Dessert'];
+let cat='All', cart=[], ot='dine', pendingImg='';
+function saveItems(){ localStorage.setItem(STORE, JSON.stringify(items)); }
+function toast(m){const e=document.getElementById('toast');e.textContent=m;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),2e3)}
+function setOT(v){ot=v;document.getElementById('di').classList.toggle('on',v==='dine');document.getElementById('ta').classList.toggle('on',v==='take')}
+function side(){document.getElementById('side').innerHTML=cats.map(c=>`<button class="cat ${c===cat?'active':''}" onclick="cat='${c}';side();render()">${c==='All'?'📋':c==='Food'?'🍽️':c==='Grill'?'🔥':c==='Drinks'?'🥤':'🍰'} ${c}</button>`).join('')}
+function render(){
+  const q=(document.getElementById('search').value||'').toLowerCase();
+  const list=items.filter(x=>(cat==='All'||x.c===cat)&&(!q||x.n.toLowerCase().includes(q)));
+  document.getElementById('grid').innerHTML=list.map(x=>{
+    const line=cart.find(c=>c.id===x.id);
+    const pic = x.img ? `<img src="${x.img}" style="width:100%;height:70px;object-fit:cover;border-radius:10px">` : `<div class="img">${x.i||'🍽️'}</div>`;
+    return `<div class="card" onclick="add(${x.id})">${line?`<span class="badge">${line.q}</span>`:''}${x.img?`<div style="margin-bottom:8px">${pic}</div>`:pic}<h4>${x.n}</h4><div class="pr">SAR ${Number(x.p).toFixed(2)}</div>
+    <button type="button" onclick="event.stopPropagation();delItem(${x.id})" style="margin-top:6px;font-size:.7rem;color:#f87171;background:none;border:none;cursor:pointer">Delete</button></div>`;
+  }).join('');
+  const n=cart.reduce((s,c)=>s+c.q,0);
+  document.getElementById('cnt').textContent=n+' items';
+  const el=document.getElementById('items');
+  if(!cart.length)el.innerHTML='<div class="empty">Tap food to add</div>';
+  else el.innerHTML=cart.map(c=>`<div class="line"><h4>${c.n}</h4><div class="row"><div class="q"><button onclick="event.stopPropagation();chg(${c.id},-1)">−</button><span>${c.q}</span><button onclick="event.stopPropagation();chg(${c.id},1)">+</button></div><strong style="color:#2dd4bf">SAR ${(c.p*c.q).toFixed(2)}</strong></div></div>`).join('');
+  const sub=cart.reduce((s,c)=>s+c.p*c.q,0), vat=sub*.15, tot=sub+vat;
+  document.getElementById('tot').innerHTML=`<div class="r"><span>Subtotal</span><span>SAR ${sub.toFixed(2)}</span></div><div class="r"><span>VAT 15%</span><span>SAR ${vat.toFixed(2)}</span></div><div class="g"><span>Grand Total</span><span>SAR ${tot.toFixed(2)}</span></div>`;
+  document.getElementById('amt').textContent=tot.toFixed(2);
+}
+function add(id){const x=items.find(i=>i.id===id);if(!x)return;const l=cart.find(c=>c.id===id);if(l)l.q++;else cart.push({id:x.id,n:x.n,p:x.p,q:1});render()}
+function chg(id,d){const l=cart.find(c=>c.id===id);if(!l)return;l.q+=d;if(l.q<=0)cart=cart.filter(c=>c.id!==id);render()}
+function pay(m){if(!cart.length)return toast('Cart empty');const tot=cart.reduce((s,c)=>s+c.p*c.q,0)*1.15;toast('Paid SAR '+tot.toFixed(2)+' · '+m);cart=[];render()}
+function openAdd(){pendingImg='';document.getElementById('aName').value='';document.getElementById('aPrice').value='';document.getElementById('aPrev').innerHTML='';document.getElementById('addModal').style.display='flex'}
+function closeAdd(){document.getElementById('addModal').style.display='none'}
+document.getElementById('aPhoto').onchange=function(e){
+  const f=e.target.files&&e.target.files[0]; if(!f)return;
+  if(f.size>800000){toast('Photo max 800KB');return;}
+  const r=new FileReader();
+  r.onload=()=>{pendingImg=r.result;document.getElementById('aPrev').innerHTML='<img src="'+pendingImg+'" style="max-height:80px;border-radius:8px">'};
+  r.readAsDataURL(f);
+};
+function saveAdd(){
+  const n=document.getElementById('aName').value.trim();
+  const p=parseFloat(document.getElementById('aPrice').value);
+  const c=document.getElementById('aCat').value;
+  if(!n||!(p>=0)){toast('Name + price required');return;}
+  const id=Date.now();
+  items.push({id,n,p,c,i:'🍽️',img:pendingImg||''});
+  saveItems(); closeAdd(); side(); render(); toast('Item added');
+}
+function delItem(id){
+  if(!confirm('Delete this item?'))return;
+  items=items.filter(x=>x.id!==id);
+  cart=cart.filter(c=>c.id!==id);
+  saveItems(); render(); toast('Deleted');
+}
+side();render();
+</script>
+</body>
+</html>

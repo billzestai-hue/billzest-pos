@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BillZestPos — Open POS Screens</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,sans-serif;background:linear-gradient(145deg,#0f172a,#134e4a);color:#f1f5f9;min-height:100dvh;padding:28px 16px}
+.wrap{max-width:480px;margin:0 auto}
+.logo{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.logo span{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#0f766e,#14b8a6);display:flex;align-items:center;justify-content:center;font-weight:800}
+h1{font-size:1.4rem;margin-bottom:6px}
+.sub{color:#94a3b8;font-size:.9rem;margin-bottom:20px;line-height:1.5}
+.card{display:block;background:rgba(30,41,59,.95);border:1px solid #334155;border-radius:16px;padding:18px;margin-bottom:12px;text-decoration:none;color:inherit}
+.card h2{font-size:1.1rem;margin:8px 0 4px}
+.card p{font-size:.85rem;color:#94a3b8;line-height:1.4}
+.card .go{color:#2dd4bf;font-weight:600;font-size:.85rem;margin-top:10px;display:block}
+.r{border-top:4px solid #14b8a6}.c{border-top:4px solid #f59e0b}.g{border-top:4px solid #3b82f6}.h{border-top:4px solid #8b5cf6}
+.warn{background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.35);border-radius:12px;padding:12px;font-size:.82rem;color:#fde68a;margin-bottom:18px;line-height:1.5}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="logo"><span>BZ</span><strong>BillZestPos</strong></div>
+  <h1>Alag-alag POS screens</h1>
+  <p class="sub">Har business ki apni file — photos jaisa design</p>
+  <div class="warn">
+    <b>Phone pe use:</b> Ye 3 files <u>same folder</u> mein rakho, phir seedha us file ko open karo jo chahiye (Restaurant / Cafe / Grocery). Hub se link kabhi-kabhi Google Files mein nahi chalta.
+  </div>
+  <a class="card r" href="BillZestPos-Restaurant.html">
+    <div style="font-size:1.8rem">🍽️</div>
+    <h2>Restaurant POS</h2>
+    <p>Dark screen · categories · food grid · order panel · Dine In / Take Away · Cash / Mada · PAY</p>
+    <span class="go">Open Restaurant →</span>
+  </a>
+  <a class="card c" href="BillZestPos-Cafe.html">
+    <div style="font-size:1.8rem">☕</div>
+    <h2>Cafe / Coffee POS</h2>
+    <p>Light screen · drink cards · +/− qty · Order Summary · Dine In / Take Out · Proceed to Payment</p>
+    <span class="go">Open Cafe →</span>
+  </a>
+  <a class="card g" href="BillZestPos-Grocery.html">
+    <div style="font-size:1.8rem">🛒</div>
+    <h2>Grocery / Shop POS</h2>
+    <p>Product list · departments · number keypad · Void/Hold · green PAY button</p>
+    <span class="go">Open Grocery →</span>
+  </a>
+  <a class="card h" href="BillZestPos-Hotel.html">
+    <div style="font-size:1.8rem">🏨</div>
+    <h2>Hotel Room View</h2>
+    <p>Floor map · vacant/occupied rooms · check-in panel</p>
+    <span class="go">Open Hotel →</span>
+  </a>
+</div>
+</body>
+</html>
