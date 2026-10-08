@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>BillZestPOS – Billing &amp; POS Software</title>
+<meta name="description" content="BillZestPOS is billing and point-of-sale software for shops, restaurants, pharmacies and wholesalers in Saudi Arabia. VAT invoices, inventory, customer offers on WhatsApp. Available in English and Arabic.">
+<link rel="canonical" href="https://billzestpos.com/">
+<meta name="theme-color" content="#14213d">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="BillZestPOS">
+<meta property="og:title" content="BillZestPOS – Billing &amp; POS Software">
+<meta property="og:description" content="VAT invoices, inventory and WhatsApp offers for your shop. English and Arabic.">
+<meta property="og:url" content="https://billzestpos.com/">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28'%3E%3Crect width='28' height='28' rx='7' fill='%23f4a300'/%3E%3Cpath d='M8 6h12v16l-2-1.5-2 1.5-2-1.5-2 1.5-2-1.5L8 22z' fill='%2314213d'/%3E%3Cpath d='M11 10h6M11 13.5h6' stroke='%23f4a300' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"BillZestPOS","url":"https://billzestpos.com/","email":"billzestai@gmail.com","telephone":"+966550898978"}</script>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;800&family=Cairo:wght@400;600;800&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f7fb;--surface:#fff;--ink:#14213d;--muted:#5b6478;--line:#dfe3ec;--accent:#f4a300;--accent-ink:#14213d;--ok:#12805c;--dark:#14213d;--dark-ink:#fff;--r:14px;--rs:10px;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1424;--surface:#161e33;--ink:#eef1f8;--muted:#9aa4bc;--line:#26304a;--ok:#4cc79a;--dark:#1d2845}}
+:root[data-theme="dark"]{--bg:#0e1424;--surface:#161e33;--ink:#eef1f8;--muted:#9aa4bc;--line:#26304a;--ok:#4cc79a;--dark:#1d2845}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 68px);scroll-behavior:smooth}
+*,*:before,*:after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.65 Figtree,Cairo,system-ui,sans-serif;-webkit-text-size-adjust:100%}
+h1,h2,h3{font-family:'Bricolage Grotesque',Cairo,sans-serif;line-height:1.15;margin:0;letter-spacing:-.01em}
+html[dir=rtl] body,html[dir=rtl] h1,html[dir=rtl] h2,html[dir=rtl] h3,html[dir=rtl] .logo,html[dir=rtl] .price,html[dir=rtl] .sum.t,html[dir=rtl] .cl a{font-family:Cairo,sans-serif;letter-spacing:0}
+html[dir=rtl] body{line-height:1.8}html[dir=rtl] h1,html[dir=rtl] h2,html[dir=rtl] h3{line-height:1.4}
+a{color:inherit}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+header{position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);border-bottom:1px solid var(--line);z-index:5}
+.nav{display:flex;align-items:center;justify-content:space-between;height:60px;gap:12px}
+.logo{display:inline-flex;align-items:center;gap:9px;font:800 22px 'Bricolage Grotesque',sans-serif;text-decoration:none;direction:ltr}
+.logo b{color:var(--accent)}
+.links{display:flex;gap:22px;margin-inline-start:auto;margin-inline-end:16px}
+.links a{text-decoration:none;color:var(--muted);font-weight:500;font-size:16px}
+.links a:hover{color:var(--ink)}
+.r{display:flex;gap:8px;align-items:center}
+.mb{display:none!important}
+.btn{display:inline-flex;align-items:center;justify-content:center;background:var(--accent);color:var(--accent-ink);font:inherit;font-weight:600;font-size:16px;line-height:1.2;padding:13px 22px;border:1.5px solid var(--accent);border-radius:var(--rs);text-decoration:none;cursor:pointer}
+.btn.alt{background:transparent;color:var(--ink);border-color:var(--line)}
+.btn.alt:hover{border-color:var(--ink)}
+.btn.sm{padding:9px 14px;font-size:14px}
+.plan .btn,form .btn{display:flex;width:100%}
+.btn:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible,button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.row{display:flex;gap:12px;flex-wrap:wrap}
+.hero{display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:center;padding:64px 20px}
+.hero h1{font-size:clamp(32px,5vw,52px);font-weight:800}
+.hero p{color:var(--muted);font-size:18px;max-width:46ch;margin:18px 0 28px}
+section{padding:72px 0}
+.alt{background:var(--surface);border-block:1px solid var(--line)}
+h2{font-size:clamp(26px,3.6vw,36px);font-weight:800;max-width:24ch}
+h3{font-size:20px;font-weight:700}
+.dark{background:var(--dark);color:var(--dark-ink)}
+.dark p{color:#b8c1d9;max-width:56ch;font-size:18px;margin:16px 0 0}
+.feat,.steps,.plans,.pos,.contact{margin-top:36px}
+.feat{display:grid;grid-template-columns:repeat(2,1fr);gap:0 48px}
+.feat div{padding:22px 0;border-top:1px solid var(--line)}
+.feat h3,.steps h3{margin-bottom:6px}
+.feat p,.steps p{margin:0;color:var(--muted)}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+.steps div{border-top:3px solid var(--accent);padding-top:16px}
+.inv,.plan{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:24px}
+.inv{font-size:16px;box-shadow:0 18px 40px -26px rgba(20,33,61,.4)}
+.alt .inv,.alt .tile,.alt .plan,.alt input,.alt select{background:var(--bg)}
+.inv-h{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px;font-weight:600}
+.tag{background:color-mix(in srgb,var(--ok) 15%,transparent);color:var(--ok);padding:2px 10px;border-radius:99px;font-size:14px;font-weight:600;white-space:nowrap}
+.line{display:grid;grid-template-columns:1fr 64px 96px;gap:8px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.line input{width:100%;padding:6px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit;text-align:center}
+.amt,.v{text-align:end;font-variant-numeric:tabular-nums;direction:ltr}
+.sum{display:flex;justify-content:space-between;padding:6px 0;color:var(--muted)}
+.sum.t{color:var(--ink);font:700 20px 'Bricolage Grotesque',sans-serif;border-top:2px solid var(--ink);margin-top:8px;padding-top:12px}
+.hint{font-size:14px;color:var(--muted);margin:12px 0 0}
+.pos{display:grid;grid-template-columns:1.2fr .8fr;gap:20px;align-items:start}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:var(--rs);padding:18px 8px;text-align:center;cursor:pointer;color:var(--ink);font:inherit;font-size:16px}
+.tile b{display:block;font-weight:600}.tile span{color:var(--muted);font-size:14px}
+.tile:hover{border-color:var(--accent)}.tile:active{background:color-mix(in srgb,var(--accent) 30%,transparent)}
+.cr{display:flex;justify-content:space-between;gap:8px;padding:8px 0;border-top:1px solid var(--line)}
+.pos .btn{margin-top:14px}
+.mkf label{display:block;font-weight:600;font-size:14px;margin:0 0 14px}
+.mkf input,.mkf select{display:block;width:100%;margin-top:6px;padding:12px;border:1px solid var(--line);border-radius:var(--rs);background:var(--surface);color:var(--ink);font:inherit;font-weight:400}
+.lead{color:var(--muted);max-width:56ch;margin:14px 0 0}
+.bub{background:color-mix(in srgb,#25d366 20%,var(--surface));border-radius:12px;padding:14px 16px;font-size:16px;white-space:pre-line;overflow-wrap:anywhere}
+.tgl{display:inline-flex;border:1.5px solid var(--line);border-radius:99px;padding:3px;margin-top:24px;background:var(--surface)}
+.tgl button{border:0;background:transparent;color:var(--muted);padding:8px 16px;border-radius:99px;font:inherit;font-size:16px;font-weight:600;cursor:pointer}
+.tgl button.on{background:var(--accent);color:var(--accent-ink)}
+.tgl i{font-style:normal;font-size:14px;margin-inline-start:6px;color:var(--ok)}.tgl .on i{color:var(--accent-ink)}
+.promo{margin:16px 0 0;padding:12px 16px;border-radius:var(--rs);background:color-mix(in srgb,var(--accent) 20%,transparent);max-width:62ch;font-size:16px}
+.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:28px}
+.plan.hot{border:2px solid var(--accent)}
+.price{font:800 36px 'Bricolage Grotesque',sans-serif;margin:10px 0}
+.price small{font:400 16px Figtree,Cairo,sans-serif;color:var(--muted)}
+.np{margin:-6px 0 2px;font-weight:600;color:var(--ok);font-size:14px}
+.plan ul{padding-inline-start:18px;margin:12px 0 22px;color:var(--muted)}
+details{border-top:1px solid var(--line);padding:16px 0}
+summary{cursor:pointer;font-weight:600}
+details p{color:var(--muted);margin:8px 0 0}
+.faq{margin-top:28px}
+.contact{display:grid;grid-template-columns:1fr 1fr;gap:40px}
+.cl small{color:var(--muted);display:block;font-size:14px}
+.cl a{display:block;font:700 20px 'Bricolage Grotesque',Cairo,sans-serif;text-decoration:none;margin:4px 0 20px;direction:ltr;text-align:start}
+html[dir=rtl] .cl a{text-align:right}
+form label{display:block;font-weight:600;font-size:14px;margin:0 0 14px}
+form input,form textarea,select{display:block;width:100%;margin-top:6px;padding:12px;border:1px solid var(--line);border-radius:var(--rs);background:var(--surface);color:var(--ink);font:inherit;font-weight:400}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ok{color:var(--ok);font-weight:600;margin:12px 0 0;font-size:14px}
+.wa{position:fixed;inset-inline-end:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));background:#25d366;width:56px;height:56px;border-radius:50%;display:grid;place-items:center;box-shadow:0 8px 20px rgba(0,0,0,.3);z-index:6;text-decoration:none}
+.wa svg{width:30px;height:30px;fill:#fff}
+footer{padding:32px 0;color:var(--muted);font-size:14px;border-top:1px solid var(--line)}
+footer b{color:var(--ink);font-size:16px}
+.fw{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:flex-start}
+.fl{display:flex;gap:18px;flex-wrap:wrap}.fl a,.fw a{text-decoration:none}.fl a:hover,.fw a:hover{color:var(--ink)}
+@media(max-width:820px){
+section{padding:52px 0}.hero{padding:36px 20px 48px}.hero h1{font-size:30px}.hero p{font-size:16px;line-height:1.6;margin:14px 0 24px}.hero .row .btn{flex:1 1 100%}
+.hero,.feat,.plans,.steps,.pos,.contact{grid-template-columns:1fr}
+.mb{display:inline-flex!important}.cta{display:none}
+.links{display:none;position:absolute;top:100%;inset-inline:0;margin:0;padding:6px 20px 10px;flex-direction:column;gap:0;background:var(--bg);border-bottom:1px solid var(--line)}
+.links.open{display:flex}.links a{padding:13px 0;border-top:1px solid var(--line);font-size:16px}.links a:first-child{border-top:0}}
+@media(max-width:420px){.tiles{grid-template-columns:repeat(2,1fr)}.two{grid-template-columns:1fr}.inv,.plan{padding:20px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+[hidden]{display:none!important}
+.vid{margin-top:36px;aspect-ratio:16/9;border-radius:var(--r);overflow:hidden;border:1px solid var(--line)}
+.vid iframe{width:100%;height:100%;border:0}
+dialog{border:1px solid var(--line);border-radius:var(--r);background:var(--surface);color:var(--ink);padding:0;width:calc(100% - 32px);max-width:640px;max-height:85vh}
+dialog::backdrop{background:rgba(10,15,30,.6)}
+.dl{padding:28px;overflow:auto;max-height:85vh}
+.dl h2{margin-bottom:6px}
+.dl h3{margin-top:22px}
+.dl p{color:var(--muted);margin:6px 0 0}
+.dl .btn{margin-top:26px}
+.alt .tgl{background:var(--bg)}
+.tw{margin-top:36px;overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--bg)}
+table{width:100%;border-collapse:collapse;font-size:16px}
+th,td{padding:14px 12px;text-align:start;border-top:1px solid var(--line);vertical-align:top}
+thead th{border-top:0;font-weight:700;font-size:16px}
+tbody th{font-weight:600}
+td{color:var(--muted)}
+.us{background:color-mix(in srgb,var(--accent) 14%,transparent)}
+td.us{color:var(--ink);font-weight:600}
+.vatc{max-width:520px;margin-top:36px}
+.vatc .tgl{margin:0 0 18px}
+.vl{display:block;font-weight:600;font-size:14px;margin:0 0 14px}
+.vl input{display:block;width:100%;margin-top:6px;padding:12px;border:1px solid var(--line);border-radius:var(--rs);color:var(--ink);font:inherit}
+.vatc .btn{display:flex;width:100%;margin-top:16px}
+.wbar{display:none}
+@media(max-width:820px){.wa{display:none}body{padding-bottom:76px}
+.wbar{display:block;position:fixed;inset-inline:0;bottom:0;z-index:6;background:var(--bg);border-top:1px solid var(--line);padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px))}
+.wbar .btn{display:flex;width:100%;gap:8px;background:#25d366;border-color:#25d366;color:#062c15}
+.wbar svg{width:20px;height:20px;fill:#062c15}}
+.offer{position:relative;background:var(--accent);color:var(--accent-ink);text-align:center;font-size:14px;line-height:1.5;padding:9px 44px}
+.offer a{font-weight:700;text-decoration:underline;margin-inline-start:6px}
+.offer button{position:absolute;inset-inline-end:8px;top:50%;transform:translateY(-50%);background:none;border:0;font-size:24px;line-height:1;color:inherit;cursor:pointer;padding:4px 10px}
+.ck{position:fixed;inset-inline:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));max-width:520px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;box-shadow:0 12px 32px -12px rgba(0,0,0,.4);z-index:7;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.ck p{margin:0;font-size:14px;flex:1 1 220px}.ck a{font-weight:600}
+.ckb{display:flex;gap:8px}
+@media(max-width:820px){.ck{bottom:calc(88px + env(safe-area-inset-bottom,0px))}}
+.top{position:fixed;inset-inline-start:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-size:20px;line-height:1;cursor:pointer;display:grid;place-items:center;z-index:5;box-shadow:0 8px 20px -10px rgba(0,0,0,.4)}
+@media(max-width:820px){.top{inset-inline-start:auto;inset-inline-end:16px;bottom:calc(88px + env(safe-area-inset-bottom,0px))}}
+</style>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How much does it cost?", "acceptedAnswer": {"@type": "Answer", "text": "Starter is free with 50 invoices a month. Business is SAR 251 a month or SAR 2,000 a year, with a 14-day free trial. New customers get 10% off the first payment with code WELCOME10."}}, {"@type": "Question", "name": "Does it support ZATCA e-invoicing?", "acceptedAnswer": {"@type": "Answer", "text": "E-invoicing is part of the product. Message us and we will confirm which ZATCA phase applies to your business and how to set it up."}}, {"@type": "Question", "name": "Does it work on my phone?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. It works on Android, iPhone and any computer browser with the same account."}}, {"@type": "Question", "name": "Can I import my old data?", "acceptedAnswer": {"@type": "Answer", "text": "You can upload customers and items from Excel. Our team helps with your first import for free."}}, {"@type": "Question", "name": "Is my data safe?", "acceptedAnswer": {"@type": "Answer", "text": "Your data is encrypted and backed up every day. You can export it whenever you want."}}, {"@type": "Question", "name": "How many people can use it?", "acceptedAnswer": {"@type": "Answer", "text": "Business includes 3 users and Enterprise includes 10. Each user can sign in on a phone or a computer."}}, {"@type": "Question", "name": "Do I need special equipment?", "acceptedAnswer": {"@type": "Answer", "text": "No. A phone or a computer is enough. A barcode scanner and a thermal printer make the counter faster, but they are optional."}}, {"@type": "Question", "name": "Can I cancel anytime?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Tell us before your next payment date and we will stop the plan. You can export your data first."}}]}</script>
+</head>
+<body>
+<div class="offer" id="offer"><span><b data-ar="عميل جديد؟">New customer?</b> <span data-ar="خصم 10% على أول دفعة بكود WELCOME10.">Get 10% off your first payment with code WELCOME10.</span> <a href="#contact" data-plan="trial" data-ar="احصل على العرض">Claim offer</a></span><button type="button" id="offer-x" aria-label="Close">&times;</button></div>
+<header><div class="wrap nav">
+<a class="logo" href="#top"><svg class="lm" width="30" height="30" viewBox="0 0 28 28" aria-hidden="true"><rect width="28" height="28" rx="7" fill="#f4a300"/><path d="M8 6h12v16l-2-1.5-2 1.5-2-1.5-2 1.5-2-1.5L8 22z" fill="#14213d"/><path d="M11 10h6M11 13.5h6" stroke="#f4a300" stroke-width="1.6" stroke-linecap="round"/></svg><span>BillZest<b>POS</b></span></a>
+<div class="links" id="links">
+<a href="#features" data-ar="المزايا">Features</a>
+<a href="#demo" data-ar="جرّب النظام">Live demo</a>
+<a href="#pricing" data-ar="الأسعار">Pricing</a>
+<a href="#faq" data-ar="الأسئلة الشائعة">FAQ</a>
+<a href="#contact" data-ar="تواصل معنا">Contact</a>
+</div>
+<div class="r">
+<button class="btn alt sm" id="lang" type="button" aria-label="Change language">العربية</button>
+<a class="btn sm cta" href="#contact" data-plan="trial" data-ar="ابدأ مجاناً">Start free</a>
+<button class="btn alt sm mb" id="mb" type="button" aria-label="Menu" aria-expanded="false">&#9776;</button>
+</div></div></header>
+
+<main id="top">
+<div class="wrap hero">
+<div>
+<h1 data-ar="فواتير جاهزة في 30 ثانية، ومدفوعاتك تحت السيطرة.">Invoices in 30 seconds. Payments under control.</h1>
+<p data-ar="BillZestPOS نظام فوترة ونقاط بيع للمحلات والمطاعم والموزعين. أنشئ الفواتير، أرسلها عبر واتساب، وتابع من عليه مستحقات.">BillZestPOS is billing and point-of-sale software for shops, restaurants and wholesalers. Create invoices, send them on WhatsApp, and see who owes you money.</p>
+<div class="row"><a class="btn" href="#contact" data-plan="trial" data-ar="جرّب مجاناً لمدة 14 يوماً">Start free for 14 days</a><a class="btn alt" href="#features" data-ar="شاهد المزايا">See features</a></div>
+</div>
+<div class="inv" aria-label="Sample invoice">
+<div class="inv-h"><span data-ar="فاتورة رقم 1042 · بيع نقدي">Invoice #1042 · Cash sale</span><span class="tag" data-ar="ضريبة القيمة المضافة 15%">VAT 15%</span></div>
+<div class="line"><span data-ar="أرز بسمتي 25 كجم">Basmati rice 25kg</span><input type="number" min="0" value="2" data-p="95" aria-label="Qty"><span class="amt"></span></div>
+<div class="line"><span data-ar="زيت دوار الشمس 15 لتر">Sunflower oil 15L</span><input type="number" min="0" value="1" data-p="110" aria-label="Qty"><span class="amt"></span></div>
+<div class="line"><span data-ar="سكر 50 كجم">Sugar 50kg</span><input type="number" min="0" value="1" data-p="105" aria-label="Qty"><span class="amt"></span></div>
+<div class="sum" style="margin-top:8px"><span data-ar="المجموع الفرعي">Subtotal</span><span class="v" id="sub"></span></div>
+<div class="sum"><span data-ar="ضريبة القيمة المضافة (15%)">VAT (15%)</span><span class="v" id="vat"></span></div>
+<div class="sum t"><span data-ar="الإجمالي">Total</span><span class="v" id="tot"></span></div>
+<p class="hint" data-ar="غيّر الكمية وسيتحدث الإجمالي تلقائياً، كما في التطبيق.">Change a quantity and the total updates, just like in the app.</p>
+</div>
+</div>
+
+<section class="dark"><div class="wrap">
+<h2 data-ar="كفى مطاردة للمدفوعات في الدفاتر.">Stop chasing payments in notebooks.</h2>
+<p data-ar="مبلغ كل عميل المستحق على بُعد لمسة واحدة، مع تذكير واتساب جاهز للإرسال.">Every customer's pending amount is one tap away, with a WhatsApp reminder ready to send.</p>
+</div></section>
+
+<section id="how"><div class="wrap">
+<h2 data-ar="ابدأ البيع في ثلاث خطوات">Start selling in three steps</h2>
+<div class="steps">
+<div><h3 data-ar="1. أنشئ حسابك">1. Create your account</h3><p data-ar="سجّل ببياناتك وبيانات نشاطك خلال دقيقتين.">Sign up with your business details in two minutes.</p></div>
+<div><h3 data-ar="2. أضف منتجاتك">2. Add your items</h3><p data-ar="ارفع منتجاتك من ملف Excel أو أضفها يدوياً.">Upload your items from Excel or add them by hand.</p></div>
+<div><h3 data-ar="3. ابدأ الفوترة">3. Start billing</h3><p data-ar="اطبع الفاتورة أو أرسلها للعميل عبر واتساب.">Print the bill or send it to your customer on WhatsApp.</p></div>
+</div>
+<div class="vid" id="vid" hidden></div>
+</div></section>
+
+<section id="features" class="alt"><div class="wrap">
+<h2 data-ar="كل ما تحتاجه نقطة البيع">Everything your counter needs</h2>
+<div class="feat">
+<div><h3 data-ar="فواتير ضريبية">Tax invoices</h3><p data-ar="حساب ضريبة القيمة المضافة تلقائياً وفواتير متوافقة مع متطلبات الهيئة.">VAT is calculated for you, with invoices that meet tax authority requirements.</p></div>
+<div><h3 data-ar="إدارة المخزون">Inventory</h3><p data-ar="ينخفض المخزون عند البيع ويرتفع عند الشراء، مع تنبيه قبل نفاد المنتج.">Stock drops when you sell and rises when you buy. Get an alert before an item runs out.</p></div>
+<div><h3 data-ar="كشف حساب العملاء">Customer ledger</h3><p data-ar="اعرف ما على كل عميل وما دفعه ومنذ متى.">See what each customer owes, what they paid, and since when.</p></div>
+<div><h3 data-ar="واتساب والرسائل">WhatsApp and SMS</h3><p data-ar="أرسل الفواتير وتذكيرات الدفع مباشرة من شاشة الفاتورة.">Send invoices and payment reminders straight from the bill screen.</p></div>
+<div><h3 data-ar="التقارير">Reports</h3><p data-ar="مبيعات يومية وأرباح وتقارير ضريبية جاهزة للمحاسب.">Daily sales, profit and VAT summaries ready for your accountant.</p></div>
+<div><h3 data-ar="يعمل دون إنترنت">Works offline</h3><p data-ar="واصل البيع عند انقطاع الإنترنت وتتم المزامنة عند عودته.">Keep selling when the internet is down. Data syncs when you are back online.</p></div>
+<div><h3 data-ar="الفوترة الإلكترونية (ZATCA)">ZATCA e-invoicing</h3><p data-ar="فواتير إلكترونية متوافقة مع متطلبات هيئة الزكاة والضريبة والجمارك.">E-invoices that follow ZATCA requirements in Saudi Arabia.</p></div>
+<div><h3 data-ar="الباركود والطابعة">Barcode and printer</h3><p data-ar="امسح الباركود وأصدر إيصالاً من طابعة حرارية بسرعة.">Scan barcodes and print receipts on a thermal printer.</p></div>
+</div>
+</div></section>
+
+<section id="industries"><div class="wrap">
+<h2 data-ar="مناسب لنشاطك">Built for your kind of business</h2>
+<div class="feat">
+<div><h3 data-ar="التجزئة والبقالات">Retail and grocery</h3><p data-ar="فوترة سريعة بالباركود ومتابعة المخزون يومياً.">Fast barcode billing and daily stock tracking.</p></div>
+<div><h3 data-ar="المطاعم والمقاهي">Restaurants and cafes</h3><p data-ar="طلبات الطاولات والتوصيل وفواتير مفصلة لكل طلب.">Table and delivery orders with a clear bill for each.</p></div>
+<div><h3 data-ar="الصيدليات">Pharmacies</h3><p data-ar="تتبع تواريخ الانتهاء والدفعات وتنبيه قبل انتهاء الصلاحية.">Track batches and expiry dates, with alerts before items expire.</p></div>
+<div><h3 data-ar="الجملة والتوزيع">Wholesale and distribution</h3><p data-ar="كشوف حساب العملاء وفواتير آجلة وتذكيرات الدفع.">Customer ledgers, credit invoices and payment reminders.</p></div>
+</div></div></section>
+
+<section id="demo" class="alt"><div class="wrap">
+<h2 data-ar="جرّب نقطة البيع بنفسك">Try the point of sale yourself</h2>
+<div class="pos">
+<div class="tiles" id="tiles"></div>
+<div class="inv"><div class="inv-h"><span data-ar="الفاتورة الحالية">Current bill</span></div>
+<div id="cl"></div>
+<div class="sum" style="margin-top:8px"><span data-ar="المجموع الفرعي">Subtotal</span><span class="v" id="ps"></span></div>
+<div class="sum"><span data-ar="ضريبة القيمة المضافة (15%)">VAT (15%)</span><span class="v" id="pv"></span></div>
+<div class="sum t"><span data-ar="الإجمالي">Total</span><span class="v" id="pt"></span></div>
+<button class="btn alt sm" id="clr" type="button" data-ar="فاتورة جديدة">New bill</button></div>
+</div></div></section>
+
+<section id="marketing"><div class="wrap">
+<h2 data-ar="أرسل عروضك لعملائك مباشرة من النظام">Send offers to your customers from the software</h2>
+<p class="lead" data-ar="اختر العملاء المناسبين وأرسل لهم عرضاً أو تذكيراً عبر واتساب أو الرسائل. تتابع النتائج، ويمكن للعميل إيقاف الرسائل في أي وقت.">Pick the right customers and send them an offer or reminder on WhatsApp or SMS. You track the results, and customers can opt out anytime.</p>
+<div class="pos">
+<div class="mkf">
+<label><span data-ar="لمن ترسل العرض؟">Who gets the offer?</span><select id="au"><option data-ar="كل العملاء">All customers</option><option data-ar="عملاء عليهم مستحقات">Customers with pending payments</option><option data-ar="عملاء لم يزوروا منذ 30 يوماً">Customers who have not visited in 30 days</option><option data-ar="أفضل العملاء">Top customers</option></select></label>
+<label><span data-ar="اسم متجرك">Your store name</span><input id="sn" value="Your Store" maxlength="30"></label>
+<label><span data-ar="نص العرض">Your offer</span><input id="of" value="20% off all items this weekend" maxlength="80"></label>
+<p class="hint" id="mc" style="margin:0 0 16px"></p>
+<a class="btn" href="#contact" data-plan="business" data-ar="فعّل أدوات التسويق">Get marketing tools</a>
+</div>
+<div class="inv"><div class="inv-h"><span data-ar="معاينة الرسالة">Message preview</span><span class="tag">WhatsApp</span></div><div class="bub" id="bub"></div></div>
+</div></div></section>
+
+<section id="compare" class="alt"><div class="wrap">
+<h2 data-ar="لماذا BillZestPOS بدل الدفتر أو Excel؟">Why BillZestPOS instead of a notebook or Excel?</h2>
+<div class="tw"><table><thead><tr><th data-ar="الميزة">Feature</th><th scope="col" data-ar="دفتر أو Excel">Notebook or Excel</th><th scope="col" class="us">BillZestPOS</th></tr></thead><tbody>
+<tr><th scope="row" data-ar="ضريبة القيمة المضافة في كل فاتورة">VAT on every bill</th><td data-ar="تحسبها بيدك">Worked out by hand</td><td class="us" data-ar="تُضاف تلقائياً">Added automatically</td></tr>
+<tr><th scope="row" data-ar="جرد المخزون">Stock count</th><td data-ar="يُعدّ يدوياً">Counted by hand</td><td class="us" data-ar="يتحدث مع كل عملية بيع">Updates with every sale</td></tr>
+<tr><th scope="row" data-ar="من عليه مستحقات">Who owes you money</th><td data-ar="بحث بين الصفحات">Search through pages</td><td class="us" data-ar="بلمسة واحدة لكل عميل">One tap per customer</td></tr>
+<tr><th scope="row" data-ar="العروض للعملاء">Offers to customers</th><td data-ar="تُكتب لكل عميل">Typed one by one</td><td class="us" data-ar="اختر مجموعة وأرسل">Pick a group and send</td></tr>
+<tr><th scope="row" data-ar="المبيعات والأرباح اليومية">Daily sales and profit</th><td data-ar="ساعات من الجمع">Hours of adding up</td><td class="us" data-ar="جاهزة خلال ثوانٍ">Ready in seconds</td></tr>
+<tr><th scope="row" data-ar="ضياع البيانات أو الخطأ فيها">Lost or wrong data</th><td data-ar="يسهل ضياعها أو الخطأ فيها">Easy to lose or get wrong</td><td class="us" data-ar="نسخة احتياطية يومياً">Backed up every day</td></tr>
+</tbody></table></div>
+</div></section>
+
+<section id="pricing"><div class="wrap">
+<h2 data-ar="أسعار بسيطة بدون رسوم تأسيس">Simple pricing, no setup fee</h2>
+<div class="tgl" role="group" aria-label="Billing period"><button type="button" id="tm" class="on" aria-pressed="true" data-ar="شهري">Monthly</button><button type="button" id="ty" aria-pressed="false"><span data-ar="سنوي">Yearly</span><i data-ar="وفّر 34%">Save 34%</i></button></div>
+<p class="promo"><b data-ar="عرض للعملاء الجدد:">New customer offer:</b> <span data-ar="خصم 10% إضافي على أول دفعة. استخدم الكود WELCOME10.">extra 10% off your first payment. Use code WELCOME10.</span></p>
+<div class="plans">
+<div class="plan"><h3 data-ar="الأساسية">Starter</h3><div class="price" data-ar="مجانية">Free</div><ul><li data-ar="50 فاتورة شهرياً">50 invoices a month</li><li data-ar="مستخدم واحد">1 user</li><li data-ar="تقارير أساسية">Basic reports</li></ul><a class="btn alt" href="#contact" data-plan="starter" data-ar="ابدأ مجاناً">Start free</a></div>
+<div class="plan hot"><h3 data-ar="الأعمال">Business</h3><div class="price"><span id="bp"></span><small id="bu"></small></div><p class="np" id="np"></p><ul><li data-ar="فواتير غير محدودة">Unlimited invoices</li><li data-ar="3 مستخدمين">3 users</li><li data-ar="المخزون وتقارير الضريبة">Inventory and VAT reports</li><li data-ar="عروض وتذكيرات واتساب">WhatsApp offers and reminders</li></ul><a class="btn" href="#contact" data-plan="business" data-ar="جرّب 14 يوماً مجاناً">Try 14 days free</a></div>
+<div class="plan"><h3 data-ar="المؤسسات">Enterprise</h3><div class="price" data-ar="حسب الطلب">Custom</div><ul><li data-ar="فروع متعددة">Multiple branches</li><li data-ar="10 مستخدمين">10 users</li><li data-ar="دعم أولوية">Priority support</li><li data-ar="تصميم فاتورة مخصص">Custom invoice design</li></ul><a class="btn alt" href="#contact" data-plan="enterprise" data-ar="تواصل معنا">Talk to us</a></div>
+</div>
+</div></section>
+
+<section id="vat" class="alt"><div class="wrap">
+<h2 data-ar="حاسبة ضريبة القيمة المضافة المجانية (15%)">Free VAT calculator (15%)</h2>
+<p class="lead" data-ar="احسب الضريبة بسرعة: أضفها إلى السعر، أو استخرجها من سعر شامل الضريبة.">Work out VAT quickly: add it to a price, or take it out of a price that already includes VAT.</p>
+<div class="inv vatc">
+<div class="tgl" role="group" aria-label="VAT mode"><button type="button" id="vma" class="on" data-ar="إضافة الضريبة">Add VAT</button><button type="button" id="vmr" data-ar="خصم الضريبة">Remove VAT</button></div>
+<label class="vl"><span id="vl"></span><input id="va" type="number" inputmode="decimal" min="0" step="0.01" value="100"></label>
+<div class="sum"><span data-ar="قبل الضريبة">Before VAT</span><span class="v" id="vn"></span></div>
+<div class="sum"><span data-ar="ضريبة القيمة المضافة (15%)">VAT (15%)</span><span class="v" id="vv"></span></div>
+<div class="sum t"><span data-ar="بعد الضريبة">With VAT</span><span class="v" id="vg"></span></div>
+<p class="hint" data-ar="تقدير سريع فقط. يجب أن تصدر الفواتير الرسمية من نظام معتمد لدى هيئة الزكاة والضريبة والجمارك.">Quick estimate only. Official invoices must come from a ZATCA-approved system.</p>
+<a class="btn" href="#contact" data-plan="trial" data-ar="جرّب BillZestPOS مجاناً">Try BillZestPOS free</a>
+</div>
+</div></section>
+
+<section id="faq"><div class="wrap">
+<h2 data-ar="أسئلة شائعة">Questions we hear often</h2>
+<div class="faq">
+<details><summary data-ar="كم تبلغ التكلفة؟">How much does it cost?</summary><p data-ar="الباقة الأساسية مجانية بحد 50 فاتورة شهرياً. وباقة الأعمال 251 ريالاً شهرياً أو 2,000 ريال سنوياً، مع تجربة مجانية 14 يوماً. والعملاء الجدد يحصلون على خصم 10% على أول دفعة بكود WELCOME10.">Starter is free with 50 invoices a month. Business is SAR 251 a month or SAR 2,000 a year, with a 14-day free trial. New customers get 10% off the first payment with code WELCOME10.</p></details>
+<details><summary data-ar="هل يدعم الفوترة الإلكترونية (ZATCA)؟">Does it support ZATCA e-invoicing?</summary><p data-ar="الفوترة الإلكترونية جزء من المنتج. راسلنا لنحدد معك المرحلة المناسبة لنشاطك لدى الهيئة وكيفية الإعداد.">E-invoicing is part of the product. Message us and we will confirm which ZATCA phase applies to your business and how to set it up.</p></details>
+<details><summary data-ar="هل يعمل على الجوال؟">Does it work on my phone?</summary><p data-ar="نعم، يعمل على أندرويد وآيفون وأي متصفح حاسوب بنفس الحساب.">Yes. It works on Android, iPhone and any computer browser with the same account.</p></details>
+<details><summary data-ar="هل يمكنني استيراد بياناتي القديمة؟">Can I import my old data?</summary><p data-ar="يمكنك رفع العملاء والمنتجات من ملف Excel، وفريقنا يساعدك في أول استيراد مجاناً.">You can upload customers and items from Excel. Our team helps with your first import for free.</p></details>
+<details><summary data-ar="هل بياناتي آمنة؟">Is my data safe?</summary><p data-ar="بياناتك مشفرة ويتم حفظ نسخة احتياطية يومياً، ويمكنك تصديرها في أي وقت.">Your data is encrypted and backed up every day. You can export it whenever you want.</p></details>
+<details><summary data-ar="كم شخصاً يمكنه استخدامه؟">How many people can use it?</summary><p data-ar="تشمل باقة الأعمال 3 مستخدمين وباقة المؤسسات 10. ويستطيع كل مستخدم الدخول من جوال أو حاسوب.">Business includes 3 users and Enterprise includes 10. Each user can sign in on a phone or a computer.</p></details>
+<details><summary data-ar="هل أحتاج إلى أجهزة خاصة؟">Do I need special equipment?</summary><p data-ar="لا. يكفي جوال أو حاسوب. ماسح الباركود والطابعة الحرارية يسرّعان العمل عند الكاشير لكنهما اختياريان.">No. A phone or a computer is enough. A barcode scanner and a thermal printer make the counter faster, but they are optional.</p></details>
+<details><summary data-ar="هل يمكنني الإلغاء في أي وقت؟">Can I cancel anytime?</summary><p data-ar="نعم. أخبرنا قبل موعد دفعتك القادمة وسنوقف الباقة. ويمكنك تصدير بياناتك قبل ذلك.">Yes. Tell us before your next payment date and we will stop the plan. You can export your data first.</p></details>
+</div>
+</div></section>
+<section id="contact" class="alt"><div class="wrap">
+<h2 data-ar="تواصل معنا أو اطلب عرضاً تجريبياً">Talk to us or request a demo</h2>
+<div class="contact">
+<div class="cl">
+<small data-ar="الجوال / واتساب">Phone / WhatsApp</small><a href="https://wa.me/966550898978">+966 55 089 8978</a>
+<small data-ar="البريد الإلكتروني">Email</small><a href="mailto:billzestai@gmail.com">billzestai@gmail.com</a>
+<small data-ar="نرد عادةً خلال ساعات العمل نفسها.">We usually reply within the same working day.</small>
+</div>
+<form id="cf" novalidate>
+<label><span data-ar="الاسم">Name</span><input name="n" required autocomplete="name"></label>
+<label><span data-ar="رقم الجوال">Phone</span><input name="p" type="tel" required autocomplete="tel"></label>
+<label><span data-ar="نوع النشاط (محل، مطعم، صيدلية...)">Business type (shop, restaurant, pharmacy...)</span><input name="b"></label>
+<label><span data-ar="الباقة">Plan</span><select name="pl"><option value="Demo" data-ar="أريد عرضاً تجريبياً فقط">Demo only</option><option value="Starter" data-ar="الأساسية (مجانية)">Starter (Free)</option><option value="Business" data-ar="الأعمال">Business</option><option value="Enterprise" data-ar="المؤسسات">Enterprise</option></select></label>
+<div class="two"><button class="btn" type="button" data-act="wa" data-ar="أرسل عبر واتساب">Send on WhatsApp</button><button class="btn alt" type="button" data-act="mail" data-ar="أرسل بالبريد">Send by email</button></div>
+<p class="hint" data-ar="بالإرسال توافق على أن نتواصل معك بخصوص BillZestPOS.">By sending, you agree that we may contact you about BillZestPOS.</p>
+<p class="ok" id="ok" hidden data-ar="تم تجهيز رسالتك. اضغط إرسال في التطبيق الذي فُتح.">Your message is ready. Tap send in the app that opened.</p>
+</form>
+</div>
+</div></section>
+</main>
+
+<footer><div class="wrap fw">
+<div><b>BillZestPOS</b><div data-ar="© 2026 BillZestPOS. جميع الحقوق محفوظة.">© 2026 BillZestPOS. All rights reserved.</div></div>
+<div class="fl"><a href="#features" data-ar="المزايا">Features</a><a href="#demo" data-ar="جرّب النظام">Live demo</a><a href="#pricing" data-ar="الأسعار">Pricing</a><a href="#faq" data-ar="الأسئلة الشائعة">FAQ</a><a href="#contact" data-ar="تواصل معنا">Contact</a><a href="#vat" data-ar="حاسبة الضريبة">VAT calculator</a><a href="#privacy" data-open="privacy" data-ar="الخصوصية">Privacy</a><a href="#terms" data-open="terms" data-ar="الشروط">Terms</a></div>
+<div class="fl" id="soc" hidden></div>
+<div dir="ltr"><a href="tel:+966550898978">+966 55 089 8978</a><br><a href="mailto:billzestai@gmail.com">billzestai@gmail.com</a></div>
+</div></footer>
+<dialog id="d-privacy" aria-labelledby="t-privacy"><div class="dl"><h2 id="t-privacy" data-ar="سياسة الخصوصية">Privacy Policy</h2><p data-ar="آخر تحديث: أكتوبر 2026">Last updated: October 2026</p><h3 data-ar="ما الذي نجمعه">What we collect</h3><p data-ar="عند الضغط على زر الإرسال في النموذج، نستلم اسمك ورقم جوالك ونوع نشاطك والباقة التي اخترتها، ونحتفظ بها للتواصل معك. وتُفتح الرسالة نفسها أيضاً في واتساب أو تطبيق البريد.">When you press a send button on our form, we receive your name, phone number, business type and chosen plan, and we keep them so we can contact you. The same message also opens in WhatsApp or your email app.</p><h3 data-ar="كيف نستخدمها">How we use it</h3><p data-ar="نستخدمها فقط للرد عليك وترتيب عرض تجريبي ومناقشة الأسعار. لا نبيع بياناتك.">We use it only to reply to you, arrange a demo and discuss pricing. We do not sell your data.</p><h3 data-ar="المشاركة">Sharing</h3><p data-ar="لا نشارك بياناتك مع شركات أخرى، إلا مع الخدمات اللازمة لتشغيل موقعنا ورسائلنا مثل الاستضافة وواتساب والبريد الإلكتروني.">We do not share your data with other companies, except the services we need to run our website and messages, such as hosting, WhatsApp and email.</p><h3 data-ar="التخزين والتحليلات">Storage and analytics</h3><p data-ar="يحفظ هذا الموقع اختيار اللغة على جهازك. وإذا استخدمنا أدوات التحليلات فإنها تجمع إحصاءات الزيارة مثل الصفحات التي تمت مشاهدتها ودولة الزائر.">This site saves your language choice on your device. If we use analytics, it collects visit statistics such as pages viewed and the country of the visit.</p><h3 data-ar="رسائلنا إليك">Messages from us</h3><p data-ar="نراسلك بخصوص خدماتنا فقط إذا تواصلت معنا أو وافقت على استلام العروض. ويمكنك طلب الإيقاف في أي وقت.">We message you about our services only if you contacted us or agreed to receive offers. You can ask us to stop at any time.</p><h3 data-ar="حقوقك">Your rights</h3><p data-ar="بموجب نظام حماية البيانات الشخصية في المملكة، يمكنك طلب الاطلاع على بياناتك أو تصحيحها أو حذفها. راسلنا على billzestai@gmail.com.">Under the Saudi Personal Data Protection Law, you can ask to see, correct or delete your data. Write to billzestai@gmail.com.</p><button class="btn" type="button" data-close data-ar="إغلاق">Close</button></div></dialog>
+<dialog id="d-terms" aria-labelledby="t-terms"><div class="dl"><h2 id="t-terms" data-ar="شروط الاستخدام">Terms of Use</h2><p data-ar="آخر تحديث: أكتوبر 2026">Last updated: October 2026</p><h3 data-ar="استخدام الموقع">Using this site</h3><p data-ar="المعلومات في هذا الموقع عامة. العروض التجريبية والأمثلة للتوضيح فقط، وقد تتغير المزايا.">The information on this site is general. Demos and examples are for illustration only, and features may change.</p><h3 data-ar="الباقات والأسعار">Plans and prices</h3><p data-ar="الأسعار معروضة بالريال السعودي وقابلة للتغيير. نؤكد لك السعر النهائي قبل الدفع.">Prices are shown in Saudi riyals and may change. We confirm the final price with you before you pay.</p><h3 data-ar="العروض والتجربة المجانية">Offers and trials</h3><p data-ar="عروض العملاء الجدد، مثل كود WELCOME10، تنطبق على أول دفعة فقط، ولا يمكن دمجها مع عروض أخرى، وقد تنتهي في أي وقت. وتُؤكد شروط التجربة المجانية عند التسجيل.">New customer offers, such as code WELCOME10, apply to the first payment only, cannot be combined with other offers and may end at any time. Free trial terms are confirmed when you sign up.</p><h3 data-ar="بيانات عملائك">Your customers' data</h3><p data-ar="أنت مسؤول عن البيانات التي تدخلها وعن حصولك على إذن لمراسلة عملائك.">You are responsible for the data you enter and for having permission to message your customers.</p><h3 data-ar="الخدمة والمسؤولية">Service and liability</h3><p data-ar="نعمل على إبقاء الخدمة متاحة، لكننا لا نضمن عدم انقطاعها. وبالقدر الذي يسمح به النظام، تقتصر مسؤوليتنا على ما دفعته لنا خلال الأشهر الـ12 السابقة.">We work to keep the service available, but we cannot promise it will never be interrupted. To the extent the law allows, our liability is limited to what you paid us in the previous 12 months.</p><h3 data-ar="النظام الواجب التطبيق">Governing law</h3><p data-ar="تخضع هذه الشروط لأنظمة المملكة العربية السعودية.">These terms follow the laws of the Kingdom of Saudi Arabia.</p><h3 data-ar="للاستفسار">Questions</h3><p data-ar="راسلنا على billzestai@gmail.com أو عبر واتساب.">Write to billzestai@gmail.com or message us on WhatsApp.</p><button class="btn" type="button" data-close data-ar="إغلاق">Close</button></div></dialog>
+<div class="wbar"><a class="btn" href="https://wa.me/966550898978"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm5.2 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.2-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8s.7-2 .9-2.3c.3-.3.6-.3.8-.3h.6c.2 0 .4 0 .6.5l.8 1.9c.1.2.1.4 0 .5l-.4.6-.3.4c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.1 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.6-.1l1.8.9c.3.1.5.2.5.3.1.2.1.8-.1 1.4z"/></svg><span data-ar="تحدث معنا عبر واتساب">Chat with us on WhatsApp</span></a></div>
+<div class="ck" id="ck" role="dialog" aria-label="Cookies" hidden><p><span data-ar="نستخدم أدوات تحليل لفهم كيف يستخدم الزوار الموقع.">We use analytics to understand how visitors use this site.</span> <a href="#privacy" data-open="privacy" data-ar="التفاصيل">Details</a></p><div class="ckb"><button class="btn sm" id="ck-y" type="button" data-ar="موافق">Accept</button><button class="btn alt sm" id="ck-n" type="button" data-ar="رفض">Decline</button></div></div>
+<button class="top" id="top-b" type="button" aria-label="Back to top / العودة للأعلى" hidden>&#8593;</button>
+<a class="wa" href="https://wa.me/966550898978" aria-label="WhatsApp"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm5.2 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.2-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8s.7-2 .9-2.3c.3-.3.6-.3.8-.3h.6c.2 0 .4 0 .6.5l.8 1.9c.1.2.1.4 0 .5l-.4.6-.3.4c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.1 1 2.1 1.300 2.4 1.500.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.6-.1l1.800.9c.3.1.5.2.5.3.1.2.1.8-.1 1.400z"/></svg></a>
+
+<script>
+(function(){
+/* ===== SETTINGS: fill these in when ready ===== */
+var CFG={
+ga:'',            /* Google Analytics ID, e.g. 'G-XXXXXXXXXX' */
+video:'',         /* YouTube video ID, e.g. 'dQw4w9WgXcQ' */
+db:{url:'',key:''}, /* Supabase Project URL and anon public key: your leads are saved to the admin panel */
+social:{instagram:'',x:'',linkedin:'',tiktok:'',snapchat:''} /* full profile links */
+};
+var ar=false,root=document.documentElement;
+var money=function(n){return (ar?'ر.س ':'SAR ')+n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})};
+var ins=document.querySelectorAll('.line input');
+function calc(){var s=0;ins.forEach(function(i){var a=Math.max(0,+i.value||0)*+i.dataset.p;i.parentNode.querySelector('.amt').textContent=money(a);s+=a});
+document.getElementById('sub').textContent=money(s);document.getElementById('vat').textContent=money(s*.15);document.getElementById('tot').textContent=money(s*1.15)}
+var P=[['Water 1.5L','ماء 1.5 لتر',2],['Bread','خبز',3],['Milk 1L','حليب 1 لتر',7],['Juice','عصير',6],['Dates 500g','تمر 500 جم',18],['Coffee','قهوة',25]],Q={},tl=document.getElementById('tiles'),cl=document.getElementById('cl');
+function tiles(){tl.textContent='';P.forEach(function(x,i){var b=document.createElement('button'),n=document.createElement('b'),m=document.createElement('span');b.type='button';b.className='tile';n.textContent=ar?x[1]:x[0];m.textContent=money(x[2]);b.appendChild(n);b.appendChild(m);b.onclick=function(){Q[i]=(Q[i]||0)+1;cart()};tl.appendChild(b)})}
+function cart(){cl.textContent='';var s=0,k=Object.keys(Q);
+if(!k.length){var e=document.createElement('p');e.className='hint';e.textContent=ar?'اضغط على منتج لإضافته.':'Tap an item to add it.';cl.appendChild(e)}
+k.forEach(function(i){var x=P[i],a=x[2]*Q[i],r=document.createElement('div'),n=document.createElement('span'),v=document.createElement('span');s+=a;r.className='cr';n.textContent=(ar?x[1]:x[0])+' × '+Q[i];v.className='v';v.textContent=money(a);r.appendChild(n);r.appendChild(v);cl.appendChild(r)});
+document.getElementById('ps').textContent=money(s);document.getElementById('pv').textContent=money(s*.15);document.getElementById('pt').textContent=money(s*1.15)}
+function pos(){tiles();cart();if(!es)sn.value=ar?'اسم متجرك':'Your Store';if(!ed)of.value=ar?'خصم 20% على جميع المنتجات هذا الأسبوع':'20% off all items this weekend';mk();vat()}
+document.getElementById('clr').addEventListener('click',function(){Q={};cart()});
+var AU=[248,36,91,40],ed=false,es=false,sn=document.getElementById('sn'),of=document.getElementById('of'),au=document.getElementById('au'),bub=document.getElementById('bub'),mc=document.getElementById('mc');
+function mk(){var n=AU[au.selectedIndex];
+bub.textContent=ar?(sn.value+'\n'+of.value+'\nأظهر هذه الرسالة عند الكاشير.\nللإيقاف أرسل: إيقاف'):(sn.value+'\n'+of.value+'\nShow this message at the counter.\nReply STOP to opt out.');
+mc.textContent=ar?('ستصل إلى نحو '+n+' عميل (مثال)'):('Reaches about '+n+' customers (example)')}
+of.addEventListener('input',function(){ed=true;mk()});sn.addEventListener('input',function(){es=true;mk()});au.addEventListener('change',mk);
+var vm='add',va=document.getElementById('va'),vma=document.getElementById('vma'),vmr=document.getElementById('vmr');
+function vat(){var a=Math.max(0,parseFloat(va.value)||0),n,g;
+if(vm==='add'){n=a;g=a*1.15}else{g=a;n=a/1.15}
+document.getElementById('vn').textContent=money(n);document.getElementById('vv').textContent=money(g-n);document.getElementById('vg').textContent=money(g);
+document.getElementById('vl').textContent=vm==='add'?(ar?'السعر قبل الضريبة':'Price before VAT'):(ar?'السعر شامل الضريبة':'Price with VAT included');
+vma.className=vm==='add'?'on':'';vmr.className=vm==='add'?'':'on';vma.setAttribute('aria-pressed',vm==='add');vmr.setAttribute('aria-pressed',vm!=='add')}
+va.addEventListener('input',vat);vma.addEventListener('click',function(){vm='add';vat()});vmr.addEventListener('click',function(){vm='remove';vat()});
+var yearly=false,bp=document.getElementById('bp'),bu=document.getElementById('bu'),np=document.getElementById('np');
+function plan(){var base=yearly?2000:251,first=Math.round(base*.9),c=ar?'ر.س ':'SAR ',n=function(x){return x.toLocaleString('en-US')};
+bp.textContent=c+n(base);
+bu.textContent=yearly?(ar?' / سنوياً':' /year'):(ar?' / شهرياً':' /month');
+np.textContent=ar?('سعر العميل الجديد: '+c+n(first)+(yearly?' للسنة الأولى':' للشهر الأول')+(yearly?' · وفّر '+c+'1,012 مقارنة بالشهري':'')):('New customer price: '+c+n(first)+(yearly?' for the first year · save '+c+'1,012 vs monthly':' for the first month'));
+document.getElementById('tm').className=yearly?'':'on';document.getElementById('ty').className=yearly?'on':'';
+document.getElementById('tm').setAttribute('aria-pressed',!yearly);document.getElementById('ty').setAttribute('aria-pressed',yearly)}
+document.getElementById('tm').addEventListener('click',function(){yearly=false;plan()});
+document.getElementById('ty').addEventListener('click',function(){yearly=true;plan()});
+function cur(){document.querySelectorAll('.cur').forEach(function(e){e.textContent=(ar?'ر.س ':'SAR ')+e.dataset.p})}
+ins.forEach(function(i){i.addEventListener('input',calc)});
+var els=document.querySelectorAll('[data-ar]');
+els.forEach(function(e){e.dataset.en=e.textContent});
+function set(a){ar=a;root.lang=a?'ar':'en';root.dir=a?'rtl':'ltr';
+els.forEach(function(e){e.textContent=a?e.dataset.ar:e.dataset.en});
+document.getElementById('lang').textContent=a?'English':'العربية';
+document.title=a?'BillZestPOS – برنامج فواتير ونقاط بيع':'BillZestPOS – Billing & POS Software';
+calc();cur();plan();pos();try{localStorage.setItem('bz-lang',a?'ar':'en')}catch(e){}}
+document.getElementById('lang').addEventListener('click',function(){set(!ar)});
+var saved=null;try{saved=localStorage.getItem('bz-lang')}catch(e){}
+function sendLead(){if(!CFG.db.url||!CFG.db.key)return;
+try{fetch(CFG.db.url+'/rest/v1/leads',{method:'POST',headers:{'Content-Type':'application/json',apikey:CFG.db.key,Authorization:'Bearer '+CFG.db.key,Prefer:'return=minimal'},keepalive:true,body:JSON.stringify({name:f.n.value.trim().slice(0,80),phone:f.p.value.trim().slice(0,25),biz:f.b.value.trim().slice(0,60),plan:f.pl.value})}).catch(function(){})}catch(e){}}
+var f=document.getElementById('cf'),ok=document.getElementById('ok');
+f.addEventListener('submit',function(e){e.preventDefault()});
+f.querySelectorAll('[data-act]').forEach(function(b){b.addEventListener('click',function(){
+if(!f.reportValidity())return;sendLead();
+var m=(ar?'طلب عرض تجريبي - BillZestPOS':'BillZestPOS demo request')+'\n'+(ar?'الاسم: ':'Name: ')+f.n.value+'\n'+(ar?'الجوال: ':'Phone: ')+f.p.value+'\n'+(ar?'النشاط: ':'Business: ')+f.b.value+'\n'+(ar?'الباقة: ':'Plan: ')+f.pl.value+(f.pl.value==='Business'?' ('+(yearly?(ar?'سنوي':'Yearly'):(ar?'شهري':'Monthly'))+')':'')+'\nCode: WELCOME10';
+ok.hidden=false;if(window.gtag)gtag("event","generate_lead",{method:b.dataset.act});
+if(b.dataset.act==='wa')window.open('https://wa.me/966550898978?text='+encodeURIComponent(m),'_blank');
+else location.href='mailto:billzestai@gmail.com?subject='+encodeURIComponent('BillZestPOS demo request')+'&body='+encodeURIComponent(m)})});
+document.querySelectorAll('[data-plan]').forEach(function(a){a.addEventListener('click',function(){
+var v={trial:'Business',business:'Business',starter:'Starter',enterprise:'Enterprise'}[a.dataset.plan];if(v)f.pl.value=v;
+setTimeout(function(){try{f.n.focus({preventScroll:true})}catch(e){}},600)})});
+var mb=document.getElementById('mb'),lk=document.getElementById('links');
+mb.addEventListener('click',function(){var o=lk.classList.toggle('open');mb.setAttribute('aria-expanded',o)});
+lk.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){lk.classList.remove('open');mb.setAttribute('aria-expanded','false')})});
+if(saved===null&&/^ar/i.test(navigator.language||''))saved='ar';
+if(saved==='ar')set(true);else{calc();cur();plan();pos()}
+var sk={instagram:'Instagram',x:'X',linkedin:'LinkedIn',tiktok:'TikTok',snapchat:'Snapchat'},so=document.getElementById('soc'),anyS=false;
+Object.keys(sk).forEach(function(k){var u=CFG.social[k];if(u){var a=document.createElement('a');a.href=u;a.target='_blank';a.rel='noopener';a.textContent=sk[k];so.appendChild(a);anyS=true}});so.hidden=!anyS;
+if(CFG.video){var vd=document.getElementById('vid'),fr=document.createElement('iframe');fr.src='https://www.youtube-nocookie.com/embed/'+encodeURIComponent(CFG.video);fr.title='BillZestPOS demo';fr.allow='encrypted-media; picture-in-picture';fr.allowFullscreen=true;fr.loading='lazy';vd.appendChild(fr);vd.hidden=false}
+function loadGA(){var gs=document.createElement('script');gs.async=true;gs.src='https://www.googletagmanager.com/gtag/js?id='+encodeURIComponent(CFG.ga);document.head.appendChild(gs);window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};gtag('js',new Date());gtag('config',CFG.ga)}
+var ckEl=document.getElementById('ck');
+function setC(v){try{localStorage.setItem('bz-consent',v)}catch(e){}ckEl.hidden=true;if(v==='yes')loadGA()}
+if(CFG.ga){var cv=null;try{cv=localStorage.getItem('bz-consent')}catch(e){}
+if(cv==='yes')loadGA();else if(cv===null)ckEl.hidden=false}
+document.getElementById('ck-y').addEventListener('click',function(){setC('yes')});
+document.getElementById('ck-n').addEventListener('click',function(){setC('no')});
+var of2=document.getElementById('offer');try{if(sessionStorage.getItem('bz-offer'))of2.hidden=true}catch(e){}
+document.getElementById('offer-x').addEventListener('click',function(){of2.hidden=true;try{sessionStorage.setItem('bz-offer','1')}catch(e){}});
+function openD(n){var d=document.getElementById('d-'+n);if(d&&d.showModal&&!d.open)d.showModal()}
+document.querySelectorAll('[data-open]').forEach(function(a){a.addEventListener('click',function(e){e.preventDefault();openD(a.dataset.open)})});
+document.querySelectorAll('dialog').forEach(function(d){d.addEventListener('click',function(e){if(e.target===d)d.close()});d.querySelectorAll('[data-close]').forEach(function(b){b.addEventListener('click',function(){d.close()})})});
+if(/^#(privacy|terms)$/.test(location.hash))openD(location.hash.slice(1));
+var tb=document.getElementById('top-b');
+window.addEventListener('scroll',function(){tb.hidden=window.scrollY<900},{passive:true});
+tb.addEventListener('click',function(){window.scrollTo({top:0,behavior:window.matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth'})});
+})();
+</script>
+</body>
+</html>

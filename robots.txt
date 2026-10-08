@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://billzestpos.com/sitemap.xml
