@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>BillZestPOS – Your account</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28'%3E%3Crect width='28' height='28' rx='7' fill='%23f4a300'/%3E%3Cpath d='M8 6h12v16l-2-1.5-2 1.5-2-1.5-2 1.5-2-1.5L8 22z' fill='%2314213d'/%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;800&family=Cairo:wght@400;600;800&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f7fb;--surface:#fff;--ink:#14213d;--muted:#5b6478;--line:#dfe3ec;--accent:#f4a300;--accent-ink:#14213d;--ok:#12805c;--bad:#c0392b;--r:14px;--rs:10px;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1424;--surface:#161e33;--ink:#eef1f8;--muted:#9aa4bc;--line:#26304a;--ok:#4cc79a;--bad:#ff8a7a}}
+*,*:before,*:after{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.65 Figtree,Cairo,system-ui,sans-serif}
+html[dir=rtl] body{font-family:Cairo,sans-serif;line-height:1.8}
+h1,h2{font-family:'Bricolage Grotesque',Cairo,sans-serif;line-height:1.15;margin:0;letter-spacing:-.01em}
+html[dir=rtl] h1,html[dir=rtl] h2,html[dir=rtl] .logo{font-family:Cairo,sans-serif;letter-spacing:0;line-height:1.4}
+h1{font-size:28px;font-weight:800}h2{font-size:20px;font-weight:700}
+a{color:inherit}
+header{border-bottom:1px solid var(--line)}
+.nav{max-width:1040px;margin:0 auto;padding:0 20px;height:60px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.logo{display:inline-flex;align-items:center;gap:9px;font:800 22px 'Bricolage Grotesque',sans-serif;text-decoration:none;direction:ltr}
+.logo b{color:var(--accent)}
+.r{display:flex;align-items:center;gap:10px}
+.r a{color:var(--muted);font-size:14px;text-decoration:none}
+.wrap{max-width:480px;margin:0 auto;padding:36px 20px 64px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:24px;margin-bottom:16px}
+.sub{color:var(--muted);margin:6px 0 20px}
+.btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:46px;background:var(--accent);color:var(--accent-ink);font:inherit;font-weight:600;font-size:16px;line-height:1.2;padding:12px 20px;border:1.5px solid var(--accent);border-radius:var(--rs);text-decoration:none;cursor:pointer}
+.btn.alt{background:transparent;color:var(--ink);border-color:var(--line)}
+.btn.alt:hover{border-color:var(--ink)}
+.btn.sm{width:auto;min-height:36px;padding:6px 14px;font-size:14px}
+.btn:disabled{opacity:.6;cursor:wait}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.tgl{display:flex;border:1.5px solid var(--line);border-radius:99px;padding:3px;margin:0 0 18px;background:var(--bg)}
+.tgl button{flex:1;border:0;background:transparent;color:var(--muted);padding:8px 16px;border-radius:99px;font:inherit;font-size:16px;font-weight:600;cursor:pointer}
+.tgl button.on{background:var(--accent);color:var(--accent-ink)}
+.or{display:flex;align-items:center;gap:12px;color:var(--muted);font-size:14px;margin:18px 0}
+.or:before,.or:after{content:"";flex:1;height:1px;background:var(--line)}
+label{display:block;font-weight:600;font-size:14px;margin:0 0 16px}
+input[type=text],input[type=email],input[type=password],input[type=tel]{display:block;width:100%;min-height:46px;margin-top:6px;padding:12px;border:1px solid var(--line);border-radius:var(--rs);background:var(--bg);color:var(--ink);font:inherit;font-weight:400}
+.sp{display:flex;align-items:center;font-weight:400}
+.sp input{margin:0 8px 0 0;width:18px;height:18px}
+html[dir=rtl] .sp input{margin:0 0 0 8px}
+.lnk{background:none;border:0;color:var(--ink);font:inherit;font-size:14px;text-decoration:underline;cursor:pointer;padding:6px 0;display:block;margin:12px auto 0}
+.err,.ok{font-size:14px;margin:0 0 16px}.err{color:var(--bad)}.ok{color:var(--ok);font-weight:600}
+.muted{color:var(--muted);margin:6px 0 0}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<header><div class="nav"><a class="logo" href="/"><svg width="30" height="30" viewBox="0 0 28 28" aria-hidden="true"><rect width="28" height="28" rx="7" fill="#f4a300"/><path d="M8 6h12v16l-2-1.5-2 1.5-2-1.5-2 1.5-2-1.5L8 22z" fill="#14213d"/><path d="M11 10h6M11 13.5h6" stroke="#f4a300" stroke-width="1.6" stroke-linecap="round"/></svg><span>BillZest<b>POS</b></span></a><div class="r"><button class="btn alt sm" id="lang" type="button">العربية</button><a href="/"><span data-t="back">Back to website</span></a></div></div></header>
+<main class="wrap">
+
+<section id="auth" hidden>
+<div class="card">
+<h1><span data-t="welcome">Welcome to BillZestPOS</span></h1><p class="sub"><span data-t="sub">Log in or create a free account.</span></p>
+<div class="tgl" role="group"><button type="button" id="tl" class="on"><span data-t="login">Log in</span></button><button type="button" id="ts"><span data-t="signup">Sign up</span></button></div>
+<button class="btn alt" id="gg" type="button"><svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg><span data-t="google">Continue with Google</span></button>
+<div class="or"><span data-t="or">or</span></div>
+<form id="af">
+<label id="nmw" hidden><span data-t="name">Name</span><input type="text" id="nm" maxlength="80" autocomplete="name"></label>
+<label><span data-t="email">Email</span><input type="email" id="em" required autocomplete="username"></label>
+<label><span data-t="password">Password</span><input type="password" id="pw" required autocomplete="current-password"></label>
+<label class="sp"><input type="checkbox" id="sp1"><span data-t="show">Show password</span></label>
+<p class="err" id="m1" role="alert" hidden></p>
+<button class="btn" id="go" type="submit" data-t="login">Log in</button>
+<button class="lnk" id="forgot" type="button"><span data-t="forgot">Forgot password?</span></button>
+</form>
+</div>
+</section>
+
+<section id="acct" hidden>
+<div class="card"><h1><span data-t="hello">Hello</span>, <span id="hn"></span></h1><p class="muted" data-t="soon">More tools for your shop are coming soon.</p><a class="btn" style="margin-top:16px" href="pos.html" data-t="openpos">Open POS billing</a></div>
+<div class="card"><h2><span data-t="trial_t">Free trial</span></h2><p class="muted" id="tr"></p></div>
+<div class="card"><h2><span data-t="profile">Your details</span></h2>
+<form id="pf" style="margin-top:16px">
+<label><span data-t="name">Name</span><input type="text" id="pn" maxlength="80"></label>
+<label><span data-t="biz">Business name</span><input type="text" id="pb" maxlength="60"></label>
+<label><span data-t="phone">Phone</span><input type="tel" id="pp" maxlength="25"></label>
+<p class="ok" id="m2" role="status" hidden></p>
+<button class="btn" type="submit"><span data-t="save">Save</span></button>
+</form></div>
+<div class="row"><a class="btn alt" href="https://wa.me/966550898978" target="_blank" rel="noopener"><span data-t="help">Need help? Chat on WhatsApp</span></a><button class="btn alt" id="so" type="button"><span data-t="signout">Sign out</span></button></div>
+</section>
+
+<section id="reset" hidden>
+<div class="card"><h1><span data-t="newpass">Set a new password</span></h1>
+<form id="rf" style="margin-top:16px">
+<label><span data-t="password">Password</span><input type="password" id="np" required minlength="8" autocomplete="new-password"></label>
+<label class="sp"><input type="checkbox" id="sp2"><span data-t="show">Show password</span></label>
+<p class="err" id="m3" role="alert" hidden></p>
+<button class="btn" type="submit"><span data-t="update">Update password</span></button>
+</form></div>
+</section>
+
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+(function(){
+var CFG={url:'https://odljezpdeeqvfgjounyg.supabase.co',key:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9kbGplenBkZWVxdmZnam91bnlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE0MTM2MzYsImV4cCI6MjEwNjk4OTYzNn0.v48urFkHW36wd_mfDIaiJWTg4efcVcZIYOy8JvfnWoE'};
+var T={"back": ["Back to website", "العودة إلى الموقع"], "login": ["Log in", "تسجيل الدخول"], "signup": ["Sign up", "إنشاء حساب"], "gosign": ["Create account", "إنشاء الحساب"], "welcome": ["Welcome to BillZestPOS", "مرحباً بك في BillZestPOS"], "sub": ["Log in or create a free account.", "سجّل الدخول أو أنشئ حساباً مجانياً."], "google": ["Continue with Google", "المتابعة عبر Google"], "or": ["or", "أو"], "name": ["Name", "الاسم"], "email": ["Email", "البريد الإلكتروني"], "password": ["Password", "كلمة المرور"], "show": ["Show password", "إظهار كلمة المرور"], "forgot": ["Forgot password?", "نسيت كلمة المرور؟"], "check_mail": ["Check your email and tap the link to finish.", "تحقق من بريدك واضغط على الرابط لإكمال التسجيل."], "reset_sent": ["We sent a password reset link to your email.", "أرسلنا رابط إعادة تعيين كلمة المرور إلى بريدك."], "enter_email": ["Enter your email first.", "أدخل بريدك الإلكتروني أولاً."], "bad": ["Wrong email or password.", "البريد الإلكتروني أو كلمة المرور غير صحيحة."], "hello": ["Hello", "مرحباً"], "trial_t": ["Free trial", "تجربة مجانية"], "trial": ["Your 14-day free trial started on {a} and ends on {b}.", "بدأت تجربتك المجانية لمدة 14 يوماً في {a} وتنتهي في {b}."], "profile": ["Your details", "بياناتك"], "biz": ["Business name", "اسم النشاط"], "phone": ["Phone", "رقم الجوال"], "save": ["Save", "حفظ"], "saved": ["Saved.", "تم الحفظ."], "nopro": ["We could not find your profile. Please contact us.", "لم نعثر على ملفك. يرجى التواصل معنا."], "soon": ["More tools for your shop are coming soon.", "المزيد من أدوات متجرك قادمة قريباً."], "help": ["Need help? Chat on WhatsApp", "تحتاج مساعدة؟ تحدث معنا عبر واتساب"], "signout": ["Sign out", "تسجيل الخروج"], "newpass": ["Set a new password", "تعيين كلمة مرور جديدة"], "update": ["Update password", "تحديث كلمة المرور"], "updated": ["Password updated.", "تم تحديث كلمة المرور."], "noload": ["Could not load the sign-in service. Please reload the page.", "تعذر تحميل خدمة الدخول. أعد تحميل الصفحة."]};
+var L='en';try{var sv=localStorage.getItem('bz-lang');if(sv==='ar'||(sv===null&&/^ar/i.test(navigator.language||'')))L='ar'}catch(e){}
+function $(i){return document.getElementById(i)}
+function t(k){return T[k][L==='ar'?1:0]}
+var sb=window.supabase?window.supabase.createClient(CFG.url,CFG.key):null,mode='login',user=null,prof=null;
+function here(){return location.href.split('#')[0].split('?')[0]}
+function say(id,txt,ok){var e=$(id);e.textContent=txt||'';e.hidden=!txt;if(id==='m1')e.className=ok?'ok':'err'}
+function show(v){['auth','acct','reset'].forEach(function(x){$(x).hidden=x!==v})}
+function fmt(d){return d.toLocaleDateString(L==='ar'?'ar-SA-u-ca-gregory-nu-latn':'en-GB',{day:'numeric',month:'long',year:'numeric'})}
+function renderAcct(){if(!user)return;var p=prof||{};
+$('hn').textContent=p.name||user.email||'';
+var a=new Date(p.created_at||user.created_at),b=new Date(a.getTime()+14*864e5);
+$('tr').textContent=t('trial').replace('{a}',fmt(a)).replace('{b}',fmt(b));
+$('pn').value=p.name||'';$('pb').value=p.biz||'';$('pp').value=p.phone||''}
+function applyLang(){document.documentElement.lang=L;document.documentElement.dir=L==='ar'?'rtl':'ltr';
+document.querySelectorAll('[data-t]').forEach(function(e){e.textContent=t(e.dataset.t)});
+$('lang').textContent=L==='ar'?'English':'العربية';renderAcct()}
+function setMode(m){mode=m;$('nmw').hidden=m!=='signup';$('forgot').hidden=m!=='login';
+$('tl').className=m==='login'?'on':'';$('ts').className=m==='signup'?'on':'';
+$('go').dataset.t=m==='login'?'login':'gosign';$('go').textContent=t($('go').dataset.t);
+$('pw').minLength=m==='signup'?8:0;$('pw').autocomplete=m==='signup'?'new-password':'current-password';say('m1','')}
+async function enter(u){user=u;show('acct');
+var r=await sb.from('profiles').select('*').eq('id',u.id).maybeSingle();
+prof=r.data||{email:u.email,created_at:u.created_at,name:'',biz:'',phone:''};renderAcct()}
+
+$('lang').addEventListener('click',function(){L=L==='ar'?'en':'ar';try{localStorage.setItem('bz-lang',L)}catch(e){}applyLang()});
+$('tl').addEventListener('click',function(){setMode('login')});
+$('ts').addEventListener('click',function(){setMode('signup')});
+$('sp1').addEventListener('change',function(e){$('pw').type=e.target.checked?'text':'password'});
+$('sp2').addEventListener('change',function(e){$('np').type=e.target.checked?'text':'password'});
+$('gg').addEventListener('click',async function(){say('m1','');var r=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:here()}});if(r.error)say('m1',r.error.message)});
+$('af').addEventListener('submit',async function(e){e.preventDefault();say('m1','');var em=$('em').value.trim(),pw=$('pw').value,b=$('go');b.disabled=true;
+try{
+if(mode==='login'){var r=await sb.auth.signInWithPassword({email:em,password:pw});if(r.error)say('m1',r.error.message==='Invalid login credentials'?t('bad'):r.error.message)}
+else{var r2=await sb.auth.signUp({email:em,password:pw,options:{data:{name:$('nm').value.trim()},emailRedirectTo:here()}});if(r2.error)say('m1',r2.error.message);else if(!r2.data.session)say('m1',t('check_mail'),true)}
+}catch(x){say('m1',(x&&x.message)||String(x))}
+b.disabled=false});
+$('forgot').addEventListener('click',async function(){var em=$('em').value.trim();if(!em){say('m1',t('enter_email'));return}
+var r=await sb.auth.resetPasswordForEmail(em,{redirectTo:here()});say('m1',r.error?r.error.message:t('reset_sent'),!r.error)});
+$('rf').addEventListener('submit',async function(e){e.preventDefault();say('m3','');
+var r=await sb.auth.updateUser({password:$('np').value});
+if(r.error){say('m3',r.error.message);return}
+var s=await sb.auth.getSession();if(s.data.session)await enter(s.data.session.user)});
+$('pf').addEventListener('submit',async function(e){e.preventDefault();say('m2','');var b=e.target.querySelector('button');b.disabled=true;
+var r=await sb.from('profiles').update({name:$('pn').value.trim(),biz:$('pb').value.trim(),phone:$('pp').value.trim()}).eq('id',user.id).select();
+b.disabled=false;
+if(r.error){var m=$('m2');m.className='err';m.textContent=r.error.message;m.hidden=false;return}
+var m2=$('m2');if(!r.data.length){m2.className='err';m2.textContent=t('nopro')}else{prof=r.data[0];m2.className='ok';m2.textContent=t('saved');renderAcct()}
+m2.hidden=false});
+$('so').addEventListener('click',async function(){await sb.auth.signOut();user=null;prof=null;show('auth')});
+
+applyLang();setMode('login');
+if(!sb){show('auth');say('m1',t('noload'))}
+else{
+sb.auth.onAuthStateChange(function(ev,session){
+if(ev==='PASSWORD_RECOVERY'){setTimeout(function(){show('reset')},0);return}
+if(ev==='SIGNED_OUT'){setTimeout(function(){show('auth')},0);return}
+if(session&&(ev==='SIGNED_IN'||ev==='INITIAL_SESSION')){setTimeout(function(){if($('reset').hidden)enter(session.user)},0)}
+else if(ev==='INITIAL_SESSION'&&!session){setTimeout(function(){show('auth')},0)}});
+}
+})();
+</script>
+</body>
+</html>

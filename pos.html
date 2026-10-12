@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>BillZestPOS – POS billing</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28'%3E%3Crect width='28' height='28' rx='7' fill='%23f4a300'/%3E%3Cpath d='M8 6h12v16l-2-1.5-2 1.5-2-1.5-2 1.5-2-1.5L8 22z' fill='%2314213d'/%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;800&family=Cairo:wght@400;600;800&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f7fb;--surface:#fff;--ink:#14213d;--muted:#5b6478;--line:#dfe3ec;--accent:#f4a300;--accent-ink:#14213d;--ok:#12805c;--bad:#c0392b;--r:14px;--rs:10px;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1424;--surface:#161e33;--ink:#eef1f8;--muted:#9aa4bc;--line:#26304a;--ok:#4cc79a;--bad:#ff8a7a}}
+*,*:before,*:after{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.65 Figtree,Cairo,system-ui,sans-serif}
+html[dir=rtl] body{font-family:Cairo,sans-serif;line-height:1.8}
+h1,h2{font-family:'Bricolage Grotesque',Cairo,sans-serif;line-height:1.15;margin:0;letter-spacing:-.01em}
+html[dir=rtl] h1,html[dir=rtl] h2,html[dir=rtl] .logo,html[dir=rtl] .sum.t{font-family:Cairo,sans-serif;letter-spacing:0;line-height:1.4}
+h1{font-size:28px;font-weight:800}h2{font-size:20px;font-weight:700}
+a{color:inherit}
+header{border-bottom:1px solid var(--line)}
+.nav{max-width:1040px;margin:0 auto;padding:0 20px;height:60px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.logo{display:inline-flex;align-items:center;gap:9px;font:800 22px 'Bricolage Grotesque',sans-serif;text-decoration:none;direction:ltr}
+.logo b{color:var(--accent)}
+.r{display:flex;align-items:center;gap:10px}
+.wrap{max-width:1040px;margin:0 auto;padding:24px 20px 96px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:24px;margin-bottom:16px}
+.muted{color:var(--muted)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;background:var(--accent);color:var(--accent-ink);font:inherit;font-weight:600;font-size:16px;line-height:1.2;padding:12px 20px;border:1.5px solid var(--accent);border-radius:var(--rs);text-decoration:none;cursor:pointer}
+.btn.alt{background:transparent;color:var(--ink);border-color:var(--line)}
+.btn.alt:hover{border-color:var(--ink)}
+.btn.sm{min-height:36px;padding:6px 14px;font-size:14px}
+.btn.bad{color:var(--bad)}
+.btn.full{width:100%}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.tgl{display:flex;border:1.5px solid var(--line);border-radius:99px;padding:3px;margin:0 0 20px;background:var(--surface);max-width:420px}
+.tgl button{flex:1;border:0;background:transparent;color:var(--muted);padding:8px 16px;border-radius:99px;font:inherit;font-size:16px;font-weight:600;cursor:pointer}
+.tgl button.on{background:var(--accent);color:var(--accent-ink)}
+input,select{display:block;width:100%;min-height:46px;padding:12px;border:1px solid var(--line);border-radius:var(--rs);background:var(--bg);color:var(--ink);font:inherit;font-weight:400}
+label{display:block;font-weight:600;font-size:14px;margin:0 0 14px}
+label input,label select{margin-top:6px}
+.pos{display:grid;grid-template-columns:1.4fr 1fr;gap:16px;align-items:start}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-top:12px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:var(--rs);padding:16px 8px;text-align:center;cursor:pointer;color:var(--ink);font:inherit;min-height:84px}
+.tile b{display:block;font-weight:600;overflow-wrap:anywhere}
+.tile span{display:block;color:var(--muted)}
+.tile small{display:block;color:var(--muted);font-size:14px}
+.tile:hover:not(:disabled){border-color:var(--accent)}
+.tile:disabled{opacity:.5;cursor:not-allowed}
+.cr{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.qty{display:inline-flex;align-items:center;gap:8px}
+.qty button{width:36px;height:36px;border:1px solid var(--line);border-radius:var(--rs);background:var(--bg);color:var(--ink);font:inherit;font-size:20px;line-height:1;cursor:pointer}
+.v{text-align:end;font-variant-numeric:tabular-nums;direction:ltr}
+.sum{display:flex;justify-content:space-between;padding:6px 0;color:var(--muted)}
+.sum.t{color:var(--ink);font:700 20px 'Bricolage Grotesque',sans-serif;border-top:2px solid var(--ink);margin:8px 0 16px;padding-top:12px}
+.err{color:var(--bad);font-size:14px;margin:12px 0 0}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.fm{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;align-items:end}
+.fm label{margin:0}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
+table{width:100%;border-collapse:collapse;font-size:16px}
+th,td{padding:10px 12px;text-align:start;border-top:1px solid var(--line);vertical-align:middle;white-space:nowrap}
+thead th{border-top:0;color:var(--muted);font-weight:600}
+td input{min-height:40px;padding:8px 10px;width:110px}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:16px}
+.kl{color:var(--muted);font-size:14px}
+.kv{font:800 28px 'Bricolage Grotesque',sans-serif;margin-top:2px;direction:ltr;text-align:start}
+.empty{padding:22px;color:var(--muted);text-align:center}
+.cartbar{position:fixed;inset-inline:0;bottom:0;z-index:5;background:var(--bg);border-top:1px solid var(--line);padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));display:none;align-items:center;justify-content:space-between;gap:12px}
+.ov{position:fixed;inset:0;z-index:9;background:rgba(10,15,30,.6);display:grid;place-items:center;padding:16px;overflow:auto}
+.rcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:24px;width:100%;max-width:420px}
+.rcard .cr{grid-template-columns:1fr auto}
+@media(max-width:820px){.pos,.kpis{grid-template-columns:1fr}.cartbar.on{display:flex}.wrap{padding-bottom:110px}}
+@media print{body>*:not(#rc){display:none!important}#rc{position:static;background:none;padding:0;display:block}.noprint{display:none!important}.rcard{border:0;max-width:none;padding:0}}
+</style>
+</head>
+<body>
+<header><div class="nav"><a class="logo" href="/"><svg width="30" height="30" viewBox="0 0 28 28" aria-hidden="true"><rect width="28" height="28" rx="7" fill="#f4a300"/><path d="M8 6h12v16l-2-1.5-2 1.5-2-1.5-2 1.5-2-1.5L8 22z" fill="#14213d"/><path d="M11 10h6M11 13.5h6" stroke="#f4a300" stroke-width="1.6" stroke-linecap="round"/></svg><span>BillZest<b>POS</b></span></a><div class="r"><button class="btn alt sm" id="lang" type="button">العربية</button><a class="btn alt sm" href="account.html" data-t="acct">Account</a></div></div></header>
+<main class="wrap">
+
+<section id="gate" hidden><div class="card" style="max-width:440px"><h1 data-t="gate_t">Please log in</h1><p class="muted" data-t="gate_p">Log in to use POS billing.</p><a class="btn" href="account.html" data-t="login">Log in</a></div></section>
+
+<div id="app" hidden>
+<div class="tgl" id="tabs"><button type="button" data-v="sell" class="on"><span data-t="sell">Sell</span></button><button type="button" data-v="prod"><span data-t="products">Products</span></button><button type="button" data-v="today"><span data-t="today">Today</span></button></div>
+
+<section id="v-sell">
+<div class="pos">
+<div><input id="q" type="search" data-p="search" autocomplete="off"><div class="tiles" id="tiles"></div></div>
+<div class="card" id="cart">
+<h2 data-t="cart">Cart</h2>
+<div id="cl" style="margin:12px 0"></div>
+<div class="sum"><span data-t="subtotal">Subtotal</span><span class="v" id="ts">-</span></div>
+<div class="sum"><span data-t="vat">VAT (15%)</span><span class="v" id="tv">-</span></div>
+<div class="sum t"><span data-t="total">Total</span><span class="v" id="tt">-</span></div>
+<label><span data-t="cname">Customer name (optional)</span><input id="cn" maxlength="80" autocomplete="off"></label>
+<label><span data-t="cphone">Customer phone (optional)</span><input id="cp" type="tel" maxlength="25" autocomplete="off"></label>
+<label><span data-t="method">Payment</span><select id="pm"><option value="Cash" data-t="cash">Cash</option><option value="Card" data-t="card">Card</option><option value="Transfer" data-t="transfer">Transfer</option></select></label>
+<div class="row"><button class="btn full" id="done" type="button" disabled data-t="complete" style="flex:1">Complete sale</button><button class="btn alt" id="clr" type="button" data-t="clear">Clear</button></div>
+<p class="err" id="m1" role="alert" hidden></p>
+</div>
+</div>
+</section>
+
+<section id="v-prod" hidden>
+<div class="card"><h2 data-t="add_p">Add product</h2>
+<form id="pf" class="fm" style="margin-top:16px">
+<label><span data-t="pname">Product name</span><input id="pn" required maxlength="80"></label>
+<label><span data-t="pprice">Price (SAR)</span><input id="pp" type="number" required min="0" max="999999" step="0.01" inputmode="decimal"></label>
+<label><span data-t="pstock">Stock (optional)</span><input id="ps" type="number" min="0" max="999999" step="1" inputmode="numeric"></label>
+<button class="btn" type="submit" data-t="add">Add</button>
+</form><p class="err" id="m2" role="alert" hidden></p></div>
+<div class="tw"><table><thead><tr><th data-t="pname">Product name</th><th data-t="pprice">Price (SAR)</th><th data-t="stock">Stock</th><th></th></tr></thead><tbody id="pl"></tbody></table></div>
+</section>
+
+<section id="v-today" hidden>
+<div class="kpis"><div class="card"><div class="kl" data-t="sales_today">Sales today</div><div class="kv" id="k1">-</div></div><div class="card"><div class="kl" data-t="invoices">Invoices</div><div class="kv" id="k2">-</div></div><div class="card"><div class="kl" data-t="vat_col">VAT collected</div><div class="kv" id="k3">-</div></div></div>
+<div class="tw"><table><tbody id="tl"></tbody></table></div>
+</section>
+</div>
+</main>
+
+<div class="cartbar" id="cb"><div><b id="cbn"></b><div class="v" id="cbt" style="text-align:start"></div></div><button class="btn" id="cbg" type="button" data-t="checkout">Checkout</button></div>
+
+<div class="ov" id="rc" role="dialog" aria-modal="true" hidden><div class="rcard"><div id="rb"></div>
+<div class="row noprint" style="margin-top:20px"><button class="btn" id="rwa" type="button" data-t="wa">Send on WhatsApp</button><button class="btn alt" id="rpr" type="button" data-t="print">Print</button><button class="btn alt" id="rns" type="button" data-t="newsale">New sale</button></div></div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+(function(){
+var CFG={url:'https://odljezpdeeqvfgjounyg.supabase.co',key:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9kbGplenBkZWVxdmZnam91bnlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE0MTM2MzYsImV4cCI6MjEwNjk4OTYzNn0.v48urFkHW36wd_mfDIaiJWTg4efcVcZIYOy8JvfnWoE'};
+var T={"acct": ["Account", "الحساب"], "gate_t": ["Please log in", "يرجى تسجيل الدخول"], "gate_p": ["Log in to use POS billing.", "سجّل الدخول لاستخدام نظام الفوترة."], "login": ["Log in", "تسجيل الدخول"], "sell": ["Sell", "بيع"], "products": ["Products", "المنتجات"], "today": ["Today", "اليوم"], "search": ["Search products", "ابحث عن منتج"], "noprod": ["No products yet. Add your first product in the Products tab.", "لا توجد منتجات بعد. أضف أول منتج من تبويب المنتجات."], "stock": ["Stock", "المخزون"], "out": ["Out of stock", "نفد المخزون"], "cart": ["Cart", "السلة"], "empty": ["Tap a product to add it.", "اضغط على منتج لإضافته."], "subtotal": ["Subtotal", "المجموع الفرعي"], "vat": ["VAT (15%)", "ضريبة القيمة المضافة (15%)"], "total": ["Total", "الإجمالي"], "cname": ["Customer name (optional)", "اسم العميل (اختياري)"], "cphone": ["Customer phone (optional)", "جوال العميل (اختياري)"], "method": ["Payment", "طريقة الدفع"], "cash": ["Cash", "نقداً"], "card": ["Card", "بطاقة"], "transfer": ["Transfer", "تحويل"], "complete": ["Complete sale", "إتمام البيع"], "clear": ["Clear", "تفريغ"], "checkout": ["Checkout", "الدفع"], "items": ["items", "منتجات"], "inv": ["Invoice", "فاتورة"], "simple": ["Simple receipt", "إيصال مبسط"], "wa": ["Send on WhatsApp", "إرسال عبر واتساب"], "print": ["Print", "طباعة"], "newsale": ["New sale", "بيع جديد"], "thanks": ["Thank you!", "شكراً لكم!"], "add_p": ["Add product", "إضافة منتج"], "pname": ["Product name", "اسم المنتج"], "pprice": ["Price (SAR)", "السعر (ر.س)"], "pstock": ["Stock (optional)", "المخزون (اختياري)"], "add": ["Add", "إضافة"], "save": ["Save", "حفظ"], "del": ["Delete", "حذف"], "sure": ["Tap again to confirm", "اضغط مرة أخرى للتأكيد"], "sales_today": ["Sales today", "مبيعات اليوم"], "invoices": ["Invoices", "الفواتير"], "vat_col": ["VAT collected", "الضريبة المحصلة"], "view": ["View", "عرض"], "none_today": ["No sales yet today.", "لا توجد مبيعات اليوم بعد."], "noload": ["Could not load the sign-in service. Please reload the page.", "تعذر تحميل خدمة الدخول. أعد تحميل الصفحة."]};
+var L='en';try{var sv=localStorage.getItem('bz-lang');if(sv==='ar'||(sv===null&&/^ar/i.test(navigator.language||'')))L='ar'}catch(e){}
+function $(i){return document.getElementById(i)}
+function t(k){return T[k][L==='ar'?1:0]}
+function esc(x){return String(x==null?'':x).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function money(n){return (L==='ar'?'ر.س ':'SAR ')+(+n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
+function dt(x){return new Date(x).toLocaleString(L==='ar'?'ar-SA-u-ca-gregory-nu-latn':'en-GB',{dateStyle:'medium',timeStyle:'short'})}
+function say(id,txt){var e=$(id);e.textContent=txt||'';e.hidden=!txt}
+var sb=window.supabase?window.supabase.createClient(CFG.url,CFG.key):null,user=null,prof={},P=[],cart={},tab='sell',cur=null,TD=[];
+function byId(id){for(var i=0;i<P.length;i++)if(P[i].id===id)return P[i]}
+
+function totals(){var s=0,n=0;Object.keys(cart).forEach(function(id){var p=byId(id);if(p){s+=p.price*cart[id];n+=cart[id]}});s=Math.round(s*100)/100;var v=Math.round(s*15)/100;return{s:s,v:v,t:Math.round((s+v)*100)/100,n:n}}
+function tiles(){var box=$('tiles'),q=$('q').value.trim().toLowerCase();box.textContent='';
+if(!P.length){var m=document.createElement('p');m.className='muted';m.textContent=t('noprod');box.appendChild(m);return}
+P.filter(function(p){return p.name.toLowerCase().indexOf(q)>-1}).forEach(function(p){
+var b=document.createElement('button'),n=document.createElement('b'),s=document.createElement('span'),out=p.stock!==null&&p.stock<=0;
+b.type='button';b.className='tile';b.disabled=out;n.textContent=p.name;s.textContent=money(p.price);b.appendChild(n);b.appendChild(s);
+if(p.stock!==null){var k=document.createElement('small');k.textContent=out?t('out'):t('stock')+': '+p.stock;b.appendChild(k)}
+b.addEventListener('click',function(){var c=(cart[p.id]||0)+1;if(p.stock!==null&&c>p.stock)return;cart[p.id]=c;cartR()});box.appendChild(b)})}
+function cartR(){var tt=totals(),h='';
+Object.keys(cart).forEach(function(id){var p=byId(id);if(!p){delete cart[id];return}
+h+='<div class="cr"><span>'+esc(p.name)+'</span><span class="qty"><button type="button" data-a="dec" data-id="'+esc(id)+'" aria-label="-">&minus;</button><b>'+cart[id]+'</b><button type="button" data-a="inc" data-id="'+esc(id)+'" aria-label="+">+</button></span><span class="v">'+money(p.price*cart[id])+'</span></div>'});
+$('cl').innerHTML=h||'<p class="muted">'+esc(t('empty'))+'</p>';
+$('ts').textContent=money(tt.s);$('tv').textContent=money(tt.v);$('tt').textContent=money(tt.t);
+$('done').disabled=!tt.n;
+$('cb').className='cartbar'+(tt.n&&tab==='sell'?' on':'');$('cbn').textContent=tt.n+' '+t('items');$('cbt').textContent=money(tt.t)}
+function prodR(){var h='';P.forEach(function(p){h+='<tr data-id="'+esc(p.id)+'"><td><b>'+esc(p.name)+'</b></td><td><input type="number" min="0" step="0.01" value="'+esc(p.price)+'" data-f="price"></td><td><input type="number" min="0" step="1" value="'+(p.stock===null?'':esc(p.stock))+'" data-f="stock"></td><td><div class="row"><button class="btn alt sm" type="button" data-a="sv">'+esc(t('save'))+'</button><button class="btn alt sm bad" type="button" data-a="dp">'+esc(t('del'))+'</button></div></td></tr>'});
+$('pl').innerHTML=h||'<tr><td colspan="4" class="empty">'+esc(t('noprod'))+'</td></tr>'}
+async function loadP(){var r=await sb.from('products').select('*').order('name');
+if(r.error){$('tiles').textContent=r.error.message;return}
+P=(r.data||[]).map(function(p){p.price=+p.price;return p});tiles();prodR();cartR()}
+async function loadToday(){var d=new Date();d.setHours(0,0,0,0);
+var r=await sb.from('invoices').select('*').gte('created_at',d.toISOString()).order('created_at',{ascending:false}).limit(200);
+if(r.error){$('tl').innerHTML='<tr><td class="empty">'+esc(r.error.message)+'</td></tr>';return}
+TD=r.data||[];var s=0,v=0;TD.forEach(function(i){s+=+i.total;v+=+i.vat});
+$('k1').textContent=money(s);$('k2').textContent=TD.length;$('k3').textContent=money(v);
+var h='';TD.forEach(function(i,ix){h+='<tr><td><b>#'+i.no+'</b></td><td>'+esc(dt(i.created_at))+'</td><td>'+esc(t(i.method.toLowerCase()))+'</td><td class="v">'+money(i.total)+'</td><td><button class="btn alt sm" type="button" data-a="vw" data-i="'+ix+'">'+esc(t('view'))+'</button></td></tr>'});
+$('tl').innerHTML=h||'<tr><td class="empty">'+esc(t('none_today'))+'</td></tr>'}
+
+function receipt(inv){cur=inv;var shop=prof.biz||prof.name||'BillZestPOS',h='<h2>'+esc(shop)+'</h2><p class="muted" style="margin:4px 0 14px">'+esc(t('simple'))+' · '+esc(t('inv'))+' #'+inv.no+'<br>'+esc(dt(inv.created_at))+'</p>';
+(inv.items||[]).forEach(function(i){h+='<div class="cr"><span>'+esc(i.name)+' × '+i.qty+'</span><span class="v">'+money(i.total)+'</span></div>'});
+h+='<div class="sum" style="margin-top:8px"><span>'+esc(t('subtotal'))+'</span><span class="v">'+money(inv.subtotal)+'</span></div><div class="sum"><span>'+esc(t('vat'))+'</span><span class="v">'+money(inv.vat)+'</span></div><div class="sum t"><span>'+esc(t('total'))+'</span><span class="v">'+money(inv.total)+'</span></div><p class="muted" style="margin:0">'+esc(t('method'))+': '+esc(t(inv.method.toLowerCase()))+'</p><p style="margin:12px 0 0">'+esc(t('thanks'))+'</p>';
+$('rb').innerHTML=h;$('rc').hidden=false;$('rns').focus()}
+function waNum(p){var d=String(p||'').replace(/\D/g,'');if(/^05\d{8}$/.test(d))d='966'+d.slice(1);else if(d.indexOf('00')===0)d=d.slice(2);return d}
+function waText(inv){var shop=prof.biz||prof.name||'BillZestPOS',x=shop+'\n'+t('inv')+' #'+inv.no+' - '+dt(inv.created_at)+'\n\n';
+(inv.items||[]).forEach(function(i){x+=i.name+' x'+i.qty+' = '+money(i.total)+'\n'});
+return x+'\n'+t('subtotal')+': '+money(inv.subtotal)+'\n'+t('vat')+': '+money(inv.vat)+'\n'+t('total')+': '+money(inv.total)+'\n\n'+t('thanks')}
+function setTab(v){tab=v;['sell','prod','today'].forEach(function(x){$('v-'+x).hidden=x!==v});
+$('tabs').querySelectorAll('button').forEach(function(b){b.className=b.dataset.v===v?'on':''});
+if(v==='today')loadToday();cartR()}
+function applyLang(){document.documentElement.lang=L;document.documentElement.dir=L==='ar'?'rtl':'ltr';
+document.querySelectorAll('[data-t]').forEach(function(e){e.textContent=t(e.dataset.t)});
+document.querySelectorAll('[data-p]').forEach(function(e){e.placeholder=t(e.dataset.p)});
+$('lang').textContent=L==='ar'?'English':'العربية';if(sb&&user){tiles();prodR();cartR();if(tab==='today')loadToday()}}
+
+$('lang').addEventListener('click',function(){L=L==='ar'?'en':'ar';try{localStorage.setItem('bz-lang',L)}catch(e){}applyLang()});
+$('tabs').addEventListener('click',function(e){var b=e.target.closest('[data-v]');if(b)setTab(b.dataset.v)});
+$('q').addEventListener('input',tiles);
+$('cl').addEventListener('click',function(e){var b=e.target.closest('[data-a]');if(!b)return;var id=b.dataset.id,p=byId(id);if(!p)return;
+if(b.dataset.a==='inc'){if(p.stock===null||(cart[id]||0)<p.stock)cart[id]=(cart[id]||0)+1}
+else{cart[id]=(cart[id]||0)-1;if(cart[id]<=0)delete cart[id]}
+cartR()});
+$('clr').addEventListener('click',function(){cart={};cartR()});
+$('cbg').addEventListener('click',function(){$('cart').scrollIntoView({behavior:'smooth'})});
+$('done').addEventListener('click',async function(){var items=Object.keys(cart).map(function(id){return{id:id,qty:cart[id]}});if(!items.length)return;var b=this;b.disabled=true;say('m1','');
+var r=await sb.rpc('create_invoice',{p_items:items,p_method:$('pm').value,p_name:$('cn').value.trim(),p_phone:$('cp').value.trim()});
+if(r.error){say('m1',r.error.message);await loadP();return}
+var inv=Array.isArray(r.data)?r.data[0]:r.data;cart={};$('cn').value='';$('cp').value='';await loadP();receipt(inv)});
+$('pf').addEventListener('submit',async function(e){e.preventDefault();say('m2','');var s=$('ps').value;
+var r=await sb.from('products').insert({name:$('pn').value.trim(),price:+$('pp').value,stock:s===''?null:parseInt(s,10)});
+if(r.error){say('m2',r.error.message);return}
+$('pn').value='';$('pp').value='';$('ps').value='';await loadP()});
+$('pl').addEventListener('click',async function(e){var b=e.target.closest('[data-a]');if(!b)return;var tr=b.closest('tr'),id=tr.dataset.id;
+if(b.dataset.a==='dp'){if(!b.dataset.sure){b.dataset.sure='1';var o=b.textContent;b.textContent=t('sure');setTimeout(function(){b.textContent=o;delete b.dataset.sure},3000);return}
+var r=await sb.from('products').delete().eq('id',id);if(r.error){say('m2',r.error.message);return}delete cart[id];await loadP();return}
+if(b.dataset.a==='sv'){var pr=tr.querySelector('[data-f=price]').value,st=tr.querySelector('[data-f=stock]').value;
+var r2=await sb.from('products').update({price:+pr,stock:st===''?null:parseInt(st,10)}).eq('id',id);if(r2.error){say('m2',r2.error.message);return}say('m2','');await loadP()}});
+$('tl').addEventListener('click',function(e){var b=e.target.closest('[data-a=vw]');if(b)receipt(TD[+b.dataset.i])});
+$('rwa').addEventListener('click',function(){if(!cur)return;var n=waNum(cur.customer_phone);window.open('https://wa.me/'+n+'?text='+encodeURIComponent(waText(cur)),'_blank')});
+$('rpr').addEventListener('click',function(){window.print()});
+$('rns').addEventListener('click',function(){$('rc').hidden=true;if(tab==='today')loadToday()});
+$('rc').addEventListener('click',function(e){if(e.target===$('rc'))$('rc').hidden=true});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')$('rc').hidden=true});
+
+applyLang();
+(async function(){
+if(!sb){$('gate').hidden=false;$('gate').querySelector('p').textContent=t('noload');return}
+var s=await sb.auth.getSession();
+if(!s.data.session){$('gate').hidden=false;return}
+user=s.data.session.user;
+sb.auth.onAuthStateChange(function(ev){if(ev==='SIGNED_OUT')setTimeout(function(){location.href='account.html'},0)});
+var pr=await sb.from('profiles').select('name,biz').eq('id',user.id).maybeSingle();prof=pr.data||{};
+$('app').hidden=false;await loadP()})();
+})();
+</script>
+</body>
+</html>
